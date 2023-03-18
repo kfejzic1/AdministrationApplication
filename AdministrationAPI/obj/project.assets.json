@@ -465,11 +465,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\AdministrationAPI\\AdministrationAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\AdministrationAPI.csproj",
       "projectName": "AdministrationAPI",
-      "projectPath": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\AdministrationAPI\\AdministrationAPI.csproj",
+      "projectPath": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\AdministrationAPI.csproj",
       "packagesPath": "C:\\Users\\Korisnik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\AdministrationAPI\\obj\\",
+      "outputPath": "C:\\Users\\Korisnik\\OneDrive\\Dokumenti\\GitHub\\AdministrationApplication\\AdministrationAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Korisnik\\AppData\\Roaming\\NuGet\\NuGet.Config",
