@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "O83gELGnwHHOA90x/HiXI20zxus78VSHu+P/PRaGLrA=",
+  "Source": "AdministrationAPI",
+  "BasePath": "_content/AdministrationAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
