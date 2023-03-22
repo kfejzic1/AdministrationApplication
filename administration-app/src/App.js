@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { testFunction } from './services/testingService';
+import TransactionsList from './components/TransactionsView/TransactionsList';
 
 function App() {
 	const [testingData, setTestingData] = useState([]);
@@ -25,6 +26,9 @@ function App() {
 			</header>
 			<div>
 				<button onClick={handleButtonClick}>Click Me</button>
+			</div>
+			<div>
+				<TransactionsList></TransactionsList>
 			</div>
 			<div>
 				{testingData.length > 0

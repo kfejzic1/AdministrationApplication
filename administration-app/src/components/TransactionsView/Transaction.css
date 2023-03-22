@@ -1,0 +1,43 @@
+.transaction-margin {
+	margin: 10px;
+    background-color: #adb6c4;
+}
+.transaction-container {
+	display: inline-flex;
+	width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #cbcdd1;
+}
+.transaction-column {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	flex: 1;
+}
+.transaction-column:nth-child(odd) {
+	background-color: #d1d9e6;
+}
+.transaction-odd-column {
+	flex: 1;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.transaction-odd-column:nth-child(even) {
+	background-color: #d1d9e6;
+}
+.container {
+	display: inline-flex;
+    box-sizing: border-box;
+	width: 100%;
+	border-bottom: 2px solid #adb6c4;
+}
+.column {
+	flex: 1;
+	background-color: #d1d9e6;
+	font-weight: bold;
+	font-size: larger;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.detailsBtn{
+	background-color: cornsilk;
+}
