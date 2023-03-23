@@ -10,10 +10,12 @@ namespace AdministrationAPI.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
+        private readonly MyDbContext _context;
 
-        public VendorController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService, MyDbContext context)
         {
             _vendorService = vendorService;
+            _context = context;
         }
 
         [HttpPost]
@@ -33,20 +35,13 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-    }
 
-    private readonly MyDbContext _context;
-
-    public VendorController(MyDbContext context)
-    {
-        _context = context;
-    }
-
-    [HttpGet]
-    public IActionResult GetVendors()
-    {
-        var vendors = _context.Vendors.ToList();
-        return Ok(vendors);
+        [HttpGet]
+        public IActionResult GetVendors()
+        {
+            var vendors = _context.Vendors.ToList();
+            return Ok(vendors);
+        }
     }
 }
 

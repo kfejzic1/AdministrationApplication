@@ -1,6 +1,7 @@
+using AdministrationAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MyProject.Models
+namespace DBContext
 {
     public class MyDbContext : DbContext
     {
