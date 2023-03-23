@@ -1,6 +1,13 @@
+using AdministrationAPI.Installers;
+using Microsoft.AspNetCore.Hosting;
+using AdministrationAplicationAPI.Installers;
+using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IVendorService, VendorService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
