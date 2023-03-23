@@ -49,4 +49,20 @@ namespace AdministrationAPI.Controllers
             return Ok(true);
         }
     }
+
+    private readonly MyDbContext _context;
+
+    public VendorController(MyDbContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet]
+    public IActionResult GetVendors()
+    {
+        var vendors = _context.Vendors.ToList();
+        return Ok(vendors);
+    }
 }
+
+
