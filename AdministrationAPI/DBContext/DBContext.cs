@@ -16,7 +16,7 @@ namespace MyProject.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("MyDbConnection"));
+            optionsBuilder.UseSqlServer(_config.GetConnectionString("ConnectionStrings:DbConnection"));
         }
     }
 }
