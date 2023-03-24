@@ -37,7 +37,10 @@
 	font-size: larger;
 	padding-top: 10px;
 	padding-bottom: 10px;
+
 }
 .detailsBtn{
-	background-color: cornsilk;
+	background-color: rgb(29, 102, 229);
+	border-radius: 5px;
+	color: #d3d3d3;
 }
