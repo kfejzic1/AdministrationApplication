@@ -15,10 +15,10 @@ namespace AdministrationAPI.Controllers.Transaction
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TransactionDTO>>> GetAllTransactions() 
+        public async Task<ActionResult<List<TransactionDTO>>> GetAllTransactions([FromQuery]int pageNumber, [FromQuery]int pageSize) 
         {
-            var response = await _transactionService.GetAllTransactions();
-            if(response.Count == 0) return NotFound("No transactions have been made.");
+            var response = await _transactionService.GetAllTransactions(pageNumber, pageSize);
+            // if(response.Transactions.Count == 0) return NotFound("No transactions have been made.");
             return Ok(response);
         }
 

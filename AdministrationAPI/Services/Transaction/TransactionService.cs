@@ -1,6 +1,8 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.DTOs;
+using AdministrationAPI.DTOs.Transaction;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services.Transaction
@@ -16,10 +18,20 @@ namespace AdministrationAPI.Services.Transaction
             _context = context;
         }
 
-        public async Task<List<TransactionDTO>> GetAllTransactions()
+        public async Task<TransactionResponseDTO> GetAllTransactions(int pageNumber, int pageSize)
         {
-            var dbTransactions = await _context.Transactions.ToListAsync();
-            return dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList();
+            if(pageNumber == 0) pageNumber = 1;
+            if(pageSize == 0) pageSize = _context.Transactions.Count();
+            var pageCount = Math.Ceiling(_context.Transactions.Count() / (double)pageSize);
+            var dbTransactions = await _context.Transactions
+                .Skip((pageNumber - 1) * (int)pageSize)
+                .Take((int)pageSize).ToListAsync();
+            var response = new TransactionResponseDTO {
+                Transactions = dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList(),
+                CurrentPage = pageNumber,
+                Pages = (int)pageCount
+            };
+            return response;
         }
 
         public async Task<TransactionDetailsDTO> GetTransactionByID(int id)
