@@ -8,14 +8,6 @@
     color: white;
 }
 
-a {
-    color:rgb(255, 250, 255);
-}
-
-a:hover {
-    color:rgb(255, 213, 0);
-}
-
 .App1{
     height: 100vh;
     width: 100%;
@@ -37,23 +29,24 @@ a:hover {
     justify-content: space-evenly;
 }
 
-.user-data{
+.code-input{
     border: none;
     background-color: rgb(0,0,0);
     height: 4em;
     width: 80%;
     border-radius:0.25em;
     padding: 2em;
-    font-size: 14px;
+    font-size: 40px;
+    text-align: center;
 }
-.user-data:focus{
+.code-input:focus{
    outline-color: rgb(255, 213, 0);
 }
-.user-data::placeholder {
+.code-input::placeholder {
     color:rgb(156, 156, 156);
 }
 
-.login-btn{
+.verify-btn{
     width: 40%;
     font-size: large;
     height: 4.5em;
@@ -67,48 +60,7 @@ a:hover {
     color: black;
 }
 
-.login-btn:hover{
+.verify-btn:hover{
   transform: scale(1.25);  
 }
 
-.hide{
-    position: absolute;
-    transform: scale(0);
-}
-
-.login-popup{
-    position: absolute;
-    height: 35em;
-    width: 30em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.25em;
-    background-color: skyblue;
-    color: white;
-    bottom: 0;
-    transform: scale(1);
-    transition: 1.5s;
-}
-
-.hide1{
-    position: absolute;
-    transform: scale(0);
-}
-
-.login-unos{
-    position: absolute;
-    height: 35em;
-    width: 30em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.25em;
-    background-color: skyblue;
-    color: white;
-    bottom: 0;
-    transform: scale(1);
-    transition: 1.5s;
-}
