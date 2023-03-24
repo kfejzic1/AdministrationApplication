@@ -1,6 +1,4 @@
-using AdministrationAPI.Installers;
 using Microsoft.AspNetCore.Hosting;
-using AdministrationAplicationAPI.Installers;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Services;
 
