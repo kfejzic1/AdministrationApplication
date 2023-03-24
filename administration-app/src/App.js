@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import LoginForm from './components/Login';
+import TwoFactorView from './components/TwoFactor';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import './App.css';
 import { testFunction } from './services/testingService';
@@ -20,6 +21,7 @@ function App() {
 			<div className="App1">
 				<Routes>
 				<Route path='/login' element={<LoginForm />} />   
+				<Route path='/twofactor' element={<TwoFactorView />} />   
 				</Routes>
 			</div>
     	</Router>
