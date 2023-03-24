@@ -1,5 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;

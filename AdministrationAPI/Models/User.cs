@@ -12,9 +12,6 @@ namespace AdministrationAPI.Models
         [Required(ErrorMessage = "Name field is required.")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Username field is required.")]
-        public string Username { get; set; }
-
         [Required(ErrorMessage = "Email field is required.")]
         [EmailAddress]
         public string Email { get; set; }
@@ -41,7 +38,6 @@ namespace AdministrationAPI.Models
         {
             Id = -1;
             Name = string.Empty;
-            Username = string.Empty;
             Email = string.Empty;
             EmailConfirmed = false;
             Password = string.Empty;
