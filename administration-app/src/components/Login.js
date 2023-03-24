@@ -10,15 +10,16 @@ const LoginForm = () => {
     return ( 
         <div className="App1"> 
             <div className="cover">
-                    <h1>Prijavi se</h1>
-                    <input type="text" placeholder="username" onChange={(e)=>{
+                    <h1>Login</h1>
+                    <input type="text" placeholder="E-mail or Phone number" onChange={(e)=>{
                        // setUsername(e.target.value)
                     }}/>
-                    <input type="password" placeholder="password" onChange={(e)=>{
+
+                    <input type="password" placeholder="Password" onChange={(e)=>{
                         //setPassword(e.target.value)
                     }}/>
-                    <p>Nisi registrovan.<a href="/">  Registruj se</a></p>
-                    <button className="login-btn"> Logiraj se</button>
+                    <p>You are not registered? <a href="/">Register</a></p>
+                    <button className="login-btn"> Login</button>
                                 
             </div>
        </div>
