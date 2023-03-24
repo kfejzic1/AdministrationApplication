@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
+import LoginForm from './components/Login';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import './App.css';
 import { testFunction } from './services/testingService';
@@ -18,7 +19,7 @@ function App() {
 			<Router>
 			<div className="App1">
 				<Routes>
-				<Route path='/login' />  
+				<Route path='/login' element={<LoginForm />} />   
 				</Routes>
 			</div>
     	</Router>
