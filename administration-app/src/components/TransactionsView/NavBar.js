@@ -8,17 +8,17 @@ export const NavBar = () => {
         <div className="nav-logo">Payment App</div>
         <ul className="nav-links">
           <li>
-            <Link to="/" activeClassName="active">
+            <Link to="/" className="active">
               Home
             </Link>
           </li>
           <li>
-            <Link to="/transactions" activeClassName="active">
+            <Link to="/transactions" className="active">
               Transactions
             </Link>
           </li>
           <li>
-            <Link to="/account" activeClassName="active">
+            <Link to="/account" className="active">
               Account
             </Link>
           </li>
