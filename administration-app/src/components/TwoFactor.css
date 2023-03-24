@@ -29,7 +29,7 @@
     justify-content: space-evenly;
 }
 
-input{
+.code-input{
     border: none;
     background-color: rgb(0,0,0);
     height: 4em;
@@ -39,10 +39,10 @@ input{
     font-size: 40px;
     text-align: center;
 }
-input:focus{
+.code-input:focus{
    outline-color: rgb(255, 213, 0);
 }
-input::placeholder {
+.code-input::placeholder {
     color:rgb(156, 156, 156);
 }
 

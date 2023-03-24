@@ -11,11 +11,11 @@ const LoginForm = () => {
         <div className="App1"> 
             <div className="cover">
                     <h1>Login</h1>
-                    <input type="text" placeholder="E-mail or Phone number" onChange={(e)=>{
+                    <input className="user-data" type="text" placeholder="E-mail or Phone number" onChange={(e)=>{
                        // setUsername(e.target.value)
                     }}/>
 
-                    <input type="password" placeholder="Password" onChange={(e)=>{
+                    <input className="user-data" type="password" placeholder="Password" onChange={(e)=>{
                         //setPassword(e.target.value)
                     }}/>
                     <p>You are not registered? <a href="/">Register</a></p>
