@@ -7,14 +7,31 @@ import './App.css';
 import { testFunction } from './services/testingService';
 import VendorManagementModal from './components/vendor/VendorManagementModal';
 
-function App() {
-	const [testingData, setTestingData] = useState([]);
+const useStyles = makeStyles(theme => ({
+  /*formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    marginTop: theme.spacing(2),
+  },*/
+}));
 
-	const handleButtonClick = () => {
-		testFunction().then(res => {
-			setTestingData(res.data);
-		});
-	};
+function UserForm() {
+  const vendor = {
+    name:"",
+    address:"",
+    details:"",
+    users: []
+  };
+  const classes = useStyles();
+  const [username, setUsername] = useState('');
+  const [address, setAddress] = useState('');
+  const [details, setDetails] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
 	return (
 		<div className='App'>
