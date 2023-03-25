@@ -1,19 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-
 *{
     margin: 0;
     box-sizing: border-box;
-    font-family: "Quicksand";
-    background-color: #282c34;
+    font-family: sans-serif;
+    background-color: rgb(29, 26, 57);
     color: white;
+}
+
+h1 {
+    background-color: rgb(51, 46, 104);
+}
+
+h3 {
+    background-color: rgb(51, 46, 104);
+}
+
+p {
+    background-color: rgb(51, 46, 104);
 }
 
 a {
     color:rgb(255, 250, 255);
+    background-color: rgb(51, 46, 104);
 }
 
 a:hover {
-    color:rgb(255, 213, 0);
+    color:rgb(255, 193, 32);
 }
 
 .App1{
@@ -25,12 +36,12 @@ a:hover {
 }
 
 .cover{
-    background-color: rgb(43, 43, 42);
+    background-color: rgb(51, 46, 104);
     width: 30em;
     height: 35em;
     position: relative;
     border-radius: 1em;
-    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+    box-shadow: 0 0.188em 1.550em rgb(50, 50, 57);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,7 +50,7 @@ a:hover {
 
 .user-data{
     border: none;
-    background-color: rgb(0,0,0);
+    background-color: rgb(29, 26, 57);
     height: 4em;
     width: 80%;
     border-radius:0.25em;
@@ -47,7 +58,7 @@ a:hover {
     font-size: 14px;
 }
 .user-data:focus{
-   outline-color: rgb(255, 213, 0);
+   outline-color: rgb(255, 193, 32);
 }
 .user-data::placeholder {
     color:rgb(156, 156, 156);
@@ -57,7 +68,7 @@ a:hover {
     width: 40%;
     font-size: large;
     height: 4.5em;
-    background-color: rgb(255, 213, 0);
+    background-color: rgb(255, 193, 32);
     display: flex;
     justify-content: center;
     align-items: center;
