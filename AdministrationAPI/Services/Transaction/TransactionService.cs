@@ -21,14 +21,9 @@ namespace AdministrationAPI.Services.Transaction
 
         public async Task<TransactionResponseDTO> GetAllTransactions(int pageNumber, int pageSize)
         {
-
+           
             if (pageNumber < 0) throw new ArgumentException("Page number cannot be negative");
             if (pageSize < 0) throw new ArgumentException("Page size cannot be negative");
-
-            if (!_context.Database.CanConnect())
-            {
-                throw new Exception("Unable to connect to database.");
-            }
 
             if (pageNumber == 0) pageNumber = 1;
             if (pageSize == 0) pageSize = _context.Transactions.Count();
