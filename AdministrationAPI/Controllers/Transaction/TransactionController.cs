@@ -24,10 +24,6 @@ namespace AdministrationAPI.Controllers.Transaction
             {
                 response = await _transactionService.GetAllTransactions(pageNumber, pageSize);
 
-                if (response.Transactions.Count == 0)
-                {
-                    return NotFound("There are no transactions");
-                }
             }
             catch (Exception e)
             {
@@ -40,8 +36,20 @@ namespace AdministrationAPI.Controllers.Transaction
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDetailsDTO>> GetTransactionById(int id)
         {
-            var response = await _transactionService.GetTransactionByID(id);
-            if (response is null) return NotFound("There is no transaction with that id.");
+
+            TransactionDetailsDTO response;
+
+           
+                try {
+
+                  response = await _transactionService.GetTransactionByID(id);
+
+                } catch (Exception e)
+                {
+                    return NotFound("Error: " + e.Message);
+                }
+                
+        
             return Ok(response);
         }
     }

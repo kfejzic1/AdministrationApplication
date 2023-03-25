@@ -16,6 +16,7 @@ namespace AdministrationAPI.Services.Transaction
         {
             _mapper = mapper;
             _context = context;
+            
         }
 
         public async Task<TransactionResponseDTO> GetAllTransactions(int pageNumber, int pageSize)
@@ -43,12 +44,17 @@ namespace AdministrationAPI.Services.Transaction
                 Pages = (int)pageCount
 
             };
+
+            if(response.Transactions.Count == 0) throw new Exception("There are no transactions.");
+            
             return response;
         }
 
         public async Task<TransactionDetailsDTO> GetTransactionByID(int id)
         {
+            if(id < 1) throw new Exception("You have specified an invalid id.");   
             var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
+            if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
         }
     }
