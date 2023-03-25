@@ -2,29 +2,29 @@
     margin: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-    background-color: rgb(29, 26, 57);
-    color: white;
+    background-color: white;
+    color: black;
 }
 
 h1 {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 h3 {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 p {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 a {
-    color:rgb(255, 250, 255);
-    background-color: rgb(51, 46, 104);
+    color:black;
+    background-color: #f2f2f2df;
 }
 
 a:hover {
-    color:rgb(255, 193, 32);
+    color:darkblue;
 }
 
 .App1{
@@ -36,7 +36,7 @@ a:hover {
 }
 
 .cover{
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
     width: 30em;
     height: 35em;
     position: relative;
@@ -49,8 +49,8 @@ a:hover {
 }
 
 .user-data{
-    border: none;
-    background-color: rgb(29, 26, 57);
+    border: 1px solid;
+    background-color: white;
     height: 4em;
     width: 80%;
     border-radius:0.25em;
@@ -58,7 +58,7 @@ a:hover {
     font-size: 14px;
 }
 .user-data:focus{
-   outline-color: rgb(255, 193, 32);
+   outline-color: rgb(51, 46, 104);
 }
 .user-data::placeholder {
     color:rgb(156, 156, 156);

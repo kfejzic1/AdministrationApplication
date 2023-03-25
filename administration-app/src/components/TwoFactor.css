@@ -2,20 +2,20 @@
     margin: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-    background-color: rgb(29, 26, 57);
-    color: white;
+    background-color: white;
+    color: black;
 }
 
 h1 {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 h3 {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 p {
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 .App1{
@@ -27,7 +27,7 @@ p {
 }
 
 .cover{
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
     width: 30em;
     height: 35em;
     position: relative;
@@ -40,26 +40,28 @@ p {
 }
 
 .code-input{
-    border: none;
-    background-color: rgb(29, 26, 57);
+    outline: 0;
+    border-width: 0 0 2px;
+    background-color: #f2f2f2df;
     height: 3em;
     width: 80%;
-    border-radius:0.25em;
     padding: 1em;
-    font-size: 30px;
+    margin: 5px;
+    font-size: 25px;
     text-align: center;
-    color: white;
+    color: black;
 }
 .code-input:focus{
-   outline-color: rgb(255, 193, 32);
+   outline-color: rgb(51, 46, 104);
 }
 .code-input::placeholder {
     color:rgb(156, 156, 156);
 }
+
 .code-container {
     display: flex;
     padding: 10px;
-    background-color: rgb(51, 46, 104);
+    background-color: #f2f2f2df;
 }
 
 .verify-btn{
@@ -79,4 +81,5 @@ p {
 .verify-btn:hover{
   transform: scale(1.25);  
 }
+
 
