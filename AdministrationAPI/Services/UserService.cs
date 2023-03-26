@@ -110,6 +110,8 @@ namespace AdministrationAPI.Services
             };
         }
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration.GetSection("Token:Secret").Value!));
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
