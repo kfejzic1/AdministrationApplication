@@ -6,6 +6,8 @@ namespace AdministrationAPI.Data
     public class AppDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -18,7 +20,6 @@ namespace AdministrationAPI.Data
             var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
             Console.WriteLine("Default connection string: " + connectionString);
-
 
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
