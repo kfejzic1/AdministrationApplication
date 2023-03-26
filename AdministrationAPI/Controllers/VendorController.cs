@@ -10,8 +10,8 @@ using System.Data;
 
 namespace AdministrationAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VendorController : ControllerBase
     {
