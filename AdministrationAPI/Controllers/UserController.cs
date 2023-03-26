@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Data;
 
 namespace AdministrationAPI.Controllers
@@ -17,32 +16,68 @@ namespace AdministrationAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService, IMapper mapper)
+
+        public UserController(IUserService userService, IMapper mapper, IEmailService emailService)
         {
             _userService = userService;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                var authenticationResult = _userService.Login(loginRequest);
+                var authenticationResult = await _userService.Login(loginRequest);
+
+                if (authenticationResult.IsTwoFactorEnabled)
+                {
+                    _emailService.SendEmail(authenticationResult.EmailMessage);
+
+                    return StatusCode(StatusCodes.Status200OK,
+                 new StatusMessageResponse { Status = "Success", Message = $"We have sent verification code to your email." });
+                }
+
                 if (authenticationResult.Success)
                     return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
                 else
                     return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
             }
-            catch(DataException ex)
+            catch (DataException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("login2FA")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginWithCode([FromBody] Login2FARequest loginRequest)
+        {
+            try
+            {
+                var authenticationResult = await _userService.Login2FA(loginRequest);
+
+                if (authenticationResult.Success)
+                    return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
+                else
+                    return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login2FA");
                 return StatusCode(500, ex.Message);
             }
         }

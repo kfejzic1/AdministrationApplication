@@ -2,7 +2,8 @@
 {
     public class LoginRequest
     {
-        public string EmailPhone { get; set; } //Moze se koristiti regex da se provjeri da li je proslijeđen email ili broj
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
         public string Password { get; set; }
     }
 }

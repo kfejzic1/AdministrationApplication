@@ -1,11 +1,10 @@
-//using MimeKit;
-//ovog nema kod mene u vscode, ali ima nekih drugih i treba skontati koji uzeti
+using MimeKit;
 
 namespace AdministrationAPI.Models
 
 {
     public class Message
-    {/*
+    {
         public List<MailboxAddress> To { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
@@ -15,6 +14,6 @@ namespace AdministrationAPI.Models
             To.AddRange(to.Select(x => new MailboxAddress("email", x)));
             Subject = subject;
             Content = content;
-        }*/
+        }
     }
 }

@@ -1,7 +1,3 @@
-
-
-//namespace User.Management.Service.Models kod njega je ovo razdvojeno bilo 
-//pa treba provjeriti kako cemo mi rasporediti u fajlove
 namespace AdministrationAPI.Models
 {
     public class EmailConfiguration

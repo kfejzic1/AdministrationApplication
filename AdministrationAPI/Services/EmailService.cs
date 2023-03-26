@@ -1,14 +1,18 @@
-/*using MailKit.Net.Smtp;
-using MimeKit;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace AdministrationAPI.Services
 {
     public class EmailService : IEmailService
     {
         private readonly EmailConfiguration _emailConfig;
-        public EmailService(EmailConfiguration emailConfig) => _emailConfig = emailConfig;
+        public EmailService(EmailConfiguration emailConfig)
+        {
+            _emailConfig = emailConfig;
+        }
+
         public void SendEmail(Message message)
         {
             var emailMessage = CreateEmailMessage(message);
@@ -50,4 +54,3 @@ namespace AdministrationAPI.Services
         }
     }
 }
-*/

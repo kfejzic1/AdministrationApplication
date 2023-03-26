@@ -5,6 +5,7 @@ namespace AdministrationAPI.Services.Interfaces
 {
     public interface IUserService
     {
-        AuthenticationResult Login(LoginRequest loginRequest);
+        Task<AuthenticationResult> Login(LoginRequest loginRequest);
+        Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
     }
 }

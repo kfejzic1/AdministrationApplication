@@ -6,7 +6,7 @@ namespace AdministrationAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
     public class WeatherForecastController : ControllerBase
     {

@@ -2,8 +2,7 @@
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,21 +12,40 @@ namespace AdministrationAPI.Services
 {
     public class UserService : IUserService
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public UserService(IConfiguration configuration)
+        public UserService(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration
+        )
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _configuration = configuration;
         }
 
-        public AuthenticationResult Login(LoginRequest loginRequest)
+        public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
             //Fetch User From Database by email or phone from LoginRequest, password should be hashed
-            var user = new User();
-            user.Email = "test@gmail.com";
-            user.Password = "$2a$11$L8nVoKKleO2vppTVIyoRMeq6UD6qwWniun.rtg22VsBaaac6DekFS"; //password je: string
+            IdentityUser user = new IdentityUser();
 
-            if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password))
+            if (loginRequest.Email != null)
+                user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            else
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == loginRequest.Phone);
+
+            if (user == null)
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User not found!" }
+                };
+
+
+
+            if (!await _userManager.CheckPasswordAsync(user, loginRequest.Password))
             {
                 return new AuthenticationResult
                 {
@@ -35,36 +53,95 @@ namespace AdministrationAPI.Services
                 };
             }
 
-            string token = CreateToken(user);
+            if (user.TwoFactorEnabled)
+            {
+                await _signInManager.SignOutAsync();
+                var canI = await _signInManager.CanSignInAsync(user);
+
+                await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, true);
+                var twoFactorToken = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+
+                var message = new Message(new string[] { user.Email! }, "Login Confirmation", twoFactorToken);
+
+                return new AuthenticationResult
+                {
+                    IsTwoFactorEnabled = true,
+                    EmailMessage = message
+                };
+            }
+
+            var authClaims = await GetAuthClaimsAsync(user);
+
+            var token = CreateToken(authClaims);
 
             return new AuthenticationResult
             {
                 Success = true,
-                Token = token
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
 
-        private string CreateToken(User user)
+        public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
-            List<Claim> claims= new List<Claim>
+            var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            var signIn = await _signInManager.TwoFactorSignInAsync(TokenOptions.DefaultEmailProvider, loginRequest.Code, false, false);
+
+            if (user == null)
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Invalid user!" }
+                };
+
+            if (signIn.Succeeded)
             {
-                new Claim("email", user.Email),
-                new Claim("name", user.Name),
-                new Claim("phone", user.Phone)
+                var authClaims = await GetAuthClaimsAsync(user);
+                var token = CreateToken(authClaims);
+
+                return new AuthenticationResult
+                {
+                    Success = true,
+                    Token = new JwtSecurityTokenHandler().WriteToken(token)
+                };
+            }
+
+            return new AuthenticationResult
+            {
+                Errors = new[] { "Invalid code!" }
             };
+        }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value!));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+        private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Secret"]));
 
             var token = new JwtSecurityToken(
-                claims: claims,
+                issuer: _configuration["Token:ValidIssuer"],
+                audience: _configuration["Token:ValidAudience"],
                 expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds
-                );
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return token;
+        }
+
+        private async Task<List<Claim>> GetAuthClaimsAsync(IdentityUser user)
+        {
+            var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            return authClaims;
         }
     }
 }
