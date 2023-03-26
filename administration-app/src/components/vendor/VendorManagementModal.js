@@ -210,7 +210,7 @@ function VendorManagementModal() {
 						</CardContent>
 						<CardActions className={classes.cardActions}>
 							<Button variant='contained' type='submit' value='Submit' onClick={handleSubmit}>
-								Submit
+								Create
 							</Button>
 						</CardActions>
 					</Card>
