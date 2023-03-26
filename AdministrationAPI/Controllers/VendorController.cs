@@ -16,10 +16,15 @@ namespace AdministrationAPI.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
+        private readonly MyDbContext _context;
 
-        public VendorController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService, MyDbContext context)
         {
             _vendorService = vendorService;
+            _context = context;
+
+            // Call EnsureCreated() method to create tables in the database if they don't exist
+            _context.Database.EnsureCreated();
         }
 
         [HttpPost]
@@ -45,7 +50,7 @@ namespace AdministrationAPI.Controllers
         public IActionResult GetVendors()
         {
             //var vendors = _context.Vendors.ToList();
-            
+
             return Ok(true);
         }
     }
