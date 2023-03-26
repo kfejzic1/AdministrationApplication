@@ -23,6 +23,7 @@ import './vendorManagement.css';
 import naslovna from './slika1.png';
 import { createVendor } from '../../services/vendorService';
 import { getAllUsers } from '../../services/userService';
+import Loader from '../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -77,6 +78,7 @@ function VendorManagementModal() {
 	const [username, setUsername] = useState('');
 	const [address, setAddress] = useState('');
 	const [details, setDetails] = useState('');
+	const [open, setOpen] = useState(false);
 	const [selectedUserIds, setSelectedUserIds] = useState([]);
 	const [errors, setErrors] = useState({ username: false, address: false });
 
@@ -119,6 +121,7 @@ function VendorManagementModal() {
 	const handleSubmit = event => {
 		event.preventDefault();
 
+		setOpen(true);
 		var validData = validate();
 
 		if (validData) {
@@ -126,7 +129,10 @@ function VendorManagementModal() {
 			vendor.address = address;
 			vendor.details = details;
 			vendor.users = selectedUserIds;
-			createVendor(vendor).then(res => console.log(res));
+			createVendor(vendor).then(res => {
+				setOpen(false);
+				console.log(res);
+			});
 		}
 	};
 
@@ -209,6 +215,8 @@ function VendorManagementModal() {
 						</CardActions>
 					</Card>
 				</form>
+
+				<Loader open={open} />
 			</div>
 		</div>
 	);
