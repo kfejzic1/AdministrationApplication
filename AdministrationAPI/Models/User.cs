@@ -9,6 +9,8 @@ namespace AdministrationAPI.Models
     {
         public int Id { get; set; }
 
+        public int Vendor_Id { get; set; }
+
         [Required(ErrorMessage = "Name field is required.")]
         public string Name { get; set; }
 
@@ -37,6 +39,7 @@ namespace AdministrationAPI.Models
         public User()
         {
             Id = -1;
+            Vendor_Id = -1;
             Name = string.Empty;
             Email = string.Empty;
             EmailConfirmed = false;
