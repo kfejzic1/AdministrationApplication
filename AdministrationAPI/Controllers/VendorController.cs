@@ -23,6 +23,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                Console.WriteLine(request.Name);
                 return Ok(_vendorService.Create(request));
             }
             catch (DataException ex)
