@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import "./Login.css"
-import Axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import { loginFunction } from "../services/loginServices";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [responese, setResponse] = useState('');
+    const [response, setResponse] = useState('');
 
     const handleButtonClick = () => {
 		loginFunction(email,password).then(res => {
 			setResponse(res.data);
 		});
 	};
+
+    console.log(response);
 
     return ( 
         <div className="App1"> 
