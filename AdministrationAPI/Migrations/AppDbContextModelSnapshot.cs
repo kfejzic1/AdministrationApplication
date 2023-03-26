@@ -40,6 +40,9 @@ namespace AdministrationAPI.Migrations
                         .HasColumnType("varchar(256)")
                         .HasColumnName("normalized_name");
 
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -355,7 +358,8 @@ namespace AdministrationAPI.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
                     b.Property<string>("Address")
                         .IsRequired()
