@@ -1,8 +1,12 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -80,7 +84,15 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
-
+       
+        public List<User> GetAllUsers()
+        {
+            using (var context = new AppDbContext())
+            {
+                return context.Users.ToList();
+            }
+        }
+        
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
