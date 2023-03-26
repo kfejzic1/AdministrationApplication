@@ -8,6 +8,6 @@
     "\\AdministrationAPI\\DBContext",
     "\\AdministrationAPI\\Models"
   ],
-  "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
+  "SelectedNode": "\\AdministrationAPI\\Controllers",
   "PreviewInSolutionExplorer": false
 }
