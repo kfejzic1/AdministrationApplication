@@ -48,7 +48,7 @@ const TwoFactorView = () => {
                                 digit4.current.focus();
                         }}/>
                         <input className="code-input" ref={digit6} type="text" maxLength={1} autoComplete="none" onChange={(e)=>{
-                            if (e.target.value.length == 0)
+                            if (e.target.value.length === 0)
                                 digit5.current.focus();
                         }}/>
                     </div>
