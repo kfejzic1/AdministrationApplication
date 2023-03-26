@@ -16,15 +16,9 @@ namespace AdministrationAPI.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
-        private readonly MyDbContext _context;
-
-        public VendorController(IVendorService vendorService, MyDbContext context)
+        public VendorController(IVendorService vendorService)
         {
             _vendorService = vendorService;
-            _context = context;
-
-            // Call EnsureCreated() method to create tables in the database if they don't exist
-            _context.Database.EnsureCreated();
         }
 
         [HttpPost]
