@@ -7,7 +7,7 @@ export function createVendor(request) {
 		data: request,
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: localStorage.getItem('token'),
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }
