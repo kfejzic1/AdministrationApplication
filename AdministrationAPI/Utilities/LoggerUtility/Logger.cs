@@ -5,7 +5,7 @@
         public static void LogException(Exception exception, string identificationCode = "general", string connectionStringName = null)
         {
             //WriteLogEntryToDB(true, exception.Message, exception.GetType().FullName, exception.StackTrace, identificationCode, null, connectionStringName);
-           // LogToFile("Exception: " + exception.Message + "/nInner Exception: " + exception.InnerException?.Message);
+            LogToFile("Exception: " + exception.Message + "/nInner Exception: " + exception.InnerException?.Message);
         }
         public static void LogToFile(string message)
         {
