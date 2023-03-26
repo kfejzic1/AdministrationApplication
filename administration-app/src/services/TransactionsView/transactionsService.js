@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { env } from '../../config/env';
 const transactions = [
 	{
 		id: 1,
@@ -653,4 +655,21 @@ export function getBasicTransactions(number = 10) {
 	return number < transactions.length
 		? { data: transactions.slice(0, number), hasMore: true }
 		: { data: transactions, hasMore: false };
+}
+
+export function getTransactions(pageNumber, pageSize) {
+	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+}
+export function getTransactionDetails(id) {
+	return axios(env.API_ENV.url + '/api/transactions/' + id, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
 }

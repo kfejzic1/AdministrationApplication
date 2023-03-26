@@ -1,4 +1,4 @@
-import { getBasicTransactions } from '../../../services/TransactionsView/transactionsService';
+import { getTransactions } from '../../../services/TransactionsView/transactionsService';
 import TransactionsListHeader from './TransactionsListHeader';
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
@@ -8,34 +8,45 @@ import React from 'react';
 
 export const TransactionsList = () => {
 	const [details, setDetails] = useState(null);
+	const [transactionsRaw, setTransactionsRaw] = useState([]);
 	const [transactions, setTransactions] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
-	var counter = 1;
-
+	const [schouldLoad, setSchouldLoad] = useState(false);
+	const [counter, setCounter] = useState(1);
 	useEffect(() => {
-		loadTransactions();
+		if (hasMore) {
+			loadTransactions();
+			setSchouldLoad(false);
+		}
+	}, [schouldLoad]);
+	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
 	}, []);
-
 	function loadTransactions() {
 		setIsLoading(true);
-		console.log(hasMore);
-		console.log(counter);
-		//fetch() or axios.get()
-		var result = getBasicTransactions(counter * 15);
-		var transactionsdata = result.data.map((item, index) => (
-			<Transaction setDetails={setDetails} index={index} prop={item}></Transaction>
-		));
-		setTransactions(transactionsdata);
-		setHasMore(result.hasMore);
-		counter = counter + 1;
-		setIsLoading(false);
+		getTransactions(counter, 15)
+			.then(transactions1 => {
+				var temp1 = [...transactionsRaw, ...transactions1.data];
+				console.log('temp2=', temp1);
+				setTransactionsRaw(temp1);
+				console.log('222=', transactionsRaw);
+				var transactionsdata = temp1.map((item, index) => (
+					<Transaction setDetails={setDetails} index={index} prop={item}></Transaction>
+				));
+				setTransactions(transactionsdata);
+				setHasMore(true);
+				setCounter(counter + 1);
+				setIsLoading(false);
+			})
+			.catch(e => {
+				setHasMore(false);
+			});
 	}
 
 	function handleScroll(e) {
 		if (e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 0.1) {
-			loadTransactions();
+			setSchouldLoad(true);
 		}
 	}
 

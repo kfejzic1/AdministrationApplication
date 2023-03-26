@@ -1,7 +1,21 @@
+import { getTransactionDetails } from '../../../services/TransactionsView/transactionsService';
 import '../css/Transactions.css';
-import TransactionsListHeader from './TransactionsListHeader';
+import { useEffect, useState } from 'react';
 
 export default function TransactionDetails(arg) {
+	const [props, setProps] = useState({
+		type: 'loading',
+		dateTime: 'laoding',
+		recipient: 'loading',
+		account: 'loading',
+		amount: 0,
+	});
+	useEffect(() => {
+		getTransactionDetails(arg.props.id).then(transaction => {
+			console.log('etra0=', transaction.data);
+			setProps(transaction.data);
+		});
+	}, []);
 	return (
 		/*<div>
 			<div>
@@ -10,41 +24,41 @@ export default function TransactionDetails(arg) {
 			<div className='transaction-margin'>
 				<div className='transaction-container'>
 					<div className='transaction-column'>
-						<p>{arg.props.id}</p>
+						<p>{props.id}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.date}</p>
+						<p>{props.date}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.recipient}</p>
+						<p>{props.recipient}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.amount}</p>
+						<p>{props.amount}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.status}</p>
+						<p>{props.status}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.currency}</p>
+						<p>{props.currency}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.nameOfThePayee}</p>
+						<p>{props.nameOfThePayee}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.bankAccount}</p>
+						<p>{props.bankAccount}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.nameOfTheBank}</p>
+						<p>{props.nameOfTheBank}</p>
 					</div>
 					<div className='transaction-column'>
-						<p>{arg.props.methodOfPayment}</p>
+						<p>{props.methodOfPayment}</p>
 					</div>
 					
 					<div className='vertical-align-div'>
 						<div
 							className='detailsBtn'
 							onClick={() => {
-								arg.setDetails(null);
+								setDetails(null);
 							}}
 						>
 							<p>Close</p>
@@ -71,16 +85,16 @@ export default function TransactionDetails(arg) {
 			</thead>
 			<tbody>
 				<tr>
-					<td>{arg.props.id}</td>
-					<td>{arg.props.date}</td>
-					<td>{arg.props.recipient}</td>
-					<td>{arg.props.amount}</td>
-					<td>{arg.props.status}</td>
-					<td>{arg.props.currency}</td>
-					<td>{arg.props.nameOfThePayee}</td>
-					<td>{arg.props.bankAccount}</td>
-					<td>{arg.props.nameOfTheBank}</td>
-					<td>{arg.props.methodOfPayment}</td>
+					<td></td>
+					<td>{props.dateTime}</td>
+					<td>{props.recipient}</td>
+					<td>{props.amount}</td>
+					<td>{props.status}</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>{props.type}</td>
 					<td>
 						<div className='closeBtnDiv'>
 							<button
