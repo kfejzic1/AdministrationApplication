@@ -1,8 +1,10 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using DBContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace AdministrationAPI.Controllers
@@ -18,6 +20,9 @@ namespace AdministrationAPI.Controllers
         {
             _vendorService = vendorService;
             _context = context;
+
+            // Call EnsureCreated() method to create tables in the database if they don't exist
+            _context.Database.EnsureCreated();
         }
 
         [HttpPost]
@@ -38,6 +43,21 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPost("migrate")]
+        public IActionResult Migrate()
+        {
+            try
+            {
+                _context.Database.Migrate();
+                return Ok("Migration successful.");
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "VendorController.Migrate");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet]
         public IActionResult GetVendors()
         {
@@ -46,5 +66,3 @@ namespace AdministrationAPI.Controllers
         }
     }
 }
-
-
