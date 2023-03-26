@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import LoginForm from './components/Login';
 import TwoFactorView from './components/TwoFactor';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
