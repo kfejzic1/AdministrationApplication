@@ -24,12 +24,14 @@ namespace AdministrationAPI.Services
         {
             //Fetch User From Database by email or phone from LoginRequest, password should be hashed
             var user = new User();
+            user.Email = "test@gmail.com";
+            user.Password = "$2a$11$L8nVoKKleO2vppTVIyoRMeq6UD6qwWniun.rtg22VsBaaac6DekFS"; //password je: string
 
             if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password))
             {
                 return new AuthenticationResult
                 {
-                    Errors = new[] { "Username/Password combination mismatch!" }
+                    Errors = new[] { "Email/Phone/Password combination mismatch!" }
                 };
             }
 
@@ -52,7 +54,7 @@ namespace AdministrationAPI.Services
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("Token:Secret").Value!));
+                _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value!));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
