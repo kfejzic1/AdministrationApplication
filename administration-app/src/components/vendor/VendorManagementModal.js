@@ -22,6 +22,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import './vendorManagement.css';
 import naslovna from './slika1.png';
 import { createVendor } from '../../services/vendorService';
+import { getAllUsers } from '../../services/userService';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -55,19 +56,6 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-//Mock data
-const users = [
-	{ id: 1, name: 'Din Švraka' },
-	{ id: 2, name: 'Toni Kapetanović' },
-	{ id: 3, name: 'Emin Džanko' },
-	{ id: 4, name: 'Zejneb Kost' },
-	{ id: 5, name: 'Amina Kurtović' },
-	{ id: 6, name: 'Amar Hasanović' },
-	{ id: 7, name: 'Aldin Kulagić' },
-	{ id: 8, name: 'Amina Abdagić' },
-	{ id: 9, name: 'Kemal Hadžiabdić' },
-];
-
 function VendorManagementModal() {
 	const vendor = {
 		name: '',
@@ -85,11 +73,18 @@ function VendorManagementModal() {
 	};
 	const classes = useStyles();
 
+	const [users, setUsers] = useState([]);
 	const [username, setUsername] = useState('');
 	const [address, setAddress] = useState('');
 	const [details, setDetails] = useState('');
 	const [selectedUserIds, setSelectedUserIds] = useState([]);
 	const [errors, setErrors] = useState({ username: false, address: false });
+
+	useEffect(() => {
+		getAllUsers().then(data => {
+			setUsers(data);
+		});
+	}, []);
 
 	const handleUsernameChange = event => {
 		setUsername(event.target.value);
@@ -125,7 +120,6 @@ function VendorManagementModal() {
 		event.preventDefault();
 
 		var validData = validate();
-		console.log('submit', validData);
 
 		if (validData) {
 			vendor.name = username;
@@ -143,7 +137,7 @@ function VendorManagementModal() {
 					<Card className={classes.root}>
 						<CardHeader title={'Create B2B Customer'}></CardHeader>
 						<CardContent>
-							<Grid component='form' container spacing={1}>
+							<Grid container spacing={1}>
 								<Grid item xs={12}>
 									<TextField
 										className={classes.textField}
