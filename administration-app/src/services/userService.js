@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { env } from '../config/env';
 
-export function createVendor(request) {
-	return axios(env.API_ENV.url + '/api/Vendor', {
-		method: 'POST',
-		data: request,
+export function getAllUsers() {
+	return axios(env.API_ENV.url + '/api/User', {
+		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: localStorage.getItem('token'),
