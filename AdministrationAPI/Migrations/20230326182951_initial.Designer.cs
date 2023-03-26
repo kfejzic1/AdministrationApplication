@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministrationAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230326102919_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230326182951_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,7 +82,24 @@ namespace AdministrationAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("Created")
+                        .IsRequired()
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("longtext");
 

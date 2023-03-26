@@ -79,7 +79,24 @@ namespace AdministrationAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("Created")
+                        .IsRequired()
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("longtext");
 
