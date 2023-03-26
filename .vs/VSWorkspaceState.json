@@ -3,7 +3,9 @@
     "",
     "\\AdministrationAPI",
     "\\AdministrationAPI\\Contracts",
+    "\\AdministrationAPI\\Contracts\\Requests",
     "\\AdministrationAPI\\Controllers",
+    "\\AdministrationAPI\\DBContext",
     "\\AdministrationAPI\\Models"
   ],
   "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
