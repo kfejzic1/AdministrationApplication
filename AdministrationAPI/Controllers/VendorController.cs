@@ -26,7 +26,6 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                Console.WriteLine(request.Name);
                 return Ok(_vendorService.Create(request));
             }
             catch (DataException ex)
@@ -43,9 +42,19 @@ namespace AdministrationAPI.Controllers
         [HttpGet]
         public IActionResult GetVendors()
         {
-            //var vendors = _context.Vendors.ToList();
-
-            return Ok(true);
+            try
+            {
+                return Ok(_vendorService.GetAll());
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

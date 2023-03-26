@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdministrationAPI.Models
 {
     public class Vendor
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)] 
         public int Id { get; set; }
         
         [Required(ErrorMessage = "Name field is required.")]
@@ -28,7 +31,6 @@ namespace AdministrationAPI.Models
 
         public Vendor()
         {
-            Id = -1;
             Name = string.Empty;
             Address = string.Empty;
             CompanyDetails = string.Empty;

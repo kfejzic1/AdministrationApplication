@@ -8,98 +8,84 @@ namespace AdministrationAPI.Services
 {
     public class VendorService : IVendorService
     {
-
-        private readonly AppDbContext _context;
-  
-
-        public VendorService(AppDbContext context)
+        public VendorService()
         {
-            _context = context;
         }
-
-
 
         public bool Create(VendorCreateRequest request)
         {
-            var vendor = new Vendor
+            using (var context = new AppDbContext())
             {
-                Name = request.Name,
-                Address = request.Address,
-                CompanyDetails = request.CompanyDetails,
-                Phone = request.Phone,
-                Created = DateTime.UtcNow,
-                CreatedBy = request.CreatedBy
-            };
+                var vendor = new Vendor
+                {
+                    Name = request.Name,
+                    Address = request.Address,
+                    CompanyDetails = request.CompanyDetails,
+                    Phone = request.Phone,
+                    Created = DateTime.UtcNow,
+                    CreatedBy = request.CreatedBy
+                };
 
-            _context.Vendors.Add(vendor);
-            _context.SaveChanges();
+                context.Vendors.Add(vendor);
+                context.SaveChanges();
 
-            return true;
+                var users = context.Users.Where(x => request.AssignedUserIds.Contains(x.Id));
+                users.ExecuteUpdate(s => s.SetProperty(b => b.VendorId, vendor.Id));
+
+                return true;
+            }
         }
         //trenutno su deklarisani kao nullable za svaki slc
         public Vendor? Get(int id)
         {
-            return _context.Vendors.FirstOrDefault(v => v.Id == id);
+            using (var context = new AppDbContext())
+            {
+                return context.Vendors.FirstOrDefault(v => v.Id == id);
+            }
         }
 
-      
-
-        public string? GetName(int id)
+        public List<Vendor> GetAll()
         {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
-
-            return vendor?.Name;
-        }
-
-        public string? GetAddress(int id)
-        {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
-
-            return vendor?.Address;
-        }
-
-        public string? GetCompanyDetails(int id)
-        {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
-
-            return vendor?.CompanyDetails;
-        }
-
-        public string? GetPhone(int id)
-        {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
-
-            return vendor?.Phone;
+            using (var context = new AppDbContext())
+            {
+                return context.Vendors.ToList();
+            }
         }
 
         public bool Delete(int id)
         {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
-
-            if (vendor != null)
+            using (var context = new AppDbContext())
             {
-                _context.Vendors.Remove(vendor);
-                _context.SaveChanges();
-                return true;
-            }
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
 
-            return false;
+                if (vendor != null)
+                {
+                    context.Vendors.Remove(vendor);
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public bool AssignUserToVendor(int vendorId, int userId)
         {
-            var vendor = _context.Vendors.FirstOrDefault(v => v.Id == vendorId);
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            if (vendor == null || user == null)
+            using (var context = new AppDbContext())
             {
-                return false;
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == vendorId);
+                var user = context.Users.FirstOrDefault(u => u.Id == userId);
+
+                if (vendor == null || user == null)
+                {
+                    return false;
+                }
+
+                user.VendorId = vendorId;
+                context.SaveChanges();
+
+                return true;
             }
-
-            user.Vendor_Id = vendorId;
-            _context.SaveChanges();
-
-            return true;
         }
     }
 
