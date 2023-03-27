@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {useRef} from 'react';
 import "./TwoFactor.css"
+import { twoFactorAut } from "../services/loginServices";
 import Axios from 'axios'
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +12,13 @@ const TwoFactorView = () => {
     const digit4 = useRef(null);
     const digit5 = useRef(null);
     const digit6 = useRef(null);
+    
+    const handleButtonClick = () => {
+        const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
+        twoFactorAut(allDigts).then(res => {
+			setResponse(res.data);
+		});
+    }
 
     return ( 
         <div className="App1"> 
@@ -53,7 +61,7 @@ const TwoFactorView = () => {
                         }}/>
                     </div>
                     
-                    <button className="verify-btn"> Verify</button>
+                    <button className="verify-btn" onClick={handleButtonClick}> Verify</button>
                                 
             </div>
        </div>
