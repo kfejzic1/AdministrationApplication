@@ -1,4 +1,7 @@
-﻿namespace AdministrationAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AdministrationAPI.Models
 {
     public class VendorUser
     {
@@ -7,8 +10,6 @@
         public int Id { get; set; }
         public int VendorId { get; set; }
         public int UserId { get; set; }
-
-        public string Name { get; set; }
 
         public VendorUser()
         {}

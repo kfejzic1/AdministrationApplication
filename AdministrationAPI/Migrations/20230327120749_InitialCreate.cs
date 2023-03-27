@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AdministrationAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -203,8 +203,8 @@ namespace AdministrationAPI.Migrations
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "8361b312-c62a-4794-ad4c-6407116568c7", "1", "Admin", "Admin" },
-                    { "9ce3c9a6-c2fc-482a-83bd-46953f2147b0", "2", "User", "User" }
+                    { "739df98f-de73-4a40-b393-a6e4d80d1bbf", "2", "User", "User" },
+                    { "a4ed1f9e-9030-4485-8bd2-eabe861ad35b", "1", "Admin", "Admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -212,8 +212,8 @@ namespace AdministrationAPI.Migrations
                 columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
                 values: new object[,]
                 {
-                    { "3943bf21-6156-4654-9ea6-957fabbb46c1", 0, "1", "kfejzic1@etf.unsa.ba", true, false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "ef30651d-183d-47d0-9658-4aaf5a4ddd46", true, "testingUser" },
-                    { "7f29ad70-4e60-4f93-9eaa-a3ffbca10ea3", 0, "1", "fejza2806@gmail.com", true, false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "a133e13b-5b45-47fc-96a7-17fe8989a8cc", false, "adminUser" }
+                    { "50ff1794-a053-43af-b941-b11065ce5d56", 0, "1", "kfejzic1@etf.unsa.ba", true, false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "4d176423-d242-4ffa-ba09-5c7fb3c46ef8", true, "testingUser" },
+                    { "9e183ad6-02f6-4829-8318-b855dcdeaf14", 0, "1", "fejza2806@gmail.com", true, false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "1ae5ee9f-618d-4f94-bb31-0397e970dd90", false, "adminUser" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AdministrationAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
@@ -7,10 +8,7 @@ namespace AdministrationAPI.Data
 {
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
-        public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<VendorUser> VendorUsers { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 

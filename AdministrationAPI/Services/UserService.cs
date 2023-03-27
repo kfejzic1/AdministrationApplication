@@ -85,12 +85,10 @@ namespace AdministrationAPI.Services
             };
         }
        
-        public List<User> GetAllUsers()
+        public List<IdentityUser> GetAllUsers()
         {
-            using (var context = new AppDbContext())
-            {
-                return context.Users.ToList();
-            }
+            var users = _userManager.Users.ToList();
+            return users;
         }
         
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
@@ -122,8 +120,6 @@ namespace AdministrationAPI.Services
             };
         }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("Token:Secret").Value!));
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {

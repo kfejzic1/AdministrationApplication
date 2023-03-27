@@ -40,9 +40,6 @@ namespace AdministrationAPI.Migrations
                         .HasColumnType("varchar(256)")
                         .HasColumnName("normalized_name");
 
-                    b.Property<int>("VendorId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -54,14 +51,14 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8361b312-c62a-4794-ad4c-6407116568c7",
+                            Id = "a4ed1f9e-9030-4485-8bd2-eabe861ad35b",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "9ce3c9a6-c2fc-482a-83bd-46953f2147b0",
+                            Id = "739df98f-de73-4a40-b393-a6e4d80d1bbf",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -176,7 +173,7 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3943bf21-6156-4654-9ea6-957fabbb46c1",
+                            Id = "50ff1794-a053-43af-b941-b11065ce5d56",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "kfejzic1@etf.unsa.ba",
@@ -187,13 +184,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062229993",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "ef30651d-183d-47d0-9658-4aaf5a4ddd46",
+                            SecurityStamp = "4d176423-d242-4ffa-ba09-5c7fb3c46ef8",
                             TwoFactorEnabled = true,
                             UserName = "testingUser"
                         },
                         new
                         {
-                            Id = "7f29ad70-4e60-4f93-9eaa-a3ffbca10ea3",
+                            Id = "9e183ad6-02f6-4829-8318-b855dcdeaf14",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "fejza2806@gmail.com",
@@ -204,7 +201,7 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062518214",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a133e13b-5b45-47fc-96a7-17fe8989a8cc",
+                            SecurityStamp = "1ae5ee9f-618d-4f94-bb31-0397e970dd90",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
                         });
@@ -352,91 +349,6 @@ namespace AdministrationAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AdministrationAPI.Models.Vendor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CompanyDetails")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("VendorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vendors");
-                });
-
-            modelBuilder.Entity("AdministrationAPI.Models.Vendor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CompanyDetails")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vendors");
                 });
 #pragma warning restore 612, 618
         }

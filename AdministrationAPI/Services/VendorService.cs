@@ -14,7 +14,7 @@ namespace AdministrationAPI.Services
 
         public bool Create(VendorCreateRequest request)
         {
-            using (var context = new AppDbContext())
+            using (var context = new VendorDbContext())
             {
                 var vendor = new Vendor
                 {
@@ -31,7 +31,7 @@ namespace AdministrationAPI.Services
 
                 foreach(int id in request.AssignedUserIds)
                 {
-                    var vendorUser = new VendorUser(vendor.Id, id);
+                    var vendorUser = new VendorUser() { VendorId = vendor.Id, UserId = id };
                     context.VendorUsers.Add(vendorUser);
                 }
                 context.SaveChanges();
@@ -42,7 +42,7 @@ namespace AdministrationAPI.Services
         //trenutno su deklarisani kao nullable za svaki slc
         public Vendor? Get(int id)
         {
-            using (var context = new AppDbContext())
+            using (var context = new VendorDbContext())
             {
                 return context.Vendors.FirstOrDefault(v => v.Id == id);
             }
@@ -50,7 +50,7 @@ namespace AdministrationAPI.Services
 
         public List<Vendor> GetAll()
         {
-            using (var context = new AppDbContext())
+            using (var context = new VendorDbContext())
             {
                 return context.Vendors.ToList();
             }
@@ -58,7 +58,7 @@ namespace AdministrationAPI.Services
 
         public bool Delete(int id)
         {
-            using (var context = new AppDbContext())
+            using (var context = new VendorDbContext())
             {
                 var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
 
