@@ -7,9 +7,8 @@ namespace AdministrationAPI.Data
 {
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
-        public DbSet<User> Users { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
-
+        public DbSet<VendorUser> VendorUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

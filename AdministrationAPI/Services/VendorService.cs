@@ -29,8 +29,12 @@ namespace AdministrationAPI.Services
                 context.Vendors.Add(vendor);
                 context.SaveChanges();
 
-                var users = context.Users.Where(x => request.AssignedUserIds.Contains(x.Id));
-                users.ExecuteUpdate(s => s.SetProperty(b => b.VendorId, vendor.Id));
+                foreach(int id in request.AssignedUserIds)
+                {
+                    var vendorUser = new VendorUser(vendor.Id, id);
+                    context.VendorUsers.Add(vendorUser);
+                }
+                context.SaveChanges();
 
                 return true;
             }
@@ -68,28 +72,7 @@ namespace AdministrationAPI.Services
                 return false;
             }
         }
-
-        public bool AssignUserToVendor(int vendorId, int userId)
-        {
-            using (var context = new AppDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == vendorId);
-                var user = context.Users.FirstOrDefault(u => u.Id == userId);
-
-                if (vendor == null || user == null)
-                {
-                    return false;
-                }
-
-                user.VendorId = vendorId;
-                context.SaveChanges();
-
-                return true;
-            }
-        }
     }
-
-
 }
 
   

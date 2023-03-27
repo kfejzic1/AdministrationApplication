@@ -39,21 +39,6 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPost("migrate")]
-        public IActionResult Migrate()
-        {
-            try
-            {
-                _context.Database.Migrate();
-                return Ok("Migration successful.");
-            }
-            catch (Exception ex)
-            {
-                LoggerUtility.Logger.LogException(ex, "VendorController.Migrate");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         [HttpGet]
         public IActionResult GetVendors()
         {
@@ -70,13 +55,6 @@ namespace AdministrationAPI.Controllers
                 LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
-        }
-
-        [HttpGet]
-        public IActionResult GetVendors()
-        {
-            var vendors = _context.Vendors.ToList();
-            return Ok(vendors);
         }
     }
 }
