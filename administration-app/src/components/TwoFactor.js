@@ -12,6 +12,7 @@ const TwoFactorView = () => {
 	const digit4 = useRef(null);
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
+	const [errorMessage, setErrorMessage] = useState(''); 
 
 
 	const handleButtonClick = () => {
