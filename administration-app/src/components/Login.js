@@ -21,7 +21,7 @@ const LoginForm = () => {
 		loginFunction(email,password).then(res => {
             setErrorMessage("");
             const propsToPass = { email };
-            navigate('/twoFactor', { state: propsToPass });
+            navigate('/twofactor', { state: propsToPass });
 		}).catch(err => {
             setErrorMessage("Neuspješna prijava!");
         });
