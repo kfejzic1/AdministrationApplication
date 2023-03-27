@@ -12,6 +12,14 @@ const LoginForm = () => {
     const [errorMessage, setErrorMessage] = useState(''); 
     const history = useHistory();
 
+    function checkData(input) {
+        const regex = new RegExp('^[0-9]+$');
+        if (input.length <= 10 && input.match(regex))
+            return "phone";
+        else 
+            return "email";
+    }
+
     const handleButtonClick = () => {
 		loginFunction(email,password).then(res => {
             setErrorMessage("");
