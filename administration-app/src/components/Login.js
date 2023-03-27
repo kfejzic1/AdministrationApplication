@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from 'react-router-dom';
 import "./Login.css"
 import { useNavigate } from "react-router-dom";
 import { loginFunction } from "../services/loginServices";
@@ -10,7 +9,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [response, setResponse] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     function checkData(input) {
         const regex = new RegExp('^[0-9]+$');
@@ -24,10 +23,7 @@ const LoginForm = () => {
 		loginFunction(email,password).then(res => {
             setErrorMessage("");
             const propsToPass = { email };
-            history.push({
-                pathname: '/twofactor',
-                state: propsToPass
-              });
+            navigate('/twofactor', { state: propsToPass });
 		}).catch(err => {
             setErrorMessage("Neuspješna prijava!");
         });

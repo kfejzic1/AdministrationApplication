@@ -18,7 +18,7 @@ const TwoFactorView = (props) => {
 
 	const handleButtonClick = () => {
 		const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
-		twoFactorAut(email,allDigts).then(res => {
+		twoFactorAut(allDigts, email).then(res => {
             setErrorMessage("");
             window.location.href = 'http://localhost:3000/';
 		}).catch(err => {
