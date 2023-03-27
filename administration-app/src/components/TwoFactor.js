@@ -5,7 +5,7 @@ import { twoFactorAut } from '../services/loginServices';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const TwoFactorView = () => {
+const TwoFactorView = (props) => {
 	const digit1 = useRef(null);
 	const digit2 = useRef(null);
 	const digit3 = useRef(null);
@@ -13,11 +13,12 @@ const TwoFactorView = () => {
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
 	const [errorMessage, setErrorMessage] = useState(''); 
+	const { email } = props.location.state;
 
 
 	const handleButtonClick = () => {
 		const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
-		twoFactorAut(allDigts).then(res => {
+		twoFactorAut(email,allDigts).then(res => {
             setErrorMessage("");
             window.location.href = 'http://localhost:3000/';
 		}).catch(err => {
