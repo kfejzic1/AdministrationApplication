@@ -19,9 +19,10 @@ export function twoFactorAut(token){
   const url = `${env.API_ENV.url}/api/User/login2FA`;
   const data = {token}
   return axios.post(url, data, {
-    headers:{
-      'Content-Type': 'application/json'
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Origin': '*'
     },
-    withCredentials: true
-  })
+  });
 }

@@ -13,11 +13,15 @@ const TwoFactorView = () => {
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
 
+
 	const handleButtonClick = () => {
-		// const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
-		// twoFactorAut(allDigts).then(res => {
-		// 	setResponse(res.data);
-		// });
+		const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
+		twoFactorAut(allDigts).then(res => {
+            setErrorMessage("");
+            window.location.href = 'http://localhost:3000/';
+		}).catch(err => {
+            setErrorMessage("Neuspješna prijava!");
+        });
 	};
 
 	return (
