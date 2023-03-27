@@ -22,7 +22,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import './vendorManagement.css';
 import naslovna from './slika1.png';
 import { createVendor } from '../../services/vendorService';
-import { getAllUsers } from '../../services/userService';
+import { getAllUsers, getUser, getUserByName, getUserName } from '../../services/userService';
 import Loader from '../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -61,8 +61,10 @@ function VendorManagementModal() {
 	const vendor = {
 		name: '',
 		address: '',
-		details: '',
-		users: [],
+		companyDetails: '',
+		createdBy: -1,
+		phone: '',
+		assignedUserIds: [],
 	};
 
 	const MenuProps = {
@@ -78,13 +80,15 @@ function VendorManagementModal() {
 	const [username, setUsername] = useState('');
 	const [address, setAddress] = useState('');
 	const [details, setDetails] = useState('');
+	const [phone, setPhone] = useState('');
+
 	const [open, setOpen] = useState(false);
 	const [selectedUserIds, setSelectedUserIds] = useState([]);
-	const [errors, setErrors] = useState({ username: false, address: false });
+	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
 
 	useEffect(() => {
-		getAllUsers().then(data => {
-			setUsers(data);
+		getAllUsers().then(res => {
+			setUsers(res.data);
 		});
 	}, []);
 
@@ -100,6 +104,10 @@ function VendorManagementModal() {
 		setDetails(event.target.value);
 	};
 
+	const handlePhoneChange = event => {
+		setPhone(event.target.value);
+	};
+
 	const handleChange = event => {
 		const { value } = event.target;
 		setSelectedUserIds(value);
@@ -108,13 +116,15 @@ function VendorManagementModal() {
 	const validate = () => {
 		var usernameError = false;
 		var addressError = false;
+		var phoneError = false;
 
 		if (username == '') usernameError = true;
 		if (address == '') addressError = true;
+		if (phone == '') phoneError = true;
 
-		setErrors({ username: usernameError, address: addressError });
+		setErrors({ username: usernameError, address: addressError, phone: phoneError });
 
-		if (usernameError || addressError) return false;
+		if (usernameError || addressError || phoneError) return false;
 		return true;
 	};
 
@@ -127,12 +137,20 @@ function VendorManagementModal() {
 		if (validData) {
 			vendor.name = username;
 			vendor.address = address;
-			vendor.details = details;
-			vendor.users = selectedUserIds;
-			createVendor(vendor).then(res => {
-				setOpen(false);
-				console.log(res);
-			});
+			vendor.companyDetails = details;
+			vendor.phone = phone;
+			vendor.assignedUserIds = selectedUserIds;
+
+			getUserByName(getUserName())
+				.then(res => {
+					vendor.createdBy = res.id;
+					createVendor(vendor)
+						.then(res => {
+							setOpen(false);
+						})
+						.catch(() => setOpen(false));
+				})
+				.catch(() => setOpen(false));
 		}
 	};
 
@@ -179,6 +197,18 @@ function VendorManagementModal() {
 									/>
 								</Grid>
 								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='outlined-basic'
+										label='Phone number'
+										variant='outlined'
+										error={errors.phone}
+										value={phone}
+										required={true}
+										onChange={handlePhoneChange}
+									/>
+								</Grid>
+								<Grid item xs={12}>
 									<FormControl className={classes.formControl} required>
 										<InputLabel id='demo-mutiple-chip-label'>Assign users</InputLabel>
 										<Select
@@ -192,7 +222,11 @@ function VendorManagementModal() {
 											renderValue={selected => (
 												<div className={classes.chips}>
 													{selected.map(userId => (
-														<Chip key={userId} label={users.find(x => x.id === userId).name} className={classes.chip} />
+														<Chip
+															key={userId}
+															label={users.find(x => x.id === userId).userName}
+															className={classes.chip}
+														/>
 													))}
 												</div>
 											)}
@@ -200,7 +234,7 @@ function VendorManagementModal() {
 											{users.map(user => (
 												<MenuItem key={user.id} value={user.id}>
 													<Checkbox checked={selectedUserIds.includes(user.id)} />
-													<ListItemText primary={user.name} />
+													<ListItemText primary={user.userName} />
 												</MenuItem>
 											))}
 										</Select>

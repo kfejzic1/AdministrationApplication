@@ -90,7 +90,13 @@ namespace AdministrationAPI.Services
             var users = _userManager.Users.ToList();
             return users;
         }
-        
+
+        public IdentityUser GetUserByName(string name)
+        {
+            return _userManager.Users.FirstOrDefault(x => x.UserName == name);
+        }
+
+
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
@@ -140,7 +146,7 @@ namespace AdministrationAPI.Services
         {
             var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("Name", user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 

@@ -100,5 +100,24 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("{name}")]
+        public IActionResult GetUserByName([FromRoute] string name)
+        {
+            try
+            {
+                var users = _userService.GetUserByName(name);
+                return Ok(users);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

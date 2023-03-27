@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AdministrationAPI.Migrations.VendorDb
+namespace AdministrationAPI.Migrations
 {
     [DbContext(typeof(VendorDbContext))]
     partial class VendorDbContextModelSnapshot : ModelSnapshot
@@ -35,10 +35,9 @@ namespace AdministrationAPI.Migrations.VendorDb
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("Created")
-                        .IsRequired()
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("CreatedBy")
+                    b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Modified")
@@ -67,8 +66,9 @@ namespace AdministrationAPI.Migrations.VendorDb
                         .HasColumnType("int")
                         .HasColumnOrder(0);
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("VendorId")
                         .HasColumnType("int");

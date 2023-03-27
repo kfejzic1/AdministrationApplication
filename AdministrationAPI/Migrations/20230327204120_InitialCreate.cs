@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AdministrationAPI.Migrations.VendorDb
+namespace AdministrationAPI.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -29,8 +29,8 @@ namespace AdministrationAPI.Migrations.VendorDb
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Phone = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
                     Modified = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ModifiedBy = table.Column<int>(type: "int", nullable: true)
                 },
@@ -47,7 +47,8 @@ namespace AdministrationAPI.Migrations.VendorDb
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     VendorId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

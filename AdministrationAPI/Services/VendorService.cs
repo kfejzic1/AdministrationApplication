@@ -29,7 +29,7 @@ namespace AdministrationAPI.Services
                 context.Vendors.Add(vendor);
                 context.SaveChanges();
 
-                foreach(int id in request.AssignedUserIds)
+                foreach(string id in request.AssignedUserIds)
                 {
                     var vendorUser = new VendorUser() { VendorId = vendor.Id, UserId = id };
                     context.VendorUsers.Add(vendorUser);

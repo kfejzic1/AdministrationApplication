@@ -17,14 +17,11 @@ namespace AdministrationAPI.Models
         public string Address { get; set; }
         public string CompanyDetails { get; set; }
 
-        [Required(ErrorMessage = "Phone field is required.")]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = "Created field is required.")]
         public DateTime? Created { get; set; }
 
-        [Required(ErrorMessage = "CreatedBy field is required.")]
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         
         public DateTime? Modified { get; set; }
         public int? ModifiedBy { get; set; }
@@ -35,6 +32,7 @@ namespace AdministrationAPI.Models
             Address = string.Empty;
             CompanyDetails = string.Empty;
             Phone = string.Empty;
+            CreatedBy = -1;
         }
     }
 }

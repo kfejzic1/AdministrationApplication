@@ -10,5 +10,6 @@ namespace AdministrationAPI.Services.Interfaces
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         List<IdentityUser> GetAllUsers();
+        IdentityUser GetUserByName(string name);
     }
 }
