@@ -51,14 +51,14 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8361b312-c62a-4794-ad4c-6407116568c7",
+                            Id = "ce0612fa-6c76-49bb-973c-e7a4f073bd79",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "9ce3c9a6-c2fc-482a-83bd-46953f2147b0",
+                            Id = "099efcaa-2e61-4c98-9387-a05bb8f4dce1",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -173,7 +173,7 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3943bf21-6156-4654-9ea6-957fabbb46c1",
+                            Id = "2f8209b5-9d22-4087-ba26-799f9211c59e",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "kfejzic1@etf.unsa.ba",
@@ -184,13 +184,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062229993",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "ef30651d-183d-47d0-9658-4aaf5a4ddd46",
+                            SecurityStamp = "1e6d8d4b-bc9d-44f1-9250-3ad63d683ced",
                             TwoFactorEnabled = true,
                             UserName = "testingUser"
                         },
                         new
                         {
-                            Id = "7f29ad70-4e60-4f93-9eaa-a3ffbca10ea3",
+                            Id = "a8323ab2-9750-43c4-b017-ca09ed9de913",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "fejza2806@gmail.com",
@@ -201,9 +201,111 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062518214",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a133e13b-5b45-47fc-96a7-17fe8989a8cc",
+                            SecurityStamp = "100a0af5-a351-4be1-961f-f0cf5333e24a",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
+                        },
+                        new
+                        {
+                            Id = "8d25df41-5e23-4804-af13-c36e6897c2c2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "esmajic2@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ESMAJIC2@ETF.UNSA.BA",
+                            NormalizedUserName = "ESMAJIC2",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "01f18223-2cdb-4310-94fe-691df80374c7",
+                            TwoFactorEnabled = true,
+                            UserName = "esmajic2"
+                        },
+                        new
+                        {
+                            Id = "6461bebc-6e1a-4306-ac1b-a7188c6838b6",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "amehmedagi1@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "AMEHMEDAGI1@ETF.UNSA.BA",
+                            NormalizedUserName = "AMEHMEDAGI1",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "3b567bac-0594-49fc-be7d-1d445725d9b4",
+                            TwoFactorEnabled = true,
+                            UserName = "amehmedagi1"
+                        },
+                        new
+                        {
+                            Id = "45607dbb-5ba8-46da-9432-8b0ca3be116e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "mbecirovic3@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MBECIROVIC3@ETF.UNSA.BA",
+                            NormalizedUserName = "MBECIROVIC3",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "05348740-585e-4bcb-94d7-e940d3823966",
+                            TwoFactorEnabled = true,
+                            UserName = "mbecirovic3"
+                        },
+                        new
+                        {
+                            Id = "9b395a35-dd7c-482e-8c30-edb79f908274",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "dmuhic1@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DMUHIC1@ETF.UNSA.BA",
+                            NormalizedUserName = "DMUHIC1",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "16693134-53e2-4c87-bf84-a31b64b7b7e7",
+                            TwoFactorEnabled = true,
+                            UserName = "dmuhic1"
+                        },
+                        new
+                        {
+                            Id = "d0c2c564-bdec-4c16-825a-8d4ea7166a83",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "emekic2@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMEKIC2@ETF.UNSA.BA",
+                            NormalizedUserName = "EMEKIC2",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "0e5f2dda-eda3-4c5c-a09b-90283826c924",
+                            TwoFactorEnabled = true,
+                            UserName = "emekic2"
+                        },
+                        new
+                        {
+                            Id = "fd979445-86c7-450a-bfcc-5ce03b0a2367",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1",
+                            Email = "abrulic1@etf.unsa.ba",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ABRULIC1@ETF.UNSA.BA",
+                            NormalizedUserName = "ABRULIC1",
+                            PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
+                            PhoneNumber = "11111",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "1674356c-728e-4df5-8d14-4b90fa05f783",
+                            TwoFactorEnabled = true,
+                            UserName = "abrulic1"
                         });
                 });
 

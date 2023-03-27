@@ -203,8 +203,8 @@ namespace AdministrationAPI.Migrations
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "8361b312-c62a-4794-ad4c-6407116568c7", "1", "Admin", "Admin" },
-                    { "9ce3c9a6-c2fc-482a-83bd-46953f2147b0", "2", "User", "User" }
+                    { "099efcaa-2e61-4c98-9387-a05bb8f4dce1", "2", "User", "User" },
+                    { "ce0612fa-6c76-49bb-973c-e7a4f073bd79", "1", "Admin", "Admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -212,8 +212,14 @@ namespace AdministrationAPI.Migrations
                 columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
                 values: new object[,]
                 {
-                    { "3943bf21-6156-4654-9ea6-957fabbb46c1", 0, "1", "kfejzic1@etf.unsa.ba", true, false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "ef30651d-183d-47d0-9658-4aaf5a4ddd46", true, "testingUser" },
-                    { "7f29ad70-4e60-4f93-9eaa-a3ffbca10ea3", 0, "1", "fejza2806@gmail.com", true, false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "a133e13b-5b45-47fc-96a7-17fe8989a8cc", false, "adminUser" }
+                    { "2f8209b5-9d22-4087-ba26-799f9211c59e", 0, "1", "kfejzic1@etf.unsa.ba", true, false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "1e6d8d4b-bc9d-44f1-9250-3ad63d683ced", true, "testingUser" },
+                    { "45607dbb-5ba8-46da-9432-8b0ca3be116e", 0, "1", "mbecirovic3@etf.unsa.ba", true, false, null, "MBECIROVIC3@ETF.UNSA.BA", "MBECIROVIC3", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "05348740-585e-4bcb-94d7-e940d3823966", true, "mbecirovic3" },
+                    { "6461bebc-6e1a-4306-ac1b-a7188c6838b6", 0, "1", "amehmedagi1@etf.unsa.ba", true, false, null, "AMEHMEDAGI1@ETF.UNSA.BA", "AMEHMEDAGI1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "3b567bac-0594-49fc-be7d-1d445725d9b4", true, "amehmedagi1" },
+                    { "8d25df41-5e23-4804-af13-c36e6897c2c2", 0, "1", "esmajic2@etf.unsa.ba", true, false, null, "ESMAJIC2@ETF.UNSA.BA", "ESMAJIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "01f18223-2cdb-4310-94fe-691df80374c7", true, "esmajic2" },
+                    { "9b395a35-dd7c-482e-8c30-edb79f908274", 0, "1", "dmuhic1@etf.unsa.ba", true, false, null, "DMUHIC1@ETF.UNSA.BA", "DMUHIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "16693134-53e2-4c87-bf84-a31b64b7b7e7", true, "dmuhic1" },
+                    { "a8323ab2-9750-43c4-b017-ca09ed9de913", 0, "1", "fejza2806@gmail.com", true, false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "100a0af5-a351-4be1-961f-f0cf5333e24a", false, "adminUser" },
+                    { "d0c2c564-bdec-4c16-825a-8d4ea7166a83", 0, "1", "emekic2@etf.unsa.ba", true, false, null, "EMEKIC2@ETF.UNSA.BA", "EMEKIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "0e5f2dda-eda3-4c5c-a09b-90283826c924", true, "emekic2" },
+                    { "fd979445-86c7-450a-bfcc-5ce03b0a2367", 0, "1", "abrulic1@etf.unsa.ba", true, false, null, "ABRULIC1@ETF.UNSA.BA", "ABRULIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "1674356c-728e-4df5-8d14-4b90fa05f783", true, "abrulic1" }
                 });
 
             migrationBuilder.CreateIndex(
