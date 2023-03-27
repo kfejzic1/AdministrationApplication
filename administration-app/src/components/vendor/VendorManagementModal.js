@@ -86,6 +86,8 @@ function VendorManagementModal() {
 	const [selectedUserIds, setSelectedUserIds] = useState([]);
 	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
 
+	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
+
 	useEffect(() => {
 		getAllUsers().then(res => {
 			setUsers(res.data);
@@ -131,10 +133,10 @@ function VendorManagementModal() {
 	const handleSubmit = event => {
 		event.preventDefault();
 
-		setOpen(true);
 		var validData = validate();
 
 		if (validData) {
+			setOpen(true);
 			vendor.name = username;
 			vendor.address = address;
 			vendor.companyDetails = details;
@@ -144,13 +146,15 @@ function VendorManagementModal() {
 			getUserByName(getUserName())
 				.then(res => {
 					vendor.createdBy = res.id;
-					createVendor(vendor)
-						.then(res => {
-							setOpen(false);
-						})
-						.catch(() => setOpen(false));
+					createVendor(vendor).then(res => {
+						setLoaderState({ ...loaderState, loading: false, success: true });
+						setOpen(false);
+					});
 				})
-				.catch(() => setOpen(false));
+				.catch(() => {
+					setLoaderState({ ...loaderState, loading: false, success: false });
+					setOpen(false);
+				});
 		}
 	};
 
@@ -250,7 +254,7 @@ function VendorManagementModal() {
 					</Card>
 				</form>
 
-				<Loader open={open} />
+				<Loader open={open} loaderState={loaderState} />
 			</div>
 		</div>
 	);
