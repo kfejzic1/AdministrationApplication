@@ -15,7 +15,7 @@ export function loginFunction(email, password) {
 
 
 export function twoFactorAut(token){
-  const url = `${env.API_ENV.url}/login`;
+  const url = `${env.API_ENV.url}/login2FA`;
   const data = {token}
   return axios.post(url, data, {
     headers:{
