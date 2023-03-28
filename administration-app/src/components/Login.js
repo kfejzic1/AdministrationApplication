@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginFunction } from "../services/loginServices";
 import { Button, Typography, TextField, Input, Alert } from "@mui/material"
 
@@ -22,6 +22,7 @@ const LoginForm = () => {
 		loginFunction(email,password).then(res => {
             setErrorMessage("");
             const email1 = email;
+            console.log(email1);
             navigate({
     
                 pathname: `/twofactor/${email1}`,

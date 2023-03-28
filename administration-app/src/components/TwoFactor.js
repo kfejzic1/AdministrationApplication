@@ -14,13 +14,16 @@ const TwoFactorView = (props) => {
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
 	//let { email } = useParams();
-	let { state } = useLocation();
-	const { email } = props.location.state;
+	let state = useLocation();
+	//const { email } = props.location.state;
+	// const { email } = props;
 	const [errorMessage, setErrorMessage] = useState(''); 
 	
 
 	const handleButtonClick = () => {
-		const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
+		const allDigts = digit1.current.value + digit2.current.value + digit3.current.value + digit4.current.value + digit5.current.value + digit6.current.value;
+		let email = state.pathname.substring(11);
+		console.log(allDigts);
 		twoFactorAut(allDigts, email).then(res => {
             setErrorMessage("");
             window.location.href = 'http://localhost:3000/';
