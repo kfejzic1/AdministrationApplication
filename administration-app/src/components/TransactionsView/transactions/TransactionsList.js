@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import '../css/Transactions.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 export const TransactionsList = () => {
 	const [details, setDetails] = useState(null);
@@ -60,16 +61,10 @@ export const TransactionsList = () => {
 					<TransactionsListHeader></TransactionsListHeader> {transactions}
 				</div>
 			)}
-			{isLoading && <div>Loading...</div>}
-			{!isLoading && hasMore && (
-				<button
-					className='loadBtn'
-					onClick={() => {
-						setSchouldLoad(true);
-					}}
-				>
-					<p>Load more transactions</p>
-				</button>
+			{isLoading && (
+				<div>
+					<LoadingSpinner></LoadingSpinner>
+				</div>
 			)}
 		</div>
 	);

@@ -86,7 +86,7 @@ export default function TransactionDetails(arg) {
 			</thead>
 			<tbody>
 				<tr>
-					<td></td>
+					<td>{arg.props.id}</td>
 					<td>{parseDate(props.dateTime)}</td>
 					<td>{props.recipient}</td>
 					<td>{props.amount}</td>
