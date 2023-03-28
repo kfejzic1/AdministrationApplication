@@ -21,7 +21,7 @@ namespace AdministrationAPI.Migrations
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Recipient = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Account = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<float>(type: "real", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
