@@ -37,25 +37,27 @@ export default function Transaction(arg) {
 			</div>
 		</div>*/
 		<table>
-			<tr>
-				<td>{arg.prop.id}</td>
-				<td>{parseDate(arg.prop.dateTime)}</td>
-				<td>{arg.prop.recipient}</td>
-				<td>{arg.prop.amount}</td>
-				<td>{arg.prop.status}</td>
-				<td>
-					<div className='detailsBtnDiv'>
-						<button
-							className='detailsBtn'
-							onClick={() => {
-								arg.setDetails(arg.prop);
-							}}
-						>
-							<p>Details</p>
-						</button>
-					</div>
-				</td>
-			</tr>
+			<tbody>
+				<tr>
+					<td>{arg.prop.id}</td>
+					<td>{parseDate(arg.prop.dateTime)}</td>
+					<td>{arg.prop.recipient}</td>
+					<td>{arg.prop.amount}</td>
+					<td>{arg.prop.status}</td>
+					<td>
+						<div className='detailsBtnDiv'>
+							<button
+								className='detailsBtn'
+								onClick={() => {
+									arg.setDetails(arg.prop);
+								}}
+							>
+								<p>Details</p>
+							</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 	);
 }
