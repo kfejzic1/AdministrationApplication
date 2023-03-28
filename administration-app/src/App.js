@@ -1,45 +1,19 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { testFunction } from './services/testingService';
+import VendorManagementModal from './components/vendor/VendorManagementModal';
 
 function App() {
-	const [testingData, setTestingData] = useState([]);
-
-	const handleButtonClick = () => {
-		testFunction().then(res => {
-			setTestingData(res.data);
-		});
-	};
+	useEffect(() => {
+		localStorage.setItem(
+			'token',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOYW1lIjoiYWRtaW5Vc2VyIiwianRpIjoiN2U0N2ZkMTQtMjJkNS00YzU4LWJkNDktZTNmMTFkZTU1ZmY4IiwiZXhwIjoxNjc5OTUwNzA3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwNTEiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.NhHqvn4Uwdxuv6IQwE9uv-RNbGrT_dZOWweP2H6bD5Y'
+		);
+	}, []);
 
 	return (
 		<div className='App'>
-			<header className='App-header'>
-				<img src={logo} className='App-logo' alt='logo' />
-				<p>
-					Edit <code>src/App.js</code> and save to reload.
-				</p>
-				<a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-					Learn React
-				</a>
-			</header>
-			<div>
-				<button onClick={handleButtonClick}>Click Me</button>
-			</div>
-			<div>
-				{testingData.length > 0
-					? testingData.map((x, index) => (
-							<div key={index}>
-								<p>Date: {x.date}</p>
-								<p>Temperature: {x.temperatureC}C</p>
-								<p>Summary: {x.summary}</p>
-								<p>--------------------</p>
-							</div>
-					  ))
-					: null}
-			</div>
+			<VendorManagementModal />
 		</div>
 	);
 }
-
 export default App;

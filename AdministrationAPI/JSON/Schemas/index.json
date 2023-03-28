@@ -1,0 +1,26 @@
+[
+  {
+    "LastDownloadTime": "2023-03-27T11:51:58.7695757Z",
+    "LocalPath": "JSON\\Schemas\\5740c3a7-7c78-4398-9949-19b2297cc589.json",
+    "OriginalPath": "http://json-schema.org/draft-04/schema",
+    "ExpirationTime": "2023-03-28T11:51:58.8740809Z"
+  },
+  {
+    "LastDownloadTime": "2023-03-27T11:51:57.9285168Z",
+    "LocalPath": "JSON\\Schemas\\60e3aafe-191f-4908-b907-46450b51c07d.json",
+    "OriginalPath": "https://json.schemastore.org/libman.json",
+    "ExpirationTime": "2023-04-03T11:51:58.7506117Z"
+  },
+  {
+    "LastDownloadTime": "2023-03-26T10:56:17.9586252Z",
+    "LocalPath": "JSON\\Schemas\\62e7c443-e7af-44a0-94fa-d529aa81eaf4.json",
+    "OriginalPath": "https://json.schemastore.org/launchsettings.json",
+    "ExpirationTime": "2023-04-02T10:56:18.9546878Z"
+  },
+  {
+    "LastDownloadTime": "2023-03-26T10:19:02.6762795Z",
+    "LocalPath": "JSON\\Schemas\\961d8115-2116-4483-8de7-8f694de6c4de.json",
+    "OriginalPath": "https://json.schemastore.org/appsettings.json",
+    "ExpirationTime": "2023-04-02T10:19:03.5777743Z"
+  }
+]
