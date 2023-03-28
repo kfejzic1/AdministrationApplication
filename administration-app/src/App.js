@@ -20,7 +20,7 @@ function App() {
 				<div className='App1'>
 					<Routes>
 						<Route path='/login' element={<LoginForm />} />
-						<Route path='/twofactor' element={<TwoFactorView />} />
+						<Route path="/twofactor/:email" element={<TwoFactorView />} />
 					</Routes>
 				</div>
 			</Router>

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import "./Login.css"
-import { navigate } from '@gatsbyjs/reach-router';
+import { useNavigate } from "react-router-dom";
 import { loginFunction } from "../services/loginServices";
 import { Button, Typography, TextField, Input, Alert } from "@mui/material"
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [response, setResponse] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); 
+    const navigate = useNavigate();
+
     function checkData(input) {
         const regex = new RegExp('^[0-9]+$');
         if (input.length <= 10 && input.match(regex))
@@ -20,8 +21,13 @@ const LoginForm = () => {
     const handleButtonClick = () => {
 		loginFunction(email,password).then(res => {
             setErrorMessage("");
-            const propsToPass = { email };
-            navigate('/twofactor', { state: propsToPass });
+            const email1 = email;
+            navigate({
+    
+                pathname: `/twofactor/${email1}`,
+                state: { postId: email1 }
+        
+              });
 		}).catch(err => {
             setErrorMessage("Neuspješna prijava!");
         });

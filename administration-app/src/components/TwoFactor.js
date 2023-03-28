@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import './TwoFactor.css';
+import { useParams } from "react-router-dom";
 import { twoFactorAut } from '../services/loginServices';
-import Axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 
 const TwoFactorView = (props) => {
 	const digit1 = useRef(null);
@@ -12,9 +13,11 @@ const TwoFactorView = (props) => {
 	const digit4 = useRef(null);
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
-	const [errorMessage, setErrorMessage] = useState(''); 
+	//let { email } = useParams();
+	let { state } = useLocation();
 	const { email } = props.location.state;
-
+	const [errorMessage, setErrorMessage] = useState(''); 
+	
 
 	const handleButtonClick = () => {
 		const allDigts = digit1+ digit2+ digit3+ digit4+ digit5+ digit6;
