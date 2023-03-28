@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import TransactionsListHeader from '../transactions/TransactionsListHeader';
+import TransactionsListHeader from '../TransactionsView/transactions/TransactionsListHeader';
 
 describe('TransactionsListHeader component', () => {
 	test('renders table with expected headers', () => {
