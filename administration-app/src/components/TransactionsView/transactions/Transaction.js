@@ -1,4 +1,5 @@
 import '../css/Transactions.css';
+import { parseDate } from './../../../services/TransactionsView/transactionsService';
 export default function Transaction(arg) {
 	// console.log('indec=', arg.index);
 	return (
@@ -38,7 +39,7 @@ export default function Transaction(arg) {
 		<table>
 			<tr>
 				<td>{arg.prop.id}</td>
-				<td>{arg.prop.dateTime}</td>
+				<td>{parseDate(arg.prop.dateTime)}</td>
 				<td>{arg.prop.recipient}</td>
 				<td>{arg.prop.amount}</td>
 				<td>{arg.prop.status}</td>

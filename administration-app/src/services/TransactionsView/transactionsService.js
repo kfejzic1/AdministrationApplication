@@ -1,5 +1,43 @@
 import axios from 'axios';
 import { env } from '../../config/env';
+
+export function getBasicTransactions(number = 10) {
+	return number < transactions.length
+		? { data: transactions.slice(0, number), hasMore: true }
+		: { data: transactions, hasMore: false };
+}
+
+export function getTransactions(pageNumber, pageSize) {
+	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+}
+export function getTransactionDetails(id) {
+	return axios(env.API_ENV.url + '/api/transactions/' + id, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+}
+export function parseDate(date) {
+	const inputDate = new Date(date);
+
+	const hours = inputDate.getHours().toString().padStart(2, '0');
+	const minutes = inputDate.getMinutes().toString().padStart(2, '0');
+	const seconds = inputDate.getSeconds().toString().padStart(2, '0');
+	const day = inputDate.getDate().toString().padStart(2, '0');
+	const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+	const year = inputDate.getFullYear().toString();
+
+	const outputDateStr = `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
+
+	return outputDateStr;
+}
+
 const transactions = [
 	{
 		id: 1,
@@ -650,26 +688,3 @@ const transactions = [
 		methodOfPayment: 'MASTERCARD',
 	},
 ];
-
-export function getBasicTransactions(number = 10) {
-	return number < transactions.length
-		? { data: transactions.slice(0, number), hasMore: true }
-		: { data: transactions, hasMore: false };
-}
-
-export function getTransactions(pageNumber, pageSize) {
-	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-}
-export function getTransactionDetails(id) {
-	return axios(env.API_ENV.url + '/api/transactions/' + id, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-}

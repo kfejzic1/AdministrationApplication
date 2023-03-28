@@ -28,9 +28,7 @@ export const TransactionsList = () => {
 		getTransactions(counter, 15)
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
-				console.log('temp2=', temp1);
 				setTransactionsRaw(temp1);
-				console.log('222=', transactionsRaw);
 				var transactionsdata = temp1.map((item, index) => (
 					<Transaction setDetails={setDetails} index={index} prop={item}></Transaction>
 				));
@@ -41,6 +39,7 @@ export const TransactionsList = () => {
 			})
 			.catch(e => {
 				setHasMore(false);
+				setIsLoading(false);
 			});
 	}
 
@@ -54,7 +53,7 @@ export const TransactionsList = () => {
 		<div className='transactions-root'>
 			{details != null ? (
 				// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
-				<TransactionDetails setDetails={setDetails} props={details}></TransactionDetails>
+				<TransactionDetails setIsLoading={setIsLoading} setDetails={setDetails} props={details}></TransactionDetails>
 			) : (
 				<div>
 					<h1>Transactions</h1>
@@ -62,6 +61,16 @@ export const TransactionsList = () => {
 				</div>
 			)}
 			{isLoading && <div>Loading...</div>}
+			{!isLoading && hasMore && (
+				<button
+					className='loadBtn'
+					onClick={() => {
+						setSchouldLoad(true);
+					}}
+				>
+					<p>Load more transactions</p>
+				</button>
+			)}
 		</div>
 	);
 };

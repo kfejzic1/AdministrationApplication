@@ -1,6 +1,7 @@
 import { getTransactionDetails } from '../../../services/TransactionsView/transactionsService';
 import '../css/Transactions.css';
 import { useEffect, useState } from 'react';
+import { parseDate } from './../../../services/TransactionsView/transactionsService';
 
 export default function TransactionDetails(arg) {
 	const [props, setProps] = useState({
@@ -12,8 +13,8 @@ export default function TransactionDetails(arg) {
 	});
 	useEffect(() => {
 		getTransactionDetails(arg.props.id).then(transaction => {
-			console.log('etra0=', transaction.data);
 			setProps(transaction.data);
+			arg.setIsLoading(false);
 		});
 	}, []);
 	return (
@@ -86,13 +87,13 @@ export default function TransactionDetails(arg) {
 			<tbody>
 				<tr>
 					<td></td>
-					<td>{props.dateTime}</td>
+					<td>{parseDate(props.dateTime)}</td>
 					<td>{props.recipient}</td>
 					<td>{props.amount}</td>
 					<td>{props.status}</td>
 					<td></td>
 					<td></td>
-					<td></td>
+					<td>{props.account}</td>
 					<td></td>
 					<td>{props.type}</td>
 					<td>
