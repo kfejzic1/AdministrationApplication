@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministrationAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230325232245_InitialMigration")]
+    [Migration("20230328101722_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -37,8 +37,8 @@ namespace AdministrationAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");

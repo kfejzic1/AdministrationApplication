@@ -34,8 +34,8 @@ namespace AdministrationAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
