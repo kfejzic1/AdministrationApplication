@@ -16,22 +16,41 @@ const LoginForm = () => {
             return "phone";
         else 
             return "email";
-    }
+      }
 
     const handleButtonClick = () => {
-		loginFunction(email,password).then(res => {
-            setErrorMessage("");
-            const email1 = email;
-            console.log(email1);
-            navigate({
-    
-                pathname: `/twofactor/${email1}`,
-                state: { postId: email1 }
+        if(checkData(email)==='email'){
+            loginFunction(email,password).then(res => {
+                setErrorMessage("");
+                const email1 = email;
+                console.log(email1);
+                navigate({
         
-              });
-		}).catch(err => {
-            setErrorMessage("Neuspješna prijava!");
-        });
+                    pathname: `/twofactor/${email1}`,
+                    state: { postId: email1 }
+            
+                });
+            }).catch(err => {
+                setErrorMessage("Neuspješna prijava!");
+            });
+        }else{
+            loginFunction(email,password).then(res => {
+                setErrorMessage("");
+                const { token } = res.data;
+                localStorage.setItem('token', token);
+                const email1 = email;
+                console.log(email1);
+                navigate({
+        
+                    pathname: `/`,
+                    state: { postId: email1 }
+            
+                });
+            }).catch(err => {
+                setErrorMessage("Neuspješna prijava!");
+            });
+
+        }
 	};
 
     return ( 

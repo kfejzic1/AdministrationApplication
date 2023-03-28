@@ -26,6 +26,8 @@ const TwoFactorView = (props) => {
 		console.log(allDigts);
 		twoFactorAut(allDigts, email).then(res => {
             setErrorMessage("");
+			const { token } = res.data;
+            localStorage.setItem('token', token);
             window.location.href = 'http://localhost:3000/';
 		}).catch(err => {
             setErrorMessage("Neuspješna prijava!");
