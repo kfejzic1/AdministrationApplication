@@ -11,7 +11,7 @@ namespace AdministrationAPI.DTOs
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
         public string Recipient { get; set; } = string.Empty;
-        public int Amount { get; set; }
+        public float Amount { get; set; }
         public TransactionStatus Status { get; set; }
     }
 }
