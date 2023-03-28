@@ -20,7 +20,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import './vendorManagement.css';
-import naslovna from './slika1.png';
+import naslovna from './slika1ChangedColor.png';
 import { createVendor } from '../../services/vendorService';
 import { getAllUsers, getUser, getUserByName, getUserName } from '../../services/userService';
 import Loader from '../loaderDialog/Loader';
@@ -31,6 +31,14 @@ const useStyles = makeStyles(theme => ({
 		minHeight: '40%',
 		maxWidth: '50%',
 		margin: 'auto',
+		"&.MuiButton-outlined": {
+			backgroundColor: "#eeba6c",
+			color: "black",
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			  },  
+		}
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -165,7 +173,7 @@ function VendorManagementModal() {
 					<Card className={classes.root}>
 						<CardHeader title={'Create B2B Customer'}></CardHeader>
 						<CardContent>
-							<Grid container spacing={1}>
+							<Grid container spacing={2}>
 								<Grid item xs={12}>
 									<TextField
 										className={classes.textField}
@@ -247,13 +255,15 @@ function VendorManagementModal() {
 							</Grid>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button variant='contained' type='submit' value='Submit' onClick={handleSubmit}>
+							<Button className={classes.root} variant="outlined" type='submit' value='Submit' onClick={handleSubmit}>
 								Create
 							</Button>
 						</CardActions>
 					</Card>
 				</form>
-
+				<div className='imageBcg'>
+					<img src={naslovna} alt="your-image-description" />
+				</div>
 				<Loader open={open} loaderState={loaderState} />
 			</div>
 		</div>
