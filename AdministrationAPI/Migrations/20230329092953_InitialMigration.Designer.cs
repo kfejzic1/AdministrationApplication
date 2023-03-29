@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministrationAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230328101722_InitialMigration")]
+    [Migration("20230329092953_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -51,6 +51,9 @@ namespace AdministrationAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

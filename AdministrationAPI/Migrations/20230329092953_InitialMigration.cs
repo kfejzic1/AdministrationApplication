@@ -22,7 +22,8 @@ namespace AdministrationAPI.Migrations
                     Recipient = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Account = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<float>(type: "real", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
