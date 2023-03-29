@@ -18,10 +18,6 @@ const LoginForm = (arg ) => {
             return "email";
       }
 
-      const  ja = () => {
-        arg.setEmail(email)
-        navigate('/twofactor');
-    }
 
     const handleButtonClick = () => {
         if(checkData(email)==='email'){
@@ -64,7 +60,7 @@ const LoginForm = (arg ) => {
                     setPassword(e.target.value)
                 }}/>
                 <Typography>You are not registered? <a href="/">Register</a></Typography>
-                <button className="login-btn" onClick={ja}> Login</button>
+                <button className="login-btn" onClick={handleButtonClick}> Login</button>
             </div>
         </div>
     );
