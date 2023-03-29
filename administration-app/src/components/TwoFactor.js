@@ -19,10 +19,11 @@ const TwoFactorView = (props) => {
 	// const { email } = props;
 	const [errorMessage, setErrorMessage] = useState(''); 
 	
+	//console.log("sadasfasfasf" + props.email)
 
 	const handleButtonClick = () => {
 		const allDigts = digit1.current.value + digit2.current.value + digit3.current.value + digit4.current.value + digit5.current.value + digit6.current.value;
-		let email = state.pathname.substring(11);
+		let email = props.email
 		console.log(allDigts);
 		twoFactorAut(allDigts, email).then(res => {
             setErrorMessage("");

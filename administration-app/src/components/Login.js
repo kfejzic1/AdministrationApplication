@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { loginFunction } from "../services/loginServices";
 import { Button, Typography, TextField, Input, Alert } from "@mui/material"
 
-const LoginForm = () => {
+const LoginForm = (arg ) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); 
@@ -18,34 +18,30 @@ const LoginForm = () => {
             return "email";
       }
 
+      const  ja = () => {
+        arg.setEmail(email)
+        navigate('/twofactor');
+    }
+
     const handleButtonClick = () => {
         if(checkData(email)==='email'){
+            arg.setEmail(email)
             loginFunction(email,password).then(res => {
                 setErrorMessage("");
                 const email1 = email;
                 console.log(email1);
-                navigate({
-        
-                    pathname: `/twofactor/${email1}`,
-                    state: { postId: email1 }
-            
-                });
             }).catch(err => {
                 setErrorMessage("Neuspješna prijava!");
             });
         }else{
+            arg.setEmail(email)
             loginFunction(email,password).then(res => {
                 setErrorMessage("");
                 const { token } = res.data;
                 localStorage.setItem('token', token);
                 const email1 = email;
                 console.log(email1);
-                navigate({
-        
-                    pathname: `/`,
-                    state: { postId: email1 }
-            
-                });
+                navigate('/twofactor');
             }).catch(err => {
                 setErrorMessage("Neuspješna prijava!");
             });
@@ -68,7 +64,7 @@ const LoginForm = () => {
                     setPassword(e.target.value)
                 }}/>
                 <Typography>You are not registered? <a href="/">Register</a></Typography>
-                <button className="login-btn" onClick={handleButtonClick}> Login</button>
+                <button className="login-btn" onClick={ja}> Login</button>
             </div>
         </div>
     );
