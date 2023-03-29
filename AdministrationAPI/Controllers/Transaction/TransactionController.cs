@@ -1,5 +1,6 @@
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
+using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Services.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,38 @@ namespace AdministrationAPI.Controllers.Transaction
 
             return Ok(response.Transactions);
         }
+        [HttpGet("filters")]
+        public async Task<ActionResult<List<TransactionDTO>>> GetTransactionsByFilters([FromQuery] DateTime? dateTime = null, [FromQuery] string? recipient = null, [FromQuery] int? amount = null, [FromQuery] TransactionStatus? status = null)
+        {
+            List<TransactionDTO> response;
+            try
+            {
+                response = await _transactionService.GetTransactionsByFilter(dateTime, recipient, amount, status);
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("sort")]
+        public async Task<ActionResult<List<TransactionDTO>>> GetSortedTransactions([FromQuery] SortingOptions sortingOptions, [FromQuery] bool ascending)
+        {
+            List<TransactionDTO> response;
+            try
+            {
+                response = await _transactionService.GetSortedTransactions(sortingOptions, ascending);
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return Ok(response);
+
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDetailsDTO>> GetTransactionById(int id)
@@ -39,18 +72,21 @@ namespace AdministrationAPI.Controllers.Transaction
 
             TransactionDetailsDTO response;
 
-           
-                try {
 
-                  response = await _transactionService.GetTransactionByID(id);
+            try
+            {
 
-                } catch (Exception e)
-                {
-                    return NotFound("Error: " + e.Message);
-                }
-                
-        
+                response = await _transactionService.GetTransactionByID(id);
+
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+
             return Ok(response);
         }
+
     }
 }

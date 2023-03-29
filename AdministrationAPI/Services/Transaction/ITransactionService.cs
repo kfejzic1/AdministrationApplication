@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
-using Microsoft.AspNetCore.Mvc;
+using AdministrationAPI.Models.Transaction;
 
 namespace AdministrationAPI.Services.Transaction
 {
@@ -12,5 +8,7 @@ namespace AdministrationAPI.Services.Transaction
     {
         Task<TransactionResponseDTO> GetAllTransactions(int pageNumber, int pageSize);
         Task<TransactionDetailsDTO> GetTransactionByID(int id);
+        Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTime = null, string? recipient = null, int? amount = null, TransactionStatus? status = null);
+        Task<List<TransactionDTO>> GetSortedTransactions(SortingOptions sortingOptions, bool ascending = true);
     }
 }
