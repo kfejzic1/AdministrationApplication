@@ -92,6 +92,30 @@ namespace AdministrationAPI.Services
         }
 
 
+        public bool deleteVendor(int id)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+
+                if (vendor != null)
+                {
+                    
+                    context.Vendors.Remove(vendor);
+
+                   
+                    var vendorUsers = context.VendorUsers.Where(vu => vu.VendorId == id).ToList();
+                    context.VendorUsers.RemoveRange(vendorUsers);
+
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+
     }
 }
 

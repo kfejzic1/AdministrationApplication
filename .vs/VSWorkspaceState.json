@@ -5,6 +5,7 @@
     "\\AdministrationAPI\\Contracts",
     "\\AdministrationAPI\\Contracts\\Requests",
     "\\AdministrationAPI\\Controllers",
+    "\\AdministrationAPI\\Migrations",
     "\\AdministrationAPI\\Models",
     "\\AdministrationAPI\\Services"
   ],
