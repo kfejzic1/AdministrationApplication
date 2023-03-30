@@ -31,7 +31,7 @@ export const TransactionsList = () => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
 				setTransactionsRaw(temp1);
 				var transactionsdata = temp1.map((item, index) => (
-					<Transaction setDetails={setDetails} index={index} prop={item}></Transaction>
+					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 				));
 				setTransactions(transactionsdata);
 				setHasMore(true);

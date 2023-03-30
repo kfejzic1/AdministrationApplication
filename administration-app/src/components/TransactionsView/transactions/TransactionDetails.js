@@ -99,7 +99,7 @@ export default function TransactionDetails(arg) {
 					<td>
 						<div className='closeBtnDiv'>
 							<button
-								class='closeBtn'
+								className='closeBtn'
 								onClick={() => {
 									arg.setDetails(null);
 								}}
