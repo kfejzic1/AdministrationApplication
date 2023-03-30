@@ -95,6 +95,5 @@ namespace AdministrationAPI.Services.Transaction
             return dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList();
         }
 
-
     }
 }
