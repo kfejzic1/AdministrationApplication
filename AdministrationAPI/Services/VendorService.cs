@@ -92,7 +92,7 @@ namespace AdministrationAPI.Services
         }
 
 
-        public bool deleteVendor(int id)
+        public bool DeleteAddress(int id)
         {
             using (var context = new VendorDbContext())
             {
@@ -100,13 +100,8 @@ namespace AdministrationAPI.Services
 
                 if (vendor != null)
                 {
-
-                    context.Vendors.Remove(vendor);
-
-
-                    var vendorUsers = context.VendorUsers.Where(vu => vu.VendorId == id).ToList();
-                    context.VendorUsers.RemoveRange(vendorUsers);
-
+                    vendor.Address = null; 
+                    vendor.Modified = DateTime.UtcNow;
                     context.SaveChanges();
                     return true;
                 }
@@ -114,6 +109,8 @@ namespace AdministrationAPI.Services
                 return false;
             }
         }
+
+
 
 
 
