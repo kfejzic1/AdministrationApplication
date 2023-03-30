@@ -65,11 +65,14 @@ namespace AdministrationAPI.Services.Transaction
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
         }
 
-        public async Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amount = null, TransactionStatus? status = null)
+        public async Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amountMin = null, int? amountMax = null, TransactionStatus? status = null)
         {
             var transactions = _context.Transactions.AsQueryable();
             if (dateTimeStart == null && dateTimeEnd != null) dateTimeStart = dateTimeEnd;
             if (dateTimeEnd == null && dateTimeStart != null) dateTimeEnd = dateTimeStart;
+
+            if (amountMin == null && amountMax != null) amountMin = amountMax;
+            if (amountMax == null && amountMin != null) amountMax = amountMin;
 
             if (dateTimeStart != null && dateTimeEnd != null)
             {
@@ -80,18 +83,17 @@ namespace AdministrationAPI.Services.Transaction
             {
                 transactions = transactions.Where(t => t.Recipient == recipient);
             }
-            if (amount != null && amount != 0)
+            if (amountMin != null && amountMax != null && amountMin != 0 && amountMax != 0)
             {
-                transactions = transactions.Where(t => t.Amount == amount);
+                transactions = transactions.Where(t => t.Amount >= amountMin && t.Amount <= amountMax);
             }
-            if (status != null && amount != 0)
+            if (status != null && amountMin != 0 && amountMax != 0)
             {
                 transactions = transactions.Where(t => t.Status == status);
             }
             var dbTransactions = await transactions.ToListAsync();
             return dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList();
         }
-
 
     }
 }
