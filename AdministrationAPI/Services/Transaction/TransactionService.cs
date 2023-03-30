@@ -2,7 +2,6 @@ using AdministrationAPI.Data;
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models.Transaction;
 
@@ -11,9 +10,9 @@ namespace AdministrationAPI.Services.Transaction
     public class TransactionService : ITransactionService
     {
         private readonly IMapper _mapper;
-        private readonly DataContext _context;
+        private readonly DBContext _context;
 
-        public TransactionService(IMapper mapper, DataContext context)
+        public TransactionService(IMapper mapper, DBContext context)
         {
             _mapper = mapper;
             _context = context;
@@ -28,11 +27,13 @@ namespace AdministrationAPI.Services.Transaction
 
             if (pageNumber == 0) pageNumber = 1;
             if (pageSize == 0) pageSize = _context.Transactions.Count();
-            Console.WriteLine("COUNTCOUNT" + _context.Transactions.Count());
+
             var pageCount = Math.Ceiling(_context.Transactions.Count() / (double)pageSize);
+
             var dbTransactions = await _context.Transactions
                 .Skip((pageNumber - 1) * (int)pageSize)
                 .Take((int)pageSize).ToListAsync();
+                
             var response = new TransactionResponseDTO
             {
                 Transactions = dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList(),
@@ -40,7 +41,6 @@ namespace AdministrationAPI.Services.Transaction
                 Pages = (int)pageCount
 
             };
-
             if (response.Transactions.Count == 0) throw new Exception("There are no transactions.");
 
             return response;
@@ -49,9 +49,11 @@ namespace AdministrationAPI.Services.Transaction
         {
             var transactions = _context.Transactions.AsQueryable();
             var orderedTransactions = transactions;
+
             if (sortingOptions == SortingOptions.Amount) orderedTransactions = ascending ? transactions.OrderBy(t => t.Amount) : transactions.OrderByDescending(t => t.Amount);
             else if (sortingOptions == SortingOptions.Recipient) orderedTransactions = ascending ? transactions.OrderBy(t => t.Recipient) : transactions.OrderByDescending(t => t.Recipient);
             else orderedTransactions = ascending ? transactions.OrderBy(t => t.DateTime) : transactions.OrderByDescending(t => t.DateTime);
+            
             var dbTransactions = await orderedTransactions.ToListAsync();
 
             return dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList();
@@ -62,12 +64,14 @@ namespace AdministrationAPI.Services.Transaction
             if (id < 1) throw new Exception("You have specified an invalid id.");
             var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
             if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
+
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
         }
 
         public async Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amountMin = null, int? amountMax = null, TransactionStatus? status = null)
         {
             var transactions = _context.Transactions.AsQueryable();
+
             if (dateTimeStart == null && dateTimeEnd != null) dateTimeStart = dateTimeEnd;
             if (dateTimeEnd == null && dateTimeStart != null) dateTimeEnd = dateTimeStart;
 
@@ -83,15 +87,19 @@ namespace AdministrationAPI.Services.Transaction
             {
                 transactions = transactions.Where(t => t.Recipient == recipient);
             }
+
             if (amountMin != null && amountMax != null && amountMin != 0 && amountMax != 0)
             {
                 transactions = transactions.Where(t => t.Amount >= amountMin && t.Amount <= amountMax);
             }
+
             if (status != null && amountMin != 0 && amountMax != 0)
             {
                 transactions = transactions.Where(t => t.Status == status);
             }
+
             var dbTransactions = await transactions.ToListAsync();
+
             return dbTransactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToList();
         }
 
