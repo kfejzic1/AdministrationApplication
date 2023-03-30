@@ -29,7 +29,7 @@ namespace AdministrationAPI.Services
                 context.Vendors.Add(vendor);
                 context.SaveChanges();
 
-                foreach(string id in request.AssignedUserIds)
+                foreach (string id in request.AssignedUserIds)
                 {
                     var vendorUser = new VendorUser() { VendorId = vendor.Id, UserId = id };
                     context.VendorUsers.Add(vendorUser);
@@ -39,7 +39,7 @@ namespace AdministrationAPI.Services
                 return true;
             }
         }
-     
+
         public Vendor? Get(int id)
         {
             using (var context = new VendorDbContext())
@@ -100,10 +100,10 @@ namespace AdministrationAPI.Services
 
                 if (vendor != null)
                 {
-                    
+
                     context.Vendors.Remove(vendor);
 
-                   
+
                     var vendorUsers = context.VendorUsers.Where(vu => vu.VendorId == id).ToList();
                     context.VendorUsers.RemoveRange(vendorUsers);
 
@@ -116,8 +116,8 @@ namespace AdministrationAPI.Services
         }
 
 
+
     }
 }
-
 
 
