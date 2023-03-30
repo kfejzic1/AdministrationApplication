@@ -11,3 +11,13 @@ export function createVendor(request) {
 		},
 	});
 }
+
+export function getAllVendors() {
+	return axios(env.API_ENV.url + '/api/Vendor', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

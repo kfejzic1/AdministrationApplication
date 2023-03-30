@@ -17,6 +17,7 @@
     "multiselect-react-dropdown": "^2.0.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-imask": "^6.5.0-alpha.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

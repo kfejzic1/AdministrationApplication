@@ -1,7 +1,9 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services
@@ -48,11 +50,29 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public List<Vendor> GetAll()
+        public List<VendorsResponse> GetAll()
         {
             using (var context = new VendorDbContext())
             {
-                return context.Vendors.ToList();
+                var response = new List<VendorsResponse>() { };
+                var vendors = context.Vendors.ToList();
+                vendors.ForEach(vendor =>
+                {
+                    VendorsResponse vendorResponse = new()
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.Name,
+                        Address = vendor.Address,
+                        CompanyDetails = vendor.CompanyDetails,
+                        Phone = vendor.Phone,
+                        Created = vendor.Created,
+                        CreatedBy = vendor.CreatedBy,
+                        Modified = vendor.Modified,
+                        ModifiedBy = vendor.ModifiedBy
+                    };
+                    response.Add(vendorResponse);
+                });
+                return response;
             }
         }
 

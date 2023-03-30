@@ -1,0 +1,16 @@
+.imageBcg {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 5%;
+}
+
+.image img {
+  width: 100%;
+  height: 100%;
+}
+.container {
+  margin-top: 3%;
+  padding: 0;
+}

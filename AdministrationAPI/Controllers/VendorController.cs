@@ -16,9 +16,12 @@ namespace AdministrationAPI.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
-        public VendorController(IVendorService vendorService)
+        private readonly IUserService _userService;
+
+        public VendorController(IVendorService vendorService, IUserService userService)
         {
             _vendorService = vendorService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -44,7 +47,13 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorService.GetAll());
+                var vendors = _vendorService.GetAll();
+                vendors.ForEach(vendor =>
+                {
+                    vendor.AssignedUsers = _userService.GetAssignedUsersForVendor(vendor.Id);
+                });
+
+                return Ok(vendors);
             }
             catch (DataException ex)
             {

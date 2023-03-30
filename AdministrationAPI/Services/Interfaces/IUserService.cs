@@ -11,5 +11,6 @@ namespace AdministrationAPI.Services.Interfaces
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         List<IdentityUser> GetAllUsers();
         IdentityUser GetUserByName(string name);
+        public List<IdentityUser> GetAssignedUsersForVendor(int vendorId);
     }
 }

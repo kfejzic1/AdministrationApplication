@@ -91,6 +91,17 @@ namespace AdministrationAPI.Services
             return users;
         }
 
+        public List<IdentityUser> GetAssignedUsersForVendor(int vendorId)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var userIds = context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
+                var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
+                return users;
+            }
+            
+        }
+
         public IdentityUser GetUserByName(string name)
         {
             return _userManager.Users.FirstOrDefault(x => x.UserName == name);
