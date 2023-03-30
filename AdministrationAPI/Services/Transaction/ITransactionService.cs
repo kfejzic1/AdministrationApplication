@@ -8,7 +8,7 @@ namespace AdministrationAPI.Services.Transaction
     {
         Task<TransactionResponseDTO> GetAllTransactions(int pageNumber, int pageSize);
         Task<TransactionDetailsDTO> GetTransactionByID(int id);
-        Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amount = null, TransactionStatus? status = null);
+        Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amountMin = null, int? amountMax = null, TransactionStatus? status = null);
         Task<List<TransactionDTO>> GetSortedTransactions(SortingOptions sortingOptions, bool ascending = true);
     }
 }
