@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import VendorManagementModal from './components/vendor/VendorManagementModal';
+//import VendorManagementModal from './components/vendor/VendorManagementModal';
+//import TransactionsListHeader from './components/table/B2BTable/TransactionsListHeader';
+import { Mainpage } from './components/table/Mainpage';
 
 function App() {
 	useEffect(() => {
@@ -12,7 +14,7 @@ function App() {
 
 	return (
 		<div className='App'>
-			<VendorManagementModal />
+			<Mainpage/>
 		</div>
 	);
 }
