@@ -5,8 +5,9 @@
     "\\AdministrationAPI\\Contracts",
     "\\AdministrationAPI\\Contracts\\Requests",
     "\\AdministrationAPI\\Controllers",
-    "\\AdministrationAPI\\DBContext",
-    "\\AdministrationAPI\\Models"
+    "\\AdministrationAPI\\Models",
+    "\\AdministrationAPI\\Services"
   ],
+  "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
   "PreviewInSolutionExplorer": false
 }
