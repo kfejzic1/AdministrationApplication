@@ -65,14 +65,17 @@ namespace AdministrationAPI.Services.Transaction
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
         }
 
-        public async Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTime = null, string? recipient = null, int? amount = null, TransactionStatus? status = null)
+        public async Task<List<TransactionDTO>> GetTransactionsByFilter(DateTime? dateTimeStart = null, DateTime? dateTimeEnd = null, string? recipient = null, int? amount = null, TransactionStatus? status = null)
         {
             var transactions = _context.Transactions.AsQueryable();
+            if (dateTimeStart == null && dateTimeEnd != null) dateTimeStart = dateTimeEnd;
+            if (dateTimeEnd == null && dateTimeStart != null) dateTimeEnd = dateTimeStart;
 
-            if (dateTime != null)
+            if (dateTimeStart != null && dateTimeEnd != null)
             {
-                transactions = transactions.Where(t => t.DateTime == dateTime);
+                transactions = transactions.Where(t => t.DateTime >= dateTimeStart && t.DateTime <= dateTimeEnd);
             }
+
             if (recipient != null)
             {
                 transactions = transactions.Where(t => t.Recipient == recipient);

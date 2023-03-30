@@ -9,6 +9,8 @@ namespace AdministrationAPI.Controllers.Transaction
     [Route("api/transactions")]
     public class TransactionController : ControllerBase
     {
+
+
         private readonly ITransactionService _transactionService;
 
         public TransactionController(ITransactionService transactionService)
@@ -34,12 +36,13 @@ namespace AdministrationAPI.Controllers.Transaction
             return Ok(response.Transactions);
         }
         [HttpGet("filters")]
-        public async Task<ActionResult<List<TransactionDTO>>> GetTransactionsByFilters([FromQuery] DateTime? dateTime = null, [FromQuery] string? recipient = null, [FromQuery] int? amount = null, [FromQuery] TransactionStatus? status = null)
+        public async Task<ActionResult<List<TransactionDTO>>> GetTransactionsByFilters([FromQuery] DateTime? dateTimeStart = null, [FromQuery] DateTime? dateTimeEnd = null, [FromQuery] string? recipient = null, [FromQuery] int? amount = null, [FromQuery] TransactionStatus? status = null)
         {
+
             List<TransactionDTO> response;
             try
             {
-                response = await _transactionService.GetTransactionsByFilter(dateTime, recipient, amount, status);
+                response = await _transactionService.GetTransactionsByFilter(dateTimeStart, dateTimeEnd, recipient, amount, status);
             }
             catch (Exception e)
             {
