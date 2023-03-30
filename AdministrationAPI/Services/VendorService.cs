@@ -39,7 +39,7 @@ namespace AdministrationAPI.Services
                 return true;
             }
         }
-        //trenutno su deklarisani kao nullable za svaki slc
+     
         public Vendor? Get(int id)
         {
             using (var context = new VendorDbContext())
@@ -72,8 +72,28 @@ namespace AdministrationAPI.Services
                 return false;
             }
         }
+
+        public bool UpdateAddress(int id, string address)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+
+                if (vendor != null)
+                {
+                    vendor.Address = address;
+                    vendor.Modified = DateTime.UtcNow;
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+
     }
 }
 
-  
+
 
