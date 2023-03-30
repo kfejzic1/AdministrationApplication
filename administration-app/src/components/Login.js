@@ -59,6 +59,20 @@ const LoginForm = (arg ) => {
                 <Input className="user-data" type="password" placeholder="Password" onChange={(e)=>{
                     setPassword(e.target.value)
                 }}/>
+
+                <div class="customBtn">
+                    <span class="icon"><img class="login-icons" src="https://i.imgur.com/JsniGks.png" width={25} height={25} alt="googleicon" /></span>
+                    <span class="buttonText">Sign in with Google</span>
+                </div>
+                <div class="customBtn">
+                    <span class="icon"><img class="login-icons" src="https://i.imgur.com/fDEMtZy.png" width={25} height={25} alt="fbicon" /></span>
+                    <span class="buttonText">Sign in with Facebook</span>
+                </div>
+                <div class="customBtn">
+                    <span class="icon"><img class="login-icons" src="https://i.imgur.com/5pDDS3b.png" width={25} height={25} alt="msicon" /></span>
+                    <span class="buttonText">Sign in with Microsoft</span>
+                </div>
+
                 <Typography>You are not registered? <a href="/">Register</a></Typography>
                 <button className="login-btn" onClick={handleButtonClick}> Login</button>
             </div>
