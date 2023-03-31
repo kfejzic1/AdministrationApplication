@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { loginFunction } from '../services/loginServices';
+import { login } from '../services/loginServices';
 import { Button, Typography, TextField, Input, Alert } from '@mui/material';
 
-const LoginForm = () => {
-	const [email, setEmail] = useState('');
+const LoginForm = arg => {
+	const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const [qrCode, setQrCodeImageUrl] = useState(null);
 	const navigate = useNavigate();
 
 	function checkData(input) {
@@ -18,18 +17,47 @@ const LoginForm = () => {
 	}
 
 	const handleButtonClick = () => {
-		loginFunction(email, password)
+		// if (checkData(email) === 'email') {
+		// 	arg.setEmail(email);
+		// 	loginFunction(email, password)
+		// 		.then(res => {
+		// 			setErrorMessage('');
+		// 			const email1 = email;
+		// 			console.log(email1);
+		// 		})
+		// 		.catch(err => {
+		// 			setErrorMessage('Neuspješna prijava!');
+		// 		});
+		// } else {
+		// 	arg.setEmail(email);
+		// 	loginFunction(email, password)
+		// 		.then(res => {
+		// 			setErrorMessage('');
+		// 			const { token } = res.data;
+		// 			localStorage.setItem('token', token);
+		// 			const email1 = email;
+		// 			console.log(email1);
+		// 			navigate('/twofactor');
+		// 		})
+		// 		.catch(err => {
+		// 			setErrorMessage('Neuspješna prijava!');
+		// 		});
+		// }
+		const loginData = {
+			[checkData(phoneMail)]: phoneMail,
+			password,
+		};
+
+		login(loginData)
 			.then(res => {
-				// setErrorMessage('');
-				console.log('response: ', res);
-				setQrCodeImageUrl({
-					imageUrl: res.data.qrCodeImageUrl,
-					manualSetupCode: res.data.manualEntrySetupCode,
-				});
-				// navigate({
-				// 	pathname: `/twofactor/${email}`,
-				// 	state: { postId: email },
-				// });
+				const { token } = res.data;
+
+				if (!token) {
+					navigate('/twofactor');
+					return;
+				}
+
+				localStorage.setItem('token', token);
 			})
 			.catch(err => {
 				setErrorMessage('Neuspješna prijava!');
@@ -38,12 +66,6 @@ const LoginForm = () => {
 
 	return (
 		<div className='App1'>
-			{qrCode ? (
-				<div>
-					<img src={qrCode.imageUrl} />
-					<p>Manual input: {qrCode.manualSetupCode}</p>
-				</div>
-			) : null}
 			<div className='cover'>
 				<Typography variant='h4'>Login</Typography>
 				<Alert severity='error' variant='filled' style={{ display: 'none' }}>
@@ -57,7 +79,7 @@ const LoginForm = () => {
 					type='text'
 					placeholder='E-mail or Phone number'
 					onChange={e => {
-						setEmail(e.target.value);
+						setPhoneMail(e.target.value);
 					}}
 				/>
 				<Input
@@ -68,6 +90,26 @@ const LoginForm = () => {
 						setPassword(e.target.value);
 					}}
 				/>
+
+				<div class='customBtn'>
+					<span class='icon'>
+						<img class='login-icons' src='https://i.imgur.com/JsniGks.png' width={25} height={25} alt='googleicon' />
+					</span>
+					<span class='buttonText'>Sign in with Google</span>
+				</div>
+				<div class='customBtn'>
+					<span class='icon'>
+						<img class='login-icons' src='https://i.imgur.com/fDEMtZy.png' width={25} height={25} alt='fbicon' />
+					</span>
+					<span class='buttonText'>Sign in with Facebook</span>
+				</div>
+				<div class='customBtn'>
+					<span class='icon'>
+						<img class='login-icons' src='https://i.imgur.com/5pDDS3b.png' width={25} height={25} alt='msicon' />
+					</span>
+					<span class='buttonText'>Sign in with Microsoft</span>
+				</div>
+
 				<Typography>
 					You are not registered? <a href='/'>Register</a>
 				</Typography>
