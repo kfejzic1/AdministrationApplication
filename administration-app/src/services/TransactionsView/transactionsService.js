@@ -8,21 +8,41 @@ export function getBasicTransactions(number = 10) {
 }
 
 export function getTransactions(pageNumber, pageSize, sortingOptions) {
-	/*return new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			resolve({ data: transactions });
+			var temp = transactions;
+			if (sortingOptions != null) {
+				console.log('Sorting sint null');
+				if (sortingOptions.Recipient != '') {
+					console.log('sad proje', temp[0].recipient, sortingOptions.Recipient, JSON.stringify(temp));
+					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+					console.log('sad je recipes', sortingOptions.Recipient, JSON.stringify(temp));
+				}
+				if (sortingOptions.Status != '')
+					temp = temp.filter(transaction => transaction.recipient.status == sortingOptions.Status);
+				if (sortingOptions.MinAmount != '')
+					temp = temp.filter(transaction => transaction.recipient.amount > sortingOptions.MinAmount);
+				if (sortingOptions.MaxAmount != '')
+					temp = temp.filter(transaction => transaction.recipient.amount < sortingOptions.MaxAmount);
+				if (sortingOptions.StartDate != '')
+					temp = temp.filter(transaction => Date(transaction.recipient.dataTime) > Date(sortingOptions.StartDate));
+				if (sortingOptions.EndDate != '')
+					temp = temp.filter(transaction => Date(transaction.recipient.dataTime) < Date(sortingOptions.EndDate));
+			}
+
+			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
 		}, 100);
 	});
-	*/
+
 	//mock is above, real is underneath
 
-	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+	/*return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
 		method: 'GET',
 		params: sortingOptions,
 		headers: {
 			'Content-Type': 'application/json',
 		},
-	});
+	});*/
 }
 export function getTransactionDetails(id) {
 	return new Promise((resolve, reject) => {
