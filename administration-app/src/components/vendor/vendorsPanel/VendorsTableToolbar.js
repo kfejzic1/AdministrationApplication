@@ -7,8 +7,31 @@ import CreateIcon from '@mui/icons-material/Create';
 import { alpha } from '@mui/material/styles';
 import { Stack } from '@mui/system';
 import VendorCreateModal from '../vendorCreateModal/VendorCreateModal';
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(theme => ({
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundColor: '#ffaf36',
+			color: 'black',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ffaf36',
+		},
+	}
+}))
 
 export default function VendorsTableToolBar(props) {
+	const classes = useStyles();
 	const { numSelected } = props;
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
@@ -19,7 +42,7 @@ export default function VendorsTableToolBar(props) {
 
 	const createVendorsTooltip = (
 		<Tooltip title='Create B2B Customer'>
-			<Button size='small' variant='contained' endIcon={<CreateIcon />} onClick={handleOpen}>
+			<Button className={classes.button} size='small' variant='contained' endIcon={<CreateIcon />} onClick={handleOpen}>
 				Create B2B Customer
 			</Button>
 		</Tooltip>
@@ -47,7 +70,7 @@ export default function VendorsTableToolBar(props) {
 			{numSelected > 0 ? (
 				<Stack direction='row' spacing={1}>
 					<Tooltip title='Delete Selected B2B Customers'>
-						<Button size='small' variant='outlined' endIcon={<DeleteIcon />}>
+						<Button className={classes.button} size='small' variant='outlined' endIcon={<DeleteIcon />}>
 							Delete B2B Customers
 						</Button>
 					</Tooltip>

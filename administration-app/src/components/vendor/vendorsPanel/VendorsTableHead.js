@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Box, TableCell, TableHead, TableRow, TableSortLabel, Checkbox } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 const headCells = [
 	{
 		id: 'id',
@@ -42,6 +42,20 @@ const headCells = [
 	},
 ];
 
+const tableTheme = createTheme({
+	palette: {
+	  primary: {
+		main: "#E7EBF0",
+	  },
+	  secondary: {
+		main: "#ffe2b6",
+	  },
+	  secondary2: {
+		main: "#ffaf36",
+	  },
+	},
+  });
+
 export default function VendorsTableHead(props) {
 	const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 	const createSortHandler = property => event => {
@@ -49,6 +63,7 @@ export default function VendorsTableHead(props) {
 	};
 
 	return (
+		<ThemeProvider theme={tableTheme}>
 		<TableHead>
 			<TableRow>
 				<TableCell padding='checkbox'>
@@ -83,6 +98,7 @@ export default function VendorsTableHead(props) {
 				))}
 			</TableRow>
 		</TableHead>
+		</ThemeProvider>
 	);
 }
 

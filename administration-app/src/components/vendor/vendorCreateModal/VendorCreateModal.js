@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 	button: {
 		marginRight: '20px',
 		'&.MuiButton-outlined': {
-			backgroundColor: '#eeba6c',
+			backgroundColor: '#ffaf36',
 			color: 'black',
 			'&:hover': {
 				backgroundColor: '#ea8c00',
