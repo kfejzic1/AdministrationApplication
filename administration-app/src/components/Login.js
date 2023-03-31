@@ -3,6 +3,7 @@ import './Login.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../services/loginServices';
 import { Button, Typography, TextField, Input, Alert } from '@mui/material';
+import { GoogleLoginButton, FacebookLoginButton, MicrosoftLoginButton } from "react-social-login-buttons"
 
 const LoginForm = arg => {
 	const [phoneMail, setPhoneMail] = useState('');
@@ -14,6 +15,14 @@ const LoginForm = arg => {
 		const regex = new RegExp('^[0-9]+$');
 		if (input.length <= 10 && input.match(regex)) return 'phone';
 		else return 'email';
+	}
+
+	function LoginAlert() {
+		if (errorMessage.length > 0)
+			return <Alert style={{width: '80%'}} severity='error' variant='filled'>
+						{errorMessage}
+					</Alert>;
+		return;
 	}
 
 	const handleButtonClick = () => {
@@ -65,15 +74,10 @@ const LoginForm = arg => {
 	};
 
 	return (
-		<div className='App1'>
+		<div className='login-container'>
 			<div className='cover'>
 				<Typography variant='h4'>Login</Typography>
-				<Alert severity='error' variant='filled' style={{ display: 'none' }}>
-					{errorMessage}
-				</Alert>
-				<div classname='alert-box'>
-					<Typography variant='h5'>{errorMessage}</Typography>
-				</div>
+				<LoginAlert/>
 				<Input
 					className='user-data'
 					type='text'
@@ -90,25 +94,9 @@ const LoginForm = arg => {
 						setPassword(e.target.value);
 					}}
 				/>
-
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/JsniGks.png' width={25} height={25} alt='googleicon' />
-					</span>
-					<span class='buttonText'>Sign in with Google</span>
-				</div>
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/fDEMtZy.png' width={25} height={25} alt='fbicon' />
-					</span>
-					<span class='buttonText'>Sign in with Facebook</span>
-				</div>
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/5pDDS3b.png' width={25} height={25} alt='msicon' />
-					</span>
-					<span class='buttonText'>Sign in with Microsoft</span>
-				</div>
+				<GoogleLoginButton style={{width: '80%'}}/>
+				<FacebookLoginButton style={{width: '80%'}}/>
+				<MicrosoftLoginButton style={{width: '80%'}}/>
 
 				<Typography>
 					You are not registered? <a href='/'>Register</a>

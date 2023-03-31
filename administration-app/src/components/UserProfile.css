@@ -1,6 +1,5 @@
 .profile-banner {
     background: linear-gradient(rgb(51, 46, 104), rgb(183,185,206));
-    border-radius: 20px;
     width: 100%;
     margin: auto;
 }
@@ -17,7 +16,7 @@
 }
 
 .profile-info {
-    width: 70%;
+    width: 80%;
     margin: auto;
     
 }

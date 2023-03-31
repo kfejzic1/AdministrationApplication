@@ -1,24 +1,4 @@
-*{
-    margin: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-    background-color: white;
-    color: black;
-}
-
-h1 {
-    background-color: #f2f2f2df;
-}
-
-h3 {
-    background-color: #f2f2f2df;
-}
-
-p {
-    background-color: #f2f2f2df;
-}
-
-.App1{
+.auth-container{
     height: 100vh;
     width: 100%;
     display: flex;
@@ -81,5 +61,3 @@ p {
 .verify-btn:hover{
   transform: scale(1.25);  
 }
-
-

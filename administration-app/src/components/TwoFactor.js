@@ -38,7 +38,7 @@ const TwoFactorView = props => {
 	};
 
 	return (
-		<div className='App1'>
+		<div className='auth-container'>
 			<div className='cover'>
 				<h1>2-Factor Authentication</h1>
 				<h3>You received a 6-digit code on your e-Mail/Phone. Please input your code here!</h3>
