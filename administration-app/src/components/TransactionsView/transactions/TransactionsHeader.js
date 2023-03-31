@@ -16,7 +16,9 @@ import TableRow from '@mui/material';
 import TableBody from '@mui/material';
 import TableCell from '@mui/material';*/
 
-export default function TransactionsListHeader() {
+export default function TransactionsListHeader(arg) {
+	const [sortingColumn, setSortingColumn] = useState('');
+	const [sortingDirection, setSortingDirection] = useState('asc');
 	const [idFilter, setIdFilter] = useState('');
 	const [dateStartFilter, setDateStartFilter] = useState('');
 	const [dateEndFilter, setDateEndFilter] = useState('');
@@ -51,24 +53,31 @@ export default function TransactionsListHeader() {
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
 		setSortDirectionId(newSortDirection);
+
 		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionDateChange = () => {
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
 		setSortDirectionDate(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('DateTime');
 		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionRecipientChange = () => {
 		const newSortDirection = sortDirectionRecipient === 'asc' ? 'desc' : 'asc';
 		setSortDirectionRecipient(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('Recipient');
 		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionAmountChange = () => {
 		const newSortDirection = sortDirectionAmount === 'asc' ? 'desc' : 'asc';
 		setSortDirectionAmount(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('Amount');
 		// send axios request to sort data ?
 	};
 
@@ -476,11 +485,23 @@ export default function TransactionsListHeader() {
 						</FormControl>
 					</th>
 					<th>
-						<button className={cn.filterBtn} 
-                        onClick={()=>{
-                            
-                        }}
-                        >Click to filter</button>
+						<button
+							className={cn.filterBtn}
+							onClick={() => {
+								arg.setFilterOptions({
+									Recipient: recipientFilter,
+									Status: statusFilter,
+									StartDate: dateStartFilter + 'T' + timeStartFilter,
+									EndDate: dateEndFilter + 'T' + timeEndFilter,
+									MinAmount: amountFilterStart,
+									MaxAmount: amountFilterEnd,
+									SortingOptoin: sortingColumn,
+									Ascending: sortingDirection == 'asc' ? true : false,
+								});
+							}}
+						>
+							Click to filter
+						</button>
 					</th>
 				</tr>
 			</thead>

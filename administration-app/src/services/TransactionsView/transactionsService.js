@@ -7,21 +7,22 @@ export function getBasicTransactions(number = 10) {
 		: { data: transactions, hasMore: false };
 }
 
-export function getTransactions(pageNumber, pageSize) {
-	return new Promise((resolve, reject) => {
+export function getTransactions(pageNumber, pageSize, sortingOptions) {
+	/*return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			resolve({ data: transactions });
 		}, 100);
 	});
+	*/
 	//mock is above, real is underneath
-	/*
+
 	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
 		method: 'GET',
+		params: sortingOptions,
 		headers: {
 			'Content-Type': 'application/json',
 		},
 	});
-	*/
 }
 export function getTransactionDetails(id) {
 	return new Promise((resolve, reject) => {
@@ -52,4 +53,20 @@ export function parseDate(date) {
 	const outputDateStr = `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
 
 	return outputDateStr;
+}
+function formatDateForDb(inputDate) {
+	// Split the input date string into its date and time components
+	const [time, date] = inputDate.split(' ');
+
+	// Split the date component into day, month, and year
+	const [day, month, year] = date.split('.');
+
+	// Create a new date object with the components in the correct order
+	const newDate = new Date(`${year}-${month}-${day}T${time}`);
+
+	// Format the new date object into the desired output format
+	const isoDate = newDate.toISOString();
+
+	// Return the formatted date string
+	return isoDate;
 }

@@ -23,13 +23,20 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		console.log('clear loaddding');
+		loadTransactions('clear-load');
+	}, [filterOptions]);
+	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
 	}, []);
-	function loadTransactions() {
+	function loadTransactions(a) {
+		console.log('filter=', filterOptions);
 		setIsLoading(true);
-		getTransactions(counter, 15)
+		if (a == 'clear-load') setCounter(1);
+		getTransactions(counter, 15, filterOptions)
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
+				if ('clear-load' == a) temp1 = transactions1.data;
 				setTransactionsRaw(temp1);
 				console.log('item)-', temp1[0].id);
 				var transactionsdata = temp1.map((item, index) => (
@@ -65,7 +72,7 @@ export const TransactionsList = arg => {
 			) : (
 				<div>
 					<h1>Transactions</h1>
-					<TransactionsListHeader></TransactionsListHeader>
+					<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
 
 					{transactions}
 				</div>
