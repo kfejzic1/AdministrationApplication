@@ -1,15 +1,4 @@
-.profile-page {
-    margin-top: 20px;
-}
-
-.profile-banner {
-    background: linear-gradient(rgb(51, 46, 104), rgb(183,185,206));
-    width: 60%;
-    margin: auto;
-}
-
 .profile-details {
-    width: 60%;
     margin: auto;
     margin-top: 20px;
 }
@@ -24,4 +13,14 @@
     height: 50px;
     margin: auto;
     font-size: 16px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+}
+
+.profile-banner {
+    background: linear-gradient(rgb(255, 193, 32), rgb(255,255,255));
+    margin: auto;
 }

@@ -4,11 +4,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Box } from "@mui/system";
 import { Typography, Table, TableContainer, TableBody, TableRow, TableCell, Paper, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProfilePage = () => {
     return (
-        <div className="profile-page">
-            <Box className="profile-banner">
+        <div className="container">
+            <Box className="profile-banner rounded-left">
                 <Box
                     component="img"
                     sx={{
@@ -32,7 +33,7 @@ const ProfilePage = () => {
                     <Typography variant="h6">Mail: example@etf.unsa.ba</Typography>  
                 </Box>
                 
-                <hr style={{width: '60%', margin: 'auto'}}/>
+                <hr style={{margin: 'auto'}}/>
 
                 <Box className="profile-details">
                     <TableContainer className="profile-info" component={Paper}>
