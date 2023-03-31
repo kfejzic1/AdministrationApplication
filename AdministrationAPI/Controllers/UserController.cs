@@ -36,10 +36,9 @@ namespace AdministrationAPI.Controllers
 
                 if (authenticationResult.IsTwoFactorEnabled)
                 {
-                    _emailService.SendEmail(authenticationResult.EmailMessage);
+                    //_emailService.SendEmail(authenticationResult.EmailMessage);
 
-                    return StatusCode(StatusCodes.Status200OK,
-                 new StatusMessageResponse { Status = "Success", Message = $"We have sent verification code to your email." });
+                    return Ok(authenticationResult);
                 }
 
                 if (authenticationResult.Success)
@@ -63,7 +62,7 @@ namespace AdministrationAPI.Controllers
         public async Task<IActionResult> LoginWithCode([FromBody] Login2FARequest loginRequest)
         {
             try
-            {
+            {                
                 var authenticationResult = await _userService.Login2FA(loginRequest);
 
                 if (authenticationResult.Success)

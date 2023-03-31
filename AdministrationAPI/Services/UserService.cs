@@ -1,7 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
-using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,6 +15,7 @@ namespace AdministrationAPI.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private List<string> listOfCodes = new List<string>() { "042889", "080327", "728991", "311480", "661868", "877397", "447642", "078630", "075330", "441271" };
 
         public UserService(
             UserManager<IdentityUser> userManager,
@@ -56,17 +57,26 @@ namespace AdministrationAPI.Services
             if (user.TwoFactorEnabled)
             {
                 await _signInManager.SignOutAsync();
-                var canI = await _signInManager.CanSignInAsync(user);
 
-                await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, true);
-                var twoFactorToken = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+                //Save this key to database, user should have {Id, email, Key}
+                //Also try to hash it or sthl
+                string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
 
-                var message = new Message(new string[] { user.Email! }, "Login Confirmation", twoFactorToken);
+                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                SetupCode setupInfo = tfa.GenerateSetupCode("Test Two Factor", user.Email, key, false);
+
+                string qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+                string manualEntrySetupCode = setupInfo.ManualEntryKey;
+
+                //Vracamo qrCodeImageUrl i proslijedimo ga na frontu kao img url
+                //Isto radimo sa manuelEntrySetupCode jer njega rucno unosimo
 
                 return new AuthenticationResult
                 {
                     IsTwoFactorEnabled = true,
-                    EmailMessage = message
+                    QrCodeImageUrl = qrCodeImageUrl,
+                    ManualEntrySetupCode = manualEntrySetupCode,
+                    SecKey = key
                 };
             }
 
@@ -84,7 +94,8 @@ namespace AdministrationAPI.Services
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-            var signIn = await _signInManager.TwoFactorSignInAsync(TokenOptions.DefaultEmailProvider, loginRequest.Code, false, false);
+            //Potrebno dobiti user key sa baze spremiti u varijablu userKey
+            string userKey = "0f5465625c";
 
             if (user == null)
                 return new AuthenticationResult
@@ -92,7 +103,10 @@ namespace AdministrationAPI.Services
                     Errors = new[] { "Invalid user!" }
                 };
 
-            if (signIn.Succeeded)
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            bool result = tfa.ValidateTwoFactorPIN(userKey, loginRequest.Code);
+
+            if (result)
             {
                 var authClaims = await GetAuthClaimsAsync(user);
                 var token = CreateToken(authClaims);
