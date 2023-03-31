@@ -16,14 +16,11 @@ namespace AdministrationAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
 
-
-        public UserController(IUserService userService, IMapper mapper, IEmailService emailService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
-            _emailService = emailService;
         }
 
         [HttpPost("login")]

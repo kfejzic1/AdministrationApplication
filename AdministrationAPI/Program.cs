@@ -14,9 +14,6 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
-var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
-builder.Services.AddSingleton(emailConfig);
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
