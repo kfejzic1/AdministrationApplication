@@ -9,7 +9,7 @@
 }
 
 .profile-details {
-    width: 75%;
+    width: 60%;
     margin: auto;
     margin-top: 20px;
 }
@@ -17,12 +17,6 @@
 .profile-main {
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.profile-info {
-    width: 80%;
-    margin: auto;
-    
 }
 
 .profile-info tr td {
