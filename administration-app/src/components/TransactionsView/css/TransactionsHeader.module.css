@@ -1,0 +1,102 @@
+:root{
+  --borderRadius:4px;
+}
+.textFieldSearch, .textFieldAmountStart, .textFieldAmountEnd {
+    background-color: whitesmoke;
+  }
+ 
+  .textFieldAmountStart {
+    margin-right: 10px;
+  }
+ 
+  .filterBtn {
+    background: var(--highlights);
+    border-radius: 999px;
+    box-shadow: var(--highlights) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+  }
+  .table{
+      
+    width:100%;
+    table-layout: fixed;
+    background: linear-gradient(to right, var(--left), var(--right));
+    font-family: 'Roboto', sans-serif;
+    margin: 0 auto;
+ 
+  }
+  .table th{
+    padding: 20px 15px 0px 15px;
+    text-align: center;
+    font-weight: 500;
+    font-size: var(--text-size2) ;
+    color: var(--_primary);
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .statusChooser{
+    background-color: whitesmoke;
+    border-radius: var(--borderRadius) ;
+  }
+  .dateInput{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around ;
+  }
+  .dateInputWrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around ;
+  }
+  .dateInput a{
+   
+    font-size: 18px;
+    margin: 0px;
+  }
+ .amountChooser{
+  border-radius: var(--borderRadius) ;
+  background-color: whitesmoke;
+ }
+  .dateTimePickerStart, .dateTimePickerEnd {
+    background-color: whitesmoke;
+  }
+ 
+  .dateTimePickerStart {
+    margin-bottom: 10px;
+    
+  }
+ 
+  .dropList, .select {
+    display: block;
+  }
+ 
+  .invalid {
+    
+  border-radius: var(--borderRadius) ;
+    border: 2px solid red;
+  }
+  .textFieldSearch{
+    
+  border-radius: var(--borderRadius) ;
+  }
+  .datePickerStart, .datePickerEnd, .timePickerStart, .timePickerEnd {
+    border: 2px solid greenyellow;
+  }
+ 
+  .invalidDateStart, .invalidDateEnd, .invalidTimeStart, .invalidTimeEnd {
+    border: 2px solid red;
+  }

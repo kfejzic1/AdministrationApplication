@@ -6,6 +6,7 @@ import cn from '../css/Transactions.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import TransactionsListHeader from './TransactionsHeader';
 export const TransactionsList = arg => {
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
@@ -29,6 +30,7 @@ export const TransactionsList = arg => {
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
 				setTransactionsRaw(temp1);
+				console.log('item)-', temp1[0].id);
 				var transactionsdata = temp1.map((item, index) => (
 					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 				));
@@ -62,18 +64,8 @@ export const TransactionsList = arg => {
 			) : (
 				<div>
 					<h1>Transactions</h1>
-					<table className={cn.table}>
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Date</th>
-								<th>Recipient</th>
-								<th>Amount</th>
-								<th>Status</th>
-								<th></th>
-							</tr>
-						</thead>
-					</table>
+					<TransactionsListHeader></TransactionsListHeader>
+
 					{transactions}
 				</div>
 			)}
