@@ -23,22 +23,28 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
-		console.log('clear loaddding');
+		console.log('clear loaddding1');
+		setCounter(1);
 		loadTransactions('clear-load');
 	}, [filterOptions]);
 	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
 	}, []);
 	function loadTransactions(a) {
-		console.log('filter=', filterOptions);
+		var tempCounter = counter;
 		setIsLoading(true);
-		if (a == 'clear-load') setCounter(1);
-		getTransactions(counter, 15, filterOptions)
+		if (a == 'clear-load') {
+			setCounter(1);
+			tempCounter = 1;
+		}
+		console.log('filter=', filterOptions, counter);
+		getTransactions(tempCounter, 15, filterOptions)
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
-				if ('clear-load' == a) temp1 = transactions1.data;
+				if ('clear-load' == a) {
+					temp1 = transactions1.data;
+				}
 				setTransactionsRaw(temp1);
-				console.log('item)-', temp1[0].id);
 				var transactionsdata = temp1.map((item, index) => (
 					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 				));

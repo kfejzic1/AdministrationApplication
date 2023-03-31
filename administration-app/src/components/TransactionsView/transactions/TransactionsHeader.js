@@ -22,8 +22,8 @@ export default function TransactionsListHeader(arg) {
 	const [idFilter, setIdFilter] = useState('');
 	const [dateStartFilter, setDateStartFilter] = useState('');
 	const [dateEndFilter, setDateEndFilter] = useState('');
-	const [timeStartFilter, setTimeStartFilter] = useState('');
-	const [timeEndFilter, setTimeEndFilter] = useState('');
+	const [timeStartFilter, setTimeStartFilter] = useState('00:00:00');
+	const [timeEndFilter, setTimeEndFilter] = useState('00:00:00');
 	const [recipientFilter, setRecipientFilter] = useState('');
 	const [amountFilterStart, setAmountFilterStart] = useState('');
 	const [amountFilterEnd, setAmountFilterEnd] = useState('');
@@ -501,6 +501,31 @@ export default function TransactionsListHeader(arg) {
 							}}
 						>
 							Click to filter
+						</button>
+						<button
+							className={cn.filterBtn}
+							onClick={() => {
+								setRecipientFilter('');
+								setStatusFilter('');
+								setDateStartFilter('T');
+								setDateEndFilter('T');
+								setAmountFilterStart('');
+								setAmountFilterEnd('');
+								setSortingDirection('asc');
+								setSortingColumn('DateTime');
+								arg.setFilterOptions({
+									Recipient: '',
+									Status: '',
+									StartDate: 'T',
+									EndDate: 'T',
+									MinAmount: '',
+									MaxAmount: '',
+									SortingOptoin: 'DateTime',
+									Ascending: 'asc',
+								});
+							}}
+						>
+							Restart filter
 						</button>
 					</th>
 				</tr>

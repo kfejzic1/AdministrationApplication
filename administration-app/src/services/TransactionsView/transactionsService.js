@@ -8,6 +8,7 @@ export function getBasicTransactions(number = 10) {
 }
 
 export function getTransactions(pageNumber, pageSize, sortingOptions) {
+	console.log('broj=', pageNumber, pageSize);
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			var temp = transactions;
@@ -18,18 +19,42 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
 					console.log('sad je recipes', sortingOptions.Recipient, JSON.stringify(temp));
 				}
-				if (sortingOptions.Status != '')
-					temp = temp.filter(transaction => transaction.recipient.status == sortingOptions.Status);
-				if (sortingOptions.MinAmount != '')
-					temp = temp.filter(transaction => transaction.recipient.amount > sortingOptions.MinAmount);
-				if (sortingOptions.MaxAmount != '')
-					temp = temp.filter(transaction => transaction.recipient.amount < sortingOptions.MaxAmount);
-				if (sortingOptions.StartDate != '')
-					temp = temp.filter(transaction => Date(transaction.recipient.dataTime) > Date(sortingOptions.StartDate));
-				if (sortingOptions.EndDate != '')
-					temp = temp.filter(transaction => Date(transaction.recipient.dataTime) < Date(sortingOptions.EndDate));
-			}
+				if (sortingOptions.Status != '') {
+					console.log('sad1 je recipes', sortingOptions.Status, temp[0].status, JSON.stringify(temp));
 
+					temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+				}
+				if (sortingOptions.MinAmount != '') {
+					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
+					console.log('sad 2je recipes', sortingOptions.ecipie, JSON.stringify(temp));
+				}
+				if (sortingOptions.MaxAmount != '') {
+					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+					console.log('sad3 je recipes', sortingOptions.Recipient, JSON.stringify(temp));
+				}
+				if (
+					!sortingOptions.StartDate.includes('TT') &&
+					sortingOptions.StartDate != 'T' &&
+					sortingOptions.StartDate != 'T00:00:00'
+				) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+					console.log('sad 4je recipes', sortingOptions.StartDate, transactions[0].dateTime, JSON.stringify(temp));
+				}
+				if (
+					!sortingOptions.EndDate.includes('TT') &&
+					sortingOptions.EndDate != 'T' &&
+					sortingOptions.EndDate != 'T00:00:00'
+				) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+					console.log('sad 5je recipes', sortingOptions.EndDate, transactions[0].dateTime, JSON.stringify(temp));
+				}
+			}
+			console.log(
+				'rez=',
+				(pageNumber - 1) * pageSize,
+				pageNumber * pageSize,
+				temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
+			);
 			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
 		}, 100);
 	});
