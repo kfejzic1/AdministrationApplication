@@ -51,7 +51,7 @@
     height: 100vh;
     background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
     background-position: center;
-    background-size: cover;
+    background-size: 100% auto;
 }
 
 .payment_form{

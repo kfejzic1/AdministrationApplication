@@ -476,7 +476,11 @@ export default function TransactionsListHeader() {
 						</FormControl>
 					</th>
 					<th>
-						<button className={cn.filterBtn}>Click to filter</button>
+						<button className={cn.filterBtn} 
+                        onClick={()=>{
+                            
+                        }}
+                        >Click to filter</button>
 					</th>
 				</tr>
 			</thead>

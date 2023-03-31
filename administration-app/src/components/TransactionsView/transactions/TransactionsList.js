@@ -8,6 +8,7 @@ import React from 'react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
 export const TransactionsList = arg => {
+	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
 	const [transactions, setTransactions] = useState([]);
