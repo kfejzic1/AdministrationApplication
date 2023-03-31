@@ -27,6 +27,11 @@ export const NavBar = () => {
 							Account
 						</Link>
 					</li>
+					<li>
+						<Link to='/payment' className='active'>
+							Pay
+						</Link>
+					</li>
 				</ul>
 			</nav>
 		</div>

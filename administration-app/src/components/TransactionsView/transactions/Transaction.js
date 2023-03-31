@@ -1,4 +1,4 @@
-import '../css/Transactions.css';
+import cn from '../css/Transactions.module.css';
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
 export default function Transaction(arg) {
 	// console.log('indec=', arg.index);
@@ -36,7 +36,7 @@ export default function Transaction(arg) {
 				</div>
 			</div>
 		</div>*/
-		<table>
+		<table className={cn.table}>
 			<tbody>
 				<tr>
 					<td>{arg.prop.id}</td>
@@ -45,9 +45,9 @@ export default function Transaction(arg) {
 					<td>{arg.prop.amount}</td>
 					<td>{arg.prop.status}</td>
 					<td>
-						<div className='detailsBtnDiv'>
+						<div className={cn.detailsBtnDiv}>
 							<button
-								className='detailsBtn'
+								className={cn.detailsBtn}
 								onClick={() => {
 									arg.setDetails(arg.prop);
 								}}

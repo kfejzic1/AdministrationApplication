@@ -1,13 +1,12 @@
 import { getTransactions } from '../../../services/TransactionsView/transactionsService';
-import TransactionsListHeader from './TransactionsListHeader';
+
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
-import '../css/Transactions.css';
+import cn from '../css/Transactions.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-
-export const TransactionsList = () => {
+export const TransactionsList = arg => {
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
 	const [transactions, setTransactions] = useState([]);
@@ -51,14 +50,31 @@ export const TransactionsList = () => {
 	}
 
 	return (
-		<div className='transactions-root'>
+		<div className={cn.transactions_root}>
 			{details != null ? (
 				// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
-				<TransactionDetails setIsLoading={setIsLoading} setDetails={setDetails} props={details}></TransactionDetails>
+				<TransactionDetails
+					setPaymentInfo={arg.setPaymentInfo}
+					setIsLoading={setIsLoading}
+					setDetails={setDetails}
+					props={details}
+				></TransactionDetails>
 			) : (
 				<div>
 					<h1>Transactions</h1>
-					<TransactionsListHeader></TransactionsListHeader> {transactions}
+					<table className={cn.table}>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Date</th>
+								<th>Recipient</th>
+								<th>Amount</th>
+								<th>Status</th>
+								<th></th>
+							</tr>
+						</thead>
+					</table>
+					{transactions}
 				</div>
 			)}
 			{isLoading && (
