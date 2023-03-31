@@ -3,7 +3,6 @@ import './Login.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../services/loginServices';
 import { Button, Typography, TextField, Input, Alert } from '@mui/material';
-import { GoogleLoginButton, FacebookLoginButton, MicrosoftLoginButton } from "react-social-login-buttons"
 
 const LoginForm = arg => {
 	const [phoneMail, setPhoneMail] = useState('');
@@ -52,6 +51,7 @@ const LoginForm = arg => {
 		// 			setErrorMessage('Neuspješna prijava!');
 		// 		});
 		// }
+		
 		const loginData = {
 			[checkData(phoneMail)]: phoneMail,
 			password,
@@ -94,9 +94,6 @@ const LoginForm = arg => {
 						setPassword(e.target.value);
 					}}
 				/>
-				<GoogleLoginButton style={{width: '80%'}}/>
-				<FacebookLoginButton style={{width: '80%'}}/>
-				<MicrosoftLoginButton style={{width: '80%'}}/>
 
 				<Typography>
 					You are not registered? <a href='/'>Register</a>
