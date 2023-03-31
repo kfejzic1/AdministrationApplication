@@ -2,37 +2,39 @@ import React, { useState } from 'react';
 import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import './TwoFactor.css';
-import { useParams } from "react-router-dom";
-import { twoFactorAut } from '../services/loginServices';
+import { useParams } from 'react-router-dom';
+import { twoFactorAuthentication } from '../services/loginServices';
 
-
-const TwoFactorView = (props) => {
+const TwoFactorView = props => {
 	const digit1 = useRef(null);
 	const digit2 = useRef(null);
 	const digit3 = useRef(null);
 	const digit4 = useRef(null);
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
-	//let { email } = useParams();
 	let state = useLocation();
-	//const { email } = props.location.state;
-	// const { email } = props;
-	const [errorMessage, setErrorMessage] = useState(''); 
-	
-	//console.log("sadasfasfasf" + props.email)
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const handleButtonClick = () => {
-		const allDigts = digit1.current.value + digit2.current.value + digit3.current.value + digit4.current.value + digit5.current.value + digit6.current.value;
-		let email = props.email
+		const allDigts =
+			digit1.current.value +
+			digit2.current.value +
+			digit3.current.value +
+			digit4.current.value +
+			digit5.current.value +
+			digit6.current.value;
+		let email = props.email;
 		console.log(allDigts);
-		twoFactorAut(allDigts, email).then(res => {
-            setErrorMessage("");
-			const { token } = res.data;
-            localStorage.setItem('token', token);
-            window.location.href = 'http://localhost:3000/';
-		}).catch(err => {
-            setErrorMessage("Neuspješna prijava!");
-        });
+		twoFactorAuthentication(allDigts, email)
+			.then(res => {
+				setErrorMessage('');
+				const { token } = res.data;
+				localStorage.setItem('token', token);
+				window.location.href = 'http://localhost:3000/';
+			})
+			.catch(err => {
+				setErrorMessage('Neuspješna prijava!');
+			});
 	};
 
 	return (
