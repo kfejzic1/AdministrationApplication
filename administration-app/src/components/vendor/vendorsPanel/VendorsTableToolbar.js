@@ -8,6 +8,7 @@ import { alpha } from '@mui/material/styles';
 import { Stack } from '@mui/system';
 import VendorCreateModal from '../vendorCreateModal/VendorCreateModal';
 import { makeStyles } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 const useStyles = makeStyles(theme => ({
 	button: {
 		marginRight: '20px',
@@ -26,10 +27,29 @@ const useStyles = makeStyles(theme => ({
 		},
 		'&.MuiButton-outlined': {
 			color: '#ffaf36',
+			border: '1px solid #ffaf36',
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000'
+			},
 		},
 	}
 }))
 
+
+const tableTheme = createTheme({
+	palette: {
+	  primary: {
+		main: "#E7EBF0",
+	  },
+	  secondary: {
+		main: "#ff9a001f",
+	  },
+	  secondary2: {
+		main: "#ffaf36",
+	  },
+	},
+  });
 export default function VendorsTableToolBar(props) {
 	const classes = useStyles();
 	const { numSelected } = props;
@@ -49,12 +69,13 @@ export default function VendorsTableToolBar(props) {
 	);
 
 	return (
+		<ThemeProvider theme={tableTheme}>
 		<Toolbar
 			sx={{
 				pl: { sm: 2 },
 				pr: { xs: 1, sm: 1 },
 				...(numSelected > 0 && {
-					bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+					bgcolor: theme => alpha(theme.palette.secondary.main, theme.palette.action.activatedOpacity),
 				}),
 			}}>
 			{numSelected > 0 ? (
@@ -91,6 +112,7 @@ export default function VendorsTableToolBar(props) {
 				<VendorCreateModal handleClose={handleClose} />
 			</Modal>
 		</Toolbar>
+		</ThemeProvider>
 	);
 }
 
