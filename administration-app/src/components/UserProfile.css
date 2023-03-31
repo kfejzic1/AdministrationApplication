@@ -1,6 +1,10 @@
+.profile-page {
+    margin-top: 20px;
+}
+
 .profile-banner {
     background: linear-gradient(rgb(51, 46, 104), rgb(183,185,206));
-    width: 100%;
+    width: 60%;
     margin: auto;
 }
 
