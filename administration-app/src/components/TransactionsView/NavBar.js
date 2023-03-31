@@ -18,6 +18,11 @@ export const NavBar = () => {
 						</Link>
 					</li>
 					<li>
+						<Link to='/vendor' className='active'>
+							Vendor
+						</Link>
+					</li>
+					<li>
 						<Link to='/account' className='active'>
 							Account
 						</Link>

@@ -50,6 +50,6 @@
   
   .nav-links a:hover {
     background-color: var(--left);
-    color: var(--primary);
+    color: white;
   }
   

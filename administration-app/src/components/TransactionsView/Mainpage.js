@@ -5,6 +5,8 @@ import { NavBar } from './NavBar';
 import { TransactionsList } from './transactions/TransactionsList';
 import { Home } from './Home';
 import { Account } from './Account';
+import { Vendor } from './Vendor';
+import { Payment } from './transactions/Payment';
 
 export const Mainpage = () => {
 	return (
@@ -15,6 +17,8 @@ export const Mainpage = () => {
 					<Route path='/' element={<Home />} />
 					<Route path='/transactions' element={<TransactionsList />} />
 					<Route path='/account' element={<Account />} />
+					<Route path='/payment' element={<Payment />} />
+					<Route path='/vendor' element={<Vendor />} />
 				</Routes>
 			</Router>
 		</div>

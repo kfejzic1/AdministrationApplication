@@ -1,0 +1,76 @@
+:root {
+	--primary:#e7ebf0
+	--secundary: #cfdeec;
+	--secundary2: #c4d7e9;
+	--left: #203A43;
+	--right: #2C5364;
+	--highlights: #0F2027; 
+    --babyblue : #3FB9F2; 
+  --bordercolor : rgba(255,255,255,0.3);
+	--text-size: 18px;
+	--text-size2: 24px;
+}
+
+h3{
+    font-size: 32px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 800;
+    color: var(--babyblue);
+}
+
+.central{
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    height: 100vh;
+    background-image: url("../../../img/bckg3.png");
+    background-position: center;
+    background-size: cover;
+}
+
+.payment-form{
+    display: flex;
+    margin-left: 10%;
+    margin-bottom: 2%;
+    flex-direction: column;
+    width: 58vh;
+    height: 52vh;
+    background-color: rgb(47, 82, 166,0.8);
+    opacity: 0.7;
+    border-radius: 50px;
+    box-shadow: 0 0.3rem 0.7rem 0 var(--highlights);
+}
+
+.form2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input{
+    padding: 15px;
+    border-radius: 5px;
+    border: 0px;
+}
+
+button{
+    color:white;
+    background-color: var(--babyblue);
+    height: 5vh;
+    width: 10vh;
+    border-radius: 20px;
+    font-size: 15px;
+    border: rgba(140, 135, 135, 0.888);
+}
+
+select{
+    background-color: var(--babyblue);
+    color: white;
+    margin-top: 1vh;
+    margin-left: 15vh;
+    margin-bottom: -1vh;
+    border-radius: 5px;
+    padding: 2px;
+}
+
