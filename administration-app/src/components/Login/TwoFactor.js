@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import './TwoFactor.css';
 import { useParams } from 'react-router-dom';
-import { twoFactorAuthentication } from '../services/loginServices';
+import { twoFactorAuthentication } from '../../services/loginService';
 
 const TwoFactorView = props => {
 	const digit1 = useRef(null);
@@ -12,20 +12,17 @@ const TwoFactorView = props => {
 	const digit4 = useRef(null);
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
-	let state = useLocation();
 	const [errorMessage, setErrorMessage] = useState('');
 
 	const handleButtonClick = () => {
-		const allDigts =
+		const code =
 			digit1.current.value +
 			digit2.current.value +
 			digit3.current.value +
 			digit4.current.value +
 			digit5.current.value +
 			digit6.current.value;
-		let email = props.email;
-		console.log(allDigts);
-		twoFactorAuthentication(allDigts, email)
+		twoFactorAuthentication({ code, email: props.email })
 			.then(res => {
 				setErrorMessage('');
 				const { token } = res.data;

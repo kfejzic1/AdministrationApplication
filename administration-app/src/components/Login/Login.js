@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { login } from '../services/loginServices';
+import { login } from '../../services/loginService';
 import { Button, Typography, TextField, Input, Alert } from '@mui/material';
+import TwoFactorView from './TwoFactor';
 
-const LoginForm = arg => {
+const LoginForm = () => {
 	const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const navigate = useNavigate();
+	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
+	const [email, setEmail] = useState(null);
+	const [qrCodeSrc, setQrCode] = useState(null);
 
 	function checkData(input) {
 		const regex = new RegExp('^[0-9]+$');
@@ -17,32 +20,6 @@ const LoginForm = arg => {
 	}
 
 	const handleButtonClick = () => {
-		// if (checkData(email) === 'email') {
-		// 	arg.setEmail(email);
-		// 	loginFunction(email, password)
-		// 		.then(res => {
-		// 			setErrorMessage('');
-		// 			const email1 = email;
-		// 			console.log(email1);
-		// 		})
-		// 		.catch(err => {
-		// 			setErrorMessage('Neuspješna prijava!');
-		// 		});
-		// } else {
-		// 	arg.setEmail(email);
-		// 	loginFunction(email, password)
-		// 		.then(res => {
-		// 			setErrorMessage('');
-		// 			const { token } = res.data;
-		// 			localStorage.setItem('token', token);
-		// 			const email1 = email;
-		// 			console.log(email1);
-		// 			navigate('/twofactor');
-		// 		})
-		// 		.catch(err => {
-		// 			setErrorMessage('Neuspješna prijava!');
-		// 		});
-		// }
 		const loginData = {
 			[checkData(phoneMail)]: phoneMail,
 			password,
@@ -50,28 +27,37 @@ const LoginForm = arg => {
 
 		login(loginData)
 			.then(res => {
-				const { token } = res.data;
+				const { token, twoFactorEnabled, mail, qrCodeImageUrl } = res.data;
 
-				if (!token) {
-					navigate('/twofactor');
+				if (twoFactorEnabled && mail) {
+					setIsTwoFactorEnabled(twoFactorEnabled);
+					setEmail(mail);
+					setQrCode(qrCodeImageUrl);
+
 					return;
 				}
 
 				localStorage.setItem('token', token);
 			})
 			.catch(err => {
-				setErrorMessage('Neuspješna prijava!');
+				const error = err.response.data.errors[0];
+				setErrorMessage(error);
 			});
 	};
 
-	return (
+	return isTwoFactorEnabled && email ? (
+		<div>
+			<TwoFactorView email={phoneMail}></TwoFactorView>
+			<img src={qrCodeSrc}></img>
+		</div>
+	) : (
 		<div className='App1'>
 			<div className='cover'>
 				<Typography variant='h4'>Login</Typography>
 				<Alert severity='error' variant='filled' style={{ display: 'none' }}>
 					{errorMessage}
 				</Alert>
-				<div classname='alert-box'>
+				<div className='alert-box'>
 					<Typography variant='h5'>{errorMessage}</Typography>
 				</div>
 				<Input

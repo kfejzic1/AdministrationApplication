@@ -1,5 +1,6 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
@@ -12,14 +13,13 @@ namespace AdministrationAPI.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
-        private List<string> listOfCodes = new List<string>() { "042889", "080327", "728991", "311480", "661868", "877397", "447642", "078630", "075330", "441271" };
 
         public UserService(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IConfiguration configuration
         )
         {
@@ -30,8 +30,7 @@ namespace AdministrationAPI.Services
 
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
-            //Fetch User From Database by email or phone from LoginRequest, password should be hashed
-            IdentityUser user = new IdentityUser();
+            User user = new User();
 
             if (loginRequest.Email != null)
                 user = await _userManager.FindByEmailAsync(loginRequest.Email);
@@ -54,29 +53,35 @@ namespace AdministrationAPI.Services
                 };
             }
 
+
+
             if (user.TwoFactorEnabled)
             {
-                await _signInManager.SignOutAsync();
+                string qrCodeImageUrl = null, manualEntrySetupCode = null;
 
-                //Save this key to database, user should have {Id, email, Key}
-                //Also try to hash it or sthl
-                string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
+                if (user.AuthenticatorKey == null)
+                {
+                    string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
 
-                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-                SetupCode setupInfo = tfa.GenerateSetupCode("Test Two Factor", user.Email, key, false);
+                    string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
 
-                string qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-                string manualEntrySetupCode = setupInfo.ManualEntryKey;
+                    TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                    SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
 
-                //Vracamo qrCodeImageUrl i proslijedimo ga na frontu kao img url
-                //Isto radimo sa manuelEntrySetupCode jer njega rucno unosimo
+                    qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+                    manualEntrySetupCode = setupInfo.ManualEntryKey;
+
+                    user.AuthenticatorKey = encodedKey;
+
+                    await _userManager.UpdateAsync(user);
+                }
 
                 return new AuthenticationResult
                 {
-                    IsTwoFactorEnabled = true,
+                    TwoFactorEnabled = true,
                     QrCodeImageUrl = qrCodeImageUrl,
                     ManualEntrySetupCode = manualEntrySetupCode,
-                    SecKey = key
+                    Mail = user.Email
                 };
             }
 
@@ -94,8 +99,6 @@ namespace AdministrationAPI.Services
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-            //Potrebno dobiti user key sa baze spremiti u varijablu userKey
-            string userKey = "0f5465625c";
 
             if (user == null)
                 return new AuthenticationResult
@@ -104,7 +107,8 @@ namespace AdministrationAPI.Services
                 };
 
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-            bool result = tfa.ValidateTwoFactorPIN(userKey, loginRequest.Code);
+            string key = Encoding.UTF8.GetString(Convert.FromBase64String(user.AuthenticatorKey));
+            bool result = tfa.ValidateTwoFactorPIN(key, loginRequest.Code);
 
             if (result)
             {
@@ -140,7 +144,7 @@ namespace AdministrationAPI.Services
             return token;
         }
 
-        private async Task<List<Claim>> GetAuthClaimsAsync(IdentityUser user)
+        private async Task<List<Claim>> GetAuthClaimsAsync(User user)
         {
             var authClaims = new List<Claim>
                 {

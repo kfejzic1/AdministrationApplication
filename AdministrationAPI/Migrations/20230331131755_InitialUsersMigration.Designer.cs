@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministrationAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230327170422_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20230331131755_InitialUsersMigration")]
+    partial class InitialUsersMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,80 +22,7 @@ namespace AdministrationAPI.Migrations
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("longtext")
-                        .HasColumnName("concurrency_stamp");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
-                        .HasColumnName("normalized_name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("usr_roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ce0612fa-6c76-49bb-973c-e7a4f073bd79",
-                            ConcurrencyStamp = "1",
-                            Name = "Admin",
-                            NormalizedName = "Admin"
-                        },
-                        new
-                        {
-                            Id = "099efcaa-2e61-4c98-9387-a05bb8f4dce1",
-                            ConcurrencyStamp = "2",
-                            Name = "User",
-                            NormalizedName = "User"
-                        });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("longtext")
-                        .HasColumnName("claim_type");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext")
-                        .HasColumnName("claim_value");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("usr_role_claims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("AdministrationAPI.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)")
@@ -104,6 +31,10 @@ namespace AdministrationAPI.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int")
                         .HasColumnName("access_failed_count");
+
+                    b.Property<string>("AuthenticatorKey")
+                        .HasColumnType("longtext")
+                        .HasColumnName("authenticator_key");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -118,6 +49,16 @@ namespace AdministrationAPI.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("email_confirmed");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_name");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)")
@@ -176,140 +117,229 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2f8209b5-9d22-4087-ba26-799f9211c59e",
+                            Id = "a1e10738-b9f5-4bcd-b76e-bf017b5acebe",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "kfejzic1@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Testing",
+                            LastName = "User",
                             LockoutEnabled = false,
                             NormalizedEmail = "KFEJZIC1@ETF.UNSA.BA",
                             NormalizedUserName = "TESTINGUSER",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062229993",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1e6d8d4b-bc9d-44f1-9250-3ad63d683ced",
+                            SecurityStamp = "46cce4ad-46ca-422e-8bed-0fd1df4a0a3e",
                             TwoFactorEnabled = true,
                             UserName = "testingUser"
                         },
                         new
                         {
-                            Id = "a8323ab2-9750-43c4-b017-ca09ed9de913",
+                            Id = "297834b6-1e15-47f9-9b0d-5c8c823bbe37",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "fejza2806@gmail.com",
                             EmailConfirmed = true,
+                            FirstName = "Admin",
+                            LastName = "User",
                             LockoutEnabled = false,
                             NormalizedEmail = "FEJZA2806@GMAIL.COM",
                             NormalizedUserName = "ADMINUSER",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062518214",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "100a0af5-a351-4be1-961f-f0cf5333e24a",
+                            SecurityStamp = "1c9198dd-7af9-4b66-ab7a-85b57d4b5d86",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
                         },
                         new
                         {
-                            Id = "8d25df41-5e23-4804-af13-c36e6897c2c2",
+                            Id = "7d0dfb8f-46b6-4f0f-a122-cacc41f9da00",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "esmajic2@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Elvedin",
+                            LastName = "Smajic",
                             LockoutEnabled = false,
                             NormalizedEmail = "ESMAJIC2@ETF.UNSA.BA",
                             NormalizedUserName = "ESMAJIC2",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "01f18223-2cdb-4310-94fe-691df80374c7",
+                            SecurityStamp = "a177fff2-341e-437f-a9f0-b45092090f2c",
                             TwoFactorEnabled = true,
                             UserName = "esmajic2"
                         },
                         new
                         {
-                            Id = "6461bebc-6e1a-4306-ac1b-a7188c6838b6",
+                            Id = "7d3541b4-2a01-46c1-aa94-cea9951b11ae",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "amehmedagi1@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Admir",
+                            LastName = "Mehmedagic",
                             LockoutEnabled = false,
                             NormalizedEmail = "AMEHMEDAGI1@ETF.UNSA.BA",
                             NormalizedUserName = "AMEHMEDAGI1",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "3b567bac-0594-49fc-be7d-1d445725d9b4",
+                            SecurityStamp = "6c0371c6-bb6f-4b9d-a2e2-4ba93ebc5b0a",
                             TwoFactorEnabled = true,
                             UserName = "amehmedagi1"
                         },
                         new
                         {
-                            Id = "45607dbb-5ba8-46da-9432-8b0ca3be116e",
+                            Id = "4015e0ed-1a41-4d9d-b37c-628d627431c1",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "mbecirovic3@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Merjem",
+                            LastName = "Becirovic",
                             LockoutEnabled = false,
                             NormalizedEmail = "MBECIROVIC3@ETF.UNSA.BA",
                             NormalizedUserName = "MBECIROVIC3",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "05348740-585e-4bcb-94d7-e940d3823966",
+                            SecurityStamp = "419e21a1-146a-40bd-830e-c89fef5ecf92",
                             TwoFactorEnabled = true,
                             UserName = "mbecirovic3"
                         },
                         new
                         {
-                            Id = "9b395a35-dd7c-482e-8c30-edb79f908274",
+                            Id = "91549501-f827-41ba-9b2b-f0e2d0125909",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "dmuhic1@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Dzenis",
+                            LastName = "Muhic",
                             LockoutEnabled = false,
                             NormalizedEmail = "DMUHIC1@ETF.UNSA.BA",
                             NormalizedUserName = "DMUHIC1",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "16693134-53e2-4c87-bf84-a31b64b7b7e7",
+                            SecurityStamp = "8ffe0fee-29f8-428d-9a13-ab2ff7713e1a",
                             TwoFactorEnabled = true,
                             UserName = "dmuhic1"
                         },
                         new
                         {
-                            Id = "d0c2c564-bdec-4c16-825a-8d4ea7166a83",
+                            Id = "2e38bf0f-f09b-4815-924d-026cec2e08b6",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "emekic2@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Ema",
+                            LastName = "Mekic",
                             LockoutEnabled = false,
                             NormalizedEmail = "EMEKIC2@ETF.UNSA.BA",
                             NormalizedUserName = "EMEKIC2",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0e5f2dda-eda3-4c5c-a09b-90283826c924",
+                            SecurityStamp = "ab5cb4a5-24d2-41eb-b7fd-43251a628973",
                             TwoFactorEnabled = true,
                             UserName = "emekic2"
                         },
                         new
                         {
-                            Id = "fd979445-86c7-450a-bfcc-5ce03b0a2367",
+                            Id = "530328c4-8ea2-4b5a-8947-e817e5bcf668",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "1",
                             Email = "abrulic1@etf.unsa.ba",
                             EmailConfirmed = true,
+                            FirstName = "Almina",
+                            LastName = "Brulic",
                             LockoutEnabled = false,
                             NormalizedEmail = "ABRULIC1@ETF.UNSA.BA",
                             NormalizedUserName = "ABRULIC1",
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1674356c-728e-4df5-8d14-4b90fa05f783",
+                            SecurityStamp = "52ddcf88-6ef4-4524-8136-50352a0410bb",
                             TwoFactorEnabled = true,
                             UserName = "abrulic1"
                         });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)")
+                        .HasColumnName("normalized_name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("usr_roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d46e9247-a0f1-4022-8fab-3292b45ae1ba",
+                            ConcurrencyStamp = "1",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "d02747f1-69a1-4093-9ea1-f2954a1d5a3b",
+                            ConcurrencyStamp = "2",
+                            Name = "User",
+                            NormalizedName = "User"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_type");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_value");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("usr_role_claims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -416,7 +446,7 @@ namespace AdministrationAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AdministrationAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -425,7 +455,7 @@ namespace AdministrationAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AdministrationAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -440,7 +470,7 @@ namespace AdministrationAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AdministrationAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -449,7 +479,7 @@ namespace AdministrationAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AdministrationAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

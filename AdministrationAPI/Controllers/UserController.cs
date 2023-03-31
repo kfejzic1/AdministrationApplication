@@ -34,12 +34,8 @@ namespace AdministrationAPI.Controllers
             {
                 var authenticationResult = await _userService.Login(loginRequest);
 
-                if (authenticationResult.IsTwoFactorEnabled)
-                {
-                    //_emailService.SendEmail(authenticationResult.EmailMessage);
-
+                if (authenticationResult.TwoFactorEnabled)
                     return Ok(authenticationResult);
-                }
 
                 if (authenticationResult.Success)
                     return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
