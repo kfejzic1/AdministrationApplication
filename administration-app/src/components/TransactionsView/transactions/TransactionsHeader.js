@@ -1,6 +1,7 @@
 import cn from '../css/TransactionsHeader.module.css';
 import TextField from '@mui/material/TextField';
 import ClearIcon from '@mui/icons-material/Clear';
+import SwapVertSharpIcon from '@mui/icons-material/SwapVertSharp';
 import IconButton from '@mui/material/IconButton';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useState } from 'react';
@@ -201,7 +202,6 @@ export default function TransactionsListHeader(arg) {
 	const clearAmountEndFilter = () => {
 		setAmountFilterEnd('');
 	};
-
 	const styles = theme => ({
 		textField: {
 			width: '90%',
@@ -234,49 +234,91 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					</th>
 					<th>
-						<TableSortLabel
-							direction={sortDirectionDate}
-							onClick={handleSortDirectionDateChange}
-							sx={{
-								'& .MuiTableSortLabel-icon': {
-									color: 'white !important',
-								},
-							}}
-							hideSortIcon={false}
-							active={true}
-						>
-							Date
-						</TableSortLabel>
+						{sortingColumn != 'DateTime' ? (
+							<div className={cn.unSort}>
+								<p>Date</p>
+								<SwapVertSharpIcon
+									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+									onClick={() => {
+										setSortingColumn('DateTime');
+										setSortingDirection('asc');
+										console.log('Sorting;');
+									}}
+								/>
+							</div>
+						) : (
+							<TableSortLabel
+								direction={sortDirectionDate}
+								onClick={handleSortDirectionDateChange}
+								sx={{
+									'& .MuiTableSortLabel-icon': {
+										color: 'white !important',
+									},
+								}}
+								hideSortIcon={false}
+								active={true}
+							>
+								Date
+							</TableSortLabel>
+						)}
 					</th>
 					<th>
-						<TableSortLabel
-							direction={sortDirectionRecipient}
-							onClick={handleSortDirectionRecipientChange}
-							sx={{
-								'& .MuiTableSortLabel-icon': {
-									color: 'white !important',
-								},
-							}}
-							hideSortIcon={false}
-							active={true}
-						>
-							Recipient
-						</TableSortLabel>
+						{sortingColumn != 'Recipient' ? (
+							<div className={cn.unSort}>
+								<p>Recipient</p>
+								<SwapVertSharpIcon
+									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+									onClick={() => {
+										setSortingColumn('Recipient');
+										setSortingDirection('asc');
+										console.log('Sorting;');
+									}}
+								/>
+							</div>
+						) : (
+							<TableSortLabel
+								direction={sortDirectionRecipient}
+								onClick={handleSortDirectionRecipientChange}
+								sx={{
+									'& .MuiTableSortLabel-icon': {
+										color: 'white !important',
+									},
+								}}
+								hideSortIcon={false}
+								active={true}
+							>
+								Recipient
+							</TableSortLabel>
+						)}
 					</th>
 					<th>
-						<TableSortLabel
-							direction={sortDirectionAmount}
-							onClick={handleSortDirectionAmountChange}
-							sx={{
-								'& .MuiTableSortLabel-icon': {
-									color: 'white !important',
-								},
-							}}
-							hideSortIcon={false}
-							active={true}
-						>
-							Amount
-						</TableSortLabel>
+						{sortingColumn != 'Amount' ? (
+							<div className={cn.unSort}>
+								<p>Amount </p>
+								<SwapVertSharpIcon
+									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+									onClick={() => {
+										setSortingColumn('Amount');
+										setSortingDirection('asc');
+										console.log('Sorting;');
+									}}
+								/>
+							</div>
+						) : (
+							<TableSortLabel
+								direction={sortDirectionAmount}
+								onClick={handleSortDirectionAmountChange}
+								sx={{
+									'& .MuiTableSortLabel-icon': {
+										color: 'white !important',
+									},
+								}}
+								hideSortIcon={false}
+								active={true}
+							>
+								Amount
+							</TableSortLabel>
+						)}
 					</th>
 					<th>
 						<TableSortLabel
@@ -295,6 +337,7 @@ export default function TransactionsListHeader(arg) {
 					</th>
 					<th></th>
 				</tr>
+
 				<tr>
 					<th>
 						<TextField
