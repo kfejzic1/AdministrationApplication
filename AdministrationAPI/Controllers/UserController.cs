@@ -81,5 +81,26 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("getuser")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UserById([FromQuery] UserRequest userRequest)
+        {
+            try
+            {
+                var userFetchResult = await _userService.GetUser(userRequest);
+
+                return StatusCode(StatusCodes.Status200OK, userFetchResult);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.UserById");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

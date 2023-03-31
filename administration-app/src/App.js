@@ -9,7 +9,7 @@ import { testFunction } from './services/testingService';
 function App() {
 	const [testingData, setTestingData] = useState([]);
 	const [email, setEmail] = useState("");
-
+	const user = useState("esmajic2");   // Testni user za sad
 
 	const handleButtonClick = () => {
 		testFunction().then(res => {
@@ -24,7 +24,7 @@ function App() {
 					<Routes>
 						<Route path='/login' element={<LoginForm setEmail={setEmail} />} />
 						<Route path="/twofactor" element={<TwoFactorView email={email} />} />
-						<Route path="/user" element={<ProfilePage />} />
+						<Route path="/user" element={<ProfilePage user={user}/>} />
 					</Routes>
 				</div>
 			</Router>

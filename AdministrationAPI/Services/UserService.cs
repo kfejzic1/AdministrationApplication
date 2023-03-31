@@ -143,5 +143,23 @@ namespace AdministrationAPI.Services
 
             return authClaims;
         }
+
+        public async Task<UserFetchResponse> GetUser(UserRequest userRequest)
+        {
+            var user = await _userManager.FindByNameAsync(userRequest.UserName);
+            if (user == null) {
+                return new UserFetchResponse 
+                {
+                    Errors = new[] { "User not found!" }
+                };
+            }
+
+            return new UserFetchResponse 
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Phone = user.PhoneNumber
+            };
+        }
     }
 }
