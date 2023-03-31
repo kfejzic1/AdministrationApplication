@@ -23,7 +23,6 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
-		console.log('clear loaddding1');
 		setCounter(1);
 		loadTransactions('clear-load');
 	}, [filterOptions]);

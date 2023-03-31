@@ -71,51 +71,53 @@ export default function TransactionDetails(arg) {
 				</div>
 			</div>
 		</div>*/
-		<table className={cn.table}>
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Recipient</th>
-					<th>Amount</th>
-					<th>Status</th>
-					<th>Bank Account</th>
-					<th>Name of the Payee</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>{arg.props.id}</td>
-					<td>{parseDate(props.dateTime)}</td>
-					<td>{props.recipient}</td>
-					<td>{props.amount}</td>
-					<td>{props.status}</td>
-					<td>{props.account}</td>
-					<td>{props.type}</td>
-					<td>
-						<div className={cn.closeBtnDiv}>
-							<button
-								className={cn.closeBtn}
-								onClick={() => {
-									arg.setDetails(null);
-								}}
-							>
-								<p>Close</p>
-							</button>
-							<button
-								className={cn.closeBtn}
-								onClick={() => {
-									arg.setPaymentInfo(props);
-									navigate('/payment');
-								}}
-							>
-								<p>Reuse</p>
-							</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div className={cn.transactoin_root}>
+			<table className={cn.table}>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Date</th>
+						<th>Recipient</th>
+						<th>Amount</th>
+						<th>Status</th>
+						<th>Bank Account</th>
+						<th>Name of the Payee</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{arg.props.id}</td>
+						<td>{parseDate(props.dateTime)}</td>
+						<td>{props.recipient}</td>
+						<td>{props.amount}</td>
+						<td>{props.status}</td>
+						<td>{props.account}</td>
+						<td>{props.type}</td>
+						<td>
+							<div className={cn.closeBtnDiv}>
+								<button
+									className={cn.closeBtn}
+									onClick={() => {
+										arg.setDetails(null);
+									}}
+								>
+									<p>Close</p>
+								</button>
+								<button
+									className={cn.closeBtn}
+									onClick={() => {
+										arg.setPaymentInfo(props);
+										navigate('/payment');
+									}}
+								>
+									<p>Reuse</p>
+								</button>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	);
 }

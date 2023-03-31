@@ -13,7 +13,7 @@ export const Payment = props => {
 		// code to handle form submission goes here
 	}
 	return (
-		<div className={cn.central}>
+		<div className={cn.payment_root}>
 			<div className={cn.payment_form}>
 				<h3 className={cn.h3}>New Transaction</h3>
 

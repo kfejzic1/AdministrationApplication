@@ -9,12 +9,6 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { OutlinedInput } from '@mui/material';
-
-/*import Table from '@mui/material';
-import TableRow from '@mui/material';
-import TableBody from '@mui/material';
-import TableCell from '@mui/material';*/
 
 export default function TransactionsListHeader(arg) {
 	const [sortingColumn, setSortingColumn] = useState('');
@@ -53,8 +47,6 @@ export default function TransactionsListHeader(arg) {
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
 		setSortDirectionId(newSortDirection);
-
-		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionDateChange = () => {
@@ -62,7 +54,6 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionDate(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('DateTime');
-		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionRecipientChange = () => {
@@ -70,7 +61,6 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionRecipient(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Recipient');
-		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionAmountChange = () => {
@@ -78,13 +68,11 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionAmount(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Amount');
-		// send axios request to sort data ?
 	};
 
 	const handleSortDirectionStatusChange = () => {
 		const newSortDirection = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
 		setSortDirectionStatus(newSortDirection);
-		// send axios request to sort data ?
 	};
 
 	const handleIdFilterChange = event => {
@@ -98,26 +86,21 @@ export default function TransactionsListHeader(arg) {
 		if (startDate > endDate && event.target.value != '') {
 			alert('Starting date cannot be highter then ending date');
 			setStartDateClass('invalidDateStart');
-			// console.log(startTimeClass)
 		} else {
 			setDateStartFilter(event.target.value);
 			setStartDateClass('datePickerStart');
-			// console.log(startTimeClass)
 		}
 	};
 
 	const handleDateEndFilterChange = event => {
 		const startDate = new Date(dateStartFilter);
 		const endDate = new Date(event.target.value);
-
 		if (startDate > endDate && event.target.value != '') {
 			alert('Starting date cannot be highter then ending date');
 			setEndDateClass('invalidDateEnd');
-			// console.log(endTimeClass)
 		} else {
 			setDateEndFilter(event.target.value);
 			setEndDateClass('datePickerEnd');
-			// console.log(endTimeClass)
 		}
 	};
 
@@ -173,7 +156,6 @@ export default function TransactionsListHeader(arg) {
 	const handleAmountFilterEndChange = event => {
 		const value = event.target.value;
 		const regex = /^\d*(\.\d{0,2})?$/;
-
 		if (parseFloat(amountFilterEnd) < parseFloat(amountFilterStart))
 			alert('Ending value cannot be lower then starting value');
 
@@ -218,14 +200,6 @@ export default function TransactionsListHeader(arg) {
 
 	const clearAmountEndFilter = () => {
 		setAmountFilterEnd('');
-	};
-
-	/*const clearStatusFilter = () => {
-        setStatusFilterEnd('');
-    };*/
-
-	const handleFilterClick = () => {
-		// Call Axios request to filter data
 	};
 
 	const styles = theme => ({
@@ -405,14 +379,7 @@ export default function TransactionsListHeader(arg) {
 							>
 								Click to enter amount
 							</InputLabel>
-							<Select
-								className={cn.select}
-								/*inputProps={{
-                                name: 'Amount',
-                                id: 'amount-filter',
-                                value: {amountFilterStart, amountFilterEnd}
-                                }}*/
-							>
+							<Select className={cn.select}>
 								<InputLabel sx={{ marginLeft: '2px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 									Enter start value
 								</InputLabel>

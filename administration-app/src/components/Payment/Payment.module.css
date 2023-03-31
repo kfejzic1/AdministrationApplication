@@ -1,4 +1,4 @@
-:root {
+.payment_root {
 	--_primary:#e7ebf0;
 	--secundary: #cfdeec;
 	--secundary2: #c4d7e9;
@@ -14,9 +14,17 @@
     --formHeading:70px;
     --formGap:25px;
     --selectBtn:15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    height: 100vh;
+    background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
+    background-position: center;
+    background-size: 100% auto;
 }
 @media screen and (max-height: 700px) {
-    :root {
+    .payment_root {
         --_primary:#e7ebf0;
         --secundary: #cfdeec;
         --secundary2: #c4d7e9;
@@ -32,6 +40,14 @@
         --formHeading:30px;
         --formGap:10px;
         --selectBtn:0px;
+        
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    height: 100vh;
+    background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
+    background-position: center;
+    background-size: 100% auto;
     }
 
      
@@ -44,15 +60,6 @@
     margin: 0;
 }
 
-.central{
-    display: flex;
-    justify-content: flex-start;
-    align-items:center;
-    height: 100vh;
-    background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
-    background-position: center;
-    background-size: 100% auto;
-}
 
 .payment_form{
     display: flex;

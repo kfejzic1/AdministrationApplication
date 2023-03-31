@@ -1,5 +1,5 @@
-:root {
-	--_primary:#E7EBF0;
+.transactions_root{
+  --_primary:#E7EBF0;
 	--secundary: #cfdeec;
 	--secundary2: #c4d7e9;
 	--left: #203A43;

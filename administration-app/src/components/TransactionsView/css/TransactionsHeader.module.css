@@ -1,6 +1,7 @@
 :root{
   --borderRadius:4px;
 }
+
 .textFieldSearch, .textFieldAmountStart, .textFieldAmountEnd {
     background-color: whitesmoke;
   }
