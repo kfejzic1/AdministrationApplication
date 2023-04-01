@@ -24,6 +24,7 @@ export const Payment = props => {
 			setRecipientAccountNumber('');
 			setCurrency('USD');
 			setType('Payment');
+			props.setPaymentInfo(null);
 		};
 	}, []);
 

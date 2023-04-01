@@ -6,9 +6,8 @@ export function getBasicTransactions(number = 10) {
 		? { data: transactions.slice(0, number), hasMore: true }
 		: { data: transactions, hasMore: false };
 }
-
 export function getTransactions(pageNumber, pageSize, sortingOptions) {
-	return new Promise((resolve, reject) => {
+	/*return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			var temp = transactions;
 			if (sortingOptions != null) {
@@ -71,32 +70,120 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
 		}, 100);
 	});
-
+	*/
 	//mock is above, real is underneath
+	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
-		if (sortingOptions.MinAmount === '') delete sortingOptions.MinAmount;
-		if (sortingOptions.SortingOptions === '') delete sortingOptions.SortingOptions;
+		if (sortingOptions.MinAmount === '') {
+			delete sortingOptions.MinAmount;
+		}
+		if (sortingOptions.SortingOptions === '') {
+			delete sortingOptions.SortingOptions;
+		}
 		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
-		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
-		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
+		if (sortingOptions.EndDate === '') delete sortingOptions.EndDate;
+		if (sortingOptions.StartDate === '') delete sortingOptions.StartDate;
 		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
 		if (sortingOptions.Status === '') delete sortingOptions.Status;
 		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
 	}
+	return new Promise(function (resolveO, reject) {
+		axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+			method: 'GET',
+			params: sortingOptions,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then(function (response) {
+				resolveO(response);
+			})
+			.catch(function (err) {
+				sortingOptions = mockSortingOptons;
+				var temp = transactions;
+				if (sortingOptions != null) {
+					if (sortingOptions.Recipient != '') {
+						temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+					}
+					if (sortingOptions.Status != '') {
+						temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+					}
+					if (sortingOptions.MinAmount != '') {
+						temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
+					}
+					if (sortingOptions.MaxAmount != '') {
+						temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+					}
+					if (!sortingOptions.StartDate.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+					}
+					if (sortingOptions.EndDate.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+					}
 
-	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+					if (sortingOptions.SortingOptions != '') {
+						if (sortingOptions.SortingOptions == 'DateTime')
+							temp = temp.sort((a, b) => {
+								if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						if (sortingOptions.SortingOptions == 'Amount') {
+							temp = temp.sort((a, b) => {
+								if (a.amount - b.amount > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
+						if (sortingOptions.SortingOptions == 'Recipient') {
+							temp = temp.sort((a, b) => {
+								if (a.recipient.localeCompare(b.recipient) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
+					}
+				}
+				resolveO({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
+			});
+	});
+	/*
+return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
 		method: 'GET',
 		params: sortingOptions,
 		headers: {
 			'Content-Type': 'application/json',
 		},
 	});
+*/
 }
+
 export function getTransactionDetails(id) {
 	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve({ data: transactions.filter(a => a.id == id)[0] });
-		}, 100);
+		axios(env.API_ENV.url + '/api/transactions/' + id, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then(function (response) {
+				resolve(response);
+			})
+			.catch(function (response) {
+				resolve({ data: transactions.filter(a => a.id == id)[0] });
+			});
 	});
 	/*
 	return axios(env.API_ENV.url + '/api/transactions/' + id, {

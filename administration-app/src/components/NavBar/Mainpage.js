@@ -15,7 +15,7 @@ export const Mainpage = () => {
 				<Routes>
 					<Route path='/' element={<Home />} />
 					<Route path='/transactions' element={<TransactionsList setPaymentInfo={setPaymentInfo} />} />
-					<Route path='/payment' element={<Payment paymentInfo={paymentInfo} />} />
+					<Route path='/payment' element={<Payment setPaymentInfo={setPaymentInfo} paymentInfo={paymentInfo} />} />
 				</Routes>
 			</Router>
 		</div>

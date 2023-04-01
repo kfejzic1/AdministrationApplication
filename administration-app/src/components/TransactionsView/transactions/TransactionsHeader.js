@@ -4,7 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SwapVertSharpIcon from '@mui/icons-material/SwapVertSharp';
 import IconButton from '@mui/material/IconButton';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -44,7 +44,9 @@ export default function TransactionsListHeader(arg) {
 
 	const [startTimeClass, setStartTimeClass] = useState('');
 	const [endTimeClass, setEndTimeClass] = useState('');
-
+	useEffect(() => {
+		updateFilterOptions();
+	}, [sortingColumn]);
 	const updateFilterOptions = () => {
 		var startDate1 = dateStartFilter + 'T' + timeStartFilter;
 		if (startDate1.length < 18) startDate1 = '';
