@@ -16,14 +16,11 @@ namespace AdministrationAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
 
-
-        public UserController(IUserService userService, IMapper mapper, IEmailService emailService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
-            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -34,13 +31,8 @@ namespace AdministrationAPI.Controllers
             {
                 var authenticationResult = await _userService.Login(loginRequest);
 
-                if (authenticationResult.IsTwoFactorEnabled)
-                {
-                    _emailService.SendEmail(authenticationResult.EmailMessage);
-
-                    return StatusCode(StatusCodes.Status200OK,
-                 new StatusMessageResponse { Status = "Success", Message = $"We have sent verification code to your email." });
-                }
+                if (authenticationResult.TwoFactorEnabled)
+                    return Ok(authenticationResult);
 
                 if (authenticationResult.Success)
                     return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
@@ -63,7 +55,7 @@ namespace AdministrationAPI.Controllers
         public async Task<IActionResult> LoginWithCode([FromBody] Login2FARequest loginRequest)
         {
             try
-            {
+            {                
                 var authenticationResult = await _userService.Login2FA(loginRequest);
 
                 if (authenticationResult.Success)

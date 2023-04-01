@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AdministrationAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialUsersMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,6 +41,12 @@ namespace AdministrationAPI.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    authenticator_key = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    first_name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    last_name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     user_name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -203,23 +209,23 @@ namespace AdministrationAPI.Migrations
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "099efcaa-2e61-4c98-9387-a05bb8f4dce1", "2", "User", "User" },
-                    { "ce0612fa-6c76-49bb-973c-e7a4f073bd79", "1", "Admin", "Admin" }
+                    { "d02747f1-69a1-4093-9ea1-f2954a1d5a3b", "2", "User", "User" },
+                    { "d46e9247-a0f1-4022-8fab-3292b45ae1ba", "1", "Admin", "Admin" }
                 });
 
             migrationBuilder.InsertData(
                 table: "usr_users",
-                columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
+                columns: new[] { "id", "access_failed_count", "authenticator_key", "concurrency_stamp", "email", "email_confirmed", "first_name", "last_name", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
                 values: new object[,]
                 {
-                    { "2f8209b5-9d22-4087-ba26-799f9211c59e", 0, "1", "kfejzic1@etf.unsa.ba", true, false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "1e6d8d4b-bc9d-44f1-9250-3ad63d683ced", true, "testingUser" },
-                    { "45607dbb-5ba8-46da-9432-8b0ca3be116e", 0, "1", "mbecirovic3@etf.unsa.ba", true, false, null, "MBECIROVIC3@ETF.UNSA.BA", "MBECIROVIC3", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "05348740-585e-4bcb-94d7-e940d3823966", true, "mbecirovic3" },
-                    { "6461bebc-6e1a-4306-ac1b-a7188c6838b6", 0, "1", "amehmedagi1@etf.unsa.ba", true, false, null, "AMEHMEDAGI1@ETF.UNSA.BA", "AMEHMEDAGI1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "3b567bac-0594-49fc-be7d-1d445725d9b4", true, "amehmedagi1" },
-                    { "8d25df41-5e23-4804-af13-c36e6897c2c2", 0, "1", "esmajic2@etf.unsa.ba", true, false, null, "ESMAJIC2@ETF.UNSA.BA", "ESMAJIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "01f18223-2cdb-4310-94fe-691df80374c7", true, "esmajic2" },
-                    { "9b395a35-dd7c-482e-8c30-edb79f908274", 0, "1", "dmuhic1@etf.unsa.ba", true, false, null, "DMUHIC1@ETF.UNSA.BA", "DMUHIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "16693134-53e2-4c87-bf84-a31b64b7b7e7", true, "dmuhic1" },
-                    { "a8323ab2-9750-43c4-b017-ca09ed9de913", 0, "1", "fejza2806@gmail.com", true, false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "100a0af5-a351-4be1-961f-f0cf5333e24a", false, "adminUser" },
-                    { "d0c2c564-bdec-4c16-825a-8d4ea7166a83", 0, "1", "emekic2@etf.unsa.ba", true, false, null, "EMEKIC2@ETF.UNSA.BA", "EMEKIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "0e5f2dda-eda3-4c5c-a09b-90283826c924", true, "emekic2" },
-                    { "fd979445-86c7-450a-bfcc-5ce03b0a2367", 0, "1", "abrulic1@etf.unsa.ba", true, false, null, "ABRULIC1@ETF.UNSA.BA", "ABRULIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "1674356c-728e-4df5-8d14-4b90fa05f783", true, "abrulic1" }
+                    { "297834b6-1e15-47f9-9b0d-5c8c823bbe37", 0, null, "1", "fejza2806@gmail.com", true, "Admin", "User", false, null, "FEJZA2806@GMAIL.COM", "ADMINUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062518214", true, "1c9198dd-7af9-4b66-ab7a-85b57d4b5d86", false, "adminUser" },
+                    { "2e38bf0f-f09b-4815-924d-026cec2e08b6", 0, null, "1", "emekic2@etf.unsa.ba", true, "Ema", "Mekic", false, null, "EMEKIC2@ETF.UNSA.BA", "EMEKIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "ab5cb4a5-24d2-41eb-b7fd-43251a628973", true, "emekic2" },
+                    { "4015e0ed-1a41-4d9d-b37c-628d627431c1", 0, null, "1", "mbecirovic3@etf.unsa.ba", true, "Merjem", "Becirovic", false, null, "MBECIROVIC3@ETF.UNSA.BA", "MBECIROVIC3", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "419e21a1-146a-40bd-830e-c89fef5ecf92", true, "mbecirovic3" },
+                    { "530328c4-8ea2-4b5a-8947-e817e5bcf668", 0, null, "1", "abrulic1@etf.unsa.ba", true, "Almina", "Brulic", false, null, "ABRULIC1@ETF.UNSA.BA", "ABRULIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "52ddcf88-6ef4-4524-8136-50352a0410bb", true, "abrulic1" },
+                    { "7d0dfb8f-46b6-4f0f-a122-cacc41f9da00", 0, null, "1", "esmajic2@etf.unsa.ba", true, "Elvedin", "Smajic", false, null, "ESMAJIC2@ETF.UNSA.BA", "ESMAJIC2", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "a177fff2-341e-437f-a9f0-b45092090f2c", true, "esmajic2" },
+                    { "7d3541b4-2a01-46c1-aa94-cea9951b11ae", 0, null, "1", "amehmedagi1@etf.unsa.ba", true, "Admir", "Mehmedagic", false, null, "AMEHMEDAGI1@ETF.UNSA.BA", "AMEHMEDAGI1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "6c0371c6-bb6f-4b9d-a2e2-4ba93ebc5b0a", true, "amehmedagi1" },
+                    { "91549501-f827-41ba-9b2b-f0e2d0125909", 0, null, "1", "dmuhic1@etf.unsa.ba", true, "Dzenis", "Muhic", false, null, "DMUHIC1@ETF.UNSA.BA", "DMUHIC1", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "11111", true, "8ffe0fee-29f8-428d-9a13-ab2ff7713e1a", true, "dmuhic1" },
+                    { "a1e10738-b9f5-4bcd-b76e-bf017b5acebe", 0, null, "1", "kfejzic1@etf.unsa.ba", true, "Testing", "User", false, null, "KFEJZIC1@ETF.UNSA.BA", "TESTINGUSER", "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", "062229993", true, "46cce4ad-46ca-422e-8bed-0fd1df4a0a3e", true, "testingUser" }
                 });
 
             migrationBuilder.CreateIndex(

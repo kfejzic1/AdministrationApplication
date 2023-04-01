@@ -2,6 +2,7 @@
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,13 +13,13 @@ namespace AdministrationAPI.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
         public UserService(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IConfiguration configuration
         )
         {
@@ -29,8 +30,7 @@ namespace AdministrationAPI.Services
 
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
-            //Fetch User From Database by email or phone from LoginRequest, password should be hashed
-            IdentityUser user = new IdentityUser();
+            User user = new User();
 
             if (loginRequest.Email != null)
                 user = await _userManager.FindByEmailAsync(loginRequest.Email);
@@ -53,20 +53,35 @@ namespace AdministrationAPI.Services
                 };
             }
 
+
+
             if (user.TwoFactorEnabled)
             {
-                await _signInManager.SignOutAsync();
-                var canI = await _signInManager.CanSignInAsync(user);
+                string qrCodeImageUrl = null, manualEntrySetupCode = null;
 
-                await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, true);
-                var twoFactorToken = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+                if (user.AuthenticatorKey == null)
+                {
+                    string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
 
-                var message = new Message(new string[] { user.Email! }, "Login Confirmation", twoFactorToken);
+                    string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
+
+                    TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                    SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
+
+                    qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+                    manualEntrySetupCode = setupInfo.ManualEntryKey;
+
+                    user.AuthenticatorKey = encodedKey;
+
+                    await _userManager.UpdateAsync(user);
+                }
 
                 return new AuthenticationResult
                 {
-                    IsTwoFactorEnabled = true,
-                    EmailMessage = message
+                    TwoFactorEnabled = true,
+                    QrCodeImageUrl = qrCodeImageUrl,
+                    ManualEntrySetupCode = manualEntrySetupCode,
+                    Mail = user.Email
                 };
             }
 
@@ -84,7 +99,6 @@ namespace AdministrationAPI.Services
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-            var signIn = await _signInManager.TwoFactorSignInAsync(TokenOptions.DefaultEmailProvider, loginRequest.Code, false, false);
 
             if (user == null)
                 return new AuthenticationResult
@@ -92,7 +106,11 @@ namespace AdministrationAPI.Services
                     Errors = new[] { "Invalid user!" }
                 };
 
-            if (signIn.Succeeded)
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            string key = Encoding.UTF8.GetString(Convert.FromBase64String(user.AuthenticatorKey));
+            bool result = tfa.ValidateTwoFactorPIN(key, loginRequest.Code);
+
+            if (result)
             {
                 var authClaims = await GetAuthClaimsAsync(user);
                 var token = CreateToken(authClaims);
@@ -126,7 +144,7 @@ namespace AdministrationAPI.Services
             return token;
         }
 
-        private async Task<List<Claim>> GetAuthClaimsAsync(IdentityUser user)
+        private async Task<List<Claim>> GetAuthClaimsAsync(User user)
         {
             var authClaims = new List<Claim>
                 {
