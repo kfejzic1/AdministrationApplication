@@ -19,6 +19,14 @@ const LoginForm = () => {
 		else return 'email';
 	}
 
+	function LoginAlert() {
+		if (errorMessage.length > 0)
+			return <Alert style={{width: '80%'}} severity='error' variant='filled'>
+						{errorMessage}
+					</Alert>;
+		return;
+	}
+
 	const handleButtonClick = () => {
 		const loginData = {
 			[checkData(phoneMail)]: phoneMail,
@@ -53,15 +61,10 @@ const LoginForm = () => {
 	return isTwoFactorEnabled && email ? (
 		<TwoFactorView email={phoneMail}></TwoFactorView>
 	) : (
-		<div className='App1'>
+		<div className='login-container'>
 			<div className='cover'>
 				<Typography variant='h4'>Login</Typography>
-				<Alert severity='error' variant='filled' style={{ display: 'none' }}>
-					{errorMessage}
-				</Alert>
-				<div className='alert-box'>
-					<Typography variant='h5'>{errorMessage}</Typography>
-				</div>
+				<LoginAlert/>
 				<Input
 					className='user-data'
 					type='text'
@@ -78,25 +81,6 @@ const LoginForm = () => {
 						setPassword(e.target.value);
 					}}
 				/>
-
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/JsniGks.png' width={25} height={25} alt='googleicon' />
-					</span>
-					<span class='buttonText'>Sign in with Google</span>
-				</div>
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/fDEMtZy.png' width={25} height={25} alt='fbicon' />
-					</span>
-					<span class='buttonText'>Sign in with Facebook</span>
-				</div>
-				<div class='customBtn'>
-					<span class='icon'>
-						<img class='login-icons' src='https://i.imgur.com/5pDDS3b.png' width={25} height={25} alt='msicon' />
-					</span>
-					<span class='buttonText'>Sign in with Microsoft</span>
-				</div>
 
 				<Typography>
 					You are not registered? <a href='/'>Register</a>
