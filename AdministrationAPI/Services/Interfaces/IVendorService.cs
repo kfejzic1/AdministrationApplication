@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 
 namespace AdministrationAPI.Services.Interfaces
@@ -7,7 +8,7 @@ namespace AdministrationAPI.Services.Interfaces
     {
         bool Create(VendorCreateRequest vendorCreateRequest);
         Vendor? Get(int id);
-        List<Vendor> GetAll();
+        List<VendorsResponse> GetAll();
         bool Delete(int id);
     }
 }

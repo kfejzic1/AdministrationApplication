@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './B2BTable/css/NavBar.css';
+import './NavBar.css';
 
 export const NavBar = () => {
 	return (
@@ -8,13 +8,8 @@ export const NavBar = () => {
 				<div className='nav-logo'>Vendor Management</div>
 				<ul className='nav-links'>
 					<li>
-						<Link to='/B2BTable' className='active'>
-							Customers
-						</Link>
-					</li>
-					<li>
-						<Link to='/vendor' className='active'>
-							Create User
+						<Link to='/B2BPanel' className='active'>
+							B2B Customers
 						</Link>
 					</li>
 				</ul>

@@ -55,24 +55,6 @@ button {
   margin-top: 50px;
 }
 
-
-.proba1 {
-  margin-top: 0px;
-}
-
-.proba{
-  width: 250px;
-}
-
-.title{
-  font-family: "Source Sans Pro", sans-serif;
-  margin-top: 50px;
-  margin-bottom: 70px;
-  font-size: 70px;
-  text-align: center;
-  font-weight: bold;
-}
-
 .app {
   display: flex;
   flex-direction: column;
