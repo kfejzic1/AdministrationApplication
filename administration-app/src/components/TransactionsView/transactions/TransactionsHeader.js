@@ -59,8 +59,8 @@ export default function TransactionsListHeader(arg) {
 			arg.setFilterOptions({
 				Recipient: recipientFilter,
 				Status: statusFilter,
-				StartDate: startDate1,
-				EndDate: endDate1,
+				DateTimeStart: startDate1,
+				DateTimeEnd: endDate1,
 				MinAmount: amountFilterStart,
 				MaxAmount: amountFilterEnd,
 				SortingOptions: sortingColumn,
@@ -452,9 +452,9 @@ export default function TransactionsListHeader(arg) {
 								size='small'
 								onChange={handleStatusFilterChange}
 							>
-								<MenuItem value='Proccesing'>Proccesing</MenuItem>
+								<MenuItem value='Processing'>Processing</MenuItem>
 								<MenuItem value='Pending'>Pending</MenuItem>
-								<MenuItem value='Succes'>Succes</MenuItem>
+								<MenuItem value='Success'>Success</MenuItem>
 								<MenuItem value='Failure'> Failure</MenuItem>
 								<MenuItem value=''>
 									<em>None</em>
@@ -485,8 +485,8 @@ export default function TransactionsListHeader(arg) {
 								arg.setFilterOptions({
 									Recipient: '',
 									Status: '',
-									StartDate: '',
-									EndDate: '',
+									DateTimeStart: '',
+									DateTimeEnd: '',
 									MinAmount: '',
 									MaxAmount: '',
 									SortingOptions: 'DateTime',

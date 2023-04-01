@@ -23,11 +23,11 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 				if (sortingOptions.MaxAmount != '') {
 					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
 				}
-				if (!sortingOptions.StartDate.length > 17) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+				if (!sortingOptions.DateTimeStart.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
 				}
-				if (sortingOptions.EndDate.length > 17) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+				if (sortingOptions.DateTimeEnd.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
 				}
 
 				if (sortingOptions.SortingOptions != '') {
@@ -80,9 +80,10 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 		if (sortingOptions.SortingOptions === '') {
 			delete sortingOptions.SortingOptions;
 		}
+
 		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
-		if (sortingOptions.EndDate === '') delete sortingOptions.EndDate;
-		if (sortingOptions.StartDate === '') delete sortingOptions.StartDate;
+		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
+		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
 		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
 		if (sortingOptions.Status === '') delete sortingOptions.Status;
 		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
@@ -115,11 +116,11 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 					if (sortingOptions.MaxAmount != '') {
 						temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
 					}
-					if (!sortingOptions.StartDate.length > 17) {
-						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+					if (!sortingOptions.DateTimeStart.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
 					}
-					if (sortingOptions.EndDate.length > 17) {
-						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+					if (sortingOptions.DateTimeEnd.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
 					}
 
 					if (sortingOptions.SortingOptions != '') {
