@@ -57,30 +57,21 @@ namespace AdministrationAPI.Services
 
             if (user.TwoFactorEnabled)
             {
-                string qrCodeImageUrl = null, manualEntrySetupCode = null;
-
                 if (user.AuthenticatorKey == null)
                 {
                     string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
-
                     string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
 
                     TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
                     SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
-
-                    qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-                    manualEntrySetupCode = setupInfo.ManualEntryKey;
-
+                    
                     user.AuthenticatorKey = encodedKey;
-
                     await _userManager.UpdateAsync(user);
                 }
 
                 return new AuthenticationResult
                 {
                     TwoFactorEnabled = true,
-                    QrCodeImageUrl = qrCodeImageUrl,
-                    ManualEntrySetupCode = manualEntrySetupCode,
                     Mail = user.Email
                 };
             }
@@ -92,7 +83,8 @@ namespace AdministrationAPI.Services
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserId = user.Id
             };
         }
 
@@ -118,7 +110,8 @@ namespace AdministrationAPI.Services
                 return new AuthenticationResult
                 {
                     Success = true,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token)
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    UserId = user.Id
                 };
             }
 

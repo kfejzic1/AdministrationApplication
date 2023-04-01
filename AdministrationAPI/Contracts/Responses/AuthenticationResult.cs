@@ -6,9 +6,7 @@
         public string? Mail { get; set; }
         public bool Success { get; set; }
         public bool TwoFactorEnabled { get; set; }
-        public string QrCodeImageUrl { get; set; }
-        public string ManualEntrySetupCode { get; set; }
-        public string SecKey { get; set; }
+        public string UserId { get; set; }
         public IEnumerable<string> Errors { get; set; }
     }
 }

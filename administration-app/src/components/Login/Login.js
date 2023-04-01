@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Login.css';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../../services/loginService';
-import { Button, Typography, TextField, Input, Alert } from '@mui/material';
+import { Button, Typography, Input, Alert } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 
 const LoginForm = () => {
@@ -11,7 +10,6 @@ const LoginForm = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
 	const [email, setEmail] = useState(null);
-	const [qrCodeSrc, setQrCode] = useState(null);
 
 	function checkData(input) {
 		const regex = new RegExp('^[0-9]+$');
@@ -27,29 +25,30 @@ const LoginForm = () => {
 
 		login(loginData)
 			.then(res => {
-				const { token, twoFactorEnabled, mail, qrCodeImageUrl } = res.data;
+				const { token, twoFactorEnabled, mail, userId } = res.data;
 
 				if (twoFactorEnabled && mail) {
 					setIsTwoFactorEnabled(twoFactorEnabled);
 					setEmail(mail);
-					setQrCode(qrCodeImageUrl);
 
 					return;
 				}
 
 				localStorage.setItem('token', token);
+				localStorage.setItem('userId', userId);
 			})
 			.catch(err => {
-				const error = err.response.data.errors[0];
-				setErrorMessage(error);
+				if (err.response.data.errors) {
+					setErrorMessage(err.response.data.errors[0]);
+					return;
+				}
+
+				setErrorMessage('Something went wrong. Contact the administrator.');
 			});
 	};
 
 	return isTwoFactorEnabled && email ? (
-		<div>
-			<TwoFactorView email={phoneMail}></TwoFactorView>
-			<img src={qrCodeSrc}></img>
-		</div>
+		<TwoFactorView email={phoneMail}></TwoFactorView>
 	) : (
 		<div className='App1'>
 			<div className='cover'>

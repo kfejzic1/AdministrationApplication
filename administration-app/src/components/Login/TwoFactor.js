@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './TwoFactor.css';
-import { useParams } from 'react-router-dom';
 import { twoFactorAuthentication } from '../../services/loginService';
 
 const TwoFactorView = props => {
@@ -13,6 +12,7 @@ const TwoFactorView = props => {
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
 	const [errorMessage, setErrorMessage] = useState('');
+	const navigate = useNavigate();
 
 	const handleButtonClick = () => {
 		const code =
@@ -24,14 +24,21 @@ const TwoFactorView = props => {
 			digit6.current.value;
 		twoFactorAuthentication({ code, email: props.email })
 			.then(res => {
-				setErrorMessage('');
-				const { token } = res.data;
+				const { token, userId } = res.data;
+
 				localStorage.setItem('token', token);
-				window.location.href = 'http://localhost:3000/';
+				localStorage.setItem('userId', userId);
+
+				navigate('/user');
 			})
 			.catch(err => {
-				setErrorMessage('Neuspješna prijava!');
-			});
+				if (err.response.data.errors) {
+					setErrorMessage(err.response.data.errors);
+					return;
+				}
+
+				setErrorMessage('Something went wrong. Contact the administrator.');
+			}); //Ispisati error message negdje
 	};
 
 	return (
