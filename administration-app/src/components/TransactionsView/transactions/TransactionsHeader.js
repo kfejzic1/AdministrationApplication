@@ -45,8 +45,9 @@ export default function TransactionsListHeader(arg) {
 	const [startTimeClass, setStartTimeClass] = useState('');
 	const [endTimeClass, setEndTimeClass] = useState('');
 	useEffect(() => {
+		console.log('useEffect');
 		updateFilterOptions();
-	}, [sortingColumn]);
+	}, [sortingColumn, sortingDirection]);
 	const updateFilterOptions = () => {
 		var startDate1 = dateStartFilter + 'T' + timeStartFilter;
 		if (startDate1.length < 18) startDate1 = '';
@@ -70,6 +71,7 @@ export default function TransactionsListHeader(arg) {
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
 		setSortDirectionId(newSortDirection);
+		updateFilterOptions();
 	};
 
 	const handleSortDirectionDateChange = () => {
@@ -81,7 +83,11 @@ export default function TransactionsListHeader(arg) {
 	};
 
 	const handleSortDirectionRecipientChange = () => {
-		const newSortDirection = sortDirectionRecipient === 'asc' ? 'desc' : 'asc';
+		var newSortDirection = 'asc';
+		var k = sortDirectionRecipient;
+		if (k.includes('a')) {
+			newSortDirection = 'desc';
+		}
 		setSortDirectionRecipient(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Recipient');
@@ -290,6 +296,7 @@ export default function TransactionsListHeader(arg) {
 									onClick={() => {
 										setSortingColumn('Recipient');
 										setSortingDirection('asc');
+										setSortDirectionAmount('asc');
 									}}
 								/>
 							</div>
@@ -316,8 +323,9 @@ export default function TransactionsListHeader(arg) {
 								<SwapVertSharpIcon
 									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 									onClick={() => {
-										setSortingColumn('Amount');
 										setSortingDirection('asc');
+										setSortDirectionAmount('asc');
+										setSortingColumn('Amount');
 									}}
 								/>
 							</div>
