@@ -70,7 +70,6 @@ export default function TransactionsListHeader(arg) {
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
 		setSortDirectionId(newSortDirection);
-		updateFilterOptions();
 	};
 
 	const handleSortDirectionDateChange = () => {
@@ -100,6 +99,8 @@ export default function TransactionsListHeader(arg) {
 	const handleSortDirectionStatusChange = () => {
 		const newSortDirection = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
 		setSortDirectionStatus(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('Status');
 		updateFilterOptions();
 	};
 
@@ -250,19 +251,7 @@ export default function TransactionsListHeader(arg) {
 			<thead>
 				<tr>
 					<th>
-						<TableSortLabel
-							direction={sortDirectionId}
-							onClick={handleSortDirectionIdChange}
-							sx={{
-								'& .MuiTableSortLabel-icon': {
-									color: 'white !important',
-								},
-							}}
-							hideSortIcon={false}
-							active={true}
-						>
-							<p className={cn.textInTh}>ID</p>
-						</TableSortLabel>
+						<p className={cn.textInTh}>ID</p>
 					</th>
 					<th>
 						{sortingColumn != 'DateTime' ? (
@@ -273,7 +262,6 @@ export default function TransactionsListHeader(arg) {
 									onClick={() => {
 										setSortingColumn('DateTime');
 										setSortingDirection('asc');
-										console.log('Sorting;');
 									}}
 								/>
 							</div>
@@ -289,7 +277,7 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								Date
+								<p className={cn.textInTh}>Date</p>
 							</TableSortLabel>
 						)}
 					</th>
@@ -302,7 +290,6 @@ export default function TransactionsListHeader(arg) {
 									onClick={() => {
 										setSortingColumn('Recipient');
 										setSortingDirection('asc');
-										console.log('Sorting;');
 									}}
 								/>
 							</div>
@@ -318,7 +305,7 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								Recipient
+								<p className={cn.textInTh}>Recipient</p>
 							</TableSortLabel>
 						)}
 					</th>
@@ -331,7 +318,6 @@ export default function TransactionsListHeader(arg) {
 									onClick={() => {
 										setSortingColumn('Amount');
 										setSortingDirection('asc');
-										console.log('Sorting;');
 									}}
 								/>
 							</div>
@@ -347,44 +333,43 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								Amount
+								<p className={cn.textInTh}>Amount</p>
 							</TableSortLabel>
 						)}
 					</th>
 					<th>
-						<TableSortLabel
-							direction={sortDirectionStatus}
-							onClick={handleSortDirectionStatusChange}
-							sx={{
-								'& .MuiTableSortLabel-icon': {
-									color: 'white !important',
-								},
-							}}
-							hideSortIcon={false}
-							active={true}
-						>
-							<p className={cn.textInTh}>Status</p>
-						</TableSortLabel>
+						{sortingColumn != 'Status' ? (
+							<div className={cn.unSort}>
+								<p>Status </p>
+								<SwapVertSharpIcon
+									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+									onClick={() => {
+										setSortingColumn('Status');
+										setSortingDirection('asc');
+									}}
+								/>
+							</div>
+						) : (
+							<TableSortLabel
+								direction={sortDirectionStatus}
+								onClick={handleSortDirectionStatusChange}
+								sx={{
+									'& .MuiTableSortLabel-icon': {
+										color: 'white !important',
+									},
+								}}
+								hideSortIcon={false}
+								active={true}
+							>
+								<p className={cn.textInTh}>Status</p>
+							</TableSortLabel>
+						)}
 					</th>
 					<th></th>
 				</tr>
 
 				<tr>
-					<th>
-						<TextField
-							className={cn.textFieldSearch}
-							value={idFilter}
-							size='small'
-							onChange={handleIdFilterChange}
-							InputProps={{
-								endAdornment: (
-									<IconButton onClick={clearIdFilter}>
-										<ClearIcon />
-									</IconButton>
-								),
-							}}
-						></TextField>
-					</th>
+					<th></th>
 					<th>
 						<div className={cn.dateInputWrapper}>
 							<div className={cn.dateInput}>

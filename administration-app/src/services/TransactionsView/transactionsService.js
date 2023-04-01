@@ -99,8 +99,9 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 				resolveO(response);
 			})
 			.catch(function (err) {
+				console.log('mockup');
 				sortingOptions = mockSortingOptons;
-				var temp = transactions;
+				var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 				if (sortingOptions != null) {
 					if (sortingOptions.Recipient != '') {
 						temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
@@ -132,6 +133,17 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 									else return -1;
 								}
 							});
+						if (sortingOptions.SortingOptions == 'Status') {
+							temp = temp.sort((a, b) => {
+								if (a.status.localeCompare(b.status) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
 						if (sortingOptions.SortingOptions == 'Amount') {
 							temp = temp.sort((a, b) => {
 								if (a.amount - b.amount > 0) {
@@ -156,7 +168,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 						}
 					}
 				}
-				resolveO({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
+				resolveO({ data: temp });
 			});
 	});
 	/*
