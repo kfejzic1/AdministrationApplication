@@ -8,6 +8,6 @@ namespace AdministrationAPI.Models.Transaction
         DateTime = 1,
         Recipient = 2,
         Amount = 3,
-
+        Status = 4
     }
 }
