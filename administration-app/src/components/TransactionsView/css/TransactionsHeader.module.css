@@ -31,8 +31,7 @@
     word-break: break-word;
     border: 0;
   }
-  .table{
-      
+  .table{ 
     width:100%;
     table-layout: fixed;
     background: linear-gradient(to right, var(--left), var(--right));
@@ -41,13 +40,16 @@
  
   }
   .table th{
-    padding: 20px 15px 0px 15px;
+    padding: 10px 15px 0px 15px;
     text-align: center;
     font-weight: 500;
     font-size: var(--text-size2) ;
     color: var(--_primary);
-    text-transform: uppercase;
     vertical-align: middle;
+  }
+  .textInTh{
+
+     color: var(--_primary);
   }
   .statusChooser{
     background-color: whitesmoke;
@@ -58,14 +60,30 @@
     flex-direction: column;
     justify-content: space-around ;
   }
+  .amountWrapper p{
+  font-size: 16px;
+  }
+
+  .amountWrapper{
+  flex-direction: row;
+  gap: 4px;
+  display: flex;
+  }
+  .amountWrapper input{
+  width: 50%;
+  padding: 9px;
+  border-width: 0;
+  margin: auto;
+  background-color: whitesmoke;
+  height: 1.5em;
+  border-radius: var(--borderRadius)  ;
+  }
   .dateInputWrapper{
     display: flex;
     flex-direction: row;
     justify-content: space-around ;
   }
-  .unSort p{ 
- color:black; 
-  }.unSort{
+  .unSort{
     display: flex;
     vertical-align: middle;
     justify-content: center; 
@@ -75,7 +93,8 @@
  height: 100%;  
   }
 .dateInput a{ 
-    font-size: 18px;
+    font-size: 16px;
+    text-align: start;
     margin: 0px;
   }
  .amountChooser{
@@ -101,7 +120,6 @@
     border: 2px solid red;
   }
   .textFieldSearch{
-    
   border-radius: var(--borderRadius) ;
   }
   .datePickerStart, .datePickerEnd, .timePickerStart, .timePickerEnd {

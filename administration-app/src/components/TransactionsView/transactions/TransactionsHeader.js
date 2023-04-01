@@ -45,9 +45,26 @@ export default function TransactionsListHeader(arg) {
 	const [startTimeClass, setStartTimeClass] = useState('');
 	const [endTimeClass, setEndTimeClass] = useState('');
 
+	const updateFilterOptions = () => {
+		var startDate1 = dateStartFilter + 'T' + timeStartFilter;
+		if (startDate1.length < 18) startDate1 = '';
+		var endDate1 = dateEndFilter + 'T' + timeEndFilter;
+		if (endDate1.length < 18) endDate1 = '';
+		arg.setFilterOptions({
+			Recipient: recipientFilter,
+			Status: statusFilter,
+			StartDate: startDate1,
+			EndDate: endDate1,
+			MinAmount: amountFilterStart,
+			MaxAmount: amountFilterEnd,
+			SortingOptions: sortingColumn,
+			Ascending: sortingDirection == 'asc' ? true : false,
+		});
+	};
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
 		setSortDirectionId(newSortDirection);
+		updateFilterOptions();
 	};
 
 	const handleSortDirectionDateChange = () => {
@@ -55,6 +72,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionDate(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('DateTime');
+		updateFilterOptions();
 	};
 
 	const handleSortDirectionRecipientChange = () => {
@@ -62,6 +80,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionRecipient(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Recipient');
+		updateFilterOptions();
 	};
 
 	const handleSortDirectionAmountChange = () => {
@@ -69,11 +88,13 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionAmount(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Amount');
+		updateFilterOptions();
 	};
 
 	const handleSortDirectionStatusChange = () => {
 		const newSortDirection = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
 		setSortDirectionStatus(newSortDirection);
+		updateFilterOptions();
 	};
 
 	const handleIdFilterChange = event => {
@@ -121,8 +142,12 @@ export default function TransactionsListHeader(arg) {
 	const handleTimeEndFilterChange = event => {
 		const startTime = timeStartFilter;
 		const endTime = event.target.value;
-
-		if (startTime > endTime && endTime != '' && startTime != '') {
+		console.log('start=', startTime, endTime);
+		if (
+			new Date(dateStartFilter + 'T' + startTime) > new Date(dateEndFilter + 'T' + endTime) &&
+			endTime != '' &&
+			startTime != ''
+		) {
 			alert('Starting time cannot be highter then ending date');
 			setEndTimeClass('invalidTimeStart');
 		} else {
@@ -230,7 +255,7 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							ID
+							<p className={cn.textInTh}>ID</p>
 						</TableSortLabel>
 					</th>
 					<th>
@@ -332,7 +357,7 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							Status
+							<p className={cn.textInTh}>Status</p>
 						</TableSortLabel>
 					</th>
 					<th></th>
@@ -343,6 +368,7 @@ export default function TransactionsListHeader(arg) {
 						<TextField
 							className={cn.textFieldSearch}
 							value={idFilter}
+							size='small'
 							onChange={handleIdFilterChange}
 							InputProps={{
 								endAdornment: (
@@ -397,6 +423,7 @@ export default function TransactionsListHeader(arg) {
 						<TextField
 							className={cn.textFieldSearch}
 							value={recipientFilter}
+							size='small'
 							onChange={handleRecipientFilterChange}
 							InputProps={{
 								endAdornment: (
@@ -408,71 +435,12 @@ export default function TransactionsListHeader(arg) {
 						></TextField>
 					</th>
 					<th>
-						<FormControl fullWidth className={cn.amountChooser}>
-							<InputLabel
-								variant='standard'
-								htmlFor='amount-filter'
-								sx={{
-									marginLeft: '2px',
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-									width: '100%',
-								}}
-							>
-								Click to enter amount
-							</InputLabel>
-							<Select className={cn.select}>
-								<InputLabel sx={{ marginLeft: '2px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-									Enter start value
-								</InputLabel>
-								<TextField
-									className={textFieldAmountStart}
-									placeholder='Start'
-									value={amountFilterStart}
-									onChange={handleAmountFilterStartChange}
-									sx={{
-										marginLeft: '2px',
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center',
-										'& .MuiOutlinedInput-notchedOutline': {
-											borderColor: styleErrorStart,
-										},
-									}}
-									InputProps={
-										{
-											//endAdornment: (<IconButton onClick={clearAmountStartFilter}><ClearIcon /></IconButton>)
-										}
-									}
-								></TextField>
-
-								<InputLabel sx={{ marginLeft: '2px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-									Enter end value
-								</InputLabel>
-
-								<TextField
-									className={textFieldAmountEnd}
-									placeholder='End'
-									value={amountFilterEnd}
-									onChange={handleAmountFilterEndChange}
-									sx={{
-										marginLeft: '2px',
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center',
-										'& .MuiOutlinedInput-notchedOutline': {
-											borderColor: styleErrorEnd,
-										},
-									}}
-									InputProps={
-										{
-											//endAdornment: (<IconButton onClick={clearAmountEndFilter}><ClearIcon /></IconButton>)
-										}
-									}
-								></TextField>
-							</Select>
-						</FormControl>
+						<div className={cn.amountWrapper}>
+							<p>Min:</p>
+							<input type='number' onChange={event => setAmountFilterStart(event.target.value)}></input>
+							<p>Max:</p>
+							<input type='number' onChange={event => setAmountFilterEnd(event.target.value)}></input>
+						</div>
 					</th>
 					<th>
 						<FormControl fullWidth className={cn.statusChooser}>
@@ -482,6 +450,7 @@ export default function TransactionsListHeader(arg) {
 								value={statusFilter}
 								displayEmpty
 								label='Status'
+								size='small'
 								onChange={handleStatusFilterChange}
 							>
 								<MenuItem value='Proccesing'>Proccesing</MenuItem>
@@ -498,16 +467,7 @@ export default function TransactionsListHeader(arg) {
 						<button
 							className={cn.filterBtn}
 							onClick={() => {
-								arg.setFilterOptions({
-									Recipient: recipientFilter,
-									Status: statusFilter,
-									StartDate: dateStartFilter + 'T' + timeStartFilter,
-									EndDate: dateEndFilter + 'T' + timeEndFilter,
-									MinAmount: amountFilterStart,
-									MaxAmount: amountFilterEnd,
-									SortingOptoin: sortingColumn,
-									Ascending: sortingDirection == 'asc' ? true : false,
-								});
+								updateFilterOptions();
 							}}
 						>
 							Click to filter
@@ -526,11 +486,11 @@ export default function TransactionsListHeader(arg) {
 								arg.setFilterOptions({
 									Recipient: '',
 									Status: '',
-									StartDate: 'T',
-									EndDate: 'T',
+									StartDate: '',
+									EndDate: '',
 									MinAmount: '',
 									MaxAmount: '',
-									SortingOptoin: 'DateTime',
+									SortingOptions: 'DateTime',
 									Ascending: 'asc',
 								});
 							}}

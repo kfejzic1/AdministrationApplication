@@ -8,66 +8,89 @@ export function getBasicTransactions(number = 10) {
 }
 
 export function getTransactions(pageNumber, pageSize, sortingOptions) {
-	console.log('broj=', pageNumber, pageSize);
-	return new Promise((resolve, reject) => {
+	/*return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			var temp = transactions;
 			if (sortingOptions != null) {
-				console.log('Sorting sint null');
 				if (sortingOptions.Recipient != '') {
-					console.log('sad proje', temp[0].recipient, sortingOptions.Recipient, JSON.stringify(temp));
 					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
-					console.log('sad je recipes', sortingOptions.Recipient, JSON.stringify(temp));
 				}
 				if (sortingOptions.Status != '') {
-					console.log('sad1 je recipes', sortingOptions.Status, temp[0].status, JSON.stringify(temp));
-
 					temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
 				}
 				if (sortingOptions.MinAmount != '') {
 					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
-					console.log('sad 2je recipes', sortingOptions.ecipie, JSON.stringify(temp));
 				}
 				if (sortingOptions.MaxAmount != '') {
 					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
-					console.log('sad3 je recipes', sortingOptions.Recipient, JSON.stringify(temp));
 				}
-				if (
-					!sortingOptions.StartDate.includes('TT') &&
-					sortingOptions.StartDate != 'T' &&
-					sortingOptions.StartDate != 'T00:00:00'
-				) {
+				if (!sortingOptions.StartDate.length > 17) {
 					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
-					console.log('sad 4je recipes', sortingOptions.StartDate, transactions[0].dateTime, JSON.stringify(temp));
 				}
-				if (
-					!sortingOptions.EndDate.includes('TT') &&
-					sortingOptions.EndDate != 'T' &&
-					sortingOptions.EndDate != 'T00:00:00'
-				) {
+				if (sortingOptions.EndDate.length > 17) {
 					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
-					console.log('sad 5je recipes', sortingOptions.EndDate, transactions[0].dateTime, JSON.stringify(temp));
+				}
+
+				if (sortingOptions.SortingOptions != '') {
+					if (sortingOptions.SortingOptions == 'DateTime')
+						temp = temp.sort((a, b) => {
+							console.log(a.toString(), b.dateTime);
+							if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					if (sortingOptions.SortingOptions == 'Amount') {
+						temp = temp.sort((a, b) => {
+							if (a.amount - b.amount > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					}
+					if (sortingOptions.SortingOptions == 'Recipient') {
+						console.log('recpinet sort', temp);
+						temp = temp.sort((a, b) => {
+							if (a.recipient.localeCompare(b.recipient) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					}
 				}
 			}
-			console.log(
-				'rez=',
-				(pageNumber - 1) * pageSize,
-				pageNumber * pageSize,
-				temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
-			);
 			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
 		}, 100);
 	});
-
+	*/
 	//mock is above, real is underneath
+	if (sortingOptions != null) {
+		if (sortingOptions.MinAmount === '') delete sortingOptions.MinAmount;
+		if (sortingOptions.SortingOptions === '') delete sortingOptions.SortingOptions;
+		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
+		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
+		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
+		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
+		if (sortingOptions.Status === '') delete sortingOptions.Status;
+		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
+	}
 
-	/*return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
 		method: 'GET',
 		params: sortingOptions,
 		headers: {
 			'Content-Type': 'application/json',
 		},
-	});*/
+	});
 }
 export function getTransactionDetails(id) {
 	return new Promise((resolve, reject) => {

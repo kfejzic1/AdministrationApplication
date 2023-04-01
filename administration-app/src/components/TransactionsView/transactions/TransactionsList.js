@@ -41,6 +41,7 @@ export const TransactionsList = arg => {
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
 				if ('clear-load' == a) {
+					console.log('clear-load');
 					temp1 = transactions1.data;
 				}
 				setTransactionsRaw(temp1);
