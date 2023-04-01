@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Data;
 
 namespace AdministrationAPI.Services
 {
@@ -26,6 +27,25 @@ namespace AdministrationAPI.Services
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+        }
+
+        public async Task<UserDT> GetUser(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null) {
+                throw new DataException("User with the provided id does not exist!");
+            }
+
+            return new UserDT
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                IsTwoFactorEnabled = user.TwoFactorEnabled,
+                AuthenticatorKey = user.AuthenticatorKey
+            };
         }
 
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
@@ -57,6 +77,8 @@ namespace AdministrationAPI.Services
 
             if (user.TwoFactorEnabled)
             {
+                string qrCodeUrl = null, manualEntryCode = null;
+
                 if (user.AuthenticatorKey == null)
                 {
                     string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
@@ -64,6 +86,8 @@ namespace AdministrationAPI.Services
 
                     TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
                     SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
+                    qrCodeUrl = setupInfo.QrCodeSetupImageUrl;
+                    manualEntryCode = setupInfo.ManualEntryKey;
                     
                     user.AuthenticatorKey = encodedKey;
                     await _userManager.UpdateAsync(user);
@@ -121,6 +145,29 @@ namespace AdministrationAPI.Services
             };
         }
 
+        public async Task<QRCodeResponse> GetTwoFactorQRCode(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
+
+            string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
+            string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
+
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
+            string qrCodeUrl = setupInfo.QrCodeSetupImageUrl;
+            string manualEntryCode = setupInfo.ManualEntryKey;
+            
+            user.AuthenticatorKey = encodedKey;
+            await _userManager.UpdateAsync(user);
+
+            return new QRCodeResponse
+            {
+                Url = qrCodeUrl,
+                ManualString = manualEntryCode
+            };
+        }
+
+
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
@@ -153,24 +200,6 @@ namespace AdministrationAPI.Services
             }
 
             return authClaims;
-        }
-
-        public async Task<UserFetchResponse> GetUser(UserRequest userRequest)
-        {
-            var user = await _userManager.FindByNameAsync(userRequest.UserName);
-            if (user == null) {
-                return new UserFetchResponse 
-                {
-                    Errors = new[] { "User not found!" }
-                };
-            }
-
-            return new UserFetchResponse 
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                Phone = user.PhoneNumber
-            };
         }
     }
 }

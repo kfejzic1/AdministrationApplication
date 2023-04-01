@@ -23,6 +23,26 @@ namespace AdministrationAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUser([FromQuery] string id)
+        {
+            try
+            {
+                var userFetchResult = await _userService.GetUser(id);
+
+                return Ok(userFetchResult);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.UserById");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
@@ -70,27 +90,6 @@ namespace AdministrationAPI.Controllers
             catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Login2FA");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpGet("getuser")]
-        [AllowAnonymous]
-        public async Task<IActionResult> UserById([FromQuery] UserRequest userRequest)
-        {
-            try
-            {
-                var userFetchResult = await _userService.GetUser(userRequest);
-
-                return StatusCode(StatusCodes.Status200OK, userFetchResult);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                LoggerUtility.Logger.LogException(ex, "UserController.UserById");
                 return StatusCode(500, ex.Message);
             }
         }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/loginService';
 import { Button, Typography, Input, Alert } from '@mui/material';
 import TwoFactorView from './TwoFactor';
@@ -10,6 +11,7 @@ const LoginForm = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
 	const [email, setEmail] = useState(null);
+	const navigate = useNavigate();
 
 	function checkData(input) {
 		const regex = new RegExp('^[0-9]+$');
@@ -25,7 +27,7 @@ const LoginForm = () => {
 
 		login(loginData)
 			.then(res => {
-				const { token, twoFactorEnabled, mail, userId } = res.data;
+				const { token, twoFactorEnabled, mail, userId, manualEntryCode, qRCodeUrl } = res.data;
 
 				if (twoFactorEnabled && mail) {
 					setIsTwoFactorEnabled(twoFactorEnabled);
@@ -36,6 +38,7 @@ const LoginForm = () => {
 
 				localStorage.setItem('token', token);
 				localStorage.setItem('userId', userId);
+				navigate('/user');
 			})
 			.catch(err => {
 				if (err.response.data.errors) {

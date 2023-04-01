@@ -7,6 +7,7 @@ namespace AdministrationAPI.Services.Interfaces
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
-        Task<UserFetchResponse> GetUser(UserRequest userRequest);
+        Task<UserDT> GetUser(string id);
+        Task<QRCodeResponse> GetTwoFactorQRCode(string id);
     }
 }
