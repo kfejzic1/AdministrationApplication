@@ -1,32 +1,216 @@
 import axios from 'axios';
 import { env } from '../../config/env';
-
+import { transactions } from './mock';
 export function getBasicTransactions(number = 10) {
 	return number < transactions.length
 		? { data: transactions.slice(0, number), hasMore: true }
 		: { data: transactions, hasMore: false };
 }
+export function getTransactions(pageNumber, pageSize, sortingOptions) {
+	/*return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			var temp = transactions;
+			if (sortingOptions != null) {
+				if (sortingOptions.Recipient != '') {
+					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+				}
+				if (sortingOptions.Status != '') {
+					temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+				}
+				if (sortingOptions.MinAmount != '') {
+					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
+				}
+				if (sortingOptions.MaxAmount != '') {
+					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+				}
+				if (!sortingOptions.StartDate.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+				}
+				if (sortingOptions.EndDate.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+				}
 
-export function getTransactions(pageNumber, pageSize) {
-	return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+				if (sortingOptions.SortingOptions != '') {
+					if (sortingOptions.SortingOptions == 'DateTime')
+						temp = temp.sort((a, b) => {
+							console.log(a.toString(), b.dateTime);
+							if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					if (sortingOptions.SortingOptions == 'Amount') {
+						temp = temp.sort((a, b) => {
+							if (a.amount - b.amount > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					}
+					if (sortingOptions.SortingOptions == 'Recipient') {
+						console.log('recpinet sort', temp);
+						temp = temp.sort((a, b) => {
+							if (a.recipient.localeCompare(b.recipient) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					}
+				}
+			}
+			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
+		}, 100);
+	});
+	*/
+	//mock is above, real is underneath
+	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
+	if (sortingOptions != null) {
+		if (sortingOptions.MinAmount === '') {
+			delete sortingOptions.MinAmount;
+		}
+		if (sortingOptions.SortingOptions === '') {
+			delete sortingOptions.SortingOptions;
+		}
+		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
+		if (sortingOptions.EndDate === '') delete sortingOptions.EndDate;
+		if (sortingOptions.StartDate === '') delete sortingOptions.StartDate;
+		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
+		if (sortingOptions.Status === '') delete sortingOptions.Status;
+		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
+	}
+	return new Promise(function (resolveO, reject) {
+		axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
+			method: 'GET',
+			params: sortingOptions,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then(function (response) {
+				resolveO(response);
+			})
+			.catch(function (err) {
+				console.log('mockup');
+				sortingOptions = mockSortingOptons;
+				var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+				if (sortingOptions != null) {
+					if (sortingOptions.Recipient != '') {
+						temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+					}
+					if (sortingOptions.Status != '') {
+						temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+					}
+					if (sortingOptions.MinAmount != '') {
+						temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
+					}
+					if (sortingOptions.MaxAmount != '') {
+						temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+					}
+					if (!sortingOptions.StartDate.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+					}
+					if (sortingOptions.EndDate.length > 17) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+					}
+
+					if (sortingOptions.SortingOptions != '') {
+						if (sortingOptions.SortingOptions == 'DateTime')
+							temp = temp.sort((a, b) => {
+								if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						if (sortingOptions.SortingOptions == 'Status') {
+							temp = temp.sort((a, b) => {
+								if (a.status.localeCompare(b.status) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
+						if (sortingOptions.SortingOptions == 'Amount') {
+							temp = temp.sort((a, b) => {
+								if (a.amount - b.amount > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
+						if (sortingOptions.SortingOptions == 'Recipient') {
+							temp = temp.sort((a, b) => {
+								if (a.recipient.localeCompare(b.recipient) > 0) {
+									if (sortingOptions.Ascending) return 1;
+									else return -1;
+								} else {
+									if (!sortingOptions.Ascending) return 1;
+									else return -1;
+								}
+							});
+						}
+					}
+				}
+				resolveO({ data: temp });
+			});
+	});
+	/*
+return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
 		method: 'GET',
+		params: sortingOptions,
 		headers: {
 			'Content-Type': 'application/json',
 		},
 	});
+*/
 }
+
 export function getTransactionDetails(id) {
+	return new Promise((resolve, reject) => {
+		axios(env.API_ENV.url + '/api/transactions/' + id, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then(function (response) {
+				resolve(response);
+			})
+			.catch(function (response) {
+				resolve({ data: transactions.filter(a => a.id == id)[0] });
+			});
+	});
+	/*
 	return axios(env.API_ENV.url + '/api/transactions/' + id, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 	});
+	*/
 }
 export function parseDate(date) {
 	const inputDate = new Date(date);
 
-	const hours = inputDate.getHours().toString().padStart(2, '0');
+	var hours = inputDate.getHours().toString();
+	if (hours == '0') hours = '00';
 	const minutes = inputDate.getMinutes().toString().padStart(2, '0');
 	const seconds = inputDate.getSeconds().toString().padStart(2, '0');
 	const day = inputDate.getDate().toString().padStart(2, '0');
@@ -37,654 +221,19 @@ export function parseDate(date) {
 
 	return outputDateStr;
 }
+function formatDateForDb(inputDate) {
+	// Split the input date string into its date and time components
+	const [time, date] = inputDate.split(' ');
 
-const transactions = [
-	{
-		id: 1,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 1,
-		status: 'proccessing1',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 2,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing2',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 3,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 3,
-		status: 'proccessing3',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 4,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing4',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 5,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing5',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 6,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing6',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 7,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 7,
-		status: 'proccessing7',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 8,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 8,
-		status: 'proccessing8',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 9,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 3,
-		status: 'proccessing9',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 10,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing10',
-		currency: 'dolar',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 11,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 12,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 13,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 14,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 15,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 16,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 17,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 18,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 19,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 8,
-		status: 'proccessing1',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 20,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing2',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 21,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 1,
-		status: 'proccessing2',
-		currency: 'euro',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 22,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 23,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 24,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 25,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 26,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 27,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 28,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 29,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 8,
-		status: 'proccessing2',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 30,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing3',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 31,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 1,
-		status: 'proccessing3',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 32,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing3',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 33,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing3',
-		currency: 'british pound',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'VISA',
-	},
-	{
-		id: 34,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 35,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 36,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 37,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 38,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 39,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 8,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 40,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 41,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 1,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 42,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing3',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 43,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing',
-		currency: 'BAM',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 44,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 45,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 46,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 47,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 48,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 49,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 8,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 50,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 2,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 51,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 1,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 52,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 6,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 53,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 5,
-		status: 'proccessing',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-	{
-		id: 54,
-		date: '1.2.2002.',
-		recipient: 'nekom',
-		amount: 4,
-		status: 'proccessing?',
-		currency: 'CHE',
-		nameOfThePayee: 'N.N',
-		bankAccount: 'XXXX XXXX XXXX XXXX',
-		nameOfTheBank: 'Bank',
-		methodOfPayment: 'MASTERCARD',
-	},
-];
+	// Split the date component into day, month, and year
+	const [day, month, year] = date.split('.');
+
+	// Create a new date object with the components in the correct order
+	const newDate = new Date(`${year}-${month}-${day}T${time}`);
+
+	// Format the new date object into the desired output format
+	const isoDate = newDate.toISOString();
+
+	// Return the formatted date string
+	return isoDate;
+}

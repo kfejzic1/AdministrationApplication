@@ -1,13 +1,14 @@
 import { getTransactions } from '../../../services/TransactionsView/transactionsService';
-import TransactionsListHeader from './TransactionsListHeader';
+
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
-import '../css/Transactions.css';
+import cn from '../css/Transactions.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-
-export const TransactionsList = () => {
+import TransactionsListHeader from './TransactionsHeader';
+export const TransactionsList = arg => {
+	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
 	const [transactions, setTransactions] = useState([]);
@@ -22,13 +23,25 @@ export const TransactionsList = () => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		setCounter(1);
+		loadTransactions('clear-load');
+	}, [filterOptions]);
+	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
 	}, []);
-	function loadTransactions() {
+	function loadTransactions(a) {
+		var tempCounter = counter;
 		setIsLoading(true);
-		getTransactions(counter, 15)
+		if (a == 'clear-load') {
+			setCounter(1);
+			tempCounter = 1;
+		}
+		getTransactions(tempCounter, 15, filterOptions)
 			.then(transactions1 => {
 				var temp1 = [...transactionsRaw, ...transactions1.data];
+				if ('clear-load' == a) {
+					temp1 = transactions1.data;
+				}
 				setTransactionsRaw(temp1);
 				var transactionsdata = temp1.map((item, index) => (
 					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
@@ -51,14 +64,21 @@ export const TransactionsList = () => {
 	}
 
 	return (
-		<div className='transactions-root'>
+		<div className={cn.transactions_root}>
 			{details != null ? (
 				// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
-				<TransactionDetails setIsLoading={setIsLoading} setDetails={setDetails} props={details}></TransactionDetails>
+				<TransactionDetails
+					setPaymentInfo={arg.setPaymentInfo}
+					setIsLoading={setIsLoading}
+					setDetails={setDetails}
+					props={details}
+				></TransactionDetails>
 			) : (
 				<div>
 					<h1>Transactions</h1>
-					<TransactionsListHeader></TransactionsListHeader> {transactions}
+					<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
+
+					{transactions}
 				</div>
 			)}
 			{isLoading && (

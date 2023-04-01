@@ -1,7 +1,9 @@
 import { getTransactionDetails } from '../../../services/TransactionsView/transactionsService';
-import '../css/Transactions.css';
+import cn from '../css/Transactions.module.css';
 import { useEffect, useState } from 'react';
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function TransactionDetails(arg) {
 	const [props, setProps] = useState({
@@ -11,6 +13,7 @@ export default function TransactionDetails(arg) {
 		account: 'loading',
 		amount: 0,
 	});
+	const navigate = useNavigate();
 	useEffect(() => {
 		getTransactionDetails(arg.props.id).then(transaction => {
 			setProps(transaction.data);
@@ -68,48 +71,53 @@ export default function TransactionDetails(arg) {
 				</div>
 			</div>
 		</div>*/
-		<table>
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Recipient</th>
-					<th>Amount</th>
-					<th>Status</th>
-					<th>Currency</th>
-					<th>Name of the Payee</th>
-					<th>Bank Account</th>
-					<th>Name of the Bank</th>
-					<th>Method of Payment</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>{arg.props.id}</td>
-					<td>{parseDate(props.dateTime)}</td>
-					<td>{props.recipient}</td>
-					<td>{props.amount}</td>
-					<td>{props.status}</td>
-					<td></td>
-					<td></td>
-					<td>{props.account}</td>
-					<td></td>
-					<td>{props.type}</td>
-					<td>
-						<div className='closeBtnDiv'>
-							<button
-								className='closeBtn'
-								onClick={() => {
-									arg.setDetails(null);
-								}}
-							>
-								<p>Close</p>
-							</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div className={cn.transactoin_root}>
+			<table className={cn.table}>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Date</th>
+						<th>Recipient</th>
+						<th>Amount</th>
+						<th>Status</th>
+						<th>Bank Account</th>
+						<th>Name of the Payee</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{arg.props.id}</td>
+						<td>{parseDate(props.dateTime)}</td>
+						<td>{props.recipient}</td>
+						<td>{props.amount}</td>
+						<td>{props.status}</td>
+						<td>{props.account}</td>
+						<td>{props.type}</td>
+						<td>
+							<div className={cn.closeBtnDiv}>
+								<button
+									className={cn.closeBtn}
+									onClick={() => {
+										arg.setDetails(null);
+									}}
+								>
+									<p>Close</p>
+								</button>
+								<button
+									className={cn.closeBtn}
+									onClick={() => {
+										arg.setPaymentInfo(props);
+										navigate('/payment');
+									}}
+								>
+									<p>Reuse</p>
+								</button>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	);
 }

@@ -1,5 +1,5 @@
-:root {
-	--primary:#E7EBF0;
+.transactions_root{
+  --_primary:#E7EBF0;
 	--secundary: #cfdeec;
 	--secundary2: #c4d7e9;
 	--left: #203A43;
@@ -9,8 +9,7 @@
 	--text-size: 18px;
 	--text-size2: 24px;
 }
-
-h1{
+.h1{
     font-size: 30px;
     color: var(--highlights);
     text-transform: uppercase;
@@ -20,38 +19,27 @@ h1{
     text-shadow: 0 0.3rem 0.3rem var(--secundary2);
   }
 
-  table{
-    width:100%;
-    table-layout: fixed;
-  }
-  .tbl-header{
+  .tbl_header{
     background-color: var(--bordercolor);
    }
-  .tbl-content{
+  .tbl_content{
     height:300px;
     overflow-x:auto;
     margin-top: 0px;
     border: 1px solid var(--bordercolor);
   }
-  th{
+  
+ .table th{
     padding: 20px 15px;
     text-align: center;
     font-weight: 500;
     font-size: var(--text-size)-5;
-    color: var(--primary);
+    color: var(--_primary);
     text-transform: uppercase;
   }
-  td{
-    padding: 15px;
-    text-align: center;
-    vertical-align:middle;
-    font-weight: 300;
-    font-size: var(--text-size);
-    color: var(--primary);
-    border-bottom: solid 1px rgba(255,255,255,0.1);
-  }
+
   
-  thead {
+  .thead {
     background: var(--highlights);
   }
 
@@ -63,18 +51,30 @@ h1{
   /* demo styles */
   
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
-    table{
+    .table{
+      
+    width:100%;
+    table-layout: fixed;
     background: linear-gradient(to right, var(--left), var(--right));
     font-family: 'Roboto', sans-serif;
+    margin: 0 auto;
+ 
   }
-  section{
+
+  .table td{
+      padding: 15px;
+      text-align: center;
+      vertical-align:middle;
+      font-weight: 300;
+      font-size: var(--text-size);
+      color: var(--_primary);
+      border-bottom: solid 1px rgba(255,255,255,0.1);
+    }
+  
+  .section{
     margin: 50px;
   } 
-  
-  table {
-    margin: 0 auto;
-  }
-  
+
   ::-webkit-scrollbar {
       width: 6px;
   } 
@@ -135,6 +135,7 @@ h1{
     text-align:center;
     display:flex; 
     justify-content:center;
+    gap: 10px;
   }
 
   .detailsBtnDiv {

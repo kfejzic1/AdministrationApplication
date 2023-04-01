@@ -1,10 +1,10 @@
-.lds-dual-ring {
+.lds_dual_ring {
   display: inline-block;
   width: 64px;
   height: 64px;
 }
 
-.lds-dual-ring:after {
+.lds_dual_ring:after {
   content: ' ';
   display: block;
   width: 46px;
@@ -16,7 +16,7 @@
   animation: lds-dual-ring 1.2s linear infinite;
 }
 
-.loading-spinner__overlay {
+.loading_spinner__overlay {
   height: 100%;
   width: 100%;
   position: absolute;
