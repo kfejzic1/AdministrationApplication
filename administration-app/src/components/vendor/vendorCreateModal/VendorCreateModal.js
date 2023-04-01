@@ -17,6 +17,7 @@ import {
 	Checkbox,
 	ListItemText,
 } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
 import { Stack } from '@mui/material';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,9 +37,10 @@ const useStyles = makeStyles(theme => ({
 	},
 	card: { border: 'none' },
 	button: {
+		width: '250px',
 		marginRight: '20px',
 		'&.MuiButton-outlined': {
-			backgroundColor: '#eeba6c',
+			backgroundColor: '#ffaf36',
 			color: 'black',
 			'&:hover': {
 				backgroundColor: '#ea8c00',
@@ -52,7 +54,6 @@ const useStyles = makeStyles(theme => ({
 		},
 	},
 	formControl: {
-		margin: theme.spacing(1),
 		minWidth: '95%',
 	},
 	paper: {
@@ -86,13 +87,6 @@ function VendorCreateModal(props) {
 		assignedUserIds: [],
 	};
 
-	const MenuProps = {
-		PaperProps: {
-			style: {
-				maxHeight: '60%',
-			},
-		},
-	};
 	const classes = useStyles();
 
 	const [users, setUsers] = useState([]);
@@ -236,7 +230,26 @@ function VendorCreateModal(props) {
 										/>
 									</Grid>
 									<Grid item xs={12}>
-										<FormControl className={classes.formControl} required>
+										<FormControl className={classes.formControl}>
+											<Autocomplete
+												style={{ margin: '0' }}
+												multiple
+												id='tags-standard'
+												options={users}
+												filterSelectedOptions
+												getOptionLabel={option => option.userName}
+												renderInput={params => (
+													<TextField
+														{...params}
+														className={classes.textField}
+														variant='outlined'
+														label='Assign Users'
+														placeholder='(User)'
+													/>
+												)}
+											/>
+										</FormControl>
+										{/* <FormControl className={classes.formControl} required>
 											<InputLabel id='demo-mutiple-chip-label'>Assign users</InputLabel>
 											<Select
 												labelId='demo-mutiple-chip-label'
@@ -265,7 +278,7 @@ function VendorCreateModal(props) {
 													</MenuItem>
 												))}
 											</Select>
-										</FormControl>
+										</FormControl> */}
 									</Grid>
 								</Grid>
 								<div className='imageBcg'>
