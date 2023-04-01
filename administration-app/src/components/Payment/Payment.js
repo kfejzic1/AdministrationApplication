@@ -52,22 +52,18 @@ export const Payment = props => {
 					/>
 					<br />
 					<div className={cn.selectWrap}>
-						<p>Type:</p>
+						<div className={cn.pWrapper}>
+							<div>Type:</div>
+						</div>
 						<select className={cn.select} value={type} onChange={event => setCurrency(event.target.value)}>
 							<option value='usd'>Credit</option>
-							<option value='eur'>EUR</option>
-							<option value='bam'>BAM</option>
-							<option value='jpy'>JPY</option>
-							<option value='gbp'>GBP</option>
-							<option value='cad'>CAD</option>
-							<option value='aud'>AUD</option>
-							<option value='chf'>CHF</option>
-							<option value='cny'>CNY</option>
-							<option value='nzd'>NZD</option>
-							<option value='mxn'>MXN</option>
-							<option value='brl'>BRL</option>
+							<option value='eur'>Payment</option>
+							<option value='bam'>Recip</option>
+							<option value='jpy'>Gift</option>
 						</select>
-						<p>Currency:</p>
+						<div className={cn.pWrapper}>
+							<div>Currency:</div>
+						</div>
 						<select className={cn.select} value={currency} onChange={event => setCurrency(event.target.value)}>
 							<option value='usd'>USD</option>
 							<option value='eur'>EUR</option>

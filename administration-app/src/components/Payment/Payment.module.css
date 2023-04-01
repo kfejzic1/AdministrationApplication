@@ -7,13 +7,13 @@
 	--highlights: #0f2027;
 	--babyblue: #3fb9f2;
 	--bordercolor: rgba(255, 255, 255, 0.3);
-	--text-size: 20px;
-	--text-size2: 30px;
-	--paddings: 50px 70px 70px 70px;
-	--inputPadding: 15px;
-	--formHeading: 70px;
-	--formGap: 25px;
-	--selectBtn: 15px;
+	--text-size: 18px;
+	--text-size2: 25px;
+	--paddings: 40px 60px 60px 60px;
+	--inputPadding: 12px;
+	--formHeading: 60px;
+	--formGap: 20px;
+	--selectBtn: 12px;
 
 	display: flex;
 	justify-content: flex-start;
@@ -57,7 +57,15 @@
 	color: var(--babyblue);
 	margin: 0;
 }
-
+.pWrapper div{
+	color: var(--babyblue);
+	display: inline-block;
+}
+.pWrapper{ 
+	display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .payment_form {
 	display: flex;
 	margin-left: 10%;
