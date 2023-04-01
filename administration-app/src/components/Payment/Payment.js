@@ -1,5 +1,7 @@
 import cn from './Payment.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
 export const Payment = props => {
 	const [transactionAmount, setTransactionAmount] = useState(props.paymentInfo ? props.paymentInfo.amount : '');
 	const [recipientName, setRecipientName] = useState(props.paymentInfo ? props.paymentInfo.recipient : '');
@@ -8,12 +10,32 @@ export const Payment = props => {
 	);
 	const [currency, setCurrency] = useState('USD');
 	const [type, setType] = useState('Payment');
+	const navigate = useNavigate();
+
 	function handleSubmit(event) {
 		event.preventDefault();
-		// code to handle form submission goes here
+		// POST za plaćanje
 	}
+
+	useEffect(() => {
+		return () => {
+			setTransactionAmount('');
+			setRecipientName('');
+			setRecipientAccountNumber('');
+			setCurrency('USD');
+			setType('Payment');
+		};
+	}, []);
+
+	const goBackHandler = () => {
+		navigate(-1);
+	};
+
 	return (
 		<div className={cn.payment_root}>
+			<button onClick={goBackHandler} className={cn.backBtn}>
+				<span>{'<'}</span>
+			</button>
 			<div className={cn.payment_form}>
 				<h3 className={cn.h3}>New Transaction</h3>
 

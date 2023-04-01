@@ -50,16 +50,20 @@ export default function TransactionsListHeader(arg) {
 		if (startDate1.length < 18) startDate1 = '';
 		var endDate1 = dateEndFilter + 'T' + timeEndFilter;
 		if (endDate1.length < 18) endDate1 = '';
-		arg.setFilterOptions({
-			Recipient: recipientFilter,
-			Status: statusFilter,
-			StartDate: startDate1,
-			EndDate: endDate1,
-			MinAmount: amountFilterStart,
-			MaxAmount: amountFilterEnd,
-			SortingOptions: sortingColumn,
-			Ascending: sortingDirection == 'asc' ? true : false,
-		});
+		if (parseFloat(amountFilterEnd) < parseFloat(amountFilterStart))
+			alert('Ending value cannot be lower then starting value');
+		else {
+			arg.setFilterOptions({
+				Recipient: recipientFilter,
+				Status: statusFilter,
+				StartDate: startDate1,
+				EndDate: endDate1,
+				MinAmount: amountFilterStart,
+				MaxAmount: amountFilterEnd,
+				SortingOptions: sortingColumn,
+				Ascending: sortingDirection == 'asc' ? true : false,
+			});
+		}
 	};
 	const handleSortDirectionIdChange = () => {
 		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
@@ -106,7 +110,7 @@ export default function TransactionsListHeader(arg) {
 		const endDate = new Date(dateEndFilter);
 
 		if (startDate > endDate && event.target.value != '') {
-			alert('Starting date cannot be highter then ending date');
+			alert('Starting date cannot be higher than ending date');
 			setStartDateClass('invalidDateStart');
 		} else {
 			setDateStartFilter(event.target.value);
@@ -118,7 +122,7 @@ export default function TransactionsListHeader(arg) {
 		const startDate = new Date(dateStartFilter);
 		const endDate = new Date(event.target.value);
 		if (startDate > endDate && event.target.value != '') {
-			alert('Starting date cannot be highter then ending date');
+			alert('Starting date cannot be higher than ending date');
 			setEndDateClass('invalidDateEnd');
 		} else {
 			setDateEndFilter(event.target.value);
@@ -182,10 +186,10 @@ export default function TransactionsListHeader(arg) {
 	const handleAmountFilterEndChange = event => {
 		const value = event.target.value;
 		const regex = /^\d*(\.\d{0,2})?$/;
-		if (parseFloat(amountFilterEnd) < parseFloat(amountFilterStart))
-			alert('Ending value cannot be lower then starting value');
 
 		if (parseFloat(value) < 0) alert('Amount cannot be a negative number');
+
+		if (parseFloat(amountFilterStart) > parseFloat(value)) alert('Start amount can not be higher than end value');
 
 		if (regex.test(value)) {
 			setStyleErrorEnd('green');

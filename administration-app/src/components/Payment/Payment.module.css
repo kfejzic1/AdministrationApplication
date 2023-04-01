@@ -1,123 +1,134 @@
 .payment_root {
-	--_primary:#e7ebf0;
+	--_primary: #e7ebf0;
 	--secundary: #cfdeec;
 	--secundary2: #c4d7e9;
-	--left: #203A43;
-	--right: #2C5364;
-	--highlights: #0F2027; 
-    --babyblue : #3FB9F2; 
-  --bordercolor : rgba(255,255,255,0.3);
+	--left: #203a43;
+	--right: #2c5364;
+	--highlights: #0f2027;
+	--babyblue: #3fb9f2;
+	--bordercolor: rgba(255, 255, 255, 0.3);
 	--text-size: 20px;
 	--text-size2: 30px;
-    --paddings:50px 70px 70px 70px;
-    --inputPadding:15px;
-    --formHeading:70px;
-    --formGap:25px;
-    --selectBtn:15px;
-    
-    display: flex;
-    justify-content: flex-start;
-    align-items:center;
-    height: 100vh;
-    background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
-    background-position: center;
-    background-size: 100% auto;
+	--paddings: 50px 70px 70px 70px;
+	--inputPadding: 15px;
+	--formHeading: 70px;
+	--formGap: 25px;
+	--selectBtn: 15px;
+
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	height: 100vh;
+	background-image: url('http://localhost:3000/TransactionView/img/bckg3.png');
+	background-position: center;
+	background-size: 100% auto;
 }
 @media screen and (max-height: 700px) {
-    .payment_root {
-        --_primary:#e7ebf0;
-        --secundary: #cfdeec;
-        --secundary2: #c4d7e9;
-        --left: #203A43;
-        --right: #2C5364;
-        --highlights: #0F2027; 
-        --babyblue : #3FB9F2; 
-      --bordercolor : rgba(255,255,255,0.3);
-        --text-size: 9px;
-        --text-size2: 17px;
-        --paddings:20px 30px 20px 30px;
-        --inputPadding:5px;
-        --formHeading:30px;
-        --formGap:10px;
-        --selectBtn:0px;
-        
-    display: flex;
-    justify-content: flex-start;
-    align-items:center;
-    height: 100vh;
-    background-image: url("http://localhost:3000/TransactionView/img/bckg3.png");
-    background-position: center;
-    background-size: 100% auto;
-    }
+	.payment_root {
+		--_primary: #e7ebf0;
+		--secundary: #cfdeec;
+		--secundary2: #c4d7e9;
+		--left: #203a43;
+		--right: #2c5364;
+		--highlights: #0f2027;
+		--babyblue: #3fb9f2;
+		--bordercolor: rgba(255, 255, 255, 0.3);
+		--text-size: 9px;
+		--text-size2: 17px;
+		--paddings: 20px 30px 20px 30px;
+		--inputPadding: 5px;
+		--formHeading: 30px;
+		--formGap: 10px;
+		--selectBtn: 0px;
 
-     
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		height: 100vh;
+		background-image: url('http://localhost:3000/TransactionView/img/bckg3.png');
+		background-position: center;
+		background-size: 100% auto;
+	}
 }
-.h3{
-    font-size: var(--formHeading);
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 800;
-    color: var(--babyblue);
-    margin: 0;
+.h3 {
+	font-size: var(--formHeading);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-weight: 800;
+	color: var(--babyblue);
+	margin: 0;
 }
 
-
-.payment_form{
-    display: flex;
-    margin-left: 10%;
-    flex-direction: column;
-    background-color: #2A4B80;
-    padding: var(--paddings);
-    border-radius: 50px;
-    box-shadow: 0 0.3rem 0.7rem 0 var(--highlights);
+.payment_form {
+	display: flex;
+	margin-left: 10%;
+	flex-direction: column;
+	background-color: #2a4b80;
+	padding: var(--paddings);
+	border-radius: 50px;
+	box-shadow: 0 0.3rem 0.7rem 0 var(--highlights);
 }
 
-.form2{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    line-height:var(--formGap);
+.form2 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	line-height: var(--formGap);
 }
 
-.input{
-    padding: var(--inputPadding);
-    border-radius: 5px;
-    border: 0px;
-    width: 70%;
-    font-size: var(--text-size);
+.input {
+	padding: var(--inputPadding);
+	border-radius: 5px;
+	border: 0px;
+	width: 70%;
+	font-size: var(--text-size);
 }
 
-.button{
-    color:white;
-    background-color: var(--babyblue);
-    border-radius: 20px;
-    font-size: var(--text-size2);
-    border: rgba(140, 135, 135, 0.888);
-    color: white;
-    align-self: center;
-    border-radius: 5px;
-    padding: var(--inputPadding);
+.button {
+	color: white;
+	background-color: var(--babyblue);
+	border-radius: 20px;
+	font-size: var(--text-size2);
+	border: rgba(140, 135, 135, 0.888);
+	color: white;
+	align-self: center;
+	border-radius: 5px;
+	padding: var(--inputPadding);
 }
 
-.select{
-    background-color: var(--babyblue);
-    color: white;
-    align-self: flex-end;
-     border-radius: 5px;
-    padding: var(--selectBtn);
-    font-size: var(--text-size);
+.select {
+	background-color: var(--babyblue);
+	color: white;
+	align-self: flex-end;
+	border-radius: 5px;
+	padding: var(--selectBtn);
+	font-size: var(--text-size);
 }
-.selectWrap{
-    flex-direction: row;
-    justify-content: space-around;
-    width: 70%;
-    display: flex;
+.selectWrap {
+	flex-direction: row;
+	justify-content: space-around;
+	width: 70%;
+	display: flex;
 }
-.selectWrap p{
-    color: var(--babyblue) ;
-    
-    vertical-align: center;
-    font-size: var(--text-size);
-    margin: 0;
+.selectWrap p {
+	color: var(--babyblue);
+
+	vertical-align: center;
+	font-size: var(--text-size);
+	margin: 0;
 }
- 
+
+.backBtn {
+	color: white;
+	font-weight: 600;
+	position: absolute;
+	top: 20vh;
+	left: 10vh;
+	width: 6vh;
+	border-radius: 30%;
+	padding: 10px;
+	border: none;
+	background: linear-gradient(180deg, var(--babyblue), #2a4b80);
+	box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1), inset 0 2px 2px rgba(0, 0, 0, 0.06);
+	cursor: pointer;
+}

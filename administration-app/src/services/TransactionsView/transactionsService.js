@@ -8,7 +8,7 @@ export function getBasicTransactions(number = 10) {
 }
 
 export function getTransactions(pageNumber, pageSize, sortingOptions) {
-	/*return new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			var temp = transactions;
 			if (sortingOptions != null) {
@@ -71,7 +71,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 			resolve({ data: temp.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) });
 		}, 100);
 	});
-	*/
+
 	//mock is above, real is underneath
 	if (sortingOptions != null) {
 		if (sortingOptions.MinAmount === '') delete sortingOptions.MinAmount;
