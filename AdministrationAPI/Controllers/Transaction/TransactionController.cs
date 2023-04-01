@@ -17,13 +17,13 @@ namespace AdministrationAPI.Controllers.Transaction
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TransactionDTO>>> GetAllTransactions([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        public async Task<ActionResult<List<TransactionDTO>>> GetTransactions([FromQuery] TransactionQueryOptions options)
         {
             TransactionResponseDTO response;
 
             try
             {
-                response = await _transactionService.GetAllTransactions(pageNumber, pageSize);
+                response = await _transactionService.GetTransactions(options);
 
             }
             catch (Exception e)
@@ -33,42 +33,6 @@ namespace AdministrationAPI.Controllers.Transaction
 
             return Ok(response.Transactions);
         }
-
-        [HttpGet("filters")]
-        public async Task<ActionResult<List<TransactionDTO>>> GetTransactionsByFilters([FromQuery] DateTime? dateTimeStart = null, [FromQuery] DateTime? dateTimeEnd = null, [FromQuery] string? recipient = null, [FromQuery] int? amountMin = null, [FromQuery] int? amountMax = null, [FromQuery] TransactionStatus? status = null)
-        {
-
-            List<TransactionDTO> response;
-
-            try
-            {
-                response = await _transactionService.GetTransactionsByFilter(dateTimeStart, dateTimeEnd, recipient, amountMin, amountMax, status);
-            }
-            catch (Exception e)
-            {
-                return NotFound("Error: " + e.Message);
-            }
-
-            return Ok(response);
-        }
-
-        [HttpGet("sort")]
-        public async Task<ActionResult<List<TransactionDTO>>> GetSortedTransactions([FromQuery] SortingOptions sortingOptions, [FromQuery] bool ascending)
-        {
-            List<TransactionDTO> response;
-
-            try
-            {
-                response = await _transactionService.GetSortedTransactions(sortingOptions, ascending);
-            }
-            catch (Exception e)
-            {
-                return NotFound("Error: " + e.Message);
-            }
-
-            return Ok(response);
-        }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDetailsDTO>> GetTransactionById(int id)
