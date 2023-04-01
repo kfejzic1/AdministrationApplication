@@ -43,6 +43,26 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        // [HttpGet("2fa-qrcode")]
+        // public Task<IActionResult> Get2FAQRCode([FromQuery] string id)
+        // {
+        //     try
+        //     {
+        //         var userFetchResult = _userService.GetTwoFactorQRCode(id);
+
+        //         return Ok(userFetchResult);
+        //     }
+        //     catch (DataException ex)
+        //     {
+        //         return BadRequest(ex.Message);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         LoggerUtility.Logger.LogException(ex, "UserController.UserById");
+        //         return StatusCode(500, ex.Message);
+        //     }
+        // }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
