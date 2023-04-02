@@ -133,5 +133,25 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("verifyToken")]
+        public IActionResult VerifyToken([FromQuery] string jwt)
+        {
+            try
+            {                
+                var result = _userService.VerifyToken(jwt);
+
+                return Ok(result);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login2FA");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

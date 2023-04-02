@@ -199,5 +199,30 @@ namespace AdministrationAPI.Services
 
             return authClaims;
         }
+
+        public TokenVerificationResult VerifyToken(string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+
+            var userNameClaim =  token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            var roleClaims = token.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+
+            var roleValues = roleClaims.Select(c => c.Value).ToList();
+
+            if (userNameClaim == null)
+            {
+                return new TokenVerificationResult
+                {
+                    Errors = new[] { "User not found!" }
+                };
+
+            }
+            return new TokenVerificationResult 
+            { 
+                Username = userNameClaim, 
+                Roles = roleValues
+            };
+        }
     }
 }
