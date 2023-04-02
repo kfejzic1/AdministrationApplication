@@ -49,6 +49,11 @@
 		background-position: center;
 		background-size: 100% auto;
 	}
+	.pWrapperDiv{
+		color: var(--babyblue);
+		font-size: 8px;
+		display: inline-block;
+	}
 }
 .h3 {
 	font-size: var(--formHeading);
@@ -57,7 +62,7 @@
 	color: var(--babyblue);
 	margin: 0;
 }
-.pWrapper div{
+.pWrapperDiv{
 	color: var(--babyblue);
 	display: inline-block;
 }
@@ -118,7 +123,7 @@
 	width: 70%;
 	display: flex;
 }
-.selectWrap p {
+.selectWrapP {
 	color: var(--babyblue);
 
 	vertical-align: center;

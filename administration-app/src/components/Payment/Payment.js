@@ -43,7 +43,7 @@ export const Payment = props => {
 					<br />
 					<div className={cn.selectWrap}>
 						<div className={cn.pWrapper}>
-							<div>Type:</div>
+							<div className={cn.pWrapperDiv}>Type:</div>
 						</div>
 						<select className={cn.select} value={type} onChange={event => setType(event.target.value)}>
 							<option value='Credit'>Credit</option>
@@ -52,7 +52,7 @@ export const Payment = props => {
 							<option value='Gift'>Gift</option>
 						</select>
 						<div className={cn.pWrapper}>
-							<div>Currency:</div>
+							<div className={cn.pWrapperDiv}>Currency:</div>
 						</div>
 						<select className={cn.select} value={currency} onChange={event => setCurrency(event.target.value)}>
 							<option value='USD'>USD</option>

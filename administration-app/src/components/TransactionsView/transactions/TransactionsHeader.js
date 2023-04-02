@@ -267,10 +267,10 @@ export default function TransactionsListHeader(arg) {
 		<table className={cn.table}>
 			<thead>
 				<tr>
-					<th>
+					<th className={cn.tableTh}>
 						<p className={cn.textInTh}>ID</p>
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						{sortingColumn != 'DateTime' ? (
 							<div className={cn.unSort}>
 								<p>Date</p>
@@ -298,7 +298,7 @@ export default function TransactionsListHeader(arg) {
 							</TableSortLabel>
 						)}
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						{sortingColumn != 'Recipient' ? (
 							<div className={cn.unSort}>
 								<p>Recipient</p>
@@ -327,7 +327,7 @@ export default function TransactionsListHeader(arg) {
 							</TableSortLabel>
 						)}
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						{sortingColumn != 'Amount' ? (
 							<div className={cn.unSort}>
 								<p>Amount </p>
@@ -356,7 +356,7 @@ export default function TransactionsListHeader(arg) {
 							</TableSortLabel>
 						)}
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						{sortingColumn != 'Status' ? (
 							<div className={cn.unSort}>
 								<p>Status </p>
@@ -384,28 +384,28 @@ export default function TransactionsListHeader(arg) {
 							</TableSortLabel>
 						)}
 					</th>
-					<th></th>
+					<th className={cn.tableTh}></th>
 				</tr>
 
 				<tr>
-					<th></th>
-					<th>
+					<th className={cn.tableTh}></th>
+					<th className={cn.tableTh}>
 						<div className={cn.dateInputWrapper}>
 							<div className={cn.dateInput}>
-								<a>Start:</a>
-								<a>End:</a>
+								<a className={cn.dateInputA}>Start:</a>
+								<a className={cn.dateInputA}>End:</a>
 							</div>
 							<div className={cn.dateInput}>
 								<input
 									type='date'
-									className={startDateClass}
+									className={(startDateClass, cn.dateInputInput)}
 									format='dd-MM-y'
 									value={dateStartFilter}
 									onChange={handleDateStartFilterChange}
 								/>
 								<input
 									type='date'
-									className={endDateClass}
+									className={(endDateClass, cn.dateInputInput)}
 									format='dd-MM-y'
 									value={dateEndFilter}
 									onChange={handleDateEndFilterChange}
@@ -414,14 +414,14 @@ export default function TransactionsListHeader(arg) {
 							<div className={cn.dateInput}>
 								<input
 									type='time'
-									className={startTimeClass}
+									className={(startTimeClass, cn.dateInputInput)}
 									value={timeStartFilter}
 									onChange={handleTimeStartFilterChange}
 								/>
 
 								<input
 									type='time'
-									className={endTimeClass}
+									className={(endTimeClass, cn.dateInputInput)}
 									value={timeEndFilter}
 									onChange={handleTimeEndFilterChange}
 								/>
@@ -429,7 +429,7 @@ export default function TransactionsListHeader(arg) {
 						</div>
 					</th>
 
-					<th>
+					<th className={cn.tableTh}>
 						<TextField
 							className={cn.textFieldSearch}
 							value={recipientFilter}
@@ -444,15 +444,23 @@ export default function TransactionsListHeader(arg) {
 							}}
 						></TextField>
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						<div className={cn.amountWrapper}>
-							<p>Min:</p>
-							<input type='number' onChange={event => setAmountFilterStart(event.target.value)}></input>
-							<p>Max:</p>
-							<input type='number' onChange={event => setAmountFilterEnd(event.target.value)}></input>
+							<p className={cn.amountWrapperP}>Min:</p>
+							<input
+								className={cn.amountWrapperInput}
+								type='number'
+								onChange={event => setAmountFilterStart(event.target.value)}
+							></input>
+							<p className={cn.amountWrapperP}>Max:</p>
+							<input
+								className={cn.amountWrapperInput}
+								type='number'
+								onChange={event => setAmountFilterEnd(event.target.value)}
+							></input>
 						</div>
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						<FormControl fullWidth className={cn.statusChooser}>
 							<Select
 								labelId='filter-status-label'
@@ -473,7 +481,7 @@ export default function TransactionsListHeader(arg) {
 							</Select>
 						</FormControl>
 					</th>
-					<th>
+					<th className={cn.tableTh}>
 						<button
 							className={cn.filterBtn}
 							onClick={() => {
