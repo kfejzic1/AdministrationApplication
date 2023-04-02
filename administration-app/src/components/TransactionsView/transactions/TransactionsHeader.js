@@ -50,9 +50,10 @@ export default function TransactionsListHeader(arg) {
 	}, [sortingColumn, sortingDirection]);
 	const updateFilterOptions = () => {
 		var startDate1 = dateStartFilter + 'T' + timeStartFilter;
-		if (startDate1.length < 18) startDate1 = '';
+		console.log('updateFilterOptions', startDate1);
+		if (startDate1.length < 15) startDate1 = '';
 		var endDate1 = dateEndFilter + 'T' + timeEndFilter;
-		if (endDate1.length < 18) endDate1 = '';
+		if (endDate1.length < 15) endDate1 = '';
 		if (parseFloat(amountFilterEnd) < parseFloat(amountFilterStart))
 			alert('Ending value cannot be lower then starting value');
 		else {
@@ -118,7 +119,10 @@ export default function TransactionsListHeader(arg) {
 		const startDate = new Date(event.target.value);
 		const endDate = new Date(dateEndFilter);
 
-		if (startDate > endDate && event.target.value != '') {
+		if (
+			new Date(startDate + 'T' + timeStartFilter) > new Date(endDate + 'T' + timeEndFilter) &&
+			event.target.value != ''
+		) {
 			alert('Starting date cannot be higher than ending date');
 			setStartDateClass('invalidDateStart');
 		} else {
@@ -130,7 +134,10 @@ export default function TransactionsListHeader(arg) {
 	const handleDateEndFilterChange = event => {
 		const startDate = new Date(dateStartFilter);
 		const endDate = new Date(event.target.value);
-		if (startDate > endDate && event.target.value != '') {
+		if (
+			new Date(startDate + 'T' + timeStartFilter) > new Date(endDate + 'T' + timeEndFilter) &&
+			event.target.value != ''
+		) {
 			alert('Starting date cannot be higher than ending date');
 			setEndDateClass('invalidDateEnd');
 		} else {
@@ -143,7 +150,11 @@ export default function TransactionsListHeader(arg) {
 		const startTime = event.target.value;
 		const endTime = timeEndFilter;
 
-		if (startTime > endTime && endTime != '' && startTime != '') {
+		if (
+			new Date(dateStartFilter + 'T' + startTime) > new Date(dateEndFilter + 'T' + endTime) &&
+			endTime != '' &&
+			startTime != ''
+		) {
 			alert('Starting time cannot be highter then ending date');
 			setStartTimeClass('invalidTimeStart');
 		} else {

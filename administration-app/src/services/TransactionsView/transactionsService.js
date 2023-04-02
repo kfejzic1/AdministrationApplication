@@ -72,6 +72,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 	});
 	*/
 	//mock is above, real is underneath
+	console.log('Sorting optins=', JSON.stringify(sortingOptions));
 	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
 		if (sortingOptions.MinAmount === '') {
@@ -116,10 +117,10 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 					if (sortingOptions.MaxAmount != '') {
 						temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
 					}
-					if (!sortingOptions.DateTimeStart.length > 17) {
+					if (sortingOptions.DateTimeStart.length > 14) {
 						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
 					}
-					if (sortingOptions.DateTimeEnd.length > 17) {
+					if (sortingOptions.DateTimeEnd.length > 14) {
 						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
 					}
 
