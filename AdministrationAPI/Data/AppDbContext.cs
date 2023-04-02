@@ -70,10 +70,3 @@ namespace AdministrationAPI.Data
         }
     }
 }
-
-                    property.SetColumnName(npgsqlColumnName);
-                }
-            }
-        }
-    }
-}

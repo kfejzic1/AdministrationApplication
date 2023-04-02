@@ -48,6 +48,17 @@ namespace AdministrationAPI.Services
             };
         }
 
+        public List<User> GetAllUsers()
+        {
+            var users = _userManager.Users.ToList();
+            return users;
+        }
+
+        public User GetUserByName(string name)
+        {
+            return _userManager.Users.FirstOrDefault(x => x.UserName == name);
+        }
+
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
             User user = new User();

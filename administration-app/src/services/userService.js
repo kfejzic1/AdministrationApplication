@@ -3,7 +3,7 @@ import { env } from '../config/env';
 import jwtDecode from 'jwt-decode';
 
 export function getAllUsers() {
-	return axios(env.API_ENV.url + '/api/User', {
+	return axios(env.API_ENV.url + '/api/User/all', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -35,6 +35,7 @@ export function getUserByName(username) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }

@@ -135,7 +135,7 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public IActionResult GetAllUsers()
         {
             try
@@ -168,11 +168,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
-=======
-                LoggerUtility.Logger.LogException(ex, "UserController.Login2FA");
->>>>>>> 0cca0a9d41ef4eb71456a77cd54e1d265d90c17d
                 return StatusCode(500, ex.Message);
             }
         }

@@ -31,14 +31,14 @@ const useStyles = makeStyles(theme => ({
 		minHeight: '40%',
 		maxWidth: '50%',
 		margin: 'auto',
-		"&.MuiButton-outlined": {
-			backgroundColor: "#eeba6c",
-			color: "black",
+		'&.MuiButton-outlined': {
+			backgroundColor: '#eeba6c',
+			color: 'black',
 			'&:hover': {
 				backgroundColor: '#ea8c00',
 				boxShadow: 'none',
-			  },  
-		}
+			},
+		},
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -167,8 +167,8 @@ function VendorManagementModal() {
 	};
 
 	return (
-		<div>
-			<div className='container'>
+		<div className='component-body'>
+			<div className='vendor-container'>
 				<form className={classes.root} onSubmit={handleSubmit}>
 					<Card className={classes.root}>
 						<CardHeader title={'Create B2B Customer'}></CardHeader>
@@ -255,14 +255,14 @@ function VendorManagementModal() {
 							</Grid>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button className={classes.root} variant="outlined" type='submit' value='Submit' onClick={handleSubmit}>
+							<Button className={classes.root} variant='outlined' type='submit' value='Submit' onClick={handleSubmit}>
 								Create
 							</Button>
 						</CardActions>
 					</Card>
 				</form>
 				<div className='imageBcg'>
-					<img src={naslovna} alt="your-image-description" />
+					<img src={naslovna} alt='your-image-description' />
 				</div>
 				<Loader open={open} loaderState={loaderState} />
 			</div>
