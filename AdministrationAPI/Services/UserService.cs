@@ -1,28 +1,27 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace AdministrationAPI.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
         public UserService(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IConfiguration configuration
         )
         {
@@ -31,10 +30,40 @@ namespace AdministrationAPI.Services
             _configuration = configuration;
         }
 
+        public async Task<UserDT> GetUser(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                throw new DataException("User with the provided id does not exist!");
+            }
+
+            return new UserDT
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                IsTwoFactorEnabled = user.TwoFactorEnabled,
+                AuthenticatorKey = user.AuthenticatorKey
+            };
+        }
+
+        public List<User> GetAllUsers()
+        {
+            var users = _userManager.Users.ToList();
+            return users;
+        }
+
+        public User GetUserByName(string name)
+        {
+            return _userManager.Users.FirstOrDefault(x => x.UserName == name);
+        }
+
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
-            //Fetch User From Database by email or phone from LoginRequest, password should be hashed
-            IdentityUser user = new IdentityUser();
+            User user = new User();
 
             if (loginRequest.Email != null)
                 user = await _userManager.FindByEmailAsync(loginRequest.Email);
@@ -57,41 +86,26 @@ namespace AdministrationAPI.Services
                 };
             }
 
-            if (user.TwoFactorEnabled)
-            {
-                await _signInManager.SignOutAsync();
-                var canI = await _signInManager.CanSignInAsync(user);
-
-                await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, true);
-                var twoFactorToken = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
-
-                var message = new Message(new string[] { user.Email! }, "Login Confirmation", twoFactorToken);
-
+            if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
                 return new AuthenticationResult
                 {
-                    IsTwoFactorEnabled = true,
-                    EmailMessage = message
+                    TwoFactorEnabled = true,
+                    Mail = user.Email
                 };
-            }
 
-            var authClaims = await GetAuthClaimsAsync(user);
+            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-            var token = CreateToken(authClaims);
+            var token = TokenUtilities.CreateToken(authClaims, _configuration);
 
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserId = user.Id
             };
         }
-       
-        public List<IdentityUser> GetAllUsers()
-        {
-            var users = _userManager.Users.ToList();
-            return users;
-        }
 
-        public List<IdentityUser> GetAssignedUsersForVendor(int vendorId)
+        public List<User> GetAssignedUsersForVendor(int vendorId)
         {
             using (var context = new VendorDbContext())
             {
@@ -99,19 +113,12 @@ namespace AdministrationAPI.Services
                 var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
                 return users;
             }
-            
-        }
 
-        public IdentityUser GetUserByName(string name)
-        {
-            return _userManager.Users.FirstOrDefault(x => x.UserName == name);
         }
-
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-            var signIn = await _signInManager.TwoFactorSignInAsync(TokenOptions.DefaultEmailProvider, loginRequest.Code, false, false);
 
             if (user == null)
                 return new AuthenticationResult
@@ -119,15 +126,20 @@ namespace AdministrationAPI.Services
                     Errors = new[] { "Invalid user!" }
                 };
 
-            if (signIn.Succeeded)
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            string key = Encoding.UTF8.GetString(Convert.FromBase64String(user.AuthenticatorKey));
+            bool result = tfa.ValidateTwoFactorPIN(key, loginRequest.Code);
+
+            if (result)
             {
-                var authClaims = await GetAuthClaimsAsync(user);
-                var token = CreateToken(authClaims);
+                var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+                var token = TokenUtilities.CreateToken(authClaims, _configuration);
 
                 return new AuthenticationResult
                 {
                     Success = true,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token)
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    UserId = user.Id
                 };
             }
 
@@ -137,38 +149,46 @@ namespace AdministrationAPI.Services
             };
         }
 
-
-        private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        public async Task<QRCodeResponse> GetTwoFactorQRCode(string id)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Secret"]));
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Token:ValidIssuer"],
-                audience: _configuration["Token:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
+            if (user == null)
+                throw new DataException("User with the provided id does not exist!");
 
-            return token;
+            string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
+            string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key)); ;
+
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
+            string qrCodeUrl = setupInfo.QrCodeSetupImageUrl;
+            string manualEntryCode = setupInfo.ManualEntryKey;
+
+            user.AuthenticatorKey = encodedKey;
+            await _userManager.UpdateAsync(user);
+
+            return new QRCodeResponse
+            {
+                Url = qrCodeUrl,
+                ManualString = manualEntryCode
+            };
         }
 
-        private async Task<List<Claim>> GetAuthClaimsAsync(IdentityUser user)
+        public async Task<bool> Toggle2FA(string id)
         {
-            var authClaims = new List<Claim>
-                {
-                    new Claim("Name", user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user == null)
+                throw new DataException("User with the provided id does not exist!");
 
-            foreach (var role in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            if (user.TwoFactorEnabled)
+                user.AuthenticatorKey = null;
 
-            return authClaims;
+            user.TwoFactorEnabled = !user.TwoFactorEnabled;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return user.TwoFactorEnabled;
         }
     }
 }

@@ -120,7 +120,7 @@ namespace AdministrationAPI.Services
 
                 if (vendor != null)
                 {
-                    vendor.Address = null; 
+                    vendor.Address = null;
                     vendor.Modified = DateTime.UtcNow;
                     context.SaveChanges();
                     return true;
