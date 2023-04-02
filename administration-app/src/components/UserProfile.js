@@ -14,6 +14,7 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogActions,
+	LinearProgress,
 } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,10 +27,13 @@ const ProfilePage = () => {
 	const [showDialog, setShowDialog] = useState(false);
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getUser(localStorage.getItem('userId')).then(res => {
 			setUser(res.data);
+			setIsLoading(false);
 			setIs2FAEnabled(res.data.isTwoFactorEnabled);
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
@@ -44,9 +48,11 @@ const ProfilePage = () => {
 	};
 
 	const toggle2FA = () => {
+		setIsLoading(true);
 		toggle2Factor(localStorage.getItem('userId')).then(res => {
 			if (res.data) setIs2FASettedUp(false);
 			setIs2FAEnabled(res.data);
+			setIsLoading(false);
 		});
 	};
 
@@ -59,6 +65,7 @@ const ProfilePage = () => {
 		<div className='container'>
 			<Box className='profile-banner rounded-left'>
 				<Box
+					className='mt-4'
 					component='img'
 					sx={{
 						height: 250,
@@ -128,6 +135,9 @@ const ProfilePage = () => {
 							) : null}
 						</Table>
 					</TableContainer>
+					<Box sx={{ width: '90%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
+						<LinearProgress />
+					</Box>
 				</Box>
 				<Box>
 					<LogoutButton />
