@@ -18,8 +18,8 @@ import {
 } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../services/userService';
-import LogoutButton from './Login/Logout';
+import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
+import LogoutButton from '../Login/Logout';
 
 const ProfilePage = () => {
 	const [user, setUser] = useState(null);
@@ -135,7 +135,7 @@ const ProfilePage = () => {
 							) : null}
 						</Table>
 					</TableContainer>
-					<Box sx={{ width: '90%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
+					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>
 				</Box>
