@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,14 +17,71 @@ namespace AdministrationAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
 
-
-        public UserController(IUserService userService, IMapper mapper, IEmailService emailService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
-            _emailService = emailService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUser([FromQuery] string id)
+        {
+            try
+            {
+                var userFetchResult = await _userService.GetUser(id);
+
+                return Ok(userFetchResult);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.UserById");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("2fa-qrcode")]
+        public async Task<IActionResult> Get2FAQRCode([FromQuery] string id)
+        {
+            try
+            {
+                var qrCode = await _userService.GetTwoFactorQRCode(id);
+
+                return Ok(qrCode);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.TwoFactorQrCode");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPatch("2fa-toggle")]
+        public async Task<IActionResult> Toggle2FA([FromQuery] string id)
+        {
+            try
+            {
+                var result = await _userService.Toggle2FA(id);
+
+                return Ok(result);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Toggle2FA");
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("login")]
@@ -34,13 +92,8 @@ namespace AdministrationAPI.Controllers
             {
                 var authenticationResult = await _userService.Login(loginRequest);
 
-                if (authenticationResult.IsTwoFactorEnabled)
-                {
-                    _emailService.SendEmail(authenticationResult.EmailMessage);
-
-                    return StatusCode(StatusCodes.Status200OK,
-                 new StatusMessageResponse { Status = "Success", Message = $"We have sent verification code to your email." });
-                }
+                if (authenticationResult.TwoFactorEnabled)
+                    return Ok(authenticationResult);
 
                 if (authenticationResult.Success)
                     return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
@@ -115,7 +168,11 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
+=======
+                LoggerUtility.Logger.LogException(ex, "UserController.Login2FA");
+>>>>>>> 0cca0a9d41ef4eb71456a77cd54e1d265d90c17d
                 return StatusCode(500, ex.Message);
             }
         }

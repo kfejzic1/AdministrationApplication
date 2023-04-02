@@ -1,4 +1,4 @@
-﻿namespace AdministrationAPI.Contracts.Requests
+namespace AdministrationAPI.Contracts.Requests
 {
     public class VendorCreateRequest
     {

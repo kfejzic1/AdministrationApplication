@@ -2,6 +2,7 @@ using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,6 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
-var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
-builder.Services.AddSingleton(emailConfig);
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -41,7 +39,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]))
     };
 });
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -69,10 +66,9 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -91,6 +87,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseMiddleware<TokenExpirationHandler>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
