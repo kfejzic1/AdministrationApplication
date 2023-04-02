@@ -1,6 +1,7 @@
 import cn from './Payment.module.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
 
 export const Payment = props => {
 	const [transactionAmount, setTransactionAmount] = useState(props.paymentInfo ? props.paymentInfo.amount : '');
@@ -16,17 +17,6 @@ export const Payment = props => {
 		event.preventDefault();
 		// POST za plaćanje
 	}
-
-	useEffect(() => {
-		return () => {
-			setTransactionAmount('');
-			setRecipientName('');
-			setRecipientAccountNumber('');
-			setCurrency('USD');
-			setType('Payment');
-			props.setPaymentInfo(null);
-		};
-	}, []);
 
 	const goBackHandler = () => {
 		navigate(-1);
@@ -55,28 +45,28 @@ export const Payment = props => {
 						<div className={cn.pWrapper}>
 							<div>Type:</div>
 						</div>
-						<select className={cn.select} value={type} onChange={event => setCurrency(event.target.value)}>
-							<option value='usd'>Credit</option>
-							<option value='eur'>Payment</option>
-							<option value='bam'>Recip</option>
-							<option value='jpy'>Gift</option>
+						<select className={cn.select} value={type} onChange={event => setType(event.target.value)}>
+							<option value='Credit'>Credit</option>
+							<option value='Payment'>Payment</option>
+							<option value='Recip'>Recip</option>
+							<option value='Gift'>Gift</option>
 						</select>
 						<div className={cn.pWrapper}>
 							<div>Currency:</div>
 						</div>
 						<select className={cn.select} value={currency} onChange={event => setCurrency(event.target.value)}>
-							<option value='usd'>USD</option>
-							<option value='eur'>EUR</option>
-							<option value='bam'>BAM</option>
-							<option value='jpy'>JPY</option>
-							<option value='gbp'>GBP</option>
-							<option value='cad'>CAD</option>
-							<option value='aud'>AUD</option>
-							<option value='chf'>CHF</option>
-							<option value='cny'>CNY</option>
-							<option value='nzd'>NZD</option>
-							<option value='mxn'>MXN</option>
-							<option value='brl'>BRL</option>
+							<option value='USD'>USD</option>
+							<option value='EUR'>EUR</option>
+							<option value='BAM'>BAM</option>
+							<option value='JPY'>JPY</option>
+							<option value='GBP'>GBP</option>
+							<option value='CAD'>CAD</option>
+							<option value='AUD'>AUD</option>
+							<option value='CHF'>CHF</option>
+							<option value='CNY'>CNY</option>
+							<option value='NZD'>NZD</option>
+							<option value='MXN'>MXN</option>
+							<option value='BRL'>BRL</option>
 						</select>
 					</div>
 					<br />
@@ -101,7 +91,26 @@ export const Payment = props => {
 
 					<br />
 
-					<button className={cn.button} type='submit'>
+					<button
+						className={cn.button}
+						type='submit'
+						onClick={() => {
+							sendPaymentInfo({
+								amount: parseFloat(transactionAmount),
+								currency: currency,
+								paymentType: type,
+								recipientAccountNumber: recipientAccountNumber,
+								recipientName: 'Test Recipient', //recipientAccountNumber,
+							})
+								.then(() => {
+									alert('Payment successfuly sent!');
+								})
+								.catch(() => {
+									alert('Failed!');
+								});
+							console.log('moj=', currency, recipientName, recipientAccountNumber, type, transactionAmount);
+						}}
+					>
 						Submit
 					</button>
 				</form>
