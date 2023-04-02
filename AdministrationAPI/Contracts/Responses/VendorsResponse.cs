@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Models;
 
 namespace AdministrationAPI.Contracts.Responses
 {
@@ -15,6 +16,6 @@ namespace AdministrationAPI.Contracts.Responses
         public int? CreatedBy { get; set; }
         public DateTime? Modified { get; set; }
         public int? ModifiedBy { get; set; }
-        public List<IdentityUser> AssignedUsers { get; set; }
+        public List<User> AssignedUsers { get; set; }
     }
 }

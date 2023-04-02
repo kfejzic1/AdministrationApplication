@@ -83,7 +83,7 @@ export default function VendorsTableToolBar(props) {
 						{numSelected} selected
 					</Typography>
 				) : (
-					<Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
+					<Typography sx={{ flex: '1 1 100%' }} align='left' variant='h6' id='tableTitle' component='div'>
 						B2B Customers
 					</Typography>
 				)}
