@@ -47,6 +47,77 @@ const TwoFactorView = props => {
 			}); //Ispisati error message negdje
 	};
 
+	const CodeContainer = () =>	{
+		return (
+			<div className='code-container'>
+				<input
+					className='code-input'
+					ref={digit1}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length > 0) digit2.current.focus();
+					}}
+				/>
+				<input
+					className='code-input'
+					ref={digit2}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length > 0) digit3.current.focus();
+						else digit1.current.focus();
+					}}
+				/>
+				<input
+					className='code-input'
+					ref={digit3}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length > 0) digit4.current.focus();
+						else digit2.current.focus();
+					}}
+				/>
+				<input
+					className='code-input'
+					ref={digit4}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length > 0) digit5.current.focus();
+						else digit3.current.focus();
+					}}
+				/>
+				<input
+					className='code-input'
+					ref={digit5}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length > 0) digit6.current.focus();
+						else digit4.current.focus();
+					}}
+				/>
+				<input
+					className='code-input'
+					ref={digit6}
+					type='text'
+					maxLength={1}
+					autoComplete='none'
+					onChange={e => {
+						if (e.target.value.length === 0) digit5.current.focus();
+					}}
+				/>
+			</div>
+		);
+	} 
+
 	return (
 		<div className='auth-container'>
 			<div className='cover'>
@@ -60,74 +131,8 @@ const TwoFactorView = props => {
 						{errorMessage}
 					</Alert>
 				) : null}
-				<h3>Please input 6-digit code from your Google Authenticator app!</h3>
-				<div className='code-container'>
-					<input
-						className='code-input'
-						ref={digit1}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length > 0) digit2.current.focus();
-						}}
-					/>
-					<input
-						className='code-input'
-						ref={digit2}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length > 0) digit3.current.focus();
-							else digit1.current.focus();
-						}}
-					/>
-					<input
-						className='code-input'
-						ref={digit3}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length > 0) digit4.current.focus();
-							else digit2.current.focus();
-						}}
-					/>
-					<input
-						className='code-input'
-						ref={digit4}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length > 0) digit5.current.focus();
-							else digit3.current.focus();
-						}}
-					/>
-					<input
-						className='code-input'
-						ref={digit5}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length > 0) digit6.current.focus();
-							else digit4.current.focus();
-						}}
-					/>
-					<input
-						className='code-input'
-						ref={digit6}
-						type='text'
-						maxLength={1}
-						autoComplete='none'
-						onChange={e => {
-							if (e.target.value.length === 0) digit5.current.focus();
-						}}
-					/>
-				</div>
-
+				<Typography variant='h5'>Please input 6-digit code from your Google Authenticator app!</Typography>
+				<CodeContainer/>
 				<button className='verify-btn' onClick={handleButtonClick}>
 					{' '}
 					Verify

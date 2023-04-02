@@ -12,7 +12,7 @@ const LogoutButton = () => {
 		navigate('/login');
 	};
 	return (
-		<Button variant='outlined' onClick={logout}>
+		<Button variant='outlined' style={{ margin: 10 }} onClick={logout}>
 			Log out
 		</Button>
 	);
