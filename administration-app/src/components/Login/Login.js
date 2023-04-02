@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../services/loginService';
-import { Button, Typography, Input, Alert } from '@mui/material';
+import { login } from '../../services/userService';
+import { LinearProgress, Typography, Input, Alert, Box } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 
 const LoginForm = () => {
@@ -11,23 +11,17 @@ const LoginForm = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
 	const [email, setEmail] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
-	function checkData(input) {
+	const checkData = input => {
 		const regex = new RegExp('^[0-9]+$');
 		if (input.length <= 10 && input.match(regex)) return 'phone';
 		else return 'email';
-	}
-
-	function LoginAlert() {
-		if (errorMessage.length > 0)
-			return <Alert style={{width: '80%'}} severity='error' variant='filled'>
-						{errorMessage}
-					</Alert>;
-		return;
-	}
+	};
 
 	const handleButtonClick = () => {
+		setIsLoading(true);
 		const loginData = {
 			[checkData(phoneMail)]: phoneMail,
 			password,
@@ -36,6 +30,7 @@ const LoginForm = () => {
 		login(loginData)
 			.then(res => {
 				const { token, twoFactorEnabled, mail, userId, manualEntryCode, qRCodeUrl } = res.data;
+				setIsLoading(false);
 
 				if (twoFactorEnabled && mail) {
 					setIsTwoFactorEnabled(twoFactorEnabled);
@@ -49,6 +44,8 @@ const LoginForm = () => {
 				navigate('/user');
 			})
 			.catch(err => {
+				setIsLoading(false);
+
 				if (err.response.data.errors) {
 					setErrorMessage(err.response.data.errors[0]);
 					return;
@@ -63,8 +60,15 @@ const LoginForm = () => {
 	) : (
 		<div className='login-container'>
 			<div className='cover'>
+				<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
+					<LinearProgress />
+				</Box>
 				<Typography variant='h4'>Login</Typography>
-				<LoginAlert/>
+				{errorMessage.length > 0 ? (
+					<Alert style={{ width: '80%' }} severity='error' variant='filled'>
+						{errorMessage}
+					</Alert>
+				) : null}
 				<Input
 					className='user-data'
 					type='text'

@@ -7,8 +7,6 @@
         public bool Success { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public string? UserId { get; set; }
-        // public string? QRCodeUrl { get; set; }
-        // public string? ManualEntryCode { get; set; }
         public IEnumerable<string> Errors { get; set; }
     }
 }

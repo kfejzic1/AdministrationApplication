@@ -73,32 +73,12 @@ namespace AdministrationAPI.Services
                 };
             }
 
-
-
-            if (user.TwoFactorEnabled)
-            {
-                string qrCodeUrl = null, manualEntryCode = null;
-
-                if (user.AuthenticatorKey == null)
-                {
-                    string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
-                    string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
-
-                    TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-                    SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
-                    qrCodeUrl = setupInfo.QrCodeSetupImageUrl;
-                    manualEntryCode = setupInfo.ManualEntryKey;
-                    
-                    user.AuthenticatorKey = encodedKey;
-                    await _userManager.UpdateAsync(user);
-                }
-
+            if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
                 return new AuthenticationResult
                 {
                     TwoFactorEnabled = true,
                     Mail = user.Email
                 };
-            }
 
             var authClaims = await GetAuthClaimsAsync(user);
 
@@ -149,6 +129,9 @@ namespace AdministrationAPI.Services
         {
             var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
+            if (user == null) 
+                throw new DataException("User with the provided id does not exist!");
+            
             string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
             string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
 
@@ -167,7 +150,22 @@ namespace AdministrationAPI.Services
             };
         }
 
+        public async Task<bool> Toggle2FA(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
+            if (user == null) 
+                throw new DataException("User with the provided id does not exist!");
+
+            if(user.TwoFactorEnabled)
+                user.AuthenticatorKey = null;
+        
+            user.TwoFactorEnabled = !user.TwoFactorEnabled;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return user.TwoFactorEnabled;
+        }
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {

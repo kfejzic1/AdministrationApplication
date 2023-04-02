@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TwoFactor.css';
-import { twoFactorAuthentication } from '../../services/loginService';
+import { twoFactorAuthentication } from '../../services/userService';
+import { LinearProgress, Box, Alert, Typography } from '@mui/material';
 
 const TwoFactorView = props => {
 	const digit1 = useRef(null);
@@ -12,9 +13,11 @@ const TwoFactorView = props => {
 	const digit5 = useRef(null);
 	const digit6 = useRef(null);
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
 	const handleButtonClick = () => {
+		setIsLoading(true);
 		const code =
 			digit1.current.value +
 			digit2.current.value +
@@ -24,6 +27,7 @@ const TwoFactorView = props => {
 			digit6.current.value;
 		twoFactorAuthentication({ code, email: props.email })
 			.then(res => {
+				setIsLoading(false);
 				const { token, userId } = res.data;
 
 				localStorage.setItem('token', token);
@@ -32,6 +36,8 @@ const TwoFactorView = props => {
 				navigate('/user');
 			})
 			.catch(err => {
+				setIsLoading(false);
+
 				if (err.response.data.errors) {
 					setErrorMessage(err.response.data.errors);
 					return;
@@ -44,8 +50,17 @@ const TwoFactorView = props => {
 	return (
 		<div className='auth-container'>
 			<div className='cover'>
-				<h1>2-Factor Authentication</h1>
-				<h3>You received a 6-digit code on your e-Mail/Phone. Please input your code here!</h3>
+				<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
+					<LinearProgress />
+				</Box>
+				<Typography variant='h4'>2-Factor Authentication</Typography>
+
+				{errorMessage.length > 0 ? (
+					<Alert style={{ width: '80%' }} severity='error' variant='filled'>
+						{errorMessage}
+					</Alert>
+				) : null}
+				<h3>Please input 6-digit code from your Google Authenticator app!</h3>
 				<div className='code-container'>
 					<input
 						className='code-input'

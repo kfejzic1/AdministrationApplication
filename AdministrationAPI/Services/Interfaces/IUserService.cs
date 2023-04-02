@@ -9,5 +9,6 @@ namespace AdministrationAPI.Services.Interfaces
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         Task<UserDT> GetUser(string id);
         Task<QRCodeResponse> GetTwoFactorQRCode(string id);
+        Task<bool> Toggle2FA(string id);
     }
 }

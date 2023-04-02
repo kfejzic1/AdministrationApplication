@@ -18,23 +18,40 @@ import {
 } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getUser } from '../services/userService';
+import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../services/userService';
 
-const ProfilePage = arg => {
+const ProfilePage = () => {
 	const [user, setUser] = useState(null);
+	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
+	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
 
 	useEffect(() => {
 		getUser(localStorage.getItem('userId')).then(res => {
 			setUser(res.data);
+			setIs2FAEnabled(res.data.isTwoFactorEnabled);
+			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
 	}, []);
 
 	const handle2FASetup = () => {
+		getTwoFactorQRCode(localStorage.getItem('userId')).then(res => {
+			setQrCode(res.data);
+		});
+
 		setShowDialog(true);
 	};
 
+	const toggle2FA = () => {
+		toggle2Factor(localStorage.getItem('userId')).then(res => {
+			if (res.data) setIs2FASettedUp(false);
+			setIs2FAEnabled(res.data);
+		});
+	};
+
 	const handleDialogClose = () => {
+		setIs2FASettedUp(true);
 		setShowDialog(false);
 	};
 
@@ -91,18 +108,18 @@ const ProfilePage = arg => {
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
-									2FA Enabled:
+									Two-Factor Authentication:
 								</TableCell>
 								<TableCell align='center'>
-									<Checkbox value={user?.isTwoFactorEnabled} disabled />
+									<Button onClick={toggle2FA}>{is2FAEnabled ? 'Disable' : 'Enable'}</Button>
 								</TableCell>
 							</TableRow>
-							{user?.isTwoFactorEnabled ? (
+							{is2FAEnabled ? (
 								<TableRow>
 									<TableCell align='center' variant='head'>
-										{user?.authenticatorKey
+										{is2FASettedUp
 											? 'You have already configured 2FA using Google Authenticator. Do You want to configure it again?'
-											: 'Setup 2FA using Google Authenticator'}
+											: '2FA not setted up!'}
 									</TableCell>
 									<TableCell align='center'>
 										<Button onClick={handle2FASetup}>Setup</Button>
@@ -113,29 +130,20 @@ const ProfilePage = arg => {
 					</TableContainer>
 				</Box>
 			</Box>
-			{console.log('qr code: ', localStorage.getItem('qrCodeUrl'))}
 
-			<Dialog
-				open={showDialog}
-				onClose={handleDialogClose}
-				aria-labelledby='alert-dialog-title'
-				aria-describedby='alert-dialog-description'>
-				<DialogTitle id='alert-dialog-title'>{'Setup 2FA'}</DialogTitle>
-				<DialogContent>
-					<DialogContentText id='alert-dialog-description'>
-						Scan QR Code via Google Authenticator App:
+			<Dialog open={showDialog} onClose={handleDialogClose}>
+				<DialogTitle>{'Setup 2FA'}</DialogTitle>
+				<DialogContent className='text-center'>
+					<DialogContentText className='mb-4'>
+						Scan QR Code via Google Authenticator App or insert manual key:
 					</DialogContentText>
-					<Box
-						component='img'
-						sx={{
-							height: 233,
-							width: 350,
-							maxHeight: { xs: 233, md: 167 },
-							maxWidth: { xs: 350, md: 250 },
-						}}
-						alt='QR Code'
-						src={localStorage.getItem('qrCodeUrl')}
-					/>
+					<Box component='img' className='mx-auto d-block' alt='QR Code' src={qrCode?.url} />
+					<DialogContentText className='mt-2'>
+						Manual key:
+						<Typography variant='body1' fontWeight='bold'>
+							{qrCode?.manualString}
+						</Typography>
+					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleDialogClose}>OK</Button>

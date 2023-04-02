@@ -43,25 +43,45 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        // [HttpGet("2fa-qrcode")]
-        // public Task<IActionResult> Get2FAQRCode([FromQuery] string id)
-        // {
-        //     try
-        //     {
-        //         var userFetchResult = _userService.GetTwoFactorQRCode(id);
+        [HttpGet("2fa-qrcode")]
+        public async Task<IActionResult> Get2FAQRCode([FromQuery] string id)
+        {
+            try
+            {
+                var qrCode = await _userService.GetTwoFactorQRCode(id);
 
-        //         return Ok(userFetchResult);
-        //     }
-        //     catch (DataException ex)
-        //     {
-        //         return BadRequest(ex.Message);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         LoggerUtility.Logger.LogException(ex, "UserController.UserById");
-        //         return StatusCode(500, ex.Message);
-        //     }
-        // }
+                return Ok(qrCode);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.TwoFactorQrCode");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPatch("2fa-toggle")]
+        public async Task<IActionResult> Toggle2FA([FromQuery] string id)
+        {
+            try
+            {
+                var result = await _userService.Toggle2FA(id);
+
+                return Ok(result);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Toggle2FA");
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpPost("login")]
         [AllowAnonymous]
