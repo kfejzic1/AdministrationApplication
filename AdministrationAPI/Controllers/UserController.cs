@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -115,7 +116,7 @@ namespace AdministrationAPI.Controllers
         public async Task<IActionResult> LoginWithCode([FromBody] Login2FARequest loginRequest)
         {
             try
-            {                
+            {
                 var authenticationResult = await _userService.Login2FA(loginRequest);
 
                 if (authenticationResult.Success)
@@ -138,8 +139,8 @@ namespace AdministrationAPI.Controllers
         public IActionResult VerifyToken([FromQuery] string jwt)
         {
             try
-            {                
-                var result = _userService.VerifyToken(jwt);
+            {
+                var result = TokenUtilities.VerifyToken(jwt);
 
                 return Ok(result);
             }

@@ -10,6 +10,5 @@ namespace AdministrationAPI.Services.Interfaces
         Task<UserDT> GetUser(string id);
         Task<QRCodeResponse> GetTwoFactorQRCode(string id);
         Task<bool> Toggle2FA(string id);
-        TokenVerificationResult VerifyToken(string jwt);
     }
 }

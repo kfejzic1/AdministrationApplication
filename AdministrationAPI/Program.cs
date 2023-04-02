@@ -2,6 +2,7 @@ using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseMiddleware<TokenExpirationHandler>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

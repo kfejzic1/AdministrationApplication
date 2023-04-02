@@ -2,13 +2,12 @@
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace AdministrationAPI.Services
 {
@@ -32,7 +31,8 @@ namespace AdministrationAPI.Services
         public async Task<UserDT> GetUser(string id)
         {
             var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
-            if (user == null) {
+            if (user == null)
+            {
                 throw new DataException("User with the provided id does not exist!");
             }
 
@@ -80,9 +80,9 @@ namespace AdministrationAPI.Services
                     Mail = user.Email
                 };
 
-            var authClaims = await GetAuthClaimsAsync(user);
+            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-            var token = CreateToken(authClaims);
+            var token = TokenUtilities.CreateToken(authClaims, _configuration);
 
             return new AuthenticationResult
             {
@@ -108,8 +108,8 @@ namespace AdministrationAPI.Services
 
             if (result)
             {
-                var authClaims = await GetAuthClaimsAsync(user);
-                var token = CreateToken(authClaims);
+                var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+                var token = TokenUtilities.CreateToken(authClaims, _configuration);
 
                 return new AuthenticationResult
                 {
@@ -129,17 +129,17 @@ namespace AdministrationAPI.Services
         {
             var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
-            if (user == null) 
+            if (user == null)
                 throw new DataException("User with the provided id does not exist!");
-            
+
             string key = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
-            string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));;
+            string encodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(key)); ;
 
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
             SetupCode setupInfo = tfa.GenerateSetupCode("Administration App", user.Email, key, false);
             string qrCodeUrl = setupInfo.QrCodeSetupImageUrl;
             string manualEntryCode = setupInfo.ManualEntryKey;
-            
+
             user.AuthenticatorKey = encodedKey;
             await _userManager.UpdateAsync(user);
 
@@ -154,75 +154,17 @@ namespace AdministrationAPI.Services
         {
             var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
-            if (user == null) 
+            if (user == null)
                 throw new DataException("User with the provided id does not exist!");
 
-            if(user.TwoFactorEnabled)
+            if (user.TwoFactorEnabled)
                 user.AuthenticatorKey = null;
-        
+
             user.TwoFactorEnabled = !user.TwoFactorEnabled;
 
             var result = await _userManager.UpdateAsync(user);
 
             return user.TwoFactorEnabled;
-        }
-
-        private JwtSecurityToken CreateToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Secret"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Token:ValidIssuer"],
-                audience: _configuration["Token:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
-
-            return token;
-        }
-
-        private async Task<List<Claim>> GetAuthClaimsAsync(User user)
-        {
-            var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            foreach (var role in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            return authClaims;
-        }
-
-        public TokenVerificationResult VerifyToken(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwt);
-
-            var userNameClaim =  token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            var roleClaims = token.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
-
-            var roleValues = roleClaims.Select(c => c.Value).ToList();
-
-            if (userNameClaim == null)
-            {
-                return new TokenVerificationResult
-                {
-                    Errors = new[] { "User not found!" }
-                };
-
-            }
-            return new TokenVerificationResult 
-            { 
-                Username = userNameClaim, 
-                Roles = roleValues
-            };
         }
     }
 }
