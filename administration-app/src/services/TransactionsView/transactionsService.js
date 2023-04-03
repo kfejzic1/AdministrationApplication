@@ -23,11 +23,11 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 				if (sortingOptions.MaxAmount != '') {
 					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
 				}
-				if (!sortingOptions.StartDate.length > 17) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+				if (!sortingOptions.DateTimeStart.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
 				}
-				if (sortingOptions.EndDate.length > 17) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+				if (sortingOptions.DateTimeEnd.length > 17) {
+					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
 				}
 
 				if (sortingOptions.SortingOptions != '') {
@@ -72,6 +72,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 	});
 	*/
 	//mock is above, real is underneath
+	console.log('Sorting optins=', JSON.stringify(sortingOptions));
 	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
 		if (sortingOptions.MinAmount === '') {
@@ -80,9 +81,10 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 		if (sortingOptions.SortingOptions === '') {
 			delete sortingOptions.SortingOptions;
 		}
+
 		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
-		if (sortingOptions.EndDate === '') delete sortingOptions.EndDate;
-		if (sortingOptions.StartDate === '') delete sortingOptions.StartDate;
+		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
+		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
 		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
 		if (sortingOptions.Status === '') delete sortingOptions.Status;
 		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
@@ -102,27 +104,32 @@ export function getTransactions(pageNumber, pageSize, sortingOptions) {
 				console.log('mockup');
 				sortingOptions = mockSortingOptons;
 				var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+
 				if (sortingOptions != null) {
-					if (sortingOptions.Recipient != '') {
+					if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
 						temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
 					}
-					if (sortingOptions.Status != '') {
+					console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
+
+					if (sortingOptions.Status && sortingOptions.Status != '') {
 						temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
 					}
-					if (sortingOptions.MinAmount != '') {
+
+					if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
 						temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
 					}
-					if (sortingOptions.MaxAmount != '') {
+					if (sortingOptions.MaxAmount && sortingOptions.MaxAmount != '') {
 						temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
 					}
-					if (!sortingOptions.StartDate.length > 17) {
-						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.StartDate));
+
+					if (sortingOptions.DateTimeStart && sortingOptions.DateTimeStart.length > 14) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
 					}
-					if (sortingOptions.EndDate.length > 17) {
-						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.EndDate));
+					if (sortingOptions.DateTimeEnd && sortingOptions.DateTimeEnd.length > 14) {
+						temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
 					}
 
-					if (sortingOptions.SortingOptions != '') {
+					if (sortingOptions.SortingOptions && sortingOptions.SortingOptions != '') {
 						if (sortingOptions.SortingOptions == 'DateTime')
 							temp = temp.sort((a, b) => {
 								if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
