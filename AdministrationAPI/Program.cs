@@ -1,6 +1,7 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
+using AdministrationAPI.Services.Transaction;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,7 +22,6 @@ builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(options =>
 {
@@ -75,6 +75,9 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
 
 var provider = builder.Services.BuildServiceProvider();
 
@@ -84,7 +87,7 @@ builder.Services.AddCors(options =>
 
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+        builder.WithOrigins(frontendURL!).AllowAnyMethod().AllowAnyHeader();
     });
 });
 
