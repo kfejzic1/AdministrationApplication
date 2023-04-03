@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { testFunction } from './services/testingService';
-import { Mainpage } from './components/NavBar/Mainpage';
+import { NavBar } from './components/NavBar/NavBar';
+import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
+import { Payment } from './components/Payment/Payment';
 
 function App() {
-	const [testingData, setTestingData] = useState([]);
-	const handleButtonClick = () => {
-		testFunction().then(res => {
-			setTestingData(res.data);
-		});
-	};
-
 	return (
 		<div className='App'>
-			<div>
-				<Mainpage />
-			</div>
+			<Router>
+				<NavBar />
+				<Routes>
+					<Route path='/' element={<h1>SI projekat</h1>} />
+					<Route path='/transactions' element={<TransactionsList />} />
+					<Route
+						path='/payment/:currency/:type/:recipientName/:transactionAmount/:recipientAccountNumber'
+						element={<Payment />}
+					/>
+					<Route path='/payment' element={<Payment />} />
+				</Routes>
+			</Router>
 		</div>
 	);
 }
-
 export default App;
