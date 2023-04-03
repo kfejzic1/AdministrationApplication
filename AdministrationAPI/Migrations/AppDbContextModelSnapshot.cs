@@ -15,89 +15,130 @@ namespace AdministrationAPI.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
+
+            modelBuilder.Entity("AdministrationAPI.Models.ActivationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("ActivatedEmail")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("activated_email");
+
+                    b.Property<bool>("ActivatedSMS")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("activated_sms");
+
+                    b.Property<string>("EmailCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("email_code");
+
+                    b.Property<string>("SMSCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("sms_code");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("usr_activation_codes", (string)null);
+                });
 
             modelBuilder.Entity("AdministrationAPI.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("id");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("access_failed_count");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("address");
+
                     b.Property<string>("AuthenticatorKey")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("authenticator_key");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("concurrency_stamp");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("email_confirmed");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("last_name");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("lockout_enabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("lockout_end");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("normalized_email");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("normalized_user_name");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("phone_number");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("phone_number_confirmed");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("security_stamp");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("two_factor_enabled");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("user_name");
 
                     b.HasKey("Id");
@@ -114,8 +155,9 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a1e10738-b9f5-4bcd-b76e-bf017b5acebe",
+                            Id = "11883f4b-00d9-4872-abde-abe721f146cf",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "kfejzic1@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -127,14 +169,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062229993",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "46cce4ad-46ca-422e-8bed-0fd1df4a0a3e",
+                            SecurityStamp = "aceffea9-f023-4983-b9ef-4663e0aebbf1",
                             TwoFactorEnabled = true,
                             UserName = "testingUser"
                         },
                         new
                         {
-                            Id = "297834b6-1e15-47f9-9b0d-5c8c823bbe37",
+                            Id = "3ba056f9-62b5-4839-b0ac-5876a9dc1b56",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "fejza2806@gmail.com",
                             EmailConfirmed = true,
@@ -146,14 +189,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062518214",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1c9198dd-7af9-4b66-ab7a-85b57d4b5d86",
+                            SecurityStamp = "6545f3f9-2052-4a7c-983b-2c58aaf03c0d",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
                         },
                         new
                         {
-                            Id = "7d0dfb8f-46b6-4f0f-a122-cacc41f9da00",
+                            Id = "3df29f63-96af-4184-a182-0f612847e58f",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "esmajic2@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -165,14 +209,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a177fff2-341e-437f-a9f0-b45092090f2c",
+                            SecurityStamp = "d0495148-75d2-4b16-8d83-f270e135fa59",
                             TwoFactorEnabled = true,
                             UserName = "esmajic2"
                         },
                         new
                         {
-                            Id = "7d3541b4-2a01-46c1-aa94-cea9951b11ae",
+                            Id = "2c5cd97c-1352-46a3-9ad7-7c805daa4911",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "amehmedagi1@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -184,14 +229,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6c0371c6-bb6f-4b9d-a2e2-4ba93ebc5b0a",
+                            SecurityStamp = "92b00e76-aef2-4d62-a930-8b297faf5fb5",
                             TwoFactorEnabled = true,
                             UserName = "amehmedagi1"
                         },
                         new
                         {
-                            Id = "4015e0ed-1a41-4d9d-b37c-628d627431c1",
+                            Id = "eb70f744-ae6b-4473-9121-fbbfc3fbb3c1",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "mbecirovic3@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -203,14 +249,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "419e21a1-146a-40bd-830e-c89fef5ecf92",
+                            SecurityStamp = "1bdda705-56d1-45cc-9363-071f3bf2b997",
                             TwoFactorEnabled = true,
                             UserName = "mbecirovic3"
                         },
                         new
                         {
-                            Id = "91549501-f827-41ba-9b2b-f0e2d0125909",
+                            Id = "af81a387-b601-42cb-98a5-1475a70f146b",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "dmuhic1@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -222,14 +269,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "8ffe0fee-29f8-428d-9a13-ab2ff7713e1a",
+                            SecurityStamp = "b9d40827-726e-44ab-adeb-04e07832f1cf",
                             TwoFactorEnabled = true,
                             UserName = "dmuhic1"
                         },
                         new
                         {
-                            Id = "2e38bf0f-f09b-4815-924d-026cec2e08b6",
+                            Id = "e3d6eb21-5477-49a3-9d78-00e92d6a6a03",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "emekic2@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -241,14 +289,15 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "ab5cb4a5-24d2-41eb-b7fd-43251a628973",
+                            SecurityStamp = "48222cb3-c3a3-4b44-9463-ec0024505162",
                             TwoFactorEnabled = true,
                             UserName = "emekic2"
                         },
                         new
                         {
-                            Id = "530328c4-8ea2-4b5a-8947-e817e5bcf668",
+                            Id = "6be9d199-76c4-40d0-967f-ff572f93264f",
                             AccessFailedCount = 0,
+                            Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
                             Email = "abrulic1@etf.unsa.ba",
                             EmailConfirmed = true,
@@ -260,7 +309,7 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "52ddcf88-6ef4-4524-8136-50352a0410bb",
+                            SecurityStamp = "353eefc9-2638-4049-b866-cba739537240",
                             TwoFactorEnabled = true,
                             UserName = "abrulic1"
                         });
@@ -269,22 +318,22 @@ namespace AdministrationAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("id");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("concurrency_stamp");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("normalized_name");
 
                     b.HasKey("Id");
@@ -298,14 +347,14 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d46e9247-a0f1-4022-8fab-3292b45ae1ba",
+                            Id = "355683d5-97cf-44fd-8d79-0fbc005e5642",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "d02747f1-69a1-4093-9ea1-f2954a1d5a3b",
+                            Id = "f1331f8f-5ba1-4303-bfc7-33c64b7346d7",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -316,20 +365,20 @@ namespace AdministrationAPI.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("claim_type");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("claim_value");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("role_id");
 
                     b.HasKey("Id");
@@ -343,20 +392,20 @@ namespace AdministrationAPI.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("claim_type");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("claim_value");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -369,20 +418,20 @@ namespace AdministrationAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("login_provider");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("provider_key");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("provider_display_name");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("user_id");
 
                     b.HasKey("LoginProvider", "ProviderKey");
@@ -395,11 +444,11 @@ namespace AdministrationAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("user_id");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("role_id");
 
                     b.HasKey("UserId", "RoleId");
@@ -412,24 +461,35 @@ namespace AdministrationAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("user_id");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("login_provider");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext")
+                        .HasColumnType("TEXT")
                         .HasColumnName("value");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("usr_user_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("AdministrationAPI.Models.ActivationCode", b =>
+                {
+                    b.HasOne("AdministrationAPI.Models.User", "User")
+                        .WithOne("ActivationCode")
+                        .HasForeignKey("AdministrationAPI.Models.ActivationCode", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -480,6 +540,12 @@ namespace AdministrationAPI.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AdministrationAPI.Models.User", b =>
+                {
+                    b.Navigation("ActivationCode")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
