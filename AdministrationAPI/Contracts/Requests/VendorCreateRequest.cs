@@ -8,9 +8,9 @@ namespace AdministrationAPI.Contracts.Requests
         public string CompanyDetails { get; set; }
         public string? Phone { get; set; }
         public DateTime? Created { get; set; }
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTime? Modified { get; set; }
-        public int? ModifiedBy { get; set; }
+        public string? ModifiedBy { get; set; }
         public List<string> AssignedUserIds { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace AdministrationAPI.Models
 
         public DateTime? Created { get; set; }
 
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         
         public DateTime? Modified { get; set; }
         public int? ModifiedBy { get; set; }
@@ -32,7 +32,7 @@ namespace AdministrationAPI.Models
             Address = string.Empty;
             CompanyDetails = string.Empty;
             Phone = string.Empty;
-            CreatedBy = -1;
+            CreatedBy = string.Empty;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace AdministrationAPI.Contracts.Requests
     {
         public string Address { get; set; }
         public DateTime? Created { get; set; }
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public int VendorId { get; set; }
         public DateTime? Modified { get; set; }
         public int? ModifiedBy { get; set; }
@@ -16,7 +16,7 @@ namespace AdministrationAPI.Contracts.Requests
         public string Address { get; set; }
         public int VendorId { get; set; }
         public DateTime? Modified { get; set; }
-        public int? ModifiedBy { get; set; }
+        public string? ModifiedBy { get; set; }
     }
 
     public class VendorLocationDeleteRequest

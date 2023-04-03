@@ -34,8 +34,4 @@
     <PackageReference Include="Twilio" Version="6.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

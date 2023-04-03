@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import './NavBar.css';
-import MainHeader from "../vendorManagmentComponent/vmc"
+import MainHeader from '../vendorManagmentComponent/vmc';
 
-export const NavBar = () => {
+export default function NavBar() {
 	return (
 		<div>
 			<nav className='nav-bar'>
-			<MainHeader/>
+				<MainHeader />
 				<ul className='nav-links'>
 					<li>
 						<Link to='/B2BPanel' className='active'>
@@ -17,4 +17,4 @@ export const NavBar = () => {
 			</nav>
 		</div>
 	);
-};
+}

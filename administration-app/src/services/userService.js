@@ -25,9 +25,9 @@ export function getUser(id) {
 	});
 }
 
-export function getUserName() {
+export function getUserId() {
 	const decoded = jwtDecode(localStorage.getItem('token'));
-	return decoded.Name;
+	return decoded.UserId;
 }
 
 export function getUserByName(username) {

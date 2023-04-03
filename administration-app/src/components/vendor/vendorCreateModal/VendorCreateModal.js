@@ -24,7 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import './vendorManagement.css';
 import naslovna from './slika1ChangedColor.png';
 import { createVendor } from '../../../services/vendorService';
-import { getAllUsers, getUserByName, getUserName } from '../../../services/userService';
+import { getAllUsers, getUserByName, getUserId } from '../../../services/userService';
 import Loader from '../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -123,9 +123,8 @@ function VendorCreateModal(props) {
 		setPhone(event.target.value);
 	};
 
-	const handleChange = event => {
-		const { value } = event.target;
-		setSelectedUserIds(value);
+	const handleChange = (event, values) => {
+		setSelectedUserIds(values.map(x => x.id));
 	};
 
 	const validate = () => {
@@ -156,19 +155,17 @@ function VendorCreateModal(props) {
 			vendor.phone = phone;
 			vendor.assignedUserIds = selectedUserIds;
 
-			getUserByName(getUserName())
+			vendor.createdBy = getUserId();
+			createVendor(vendor)
 				.then(res => {
-					vendor.createdBy = res.id;
-					createVendor(vendor).then(res => {
-						setLoaderState({ ...loaderState, loading: false, success: true });
-						setOpen(false);
-						props.handleClose();
-					});
-				})
-				.catch(() => {
-					setLoaderState({ ...loaderState, loading: false, success: false });
+					setLoaderState({ ...loaderState, loading: false, success: true });
 					setOpen(false);
 					props.handleClose();
+				})
+				.catch(error => {
+					console.log('error', error);
+					setLoaderState({ ...loaderState, loading: false, success: false });
+					setOpen(false);
 				});
 		}
 	};
@@ -238,6 +235,7 @@ function VendorCreateModal(props) {
 												options={users}
 												filterSelectedOptions
 												getOptionLabel={option => option.userName}
+												onChange={handleChange}
 												renderInput={params => (
 													<TextField
 														{...params}

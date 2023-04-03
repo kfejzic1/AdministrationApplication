@@ -3,6 +3,7 @@ using System;
 using AdministrationAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministrationAPI.Migrations.VendorDb
 {
     [DbContext(typeof(VendorDbContext))]
-    partial class VendorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230403230823_main1")]
+    partial class main1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,14 +76,14 @@ namespace AdministrationAPI.Migrations.VendorDb
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
 
                     b.Property<int>("VendorId")
                         .HasColumnType("int");

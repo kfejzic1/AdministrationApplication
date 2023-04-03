@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
 
-import {
-	Button,
-	TextField,
-	Grid,
-	Card,
-	CardHeader,
-	CardContent,
-	CardActions,
-} from '@material-ui/core';
+import { Button, TextField, Grid, Card, CardHeader, CardContent, CardActions } from '@material-ui/core';
 import { Stack } from '@mui/material';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { createVendorLocation} from '../../../services/vendorService';
-import { getUserByName, getUserName } from '../../../services/userService';
+import { createVendorLocation } from '../../../services/vendorService';
+import { getUserId } from '../../../services/userService';
 import Loader from '../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -67,20 +59,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function LocationCreateModal(props) {
-    const location = {
-        address: '',
-        createdBy: -1,
-        vendorId: -1,
-    }
+	const location = {
+		address: '',
+		createdBy: -1,
+		vendorId: -1,
+	};
 
 	const classes = useStyles();
 	const [address, setAddress] = useState('');
 
 	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
-    
+
 	const [open, setOpen] = useState(false);
 	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
-    
+
 	const handleAddressChange = event => {
 		setAddress(event.target.value);
 	};
@@ -90,7 +82,7 @@ export default function LocationCreateModal(props) {
 
 		if (address === '') addressError = true;
 
-		setErrors({ address: addressError});
+		setErrors({ address: addressError });
 
 		if (addressError) return false;
 		return true;
@@ -105,20 +97,17 @@ export default function LocationCreateModal(props) {
 			setOpen(true);
 			location.address = address;
 
-			getUserByName(getUserName())
+			location.createdBy = getUserId();
+			location.vendorId = props.vendorId;
+			createVendorLocation(location)
 				.then(res => {
-					location.createdBy = res.id;
-                    location.vendorId = props.vendorId;
-					createVendorLocation(location).then(res => {
-						setLoaderState({ ...loaderState, loading: false, success: true });
-						setOpen(false);
-						props.handleClose();
-					});
+					setLoaderState({ ...loaderState, loading: false, success: true });
+					setOpen(false);
+					props.handleClose();
 				})
 				.catch(() => {
 					setLoaderState({ ...loaderState, loading: false, success: false });
 					setOpen(false);
-					props.handleClose();
 				});
 		}
 	};
@@ -159,4 +148,3 @@ export default function LocationCreateModal(props) {
 		</div>
 	);
 }
-

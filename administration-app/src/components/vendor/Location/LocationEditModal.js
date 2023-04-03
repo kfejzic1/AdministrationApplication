@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-	Button,
-	TextField,
-	Grid,
-	Card,
-	CardHeader,
-	CardContent,
-	CardActions,
-} from '@material-ui/core';
+import { Button, TextField, Grid, Card, CardHeader, CardContent, CardActions } from '@material-ui/core';
 import { Stack } from '@mui/material';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { editVendorLocation} from '../../../services/vendorService';
-import { getUserByName, getUserName } from '../../../services/userService';
+import { editVendorLocation } from '../../../services/vendorService';
+import { getUserId } from '../../../services/userService';
 import { getVendorLocation } from '../../../services/vendorService';
 import Loader from '../../loaderDialog/Loader';
 
@@ -68,29 +60,29 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function LocationEditModal(props) {
-    const location = {
-        address: '',
-        modifiedBy: -1,
-        vendorId: -1,
-    }
+	const location = {
+		address: '',
+		modifiedBy: -1,
+		vendorId: -1,
+	};
 
 	const classes = useStyles();
 	const [address, setAddress] = useState('');
 
-    const fetchData = async () => {
-        getVendorLocation(props.locationId[0]).then(res=>{
-            setAddress(res.data.address);
-        });
-    }
-    useEffect(() => {
+	const fetchData = async () => {
+		getVendorLocation(props.locationId[0]).then(res => {
+			setAddress(res.data.address);
+		});
+	};
+	useEffect(() => {
 		fetchData();
 	}, []);
-    
+
 	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
-    
+
 	const [open, setOpen] = useState(false);
 	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
-    
+
 	const handleAddressChange = event => {
 		setAddress(event.target.value);
 	};
@@ -100,7 +92,7 @@ export default function LocationEditModal(props) {
 
 		if (address === '') addressError = true;
 
-		setErrors({ address: addressError});
+		setErrors({ address: addressError });
 
 		if (addressError) return false;
 		return true;
@@ -114,21 +106,19 @@ export default function LocationEditModal(props) {
 		if (validData) {
 			setOpen(true);
 			location.address = address;
-			getUserByName(getUserName())
-			.then(res => {
-					location.id = props.locationId[0];
-					location.modifiedBy = res.data.id;
-                    location.vendorId = props.vendorId;
-					editVendorLocation(location).then(res => {
-						setLoaderState({ ...loaderState, loading: false, success: true });
-						setOpen(false);
-						props.handleClose();
-					});
+
+			location.id = props.locationId[0];
+			location.modifiedBy = getUserId();
+			location.vendorId = props.vendorId;
+			editVendorLocation(location)
+				.then(res => {
+					setLoaderState({ ...loaderState, loading: false, success: true });
+					setOpen(false);
+					props.handleClose();
 				})
 				.catch(() => {
 					setLoaderState({ ...loaderState, loading: false, success: false });
 					setOpen(false);
-					props.handleClose();
 				});
 		}
 	};
@@ -169,4 +159,3 @@ export default function LocationEditModal(props) {
 		</div>
 	);
 }
-
