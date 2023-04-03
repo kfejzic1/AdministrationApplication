@@ -102,8 +102,8 @@ export const Payment = props => {
 								amount: parseFloat(transactionAmountState),
 								currency: currencyState,
 								paymentType: typeState,
-								recipientAccountNumberState: recipientAccountNumberState,
-								recipientNameState: 'Test Recipient', //recipientAccountNumberState,
+								recipientAccountNumber: recipientAccountNumberState,
+								recipientName: 'Test Recipient', //recipientAccountNumberState,
 							})
 								.then(() => {
 									alert('Payment successfuly sent!');
