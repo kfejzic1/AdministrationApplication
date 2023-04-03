@@ -63,7 +63,7 @@ const ProfilePage = () => {
 
 	return (
 		<div className='container'>
-			<Box className='profile-banner rounded-left'>
+			<Box className='profile-banner rounded-left text-center'>
 				<Box
 					className='mt-4'
 					component='img'
@@ -78,7 +78,7 @@ const ProfilePage = () => {
 			</Box>
 
 			<Box>
-				<Box className='profile-main'>
+				<Box className='profile-main text-center'>
 					<Typography variant='h3' style={{ background: 'white' }}>
 						{user?.userName}
 					</Typography>
@@ -139,7 +139,7 @@ const ProfilePage = () => {
 						<LinearProgress />
 					</Box>
 				</Box>
-				<Box>
+				<Box className='text-center'>
 					<LogoutButton />
 				</Box>
 			</Box>

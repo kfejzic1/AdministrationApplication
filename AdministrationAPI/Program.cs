@@ -15,7 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("SqliteMain");
 
-builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
+// Add services to the container.
+builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
+builder.Services.AddSingleton<IVendorService, VendorService>();
+builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(options =>

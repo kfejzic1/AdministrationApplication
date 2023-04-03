@@ -29,8 +29,8 @@ namespace AdministrationAPI.Utilities
         {
             var authClaims = new List<Claim>
             {
-                    new Claim(ClaimTypes.UserData, user.Id),
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("UserId", user.Id),
+                    new Claim("UserName", user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 

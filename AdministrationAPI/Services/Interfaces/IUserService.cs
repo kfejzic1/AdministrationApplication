@@ -8,6 +8,7 @@ namespace AdministrationAPI.Services.Interfaces
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
+        public List<User> GetAssignedUsersForVendor(int vendorId);
         Task<UserDT> GetUser(string id);
         User GetUserByEmail(string email);
         User GetUserByFirstName(string firstName);

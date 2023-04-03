@@ -1,7 +1,9 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services
@@ -29,7 +31,7 @@ namespace AdministrationAPI.Services
                 context.Vendors.Add(vendor);
                 context.SaveChanges();
 
-                foreach(string id in request.AssignedUserIds)
+                foreach (string id in request.AssignedUserIds)
                 {
                     var vendorUser = new VendorUser() { VendorId = vendor.Id, UserId = id };
                     context.VendorUsers.Add(vendorUser);
@@ -39,7 +41,7 @@ namespace AdministrationAPI.Services
                 return true;
             }
         }
-        //trenutno su deklarisani kao nullable za svaki slc
+
         public Vendor? Get(int id)
         {
             using (var context = new VendorDbContext())
@@ -48,11 +50,29 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public List<Vendor> GetAll()
+        public List<VendorsResponse> GetAll()
         {
             using (var context = new VendorDbContext())
             {
-                return context.Vendors.ToList();
+                var response = new List<VendorsResponse>() { };
+                var vendors = context.Vendors.ToList();
+                vendors.ForEach(vendor =>
+                {
+                    VendorsResponse vendorResponse = new()
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.Name,
+                        Address = vendor.Address,
+                        CompanyDetails = vendor.CompanyDetails,
+                        Phone = vendor.Phone,
+                        Created = vendor.Created,
+                        CreatedBy = vendor.CreatedBy,
+                        Modified = vendor.Modified,
+                        ModifiedBy = vendor.ModifiedBy
+                    };
+                    response.Add(vendorResponse);
+                });
+                return response;
             }
         }
 
@@ -72,8 +92,49 @@ namespace AdministrationAPI.Services
                 return false;
             }
         }
+
+        public bool UpdateAddress(int id, string address)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+
+                if (vendor != null)
+                {
+                    vendor.Address = address;
+                    vendor.Modified = DateTime.UtcNow;
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+
+        public bool DeleteAddress(int id)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+
+                if (vendor != null)
+                {
+                    vendor.Address = null;
+                    vendor.Modified = DateTime.UtcNow;
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+
+
+
+
     }
 }
 
-  
 
