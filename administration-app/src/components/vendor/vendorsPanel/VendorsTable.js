@@ -11,6 +11,7 @@ import {
 	Switch,
 	Checkbox,
 	Paper,
+	Button,
 } from '@mui/material';
 import { Chip } from '@material-ui/core';
 import VendorsTableHead from './VendorsTableHead';
@@ -78,6 +79,46 @@ const useStyles = makeStyles({
 			backgroundColor: '#ffc976',
 		},
 	},
+
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundColor: '#ffaf36',
+			color: 'black',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ffaf36',
+			border: '2px solid #ff9a00',
+
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000',
+			},
+		},
+
+		'&.MuiButton-text': {
+			backgroundColor: '#e0e0e0',
+			border: '1px solid #bbb8b8',
+			color: '#000000',
+			textTransform: 'none',
+			borderRadius: '10px',
+			width: 'auto',
+			padding: '1px 15px',
+			'&:hover': {
+				border: '1px solid #000000',
+				backgroundColor: '#bbb8b8',
+			},
+		},
+	},
 });
 
 function getComparator(order, orderBy) {
@@ -106,6 +147,10 @@ function descendingComparator(a, b, orderBy) {
 		return 1;
 	}
 	return 0;
+}
+
+function openLocations(id) {
+	window.open(`/B2BLocation/${id}`);
 }
 
 export default function VendorsTable() {
@@ -178,7 +223,7 @@ export default function VendorsTable() {
 	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - vendors.length) : 0;
 
 	return (
-		<Box sx={{ width: '95%', margin: 'auto', pt: '15px' }}>
+		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '5%' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
 				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} />
 				<ThemeProvider theme={tableTheme}>
@@ -230,13 +275,23 @@ export default function VendorsTable() {
 													{row.id}
 												</TableCell>
 												<TableCell align='left'>{row.name}</TableCell>
-												<TableCell align='left'>{row.address}</TableCell>
 												<TableCell align='left'>{row.companyDetails}</TableCell>
 												<TableCell align='left'>{row.phone}</TableCell>
 												<TableCell align='left'>
 													{row.assignedUsers.map(user => (
 														<Chip key={user.Id} label={user.userName} style={{ margin: '3px' }} />
 													))}
+												</TableCell>
+												<TableCell>
+													<Button
+														className={`${classes.button}`}
+														variant='text'
+														align='center'
+														onClick={() => {
+															openLocations(row.id);
+														}}>
+														Details
+													</Button>
 												</TableCell>
 											</TableRow>
 										);

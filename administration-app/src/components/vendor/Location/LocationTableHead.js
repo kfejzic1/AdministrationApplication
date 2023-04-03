@@ -10,30 +10,13 @@ const headCells = [
 		disablePadding: true,
 		label: 'Id',
 	},
-	{
-		id: 'name',
-		numeric: false,
-		disablePadding: true,
-		label: 'Name',
-	},
-	{
-		id: 'companyDetails',
-		numeric: false,
-		disablePadding: false,
-		label: 'Company Details',
-	},
-	{
-		id: 'phone',
-		numeric: false,
-		disablePadding: false,
-		label: 'Phone number',
-	},
-	{
-		id: 'assignedUsers',
-		numeric: false,
-		disablePadding: false,
-		label: 'Assigned Users',
-	},
+    {
+        id: 'address',
+        visible: true,
+        numeric: false,
+        disablePadding: true,
+        label: 'Address'
+    }
 ];
 
 const tableTheme = createTheme({
@@ -50,7 +33,7 @@ const tableTheme = createTheme({
 	},
   });
 
-export default function VendorsTableHead(props) {
+export default function LocationTableHead(props) {
 	const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 	const createSortHandler = property => event => {
 		onRequestSort(event, property);
@@ -96,7 +79,7 @@ export default function VendorsTableHead(props) {
 	);
 }
 
-VendorsTableHead.propTypes = {
+LocationTableHead.propTypes = {
 	numSelected: PropTypes.number.isRequired,
 	onRequestSort: PropTypes.func.isRequired,
 	onSelectAllClick: PropTypes.func.isRequired,

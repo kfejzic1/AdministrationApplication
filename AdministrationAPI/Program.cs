@@ -15,7 +15,12 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
+var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
+builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();

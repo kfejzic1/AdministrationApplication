@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Toolbar, Tooltip, Typography, Button, Modal } from '@mui/material';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CreateIcon from '@mui/icons-material/Create';
+import CreateIcon from '@mui/icons-material/Add';
+
 import { alpha } from '@mui/material/styles';
 import { Stack } from '@mui/system';
 import VendorCreateModal from '../vendorCreateModal/VendorCreateModal';
@@ -28,7 +29,8 @@ const useStyles = makeStyles(theme => ({
 		},
 		'&.MuiButton-outlined': {
 			color: '#ffaf36',
-			border: '1px solid #ffaf36',
+			border: '2px solid #ff9a00',
+
 			'&:hover': {
 				border: '2px solid #000000',
 				color: '#000000',
@@ -67,6 +69,13 @@ export default function VendorsTableToolBar(props) {
 			</Button>
 		</Tooltip>
 	);
+	const deleteVendorsTooltip = (
+		<Tooltip title='Delete Selected B2B Customers'>
+			<Button className={classes.button} size='small' variant='outlined' endIcon={<DeleteIcon />}>
+				Delete B2B Customers
+			</Button>
+		</Tooltip>
+	);
 
 	return (
 		<ThemeProvider theme={tableTheme}>
@@ -83,19 +92,14 @@ export default function VendorsTableToolBar(props) {
 						{numSelected} selected
 					</Typography>
 				) : (
-					<Typography sx={{ flex: '1 1 100%' }} align='left' variant='h6' id='tableTitle' component='div'>
+					<Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
 						B2B Customers
 					</Typography>
 				)}
 
 				{numSelected > 0 ? (
 					<Stack direction='row' spacing={1}>
-						<Tooltip title='Delete Selected B2B Customers'>
-							<Button className={classes.button} size='small' variant='outlined' endIcon={<DeleteIcon />}>
-								Delete B2B Customers
-							</Button>
-						</Tooltip>
-
+						{deleteVendorsTooltip}
 						{createVendorsTooltip}
 					</Stack>
 				) : (

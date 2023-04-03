@@ -15,25 +15,7 @@ const headCells = [
 		numeric: false,
 		disablePadding: true,
 		label: 'Name',
-	},
-	{
-		id: 'companyDetails',
-		numeric: false,
-		disablePadding: false,
-		label: 'Company Details',
-	},
-	{
-		id: 'phone',
-		numeric: false,
-		disablePadding: false,
-		label: 'Phone number',
-	},
-	{
-		id: 'assignedUsers',
-		numeric: false,
-		disablePadding: false,
-		label: 'Assigned Users',
-	},
+	}
 ];
 
 const tableTheme = createTheme({
@@ -50,7 +32,7 @@ const tableTheme = createTheme({
 	},
   });
 
-export default function VendorsTableHead(props) {
+export default function POSTableHead(props) {
 	const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 	const createSortHandler = property => event => {
 		onRequestSort(event, property);
@@ -67,7 +49,7 @@ export default function VendorsTableHead(props) {
 						checked={rowCount > 0 && numSelected === rowCount}
 						onChange={onSelectAllClick}
 						inputProps={{
-							'aria-label': 'select all vendors',
+							'aria-label': 'select all pos',
 						}}
 					/>
 				</TableCell>
@@ -96,7 +78,7 @@ export default function VendorsTableHead(props) {
 	);
 }
 
-VendorsTableHead.propTypes = {
+POSTableHead.propTypes = {
 	numSelected: PropTypes.number.isRequired,
 	onRequestSort: PropTypes.func.isRequired,
 	onSelectAllClick: PropTypes.func.isRequired,

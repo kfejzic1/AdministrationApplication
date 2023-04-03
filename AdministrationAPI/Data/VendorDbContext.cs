@@ -10,7 +10,8 @@ namespace AdministrationAPI.Data
     {
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<VendorUser> VendorUsers { get; set; }
-
+        public DbSet<VendorLocation> VendorLocations { get; set; }
+        public DbSet<VendorPOS> VendorPOS { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -18,14 +19,11 @@ namespace AdministrationAPI.Data
             .AddJsonFile("appsettings.json")
             .Build();
 
-
-            var connectionString = configuration.GetConnectionString("SqliteVendor");
+            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
             Console.WriteLine("Default connection string: " + connectionString);
 
-
-            // optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }
