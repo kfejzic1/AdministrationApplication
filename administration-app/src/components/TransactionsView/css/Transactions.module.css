@@ -18,6 +18,12 @@
     margin-bottom: 15px;
     text-shadow: 0 0.3rem 0.3rem var(--secundary2);
   }
+  .hr{
+    
+    height: 3px;
+    background-color:#80808030;
+    width: 100%;
+  }
 
   .tbl_header{
     background-color: var(--bordercolor);

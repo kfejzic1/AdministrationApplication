@@ -1,16 +1,19 @@
 import cn from './Payment.module.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
 
 export const Payment = props => {
-	const [transactionAmount, setTransactionAmount] = useState(props.paymentInfo ? props.paymentInfo.amount : '');
-	const [recipientName, setRecipientName] = useState(props.paymentInfo ? props.paymentInfo.recipient : '');
-	const [recipientAccountNumber, setRecipientAccountNumber] = useState(
-		props.paymentInfo ? props.paymentInfo.account : ''
+	const { currency, recipientAccountNumber, recipientName, transactionAmount, type } = useParams();
+	console.log('mozda je=', currency, recipientAccountNumber, recipientName);
+	const [transactionAmountState, setTransactionAmount] = useState(transactionAmount != -1 ? transactionAmount : '');
+	const [recipientNameState, setRecipientName] = useState(recipientName != -1 ? recipientName : '');
+	const [recipientAccountNumberState, setRecipientAccountNumber] = useState(
+		recipientAccountNumber != -1 ? recipientAccountNumber : ''
 	);
-	const [currency, setCurrency] = useState('USD');
-	const [type, setType] = useState('Payment');
+	const [currencyState, setCurrency] = useState(currency != -1 ? currency : 'USD');
+	const [typeState, setType] = useState(type != -1 ? type : 'Payment');
 	const navigate = useNavigate();
 
 	function handleSubmit(event) {
@@ -37,7 +40,7 @@ export const Payment = props => {
 						className={cn.input}
 						type='number'
 						placeholder='Transaction amount'
-						value={transactionAmount}
+						value={transactionAmountState}
 						onChange={event => setTransactionAmount(event.target.value)}
 					/>
 					<br />
@@ -45,7 +48,7 @@ export const Payment = props => {
 						<div className={cn.pWrapper}>
 							<div className={cn.pWrapperDiv}>Type:</div>
 						</div>
-						<select className={cn.select} value={type} onChange={event => setType(event.target.value)}>
+						<select className={cn.select} value={typeState} onChange={event => setType(event.target.value)}>
 							<option value='Credit'>Credit</option>
 							<option value='Payment'>Payment</option>
 							<option value='Recip'>Recip</option>
@@ -54,7 +57,7 @@ export const Payment = props => {
 						<div className={cn.pWrapper}>
 							<div className={cn.pWrapperDiv}>Currency:</div>
 						</div>
-						<select className={cn.select} value={currency} onChange={event => setCurrency(event.target.value)}>
+						<select className={cn.select} value={currencyState} onChange={event => setCurrency(event.target.value)}>
 							<option value='USD'>USD</option>
 							<option value='EUR'>EUR</option>
 							<option value='BAM'>BAM</option>
@@ -75,7 +78,7 @@ export const Payment = props => {
 						className={cn.input}
 						type='text'
 						placeholder='Recipient name'
-						value={recipientName}
+						value={recipientNameState}
 						onChange={event => setRecipientName(event.target.value)}
 					/>
 
@@ -85,7 +88,7 @@ export const Payment = props => {
 						className={cn.input}
 						type='text'
 						placeholder='Recipient account number'
-						value={recipientAccountNumber}
+						value={recipientAccountNumberState}
 						onChange={event => setRecipientAccountNumber(event.target.value)}
 					/>
 
@@ -96,11 +99,11 @@ export const Payment = props => {
 						type='submit'
 						onClick={() => {
 							sendPaymentInfo({
-								amount: parseFloat(transactionAmount),
-								currency: currency,
-								paymentType: type,
-								recipientAccountNumber: recipientAccountNumber,
-								recipientName: 'Test Recipient', //recipientAccountNumber,
+								amount: parseFloat(transactionAmountState),
+								currency: currencyState,
+								paymentType: typeState,
+								recipientAccountNumberState: recipientAccountNumberState,
+								recipientNameState: 'Test Recipient', //recipientAccountNumberState,
 							})
 								.then(() => {
 									alert('Payment successfuly sent!');
@@ -108,7 +111,14 @@ export const Payment = props => {
 								.catch(() => {
 									alert('Failed!');
 								});
-							console.log('moj=', currency, recipientName, recipientAccountNumber, type, transactionAmount);
+							console.log(
+								'moj=',
+								currencyState,
+								recipientNameState,
+								recipientAccountNumberState,
+								typeState,
+								transactionAmountState
+							);
 						}}
 					>
 						Submit

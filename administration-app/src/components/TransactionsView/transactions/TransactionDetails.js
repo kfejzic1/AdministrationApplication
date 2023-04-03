@@ -85,6 +85,11 @@ export default function TransactionDetails(arg) {
 						<th className={cn.th}></th>
 					</tr>
 				</thead>
+				<tr>
+					<th colSpan={8}>
+						<hr className={cn.hr} />
+					</th>
+				</tr>
 				<tbody>
 					<tr className={cn.tbodyDetails}>
 						<td className={cn.td}>{arg.props.id}</td>
@@ -96,19 +101,13 @@ export default function TransactionDetails(arg) {
 						<td className={cn.td}>{props.type}</td>
 						<td className={cn.td}>
 							<div className={cn.closeBtnDiv}>
-								<button
-									className={cn.closeBtn}
-									onClick={() => {
-										arg.setDetails(null);
-									}}
-								>
+								<button className={cn.closeBtn} onClick={() => {}}>
 									<p className={cn.pNoMargin}>Close</p>
 								</button>
 								<button
 									className={cn.closeBtn}
 									onClick={() => {
-										arg.setPaymentInfo(props);
-										navigate('/payment');
+										navigate('/payment/USD/Payment/' + props.recipient + '/' + props.amount + '/' + props.account);
 									}}
 								>
 									<p className={cn.pNoMargin}>Reuse</p>

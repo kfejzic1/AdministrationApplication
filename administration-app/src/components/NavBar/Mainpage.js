@@ -7,15 +7,18 @@ import { Home } from './Home';
 import { Payment } from '../Payment/Payment';
 
 export const Mainpage = () => {
-	const [paymentInfo, setPaymentInfo] = useState(null);
 	return (
 		<div className='App'>
 			<Router>
 				<NavBar />
 				<Routes>
 					<Route path='/' element={<Home />} />
-					<Route path='/transactions' element={<TransactionsList setPaymentInfo={setPaymentInfo} />} />
-					<Route path='/payment' element={<Payment setPaymentInfo={setPaymentInfo} paymentInfo={paymentInfo} />} />
+					<Route path='/transactions' element={<TransactionsList />} />
+					<Route
+						path='/payment/:currency/:type/:recipientName/:transactionAmount/:recipientAccountNumber'
+						element={<Payment />}
+					/>
+					<Route path='/payment' element={<Payment />} />
 				</Routes>
 			</Router>
 		</div>
