@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
+using AutoMapper;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
@@ -18,16 +19,19 @@ namespace AdministrationAPI.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IMapper mapper
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -189,6 +193,31 @@ namespace AdministrationAPI.Services
             var result = await _userManager.UpdateAsync(user);
 
             return user.TwoFactorEnabled;
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return _userManager.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public User GetUserByFirstName(string firstName)
+        {
+            return _userManager.Users.FirstOrDefault(u => u.FirstName == firstName);
+        }
+
+        public async Task<User> Register(RegisterRequest model)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Email == model.Email || u.UserName == model.Username || u.PhoneNumber == model.PhoneNumber);
+
+            if (user is not null) {
+                throw new InvalidDataException("User already exists");
+            }
+
+            User newUser = _mapper.Map<User>(model);
+            IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
+            // _userManager.SaveChanges();
+
+            return result.Succeeded ? newUser : null;
         }
     }
 }

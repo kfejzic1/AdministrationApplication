@@ -19,12 +19,13 @@ namespace AdministrationAPI.Data
             .Build();
 
 
-            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+            var connectionString = configuration.GetConnectionString("SqliteVendor");
 
             Console.WriteLine("Default connection string: " + connectionString);
 
 
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            // optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseSqlite(connectionString);
         }
     }
 }
