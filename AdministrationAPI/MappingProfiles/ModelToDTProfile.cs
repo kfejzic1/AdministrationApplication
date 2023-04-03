@@ -1,4 +1,6 @@
-﻿using AdministrationAPI.Contracts.Responses;
+﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Models;
 using AutoMapper;
 
 namespace AdministrationAPI.MappingProfiles
@@ -9,6 +11,7 @@ namespace AdministrationAPI.MappingProfiles
         {
             CreateMap<AuthenticationResult, AuthSuccessResponse>();
             CreateMap<AuthenticationResult, AuthFailResponse>();
+            CreateMap<RegisterRequest, User>();
         }
     }
 }
