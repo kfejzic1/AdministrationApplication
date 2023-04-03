@@ -288,7 +288,7 @@ export default function TransactionsListHeader(arg) {
 								onClick={handleSortDirectionDateChange}
 								sx={{
 									'& .MuiTableSortLabel-icon': {
-										color: 'white !important',
+										color: 'black !important',
 									},
 								}}
 								hideSortIcon={false}
@@ -317,7 +317,7 @@ export default function TransactionsListHeader(arg) {
 								onClick={handleSortDirectionRecipientChange}
 								sx={{
 									'& .MuiTableSortLabel-icon': {
-										color: 'white !important',
+										color: 'black !important',
 									},
 								}}
 								hideSortIcon={false}
@@ -346,7 +346,7 @@ export default function TransactionsListHeader(arg) {
 								onClick={handleSortDirectionAmountChange}
 								sx={{
 									'& .MuiTableSortLabel-icon': {
-										color: 'white !important',
+										color: 'black !important',
 									},
 								}}
 								hideSortIcon={false}
@@ -374,7 +374,7 @@ export default function TransactionsListHeader(arg) {
 								onClick={handleSortDirectionStatusChange}
 								sx={{
 									'& .MuiTableSortLabel-icon': {
-										color: 'white !important',
+										color: 'black !important',
 									},
 								}}
 								hideSortIcon={false}

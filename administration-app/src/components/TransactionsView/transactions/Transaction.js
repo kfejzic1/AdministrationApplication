@@ -6,12 +6,12 @@ export default function Transaction(arg) {
 			<table className={cn.table}>
 				<tbody>
 					<tr>
-						<td>{arg.prop.id}</td>
-						<td>{parseDate(arg.prop.dateTime)}</td>
-						<td>{arg.prop.recipient}</td>
-						<td>{arg.prop.amount}</td>
-						<td>{arg.prop.status}</td>
-						<td>
+						<td className={cn.td}>{arg.prop.id}</td>
+						<td className={cn.td}>{parseDate(arg.prop.dateTime)}</td>
+						<td className={cn.td}>{arg.prop.recipient}</td>
+						<td className={cn.td}>{arg.prop.amount}</td>
+						<td className={cn.td}>{arg.prop.status}</td>
+						<td className={cn.td}>
 							<div className={cn.detailsBtnDiv}>
 								<button
 									className={cn.detailsBtn}
@@ -19,7 +19,7 @@ export default function Transaction(arg) {
 										arg.setDetails(arg.prop);
 									}}
 								>
-									<p>Details</p>
+									<p className={cn.pNoMargin}>Details</p>
 								</button>
 							</div>
 						</td>

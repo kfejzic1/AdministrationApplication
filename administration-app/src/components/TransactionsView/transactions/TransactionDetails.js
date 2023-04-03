@@ -72,29 +72,29 @@ export default function TransactionDetails(arg) {
 			</div>
 		</div>*/
 		<div className={cn.transactoin_root}>
-			<table className={cn.table}>
+			<table className={cn.tableDetails}>
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Date</th>
-						<th>Recipient</th>
-						<th>Amount</th>
-						<th>Status</th>
-						<th>Bank Account</th>
-						<th>Name of the Payee</th>
-						<th></th>
+						<th className={cn.th}>ID</th>
+						<th className={cn.th}>Date</th>
+						<th className={cn.th}>Recipient</th>
+						<th className={cn.th}>Amount</th>
+						<th className={cn.th}>Status</th>
+						<th className={cn.th}>Bank Account</th>
+						<th className={cn.th}>Name of the Payee</th>
+						<th className={cn.th}></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>{arg.props.id}</td>
-						<td>{parseDate(props.dateTime)}</td>
-						<td>{props.recipient}</td>
-						<td>{props.amount}</td>
-						<td>{props.status}</td>
-						<td>{props.account}</td>
-						<td>{props.type}</td>
-						<td>
+					<tr className={cn.tbodyDetails}>
+						<td className={cn.td}>{arg.props.id}</td>
+						<td className={cn.td}>{parseDate(props.dateTime)}</td>
+						<td className={cn.td}>{props.recipient}</td>
+						<td className={cn.td}>{props.amount}</td>
+						<td className={cn.td}>{props.status}</td>
+						<td className={cn.td}>{props.account}</td>
+						<td className={cn.td}>{props.type}</td>
+						<td className={cn.td}>
 							<div className={cn.closeBtnDiv}>
 								<button
 									className={cn.closeBtn}
@@ -102,7 +102,7 @@ export default function TransactionDetails(arg) {
 										arg.setDetails(null);
 									}}
 								>
-									<p>Close</p>
+									<p className={cn.pNoMargin}>Close</p>
 								</button>
 								<button
 									className={cn.closeBtn}
@@ -111,7 +111,7 @@ export default function TransactionDetails(arg) {
 										navigate('/payment');
 									}}
 								>
-									<p>Reuse</p>
+									<p className={cn.pNoMargin}>Reuse</p>
 								</button>
 							</div>
 						</td>

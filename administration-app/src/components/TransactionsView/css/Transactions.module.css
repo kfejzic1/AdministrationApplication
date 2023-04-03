@@ -1,10 +1,10 @@
 .transactions_root{
-  --_primary:#E7EBF0;
+  --_primary:#000;
 	--secundary: #cfdeec;
 	--secundary2: #c4d7e9;
-	--left: #203A43;
-	--right: #2C5364;
-	--highlights: #0F2027;
+	--left: #f0f3ea;
+	--right: #eff1e9;
+	--highlights: #e6e218;
   --bordercolor : rgba(255,255,255,0.3);
 	--text-size: 18px;
 	--text-size2: 24px;
@@ -29,7 +29,7 @@
     border: 1px solid var(--bordercolor);
   }
   
- .table th{
+ .th{
     padding: 20px 15px;
     text-align: center;
     font-weight: 500;
@@ -53,24 +53,39 @@
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
     .table{
       
-    width:100%;
+    border: solid 2px rgba(12, 1, 1, 0.1);
+    width:96%;
     table-layout: fixed;
-    background: linear-gradient(to right, var(--left), var(--right));
+    background: #fff;
     font-family: 'Roboto', sans-serif;
-    margin: 0 auto;
+   margin-top: 10px;
+   margin-inline: auto;
+   border-radius: 8px;
  
   }
-
-  .table td{
+  .tableDetails{
+    width:100%;
+    table-layout: fixed;
+    background: #fff;
+    font-family: 'Roboto', sans-serif;
+  }
+  .tbodyDetails{
+    width:100%;
+    table-layout: fixed;
+    background: #fff;
+    font-family: 'Roboto', sans-serif;
+  }
+.rootN{
+  background-color: var(--right);
+}
+ .td{
       padding: 15px;
       text-align: center;
       vertical-align:middle;
-      font-weight: 300;
+      font-weight: 400;
       font-size: var(--text-size);
       color: var(--_primary);
-      border-bottom: solid 1px rgba(255,255,255,0.1);
     }
-  
   .section{
     margin: 50px;
   } 
@@ -87,26 +102,29 @@
 
 
 
+ 
   .closeBtn, .detailsBtn {
     background: var(--highlights);
-    border-radius: 999px;
-    box-shadow: var(--highlights) 0 10px 20px -10px;
+    border-radius: 4px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #000;
     cursor: pointer;
     font-family: Inter,Helvetica;
     font-size: 16px;
     font-weight: 200;
-    line-height: 24px;
     opacity: 1;
     outline: 0 solid transparent;
-    padding: 8px 18px;
+    padding: 7px 7px;
+    border-color: #80808030 ;
+    border-width:1px;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     width: fit-content;
     word-break: break-word;
-    border: 0;
+  }
+   .pNoMargin{
+   margin:0
   }
   .loadBtn {
     margin-top: 40px;
@@ -114,7 +132,7 @@
     border-radius: 999px;
     box-shadow: var(--highlights) 0 10px 20px -10px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #000;
     cursor: pointer;
     font-family: Inter,Helvetica;
     font-size: 16px;
@@ -137,7 +155,11 @@
     justify-content:center;
     gap: 10px;
   }
-
+.h1{
+  background-color: #fff;
+  margin: 0;
+  color: #000;
+}
   .detailsBtnDiv {
     text-align:center;
     display:flex; 

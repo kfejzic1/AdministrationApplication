@@ -74,8 +74,8 @@ export const TransactionsList = arg => {
 					props={details}
 				></TransactionDetails>
 			) : (
-				<div>
-					<h1>Transactions</h1>
+				<div className={cn.rootN}>
+					<h1 className={cn.h1}>Transactions</h1>
 					<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
 
 					{transactions}

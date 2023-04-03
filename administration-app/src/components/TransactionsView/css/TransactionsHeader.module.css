@@ -10,35 +10,36 @@
  
   .filterBtn {
     background: var(--highlights);
-    border-radius: 999px;
-    box-shadow: var(--highlights) 0 10px 20px -10px;
+    border-radius: 5px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #000;
     cursor: pointer;
     font-family: Inter,Helvetica;
     font-size: 16px;
     font-weight: 200;
     line-height: 24px;
+    border-color: #80808030;
+    border-width:1px;
     opacity: 1;
     outline: 0 solid transparent;
-    padding: 8px 18px;
+    padding: 7px 8px;
+    margin-right:3px ;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     width: fit-content;
     word-break: break-word;
-    border: 0;
   }
   .table{ 
     
   --borderRadius:4px;
     width:100%;
     table-layout: fixed;
-    background: linear-gradient(to right, var(--left), var(--right));
+    background: #fff;
     font-family: 'Roboto', sans-serif;
     margin: 0 auto;
     padding-bottom: 10px;
-    border-bottom: 2px solid rgb(255, 255, 255,0.1); 
+    border-bottom: 2px solid grey; 
   }
   .tableTh{
     padding: 10px 15px 0px 15px;
@@ -46,7 +47,9 @@
     font-weight: 500;
     font-size: var(--text-size2) ;
     color: var(--_primary);
+    background-color: #fff;
     vertical-align: middle;
+    border-color: #fff;
   }
   .textInTh{
 
@@ -73,7 +76,8 @@
   .amountWrapperInput{
   width: 50%;
   padding: 9px;
-  border-width: 0;
+  border-width: 1px;
+  border-color: #80808060;
   margin: auto;
   background-color: whitesmoke;
   height: 1.5em;
