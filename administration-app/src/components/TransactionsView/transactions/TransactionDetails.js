@@ -101,7 +101,12 @@ export default function TransactionDetails(arg) {
 						<td className={cn.td}>{props.type}</td>
 						<td className={cn.td}>
 							<div className={cn.closeBtnDiv}>
-								<button className={cn.closeBtn} onClick={() => {}}>
+								<button
+									className={cn.closeBtn}
+									onClick={() => {
+										arg.setDetails(null);
+									}}
+								>
 									<p className={cn.pNoMargin}>Close</p>
 								</button>
 								<button
