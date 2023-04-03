@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models.Transaction;
 
+
 namespace AdministrationAPI.Services.Transaction
 {
     public class TransactionService : ITransactionService
@@ -18,6 +19,7 @@ namespace AdministrationAPI.Services.Transaction
             _context = context;
 
         }
+
 
         public async Task<TransactionResponseDTO> GetTransactions(TransactionQueryOptions options)
         {
@@ -45,7 +47,7 @@ namespace AdministrationAPI.Services.Transaction
             }
 
             if (options.MinAmount == null && options.MaxAmount != null) options.MinAmount = options.MaxAmount;
-            if (options.MaxAmount == null && options.MinAmount != null) options.MaxAmount= options.MinAmount;
+            if (options.MaxAmount == null && options.MinAmount != null) options.MaxAmount = options.MinAmount;
 
             if (options.MinAmount != null && options.MaxAmount != null)
             {
@@ -60,13 +62,13 @@ namespace AdministrationAPI.Services.Transaction
             // Sort transactions
             if (options.SortingOptions != null)
             {
-                if (options.SortingOptions == SortingOptions.Amount) 
+                if (options.SortingOptions == SortingOptions.Amount)
                     transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Amount) : transactions.OrderByDescending(t => t.Amount);
-                else if (options.SortingOptions == SortingOptions.Recipient) 
+                else if (options.SortingOptions == SortingOptions.Recipient)
                     transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Recipient) : transactions.OrderByDescending(t => t.Recipient);
                 else if (options.SortingOptions == SortingOptions.Status)
-                     transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Status) : transactions.OrderByDescending(t => t.Status);
-                else 
+                    transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Status) : transactions.OrderByDescending(t => t.Status);
+                else
                     transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.DateTime) : transactions.OrderByDescending(t => t.DateTime);
             }
 

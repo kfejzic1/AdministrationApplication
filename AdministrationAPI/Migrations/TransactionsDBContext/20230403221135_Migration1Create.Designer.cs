@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AdministrationAPI.Migrations
+namespace AdministrationAPI.Migrations.TransactionsDBContext
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20230330193609_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20230403221135_Migration1Create")]
+    partial class Migration1Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

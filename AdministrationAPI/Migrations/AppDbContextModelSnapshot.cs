@@ -155,7 +155,7 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "11883f4b-00d9-4872-abde-abe721f146cf",
+                            Id = "6e4f879f-6ffc-49fe-bb94-560a22020f69",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -169,13 +169,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062229993",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "aceffea9-f023-4983-b9ef-4663e0aebbf1",
+                            SecurityStamp = "78dbc842-65cf-4041-8437-4a3ea970de61",
                             TwoFactorEnabled = true,
                             UserName = "testingUser"
                         },
                         new
                         {
-                            Id = "3ba056f9-62b5-4839-b0ac-5876a9dc1b56",
+                            Id = "21ab9dd0-c0c4-48c2-9999-6cc5e0bb5489",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -189,13 +189,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "062518214",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6545f3f9-2052-4a7c-983b-2c58aaf03c0d",
+                            SecurityStamp = "5c92eb36-eca0-4d56-85be-aa61a24501a5",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
                         },
                         new
                         {
-                            Id = "3df29f63-96af-4184-a182-0f612847e58f",
+                            Id = "ffce620f-ae82-489f-8c6b-fec4fe1659a2",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -209,13 +209,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "d0495148-75d2-4b16-8d83-f270e135fa59",
+                            SecurityStamp = "4f37fc95-8662-4cd2-a4b9-edbc6afc7e91",
                             TwoFactorEnabled = true,
                             UserName = "esmajic2"
                         },
                         new
                         {
-                            Id = "2c5cd97c-1352-46a3-9ad7-7c805daa4911",
+                            Id = "c53daa2c-1d51-4b26-90f5-a9e706abfa54",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -229,13 +229,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "92b00e76-aef2-4d62-a930-8b297faf5fb5",
+                            SecurityStamp = "95d85cc0-c417-42ec-80c0-f761d1e3f7eb",
                             TwoFactorEnabled = true,
                             UserName = "amehmedagi1"
                         },
                         new
                         {
-                            Id = "eb70f744-ae6b-4473-9121-fbbfc3fbb3c1",
+                            Id = "68ebb283-ddb4-45d9-b569-10c5c9eef913",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -249,13 +249,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "1bdda705-56d1-45cc-9363-071f3bf2b997",
+                            SecurityStamp = "1937e513-5f5e-4834-8fbb-20e7ac7a1c93",
                             TwoFactorEnabled = true,
                             UserName = "mbecirovic3"
                         },
                         new
                         {
-                            Id = "af81a387-b601-42cb-98a5-1475a70f146b",
+                            Id = "8df605f7-2c75-4737-8b96-078e3fe30a8e",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -269,13 +269,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "b9d40827-726e-44ab-adeb-04e07832f1cf",
+                            SecurityStamp = "9f8ef697-b619-4ef0-b40c-aa519cc1dc37",
                             TwoFactorEnabled = true,
                             UserName = "dmuhic1"
                         },
                         new
                         {
-                            Id = "e3d6eb21-5477-49a3-9d78-00e92d6a6a03",
+                            Id = "35c88b90-d072-49d7-845d-8b13a1257fff",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -289,13 +289,13 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "48222cb3-c3a3-4b44-9463-ec0024505162",
+                            SecurityStamp = "80bd8897-48c0-4dcf-9f48-e8e814e28de9",
                             TwoFactorEnabled = true,
                             UserName = "emekic2"
                         },
                         new
                         {
-                            Id = "6be9d199-76c4-40d0-967f-ff572f93264f",
+                            Id = "4523b9a7-a16f-4d58-93be-470cb90ce613",
                             AccessFailedCount = 0,
                             Address = "Tamo negdje 1",
                             ConcurrencyStamp = "1",
@@ -309,7 +309,7 @@ namespace AdministrationAPI.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==",
                             PhoneNumber = "11111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "353eefc9-2638-4049-b866-cba739537240",
+                            SecurityStamp = "5841acaf-ec84-49f4-bdee-6653f5177f50",
                             TwoFactorEnabled = true,
                             UserName = "abrulic1"
                         });
@@ -347,14 +347,14 @@ namespace AdministrationAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "355683d5-97cf-44fd-8d79-0fbc005e5642",
+                            Id = "19057999-609d-428d-9dc8-96360426b156",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "f1331f8f-5ba1-4303-bfc7-33c64b7346d7",
+                            Id = "83a6c706-d7a7-4b4a-8826-349f8c052d56",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdministrationAPI.Controllers.Transaction
 {
+
     [Route("api/transactions")]
     public class TransactionController : ControllerBase
     {
+
+
         private readonly ITransactionService _transactionService;
 
         public TransactionController(ITransactionService transactionService)
@@ -19,6 +22,7 @@ namespace AdministrationAPI.Controllers.Transaction
         [HttpGet]
         public async Task<ActionResult<List<TransactionDTO>>> GetTransactions([FromQuery] TransactionQueryOptions options)
         {
+
             TransactionResponseDTO response;
 
             try
