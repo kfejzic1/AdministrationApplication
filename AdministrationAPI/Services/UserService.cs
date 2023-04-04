@@ -1,7 +1,6 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
-using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
@@ -220,7 +219,8 @@ namespace AdministrationAPI.Services
         {
             var user = _userManager.Users.FirstOrDefault(u => u.Email == model.Email || u.UserName == model.Username || u.PhoneNumber == model.PhoneNumber);
 
-            if (user is not null) {
+            if (user is not null)
+            {
                 throw new InvalidDataException("User already exists");
             }
 

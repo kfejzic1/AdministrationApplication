@@ -172,5 +172,25 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("validate-token")]
+        public IActionResult ValidateToken([FromQuery] string token)
+        {
+            try
+            {
+                var roles = TokenUtilities.VerifyToken(token);
+
+                return Ok(token);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.TwoFactorQrCode");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
