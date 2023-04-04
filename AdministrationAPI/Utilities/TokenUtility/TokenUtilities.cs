@@ -29,6 +29,7 @@ namespace AdministrationAPI.Utilities
         {
             var authClaims = new List<Claim>
             {
+                    
                     new Claim("UserId", user.Id),
                     new Claim("UserName", user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -49,7 +50,7 @@ namespace AdministrationAPI.Utilities
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwt);
 
-            var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
             var roleClaims = token.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
             var roleValues = roleClaims.Select(c => c.Value).ToList();
