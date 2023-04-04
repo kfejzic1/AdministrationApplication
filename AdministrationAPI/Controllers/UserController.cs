@@ -180,7 +180,7 @@ namespace AdministrationAPI.Controllers
             {
                 var roles = TokenUtilities.VerifyToken(token);
 
-                return Ok(token);
+                return Ok(roles);
             }
             catch (DataException ex)
             {
