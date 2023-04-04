@@ -7,15 +7,19 @@ import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
 export const Payment = props => {
 	const { currency, recipientAccountNumber, recipientName, transactionAmount, type } = useParams();
 	console.log('mozda je=', currency, recipientAccountNumber, recipientName);
-	const [transactionAmountState, setTransactionAmount] = useState(transactionAmount != -1 ? transactionAmount : '');
-	const [recipientNameState, setRecipientName] = useState(recipientName != -1 ? recipientName : '');
-	const [recipientAccountNumberState, setRecipientAccountNumber] = useState(
-		recipientAccountNumber != -1 ? recipientAccountNumber : ''
+	const [transactionAmountState, setTransactionAmount] = useState(
+		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
 	);
-	const [currencyState, setCurrency] = useState(currency != -1 ? currency : 'USD');
-	const [typeState, setType] = useState(type != -1 ? type : 'Payment');
+	const [recipientNameState, setRecipientName] = useState(
+		recipientName != undefined && recipientName != -1 ? recipientName : ''
+	);
+	const [recipientAccountNumberState, setRecipientAccountNumber] = useState(
+		recipientAccountNumber != undefined && recipientAccountNumber != -1 ? recipientAccountNumber : ''
+	);
+	const [currencyState, setCurrency] = useState(currency != undefined && currency != -1 ? currency : 'USD');
+	const [typeState, setType] = useState(type != undefined && type != -1 ? type : 'Payment');
 	const navigate = useNavigate();
-
+	console.log('currency', currencyState);
 	function handleSubmit(event) {
 		event.preventDefault();
 		// POST za plaćanje
@@ -58,8 +62,8 @@ export const Payment = props => {
 							<div className={cn.pWrapperDiv}>Currency:</div>
 						</div>
 						<select className={cn.select} value={currencyState} onChange={event => setCurrency(event.target.value)}>
-							<option value='USD'>USD</option>
 							<option value='EUR'>EUR</option>
+							<option value='USD'>USD</option>
 							<option value='BAM'>BAM</option>
 							<option value='JPY'>JPY</option>
 							<option value='GBP'>GBP</option>

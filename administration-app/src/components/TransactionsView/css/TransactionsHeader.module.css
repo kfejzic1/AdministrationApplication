@@ -30,6 +30,9 @@
   width: fit-content;
   word-break: break-word;
 }
+.tri{
+  height: 30px;
+}
 .table{ 
   
 --borderRadius:4px;
@@ -37,7 +40,7 @@
   table-layout: fixed;
   background: #fff;
   font-family: 'Roboto', sans-serif;
-  margin: 0 auto;
+  margin:0 auto;
   padding-bottom: 10px;
   border-bottom: 2px solid grey; 
 }
@@ -64,6 +67,7 @@
 }
 .amountWrapperP{
 font-size: 16px;
+margin: auto;
 }
 
 .amountWrapper{
@@ -94,6 +98,8 @@ border-radius: var(--borderRadius)  ;
 }
  .dateInputInput{ 
 height: 100%;  
+line-height: revert;
+font-size: 15px;
 }
 .dateInputA{ 
   font-size: 16px;
