@@ -106,16 +106,15 @@ const useStyles = makeStyles({
 		},
 
 		'&.MuiButton-text': {
-			backgroundColor: '#e0e0e0',
+			backgroundColor: '#ffaf36',
 			border: '1px solid #bbb8b8',
 			color: '#000000',
 			textTransform: 'none',
-			borderRadius: '10px',
 			width: 'auto',
 			padding: '1px 15px',
 			'&:hover': {
 				border: '1px solid #000000',
-				backgroundColor: '#bbb8b8',
+				backgroundColor: '#ea8c00',
 			},
 		},
 	},
