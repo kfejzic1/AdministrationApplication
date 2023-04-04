@@ -81,7 +81,7 @@
       "name": "Airplane task",
       "description": "Schema for building Airplane tasks",
       "fileMatch": ["*.task.json", "*.task.yaml", "*.task.yml"],
-      "url": "https://raw.githubusercontent.com/airplanedev/lib/main/pkg/deploy/taskdir/definitions/schema_0_3.json"
+      "url": "https://api.airplane.dev/v0/schemas/task.json"
     },
     {
       "name": "angular.json",
@@ -786,6 +786,12 @@
       "description": "Schema for Dein.vim, a Vim/Neovim plugin manager",
       "fileMatch": ["dein.toml"],
       "url": "https://json.schemastore.org/dein.json"
+    },
+    {
+      "name": "Deta Spacefile Schema",
+      "description": "Configuration file for Space Apps",
+      "fileMatch": ["Spacefile"],
+      "url": "https://deta.space/assets/spacefile.schema.json"
     },
     {
       "name": "Drupal Breakpoints Schema",
@@ -2088,6 +2094,11 @@
       "url": "https://raw.githubusercontent.com/rancher/k3d/main/pkg/config/config.versions.schema.json"
     },
     {
+      "name": "Kas",
+      "description": "Configuration for the Kas setup tool",
+      "url": "https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json"
+    },
+    {
       "name": "KrakenD",
       "description": "KrakenD API Gateway configuration file",
       "fileMatch": [
@@ -2947,7 +2958,7 @@
     {
       "name": "Ruff",
       "description": "JSON schema for Ruff, a fast Python linter",
-      "fileMatch": ["ruff.toml"],
+      "fileMatch": ["ruff.toml", ".ruff.toml"],
       "url": "https://json.schemastore.org/ruff.json"
     },
     {
@@ -4410,7 +4421,7 @@
     {
       "name": "Hugo",
       "description": "Hugo static site generator config file schema",
-      "fileMatch": [],
+      "fileMatch": ["hugo.toml", "hugo.json", "hugo.yaml"],
       "url": "https://json.schemastore.org/hugo.json"
     },
     {

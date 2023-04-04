@@ -69,6 +69,7 @@ export default function VendorsTableToolBar(props) {
 	};
 	let handleDelete = async () => {
 		setOpenLoader(true);
+
 		const delVend = await props.selectedIds.forEach(id => {
 			deleteVendor({ id: id })
 				.then(res => {
@@ -79,6 +80,7 @@ export default function VendorsTableToolBar(props) {
 				.catch(() => {
 					setLoaderState({ ...loaderState, loading: false, success: false });
 					setOpen(false);
+					setOpenLoader(false);
 				});
 		});
 	};
