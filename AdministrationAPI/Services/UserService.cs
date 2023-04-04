@@ -90,6 +90,12 @@ namespace AdministrationAPI.Services
                 };
             }
 
+            if ((loginRequest.Email != null && !user.EmailConfirmed) || (loginRequest.Phone != null && !user.PhoneNumberConfirmed))
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Provided email/phone is not confirmed!" }
+                };
+
             if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
                 return new AuthenticationResult
                 {
@@ -122,7 +128,12 @@ namespace AdministrationAPI.Services
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
         {
-            var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            User user = new User();
+
+            if (loginRequest.Email != null)
+                user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            else
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == loginRequest.Phone);
 
             if (user == null)
                 return new AuthenticationResult
