@@ -85,14 +85,17 @@ export default function LocationTableToolbar(props) {
 	async function deleteAddresses() {
 		setOpenLoader(true);
 		const delAdr = await selectedIds.forEach(id => {
-			deleteVendorLocation({ id: id }).catch(() => {
-				setLoaderState({ ...loaderState, loading: false, success: false });
-				setOpen(false);
-			});
+			deleteVendorLocation({ id: id })
+				.then(res => {
+					setLoaderState({ ...loaderState, loading: false, success: true });
+					props.fetchLocations();
+					setOpenLoader(false);
+				})
+				.catch(() => {
+					setLoaderState({ ...loaderState, loading: false, success: false });
+					setOpen(false);
+				});
 		});
-		setLoaderState({ ...loaderState, loading: false, success: true });
-		props.fetchLocations();
-		setOpenLoader(false);
 	}
 
 	const createAddressTooltip = (

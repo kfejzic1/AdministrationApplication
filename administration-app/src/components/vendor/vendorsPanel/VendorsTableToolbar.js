@@ -10,6 +10,7 @@ import VendorCreateModal from '../vendorCreateModal/VendorCreateModal';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { deleteVendor } from '../../../services/vendorService';
+import Loader from '../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
 	button: {
@@ -68,14 +69,17 @@ export default function VendorsTableToolBar(props) {
 	let handleDelete = async () => {
 		setOpenLoader(true);
 		const delVend = await selectedIds.forEach(id => {
-			deleteVendor({ id: id }).catch(() => {
+			deleteVendor({ id: id })
+			.then(res=>{
+				setLoaderState({ ...loaderState, loading: false, success: true });
+				props.fetchVendors();
+				setOpenLoader(false);
+			})
+			.catch(() => {
 				setLoaderState({ ...loaderState, loading: false, success: false });
 				setOpen(false);
 			});
 		});
-		setLoaderState({ ...loaderState, loading: false, success: true });
-		props.fetchVendors();
-		setOpenLoader(false);
 	};
 
 	const createVendorsTooltip = (
@@ -140,6 +144,7 @@ export default function VendorsTableToolBar(props) {
 					<VendorCreateModal handleClose={handleClose} />
 				</Modal>
 			</Toolbar>
+			<Loader open={openLoader} loaderState={loaderState} />
 		</ThemeProvider>
 	);
 }
