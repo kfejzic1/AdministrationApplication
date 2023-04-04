@@ -130,7 +130,6 @@ function descendingComparator(a, b, orderBy) {
 }
 
 export default function Location() {
-  const dataArrived = false;
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
   const [selected, setSelected] = useState([]);
@@ -144,7 +143,6 @@ export default function Location() {
   const fetchData = async () => {
     getVendor(params.id).then((res) => {
       setVendor(res.data);
-      dataArrived = true;
     });
     getAllVendorLocations(params.id).then((res) => {
       setLocations(res.data);

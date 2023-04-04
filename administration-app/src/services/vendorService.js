@@ -84,3 +84,14 @@ export function editVendorLocation(request){
 		}
 	});
 }
+
+export function deleteVendor(request){
+	return axios(env.API_ENV.url + '/api/Vendor/Delete', {
+		method: 'DELETE',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		}
+	});
+}
