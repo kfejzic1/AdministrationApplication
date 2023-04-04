@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  si:
+    image: official3:latest
+    container_name: OFFICIAL3
+    ports:
+      - "3000:3000"
+    restart: on-failure:10
