@@ -266,6 +266,7 @@ export default function TransactionsListHeader(arg) {
 	return (
 		<table className={cn.table}>
 			<thead>
+				<tr className={cn.tri}></tr>
 				<tr>
 					<th className={cn.tableTh}>
 						<p className={cn.textInTh}>ID</p>
@@ -273,7 +274,7 @@ export default function TransactionsListHeader(arg) {
 					<th className={cn.tableTh}>
 						{sortingColumn != 'DateTime' ? (
 							<div className={cn.unSort}>
-								<p>Date</p>
+								<div>Date</div>
 								<SwapVertSharpIcon
 									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 									onClick={() => {
@@ -294,14 +295,14 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								<p className={cn.textInTh}>Date</p>
+								<div className={cn.textInTh}>Date</div>
 							</TableSortLabel>
 						)}
 					</th>
 					<th className={cn.tableTh}>
 						{sortingColumn != 'Recipient' ? (
 							<div className={cn.unSort}>
-								<p>Recipient</p>
+								<div>Recipient</div>
 								<SwapVertSharpIcon
 									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 									onClick={() => {
@@ -323,14 +324,14 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								<p className={cn.textInTh}>Recipient</p>
+								<div className={cn.textInTh}>Recipient</div>
 							</TableSortLabel>
 						)}
 					</th>
 					<th className={cn.tableTh}>
 						{sortingColumn != 'Amount' ? (
 							<div className={cn.unSort}>
-								<p>Amount </p>
+								<div>Amount </div>
 								<SwapVertSharpIcon
 									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 									onClick={() => {
@@ -352,14 +353,14 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								<p className={cn.textInTh}>Amount</p>
+								<div className={cn.textInTh}>Amount</div>
 							</TableSortLabel>
 						)}
 					</th>
 					<th className={cn.tableTh}>
 						{sortingColumn != 'Status' ? (
 							<div className={cn.unSort}>
-								<p>Status </p>
+								<div>Status </div>
 								<SwapVertSharpIcon
 									sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 									onClick={() => {
@@ -380,7 +381,7 @@ export default function TransactionsListHeader(arg) {
 								hideSortIcon={false}
 								active={true}
 							>
-								<p className={cn.textInTh}>Status</p>
+								<div className={cn.textInTh}>Status</div>
 							</TableSortLabel>
 						)}
 					</th>
@@ -392,8 +393,8 @@ export default function TransactionsListHeader(arg) {
 					<th className={cn.tableTh}>
 						<div className={cn.dateInputWrapper}>
 							<div className={cn.dateInput}>
-								<a className={cn.dateInputA}>Start:</a>
-								<a className={cn.dateInputA}>End:</a>
+								<div className={cn.dateInputA}>Start:</div>
+								<div className={cn.dateInputA}>End:</div>
 							</div>
 							<div className={cn.dateInput}>
 								<input
@@ -446,13 +447,13 @@ export default function TransactionsListHeader(arg) {
 					</th>
 					<th className={cn.tableTh}>
 						<div className={cn.amountWrapper}>
-							<p className={cn.amountWrapperP}>Min:</p>
+							<div className={cn.amountWrapperP}>Min:</div>
 							<input
 								className={cn.amountWrapperInput}
 								type='number'
 								onChange={event => setAmountFilterStart(event.target.value)}
 							></input>
-							<p className={cn.amountWrapperP}>Max:</p>
+							<div className={cn.amountWrapperP}>Max:</div>
 							<input
 								className={cn.amountWrapperInput}
 								type='number'
@@ -517,6 +518,7 @@ export default function TransactionsListHeader(arg) {
 						</button>
 					</th>
 				</tr>
+				<tr className={cn.tri}></tr>
 			</thead>
 		</table>
 	);

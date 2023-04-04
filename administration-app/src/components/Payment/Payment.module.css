@@ -19,9 +19,10 @@
 	justify-content: flex-start;
 	align-items: center;
 	height: 100vh;
-	background-image: url('http://localhost:3000/TransactionView/img/bckg3.png');
-	background-position: center;
-	background-size: 100% auto;
+	background-image: url('http://localhost:3000/TransactionView/img/bg.png');
+	background-position: right;
+	background-size: 70% 70%;
+	background-repeat: no-repeat;
 }
 @media screen and (max-height: 700px) {
 	.payment_root {
@@ -45,7 +46,7 @@
 		justify-content: flex-start;
 		align-items: center;
 		height: 100vh;
-		background-image: url('http://localhost:3000/TransactionView/img/bckg3.png');
+		background-image: url('http://localhost:3000/TransactionView/img/bg.png');
 		background-position: center;
 		background-size: 100% auto;
 	}
