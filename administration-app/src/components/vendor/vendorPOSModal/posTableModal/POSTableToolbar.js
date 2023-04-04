@@ -9,6 +9,7 @@ import { Stack } from "@mui/system";
 import POSCreateModal from "../posCreateModal/POSCreateModal";
 import { makeStyles } from "@material-ui/core/styles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Loader from "../../../loaderDialog/Loader";
 const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: "20px",
@@ -79,15 +80,17 @@ export default function POSTableToolBar(props) {
   let deletePos = async () => {
 	setOpenLoader(true)
 	const deleteIds = await selectedIds.forEach(id => {
-			Delete({ id: id }).catch(() => {
+			Delete({ id: id })
+      .then(res=>{
+        setLoaderState({ ...loaderState, loading: false, success: true });
+        props.fetchPOS();
+        setOpenLoader(false)
+      })
+      .catch(() => {
         setLoaderState({ ...loaderState, loading: false, success: false });
         setOpen(false);
       });;
 	})
-
-      setLoaderState({ ...loaderState, loading: false, success: true });
-      props.fetchPOS();
-      setOpenLoader(false)
 }
 
 
@@ -182,6 +185,7 @@ export default function POSTableToolBar(props) {
           />
         </Modal>
       </Toolbar>
+      <Loader open={openLoader} loaderState={loaderState} />
     </ThemeProvider>
   );
 }

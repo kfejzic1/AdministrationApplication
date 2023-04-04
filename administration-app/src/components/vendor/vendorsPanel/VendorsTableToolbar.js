@@ -9,6 +9,8 @@ import { Stack } from '@mui/system';
 import VendorCreateModal from '../vendorCreateModal/VendorCreateModal';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { deleteVendor } from '../../../services/vendorService';
+import Loader from '../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
 	button: {
@@ -53,13 +55,34 @@ const tableTheme = createTheme({
 	},
 });
 export default function VendorsTableToolBar(props) {
+	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
+	const [openLoader, setOpenLoader] = useState(false);
+
 	const classes = useStyles();
 	const { numSelected } = props;
 	const [open, setOpen] = useState(false);
+
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
 		props.fetchVendors();
 		setOpen(false);
+	};
+	let handleDelete = async () => {
+		setOpenLoader(true);
+
+		const delVend = await props.selectedIds.forEach(id => {
+			deleteVendor({ id: id })
+				.then(res => {
+					setLoaderState({ ...loaderState, loading: false, success: true });
+					props.fetchVendors();
+					setOpenLoader(false);
+				})
+				.catch(() => {
+					setLoaderState({ ...loaderState, loading: false, success: false });
+					setOpen(false);
+					setOpenLoader(false);
+				});
+		});
 	};
 
 	const createVendorsTooltip = (
@@ -71,7 +94,12 @@ export default function VendorsTableToolBar(props) {
 	);
 	const deleteVendorsTooltip = (
 		<Tooltip title='Delete Selected B2B Customers'>
-			<Button className={classes.button} size='small' variant='outlined' endIcon={<DeleteIcon />}>
+			<Button
+				className={classes.button}
+				size='small'
+				variant='outlined'
+				endIcon={<DeleteIcon />}
+				onClick={handleDelete}>
 				Delete B2B Customers
 			</Button>
 		</Tooltip>
@@ -116,6 +144,7 @@ export default function VendorsTableToolBar(props) {
 					<VendorCreateModal handleClose={handleClose} />
 				</Modal>
 			</Toolbar>
+			<Loader open={openLoader} loaderState={loaderState} />
 		</ThemeProvider>
 	);
 }

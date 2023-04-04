@@ -46,6 +46,25 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpDelete("Delete")]
+        public IActionResult VendorDelete([FromBody] VendorDeleteRequest request)
+        {
+            try
+            {
+                return Ok(_vendorService.Delete(request.Id));
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "POSController.Delete");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         [HttpGet]
         public IActionResult GetVendors()
         {

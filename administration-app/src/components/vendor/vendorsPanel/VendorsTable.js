@@ -106,16 +106,15 @@ const useStyles = makeStyles({
 		},
 
 		'&.MuiButton-text': {
-			backgroundColor: '#e0e0e0',
+			backgroundColor: '#ffaf36',
 			border: '1px solid #bbb8b8',
 			color: '#000000',
 			textTransform: 'none',
-			borderRadius: '10px',
 			width: 'auto',
 			padding: '1px 15px',
 			'&:hover': {
 				border: '1px solid #000000',
-				backgroundColor: '#bbb8b8',
+				backgroundColor: '#ea8c00',
 			},
 		},
 	},
@@ -223,9 +222,9 @@ export default function VendorsTable() {
 	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - vendors.length) : 0;
 
 	return (
-		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '5%' }}>
+		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} />
+				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} selectedIds={selected} />
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
 						<Table

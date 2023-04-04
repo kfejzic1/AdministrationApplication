@@ -34,6 +34,12 @@ const headCells = [
 		disablePadding: false,
 		label: 'Assigned Users',
 	},
+	{
+		id: 'details',
+		numeric: false,
+		disablePadding: false,
+		label: '',
+	},
 ];
 
 const tableTheme = createTheme({

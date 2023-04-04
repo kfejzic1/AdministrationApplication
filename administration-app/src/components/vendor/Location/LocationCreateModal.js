@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 	card: { border: 'none' },
 	button: {
 		marginRight: '20px',
-		'&.MuiButton-outlined': {
+		'&.MuiButton-standard': {
 			backgroundColor: '#ffaf36',
 			color: 'black',
 			'&:hover': {
@@ -124,9 +124,9 @@ export default function LocationCreateModal(props) {
 									<Grid item xs={12}>
 										<TextField
 											className={classes.textField}
-											id='outlined-basic'
+											id='standard-basic'
 											label='Address'
-											variant='outlined'
+											variant='standard'
 											value={address}
 											required={true}
 											error={errors.address}
@@ -137,7 +137,7 @@ export default function LocationCreateModal(props) {
 							</Stack>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='outlined' type='submit' value='Submit' onClick={handleSubmit}>
+							<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
 								Create
 							</Button>
 						</CardActions>
