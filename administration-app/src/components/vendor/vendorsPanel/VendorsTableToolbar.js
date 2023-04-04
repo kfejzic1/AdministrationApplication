@@ -61,6 +61,7 @@ export default function VendorsTableToolBar(props) {
 	const classes = useStyles();
 	const { numSelected } = props;
 	const [open, setOpen] = useState(false);
+
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
 		props.fetchVendors();
@@ -68,17 +69,17 @@ export default function VendorsTableToolBar(props) {
 	};
 	let handleDelete = async () => {
 		setOpenLoader(true);
-		const delVend = await selectedIds.forEach(id => {
+		const delVend = await props.selectedIds.forEach(id => {
 			deleteVendor({ id: id })
-			.then(res=>{
-				setLoaderState({ ...loaderState, loading: false, success: true });
-				props.fetchVendors();
-				setOpenLoader(false);
-			})
-			.catch(() => {
-				setLoaderState({ ...loaderState, loading: false, success: false });
-				setOpen(false);
-			});
+				.then(res => {
+					setLoaderState({ ...loaderState, loading: false, success: true });
+					props.fetchVendors();
+					setOpenLoader(false);
+				})
+				.catch(() => {
+					setLoaderState({ ...loaderState, loading: false, success: false });
+					setOpen(false);
+				});
 		});
 	};
 
@@ -96,8 +97,7 @@ export default function VendorsTableToolBar(props) {
 				size='small'
 				variant='outlined'
 				endIcon={<DeleteIcon />}
-				onClick={handleDelete}
-			>
+				onClick={handleDelete}>
 				Delete B2B Customers
 			</Button>
 		</Tooltip>
@@ -112,8 +112,7 @@ export default function VendorsTableToolBar(props) {
 					...(numSelected > 0 && {
 						bgcolor: theme => alpha(theme.palette.secondary.main, theme.palette.action.activatedOpacity),
 					}),
-				}}
-			>
+				}}>
 				{numSelected > 0 ? (
 					<Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
 						{numSelected} selected
@@ -139,8 +138,7 @@ export default function VendorsTableToolBar(props) {
 					open={open}
 					onClose={handleClose}
 					aria-labelledby='modal-modal-title'
-					aria-describedby='modal-modal-description'
-				>
+					aria-describedby='modal-modal-description'>
 					<VendorCreateModal handleClose={handleClose} />
 				</Modal>
 			</Toolbar>

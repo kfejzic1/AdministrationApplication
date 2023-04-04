@@ -222,9 +222,9 @@ export default function VendorsTable() {
 	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - vendors.length) : 0;
 
 	return (
-		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '5%' }}>
+		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} />
+				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} selectedIds={selected} />
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
 						<Table

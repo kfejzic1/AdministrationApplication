@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 	button: {
 		width: '250px',
 		marginRight: '20px',
-		'&.MuiButton-outlined': {
+		'&.MuiButton-standard': {
 			backgroundColor: '#ffaf36',
 			color: 'black',
 			'&:hover': {
@@ -74,6 +74,10 @@ const useStyles = makeStyles(theme => ({
 	cardActions: {
 		justifyContent: 'right',
 		paddingTop: 20,
+	},
+	image: {
+		width: '100%',
+		height: '100%',
 	},
 }));
 
@@ -171,129 +175,97 @@ function VendorCreateModal(props) {
 	};
 
 	return (
-		<div>
-			<div className='container'>
-				<form className={classes.root} onSubmit={handleSubmit}>
-					<Card classname={classes.card}>
-						<CardHeader align='left' title={'Create B2B Customer'}></CardHeader>
-						<CardContent>
-							<Stack direction='row' spacing={2}>
-								<Grid container spacing={2}>
-									<Grid item xs={12}>
-										<TextField
-											className={classes.textField}
-											id='outlined-basic'
-											label='Name'
-											variant='outlined'
-											value={username}
-											required={true}
-											error={errors.username}
-											onChange={handleUsernameChange}
-										/>
-									</Grid>
-									<Grid item xs={12}>
-										<TextField
-											className={classes.textField}
-											id='outlined-basic'
-											label='Address'
-											variant='outlined'
-											value={address}
-											required={true}
-											error={errors.address}
-											onChange={handleAddressChange}
-										/>
-									</Grid>
-									<Grid item xs={12}>
-										<TextField
-											className={classes.textField}
-											id='outlined-basic'
-											label='Details'
-											variant='outlined'
-											value={details}
-											onChange={handleDetailsChange}
-										/>
-									</Grid>
-									<Grid item xs={12}>
-										<TextField
-											className={classes.textField}
-											id='outlined-basic'
-											type='tel'
-											label='Phone number'
-											variant='outlined'
-											error={errors.phone}
-											value={phone}
-											required={true}
-											onChange={handlePhoneChange}
-										/>
-									</Grid>
-									<Grid item xs={12}>
-										<FormControl className={classes.formControl}>
-											<Autocomplete
-												style={{ margin: '0' }}
-												multiple
-												id='tags-standard'
-												options={users}
-												filterSelectedOptions
-												getOptionLabel={option => option.userName}
-												onChange={handleChange}
-												renderInput={params => (
-													<TextField
-														{...params}
-														className={classes.textField}
-														variant='outlined'
-														label='Assign Users'
-														placeholder='(User)'
-													/>
-												)}
-											/>
-										</FormControl>
-										{/* <FormControl className={classes.formControl} required>
-											<InputLabel id='demo-mutiple-chip-label'>Assign users</InputLabel>
-											<Select
-												labelId='demo-mutiple-chip-label'
-												id='demo-mutiple-chip'
-												multiple
-												autoWidth
-												value={selectedUserIds}
-												onChange={handleChange}
-												input={<Input id='select-multiple-chip' />}
-												renderValue={selected => (
-													<div className={classes.chips}>
-														{selected.map(userId => (
-															<Chip
-																key={userId}
-																label={users.find(x => x.id === userId).userName}
-																className={classes.chip}
-															/>
-														))}
-													</div>
-												)}
-												MenuProps={MenuProps}>
-												{users.map(user => (
-													<MenuItem key={user.id} value={user.id}>
-														<Checkbox checked={selectedUserIds.includes(user.id)} />
-														<ListItemText primary={user.userName} />
-													</MenuItem>
-												))}
-											</Select>
-										</FormControl> */}
-									</Grid>
+		<div className='p-0 mt-5'>
+			<form className={classes.root} onSubmit={handleSubmit}>
+				<Card classname={classes.card}>
+					<CardHeader align='left' title={'Create B2B Customer'}></CardHeader>
+					<CardContent>
+						<Stack direction='row' spacing={2}>
+							<Grid container spacing={2}>
+								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='standard-basic'
+										label='Name'
+										variant='standard'
+										value={username}
+										required={true}
+										error={errors.username}
+										onChange={handleUsernameChange}
+									/>
 								</Grid>
-								<div className='imageBcg'>
-									<img src={naslovna} alt='your-image-description' />
-								</div>
-							</Stack>
-						</CardContent>
-						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='outlined' type='submit' value='Submit' onClick={handleSubmit}>
-								Create
-							</Button>
-						</CardActions>
-					</Card>
-				</form>
+								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='standard-basic'
+										label='Address'
+										variant='standard'
+										value={address}
+										required={true}
+										error={errors.address}
+										onChange={handleAddressChange}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='standard-basic'
+										label='Details'
+										variant='standard'
+										value={details}
+										onChange={handleDetailsChange}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='standard-basic'
+										type='tel'
+										label='Phone number'
+										variant='standard'
+										error={errors.phone}
+										value={phone}
+										required={true}
+										onChange={handlePhoneChange}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<FormControl className={classes.formControl}>
+										<Autocomplete
+											style={{ margin: '0' }}
+											multiple
+											id='tags-standard'
+											options={users}
+											filterSelectedOptions
+											getOptionLabel={option => option.userName}
+											onChange={handleChange}
+											renderInput={params => (
+												<TextField
+													{...params}
+													className={classes.textField}
+													variant='standard'
+													label='Assign Users'
+													placeholder='(User)'
+												/>
+											)}
+										/>
+									</FormControl>
+								</Grid>
+							</Grid>
+							<div className={'imageBcg'}>
+								<img src={naslovna} alt='your-image-description' />
+							</div>
+						</Stack>
+					</CardContent>
+					<CardActions className={classes.cardActions}>
+						<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
+							Create
+						</Button>
+					</CardActions>
+				</Card>
+			</form>
 
-				<Loader open={open} loaderState={loaderState} />
-			</div>
+			<Loader open={open} loaderState={loaderState} />
 		</div>
 	);
 }
