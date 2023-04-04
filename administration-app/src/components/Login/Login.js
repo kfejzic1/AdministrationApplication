@@ -56,7 +56,7 @@ const LoginForm = () => {
 	};
 
 	return isTwoFactorEnabled && email ? (
-		<TwoFactorView email={phoneMail}></TwoFactorView>
+		<TwoFactorView userData={phoneMail}></TwoFactorView>
 	) : (
 		<div className='login-container'>
 			<div className='cover'>

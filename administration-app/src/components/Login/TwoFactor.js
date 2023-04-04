@@ -16,6 +16,12 @@ const TwoFactorView = props => {
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
+	const checkData = input => {
+		const regex = new RegExp('^[0-9]+$');
+		if (input.length <= 10 && input.match(regex)) return 'phone';
+		else return 'email';
+	};
+
 	const handleButtonClick = () => {
 		setIsLoading(true);
 		const code =
@@ -25,7 +31,7 @@ const TwoFactorView = props => {
 			digit4.current.value +
 			digit5.current.value +
 			digit6.current.value;
-		twoFactorAuthentication({ code, email: props.email })
+		twoFactorAuthentication({ code, [checkData(props.userData)]: props.userData })
 			.then(res => {
 				setIsLoading(false);
 				const { token, userId } = res.data;
@@ -47,7 +53,7 @@ const TwoFactorView = props => {
 			}); //Ispisati error message negdje
 	};
 
-	const CodeContainer = () =>	{
+	const CodeContainer = () => {
 		return (
 			<div className='code-container'>
 				<input
@@ -116,7 +122,7 @@ const TwoFactorView = props => {
 				/>
 			</div>
 		);
-	} 
+	};
 
 	return (
 		<div className='auth-container'>
@@ -132,7 +138,7 @@ const TwoFactorView = props => {
 					</Alert>
 				) : null}
 				<Typography variant='h5'>Please input 6-digit code from your Google Authenticator app!</Typography>
-				<CodeContainer/>
+				<CodeContainer />
 				<button className='verify-btn' onClick={handleButtonClick}>
 					{' '}
 					Verify
