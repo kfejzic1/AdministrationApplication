@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  si:
+    image: siprojekat:latest
+    container_name: siprojekat
+    ports:
+      - "3000:3000"
+    restart: on-failure:10
