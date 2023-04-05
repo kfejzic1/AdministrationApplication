@@ -18,12 +18,29 @@ function App() {
 				<NavBar />
 				<Routes>
 					<Route path='/' element={<h1 style={{ textAlign: 'center' }}>SI projekat</h1>} />
-					<Route path='/transactions' element={<TransactionsList />} />
+					<Route 
+						path='/transactions'
+						element={
+						<ProtectedRoute>
+							<TransactionsList />
+						</ProtectedRoute>
+					} />
 					<Route
 						path='/payment/:currency/:type/:recipientName/:transactionAmount/:recipientAccountNumber'
-						element={<Payment />}
+						element={
+							<ProtectedRoute>
+								<Payment />
+							</ProtectedRoute>
+						}
 					/>
-					<Route path='/payment' element={<Payment />} />
+					<Route 
+						path='/payment' 
+						element={
+							<ProtectedRoute>
+								<Payment />
+							</ProtectedRoute>
+						}
+					/>
 
 					<Route
 						path='/user'
