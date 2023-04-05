@@ -7,6 +7,7 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IUserService
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
+        Task<AuthenticationResult> SocialLogin(string email);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         public List<User> GetAssignedUsersForVendor(int vendorId);
         Task<UserDT> GetUser(string id);

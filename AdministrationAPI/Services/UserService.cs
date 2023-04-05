@@ -114,6 +114,46 @@ namespace AdministrationAPI.Services
             };
         }
 
+        //this method will be called after accesstoken validation
+        //so only email is neccessary, not password
+        //also, in this method we are 100% sure that user already exists
+        //check was performed in /validate route's controller
+        public async Task<AuthenticationResult> SocialLogin(string email)
+        {
+            User user = GetUserByEmail(email);
+
+            if (!user.EmailConfirmed)
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Provided email is not confirmed!" }
+                };
+
+            //todo: SHVATI TOK SA 2FA ZA POTREBE SOCIAL LOGIN-A!!!
+            if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                return new AuthenticationResult
+                {
+                    TwoFactorEnabled = true,
+                    Mail = email
+                };
+
+            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+            var token = TokenUtilities.CreateToken(authClaims, _configuration);
+
+            return new AuthenticationResult
+            {
+                Success = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserId = user.Id,
+                Mail = email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.UserName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber
+            };
+        }
+
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
             using (var context = new VendorDbContext())
