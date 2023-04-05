@@ -6,6 +6,7 @@ import cn from '../css/Transactions.module.css';
 import cn1 from '../LoadingSpinner/LoadingSpinner.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
+import { Box, Table, TableBody, TableContainer, Paper, Typography } from '@mui/material';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
 export const TransactionsList = arg => {
@@ -65,7 +66,7 @@ export const TransactionsList = arg => {
 	}
 
 	return (
-		<div className={cn.transactions_root}>
+		<Box>
 			{details != null ? (
 				// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
 				<TransactionDetails
@@ -75,18 +76,27 @@ export const TransactionsList = arg => {
 					props={details}
 				></TransactionDetails>
 			) : (
-				<div className={cn.rootN}>
-					<h1 className={cn.h1}>Transactions</h1>
-					<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
-
-					{transactions}
-				</div>
+				<Box sx={{ bgcolor: '#eceff1' }}>
+					<Typography variant='h2' sx={{ bgcolor: '#fff', width: '100%', pb: 3 }} align='center'>
+						Transactions
+					</Typography>
+					<Box sx={{ width: '95%', margin: 'auto', pt: '15px' }}>
+						<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
+							<TableContainer>
+								<Table>
+									<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
+									<TableBody>{transactions}</TableBody>
+								</Table>
+							</TableContainer>
+						</Paper>
+					</Box>
+				</Box>
 			)}
 			{isLoading && (
 				<div className={cn1.spinnerRoot}>
 					<LoadingSpinner></LoadingSpinner>
 				</div>
 			)}
-		</div>
+		</Box>
 	);
 };

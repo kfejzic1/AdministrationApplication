@@ -5,7 +5,7 @@ import SwapVertSharpIcon from '@mui/icons-material/SwapVertSharp';
 import IconButton from '@mui/material/IconButton';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useEffect, useState } from 'react';
-
+import { Box, Button, TableCell, TableRow, TableHead, Input, Typography } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -44,7 +44,7 @@ export default function TransactionsListHeader(arg) {
 
 	const [startTimeClass, setStartTimeClass] = useState('');
 	const [endTimeClass, setEndTimeClass] = useState('');
-	
+
 	useEffect(() => {
 		console.log('useEffect');
 		updateFilterOptions();
@@ -205,12 +205,11 @@ export default function TransactionsListHeader(arg) {
 		setRecipientFilter('');
 	};
 
-
 	/*const styles = theme => ({
 		textField: {
 			width: '90%',
 			marginLeft: 'auto',
-			marginRight: 'auto',
+			mainRight: 'auto',
 			color: 'white',
 			paddingBottom: 0,
 			marginTop: 0,
@@ -219,264 +218,272 @@ export default function TransactionsListHeader(arg) {
 	});*/
 
 	return (
+		<TableHead className={cn.Table}>
+			<TableRow>
+				<TableCell className={cn.tableTh}>
+					<Typography variant='h6' className={cn.textInTh}>
+						ID
+					</Typography>
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					{sortingColumn != 'DateTime' ? (
+						<div className={cn.unSort}>
+							<Typography variant='h6'>Date</Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingColumn('DateTime');
+									setSortingDirection('asc');
+								}}
+							/>
+						</div>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionDate}
+							onClick={handleSortDirectionDateChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6' className={cn.textInTh}>
+								Date
+							</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					{sortingColumn != 'Recipient' ? (
+						<div className={cn.unSort}>
+							<Typography variant='h6'>Recipient</Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingColumn('Recipient');
+									setSortingDirection('asc');
+									setSortDirectionAmount('asc');
+								}}
+							/>
+						</div>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionRecipient}
+							onClick={handleSortDirectionRecipientChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6' className={cn.textInTh}>
+								Recipient
+							</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					{sortingColumn != 'Amount' ? (
+						<div className={cn.unSort}>
+							<Typography variant='h6'>Amount </Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingDirection('asc');
+									setSortDirectionAmount('asc');
+									setSortingColumn('Amount');
+								}}
+							/>
+						</div>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionAmount}
+							onClick={handleSortDirectionAmountChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6' className={cn.textInTh}>
+								Amount
+							</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					{sortingColumn != 'Status' ? (
+						<div className={cn.unSort}>
+							<Typography variant='h6'>Status </Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingColumn('Status');
+									setSortingDirection('asc');
+								}}
+							/>
+						</div>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionStatus}
+							onClick={handleSortDirectionStatusChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6' className={cn.textInTh}>
+								Status
+							</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell className={cn.tableTh}></TableCell>
+			</TableRow>
 
-			<table className={cn.table}>
-				<thead>
-					<tr>
-						<th className={cn.tableTh}>
-							<p className={cn.textInTh}>ID</p>
-						</th>
-						<th className={cn.tableTh}>
-							{sortingColumn != 'DateTime' ? (
-								<div className={cn.unSort}>
-									<p>Date</p>
-									<SwapVertSharpIcon
-										sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
-										onClick={() => {
-											setSortingColumn('DateTime');
-											setSortingDirection('asc');
-										}}
-									/>
-								</div>
-							) : (
-								<TableSortLabel
-									direction={sortDirectionDate}
-									onClick={handleSortDirectionDateChange}
-									sx={{
-										'& .MuiTableSortLabel-icon': {
-											color: 'black !important',
-										},
-									}}
-									hideSortIcon={false}
-									active={true}
-								>
-									<p className={cn.textInTh}>Date</p>
-								</TableSortLabel>
-							)}
-						</th>
-						<th className={cn.tableTh}>
-							{sortingColumn != 'Recipient' ? (
-								<div className={cn.unSort}>
-									<p>Recipient</p>
-									<SwapVertSharpIcon
-										sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
-										onClick={() => {
-											setSortingColumn('Recipient');
-											setSortingDirection('asc');
-											setSortDirectionAmount('asc');
-										}}
-									/>
-								</div>
-							) : (
-								<TableSortLabel
-									direction={sortDirectionRecipient}
-									onClick={handleSortDirectionRecipientChange}
-									sx={{
-										'& .MuiTableSortLabel-icon': {
-											color: 'black !important',
-										},
-									}}
-									hideSortIcon={false}
-									active={true}
-								>
-									<p className={cn.textInTh}>Recipient</p>
-								</TableSortLabel>
-							)}
-						</th>
-						<th className={cn.tableTh}>
-							{sortingColumn != 'Amount' ? (
-								<div className={cn.unSort}>
-									<p>Amount </p>
-									<SwapVertSharpIcon
-										sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
-										onClick={() => {
-											setSortingDirection('asc');
-											setSortDirectionAmount('asc');
-											setSortingColumn('Amount');
-										}}
-									/>
-								</div>
-							) : (
-								<TableSortLabel
-									direction={sortDirectionAmount}
-									onClick={handleSortDirectionAmountChange}
-									sx={{
-										'& .MuiTableSortLabel-icon': {
-											color: 'black !important',
-										},
-									}}
-									hideSortIcon={false}
-									active={true}
-								>
-									<p className={cn.textInTh}>Amount</p>
-								</TableSortLabel>
-							)}
-						</th>
-						<th className={cn.tableTh}>
-							{sortingColumn != 'Status' ? (
-								<div className={cn.unSort}>
-									<p>Status </p>
-									<SwapVertSharpIcon
-										sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
-										onClick={() => {
-											setSortingColumn('Status');
-											setSortingDirection('asc');
-										}}
-									/>
-								</div>
-							) : (
-								<TableSortLabel
-									direction={sortDirectionStatus}
-									onClick={handleSortDirectionStatusChange}
-									sx={{
-										'& .MuiTableSortLabel-icon': {
-											color: 'black !important',
-										},
-									}}
-									hideSortIcon={false}
-									active={true}
-								>
-									<p className={cn.textInTh}>Status</p>
-								</TableSortLabel>
-							)}
-						</th>
-						<th className={cn.tableTh}></th>
-					</tr>
-				</thead>
+			<TableRow>
+				<TableCell className={cn.tableTh}></TableCell>
+				<TableCell className={cn.tableTh}>
+					<div className={cn.dateInputWrapper}>
+						<div className={cn.dateInput}>
+							<div className={cn.dateInputA}>Start:</div>
+							<div className={cn.dateInputA}>End:</div>
+						</div>
+						<div className={cn.dateInput}>
+							<input
+								type='date'
+								className={(startDateClass, cn.dateInputInput)}
+								format='dd-MM-y'
+								value={dateStartFilter}
+								onChange={handleDateStartFilterChange}
+							/>
+							<input
+								type='date'
+								className={(endDateClass, cn.dateInputInput)}
+								format='dd-MM-y'
+								value={dateEndFilter}
+								onChange={handleDateEndFilterChange}
+							/>
+						</div>
+						<div className={cn.dateInput}>
+							<input
+								type='time'
+								className={(startTimeClass, cn.dateInputInput)}
+								value={timeStartFilter}
+								onChange={handleTimeStartFilterChange}
+							/>
 
-					<tbody className={cn.tableBody}>
-						<tr>
-							<td className={cn.tableTh}></td>
-							<td className={cn.tableTh}>
-								<div className={cn.dateInputWrapper}>
-									<div className={cn.dateInput}>
-										<div className={cn.dateInputA}>Start:</div>
-										<div className={cn.dateInputA}>End:</div>
-									</div>
-									<div className={cn.dateInput}>
-										<input
-											type='date'
-											className={(startDateClass, cn.dateInputInput)}
-											format='dd-MM-y'
-											value={dateStartFilter}
-											onChange={handleDateStartFilterChange}
-										/>
-										<input
-											type='date'
-											className={(endDateClass, cn.dateInputInput)}
-											format='dd-MM-y'
-											value={dateEndFilter}
-											onChange={handleDateEndFilterChange}
-										/>
-									</div>
-									<div className={cn.dateInput}>
-										<input
-											type='time'
-											className={(startTimeClass, cn.dateInputInput)}
-											value={timeStartFilter}
-											onChange={handleTimeStartFilterChange}
-										/>
+							<input
+								type='time'
+								className={(endTimeClass, cn.dateInputInput)}
+								value={timeEndFilter}
+								onChange={handleTimeEndFilterChange}
+							/>
+						</div>
+					</div>
+				</TableCell>
 
-										<input
-											type='time'
-											className={(endTimeClass, cn.dateInputInput)}
-											value={timeEndFilter}
-											onChange={handleTimeEndFilterChange}
-										/>
-									</div>
-								</div>
-							</td>
-
-							<td className={cn.tableTh}>
-								<TextField
-									className={cn.textFieldSearch}
-									value={recipientFilter}
-									size='small'
-									onChange={handleRecipientFilterChange}
-									InputProps={{
-										endAdornment: (
-											<IconButton onClick={clearRecipientFilter}>
-												<ClearIcon />
-											</IconButton>
-										),
-									}}
-								></TextField>
-							</td>
-							<td className={cn.tableTh}>
-								<div className={cn.amountWrapper}>
-									<div className={cn.amountWrapperP}>Min:</div>
-									<input
-										className={cn.amountWrapperInput}
-										type='number'
-										onChange={event => setAmountFilterStart(event.target.value)}
-									></input>
-									<div className={cn.amountWrapperP}>Max:</div>
-									<input
-										className={cn.amountWrapperInput}
-										type='number'
-										onChange={event => setAmountFilterEnd(event.target.value)}
-									></input>
-								</div>
-							</td>
-							<td className={cn.tableTh}>
-								<FormControl fullWidth className={cn.statusChooser}>
-									<Select
-										labelId='filter-status-label'
-										id='filter-status'
-										value={statusFilter}
-										displayEmpty
-										label='Status'
-										size='small'
-										onChange={handleStatusFilterChange}
-									>
-										<MenuItem value='Processing'>Processing</MenuItem>
-										<MenuItem value='Pending'>Pending</MenuItem>
-										<MenuItem value='Success'>Success</MenuItem>
-										<MenuItem value='Failure'> Failure</MenuItem>
-										<MenuItem value=''>
-											<em>None</em>
-										</MenuItem>
-									</Select>
-								</FormControl>
-							</td>
-							<td className={cn.tableTh}>
-								<button
-									className={cn.filterBtn}
-									onClick={() => {
-										updateFilterOptions();
-									}}
-								>
-									Click to filter
-								</button>
-								<button
-									className={cn.filterBtn}
-									onClick={() => {
-										setRecipientFilter('');
-										setStatusFilter('');
-										setDateStartFilter('T');
-										setDateEndFilter('T');
-										setAmountFilterStart('');
-										setAmountFilterEnd('');
-										setSortingDirection('asc');
-										setSortingColumn('DateTime');
-										arg.setFilterOptions({
-											Recipient: '',
-											Status: '',
-											DateTimeStart: '',
-											DateTimeEnd: '',
-											MinAmount: '',
-											MaxAmount: '',
-											SortingOptions: 'DateTime',
-											Ascending: 'asc',
-										});
-									}}
-								>
-									Restart filter
-								</button>
-							</td>
-						</tr>
-					</tbody>
-			</table>
-		
+				<TableCell className={cn.tableTh}>
+					<TextField
+						value={recipientFilter}
+						size='small'
+						onChange={handleRecipientFilterChange}
+						InputProps={{
+							endAdornment: (
+								<IconButton onClick={clearRecipientFilter}>
+									<ClearIcon />
+								</IconButton>
+							),
+						}}
+					></TextField>
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					<div className={cn.amountWrapper}>
+						<div className={cn.amountWrapperP}>Min:</div>
+						<TextField
+							size='small'
+							variant='outlined'
+							type='number'
+							onChange={event => setAmountFilterStart(event.target.value)}
+						></TextField>
+						<div className={cn.amountWrapperP}>Max:</div>
+						<TextField
+							size='small'
+							variant='outlined'
+							type='number'
+							onChange={event => setAmountFilterEnd(event.target.value)}
+						></TextField>
+					</div>
+				</TableCell>
+				<TableCell className={cn.tableTh}>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							value={statusFilter}
+							displayEmpty
+							label='Status'
+							size='small'
+							onChange={handleStatusFilterChange}
+						>
+							<MenuItem value='Processing'>Processing</MenuItem>
+							<MenuItem value='Pending'>Pending</MenuItem>
+							<MenuItem value='Success'>Success</MenuItem>
+							<MenuItem value='Failure'> Failure</MenuItem>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+						</Select>
+					</FormControl>
+				</TableCell>
+				<TableCell>
+					<Box display={'flex'} gap={3} justifyContent={'center'}>
+						<Button
+							variant='contained'
+							onClick={() => {
+								updateFilterOptions();
+							}}
+						>
+							Click to filter
+						</Button>
+						<Button
+							variant='contained'
+							className={cn.filterBtn}
+							onClick={() => {
+								setRecipientFilter('');
+								setStatusFilter('');
+								setDateStartFilter('T');
+								setDateEndFilter('T');
+								setAmountFilterStart('');
+								setAmountFilterEnd('');
+								setSortingDirection('asc');
+								setSortingColumn('DateTime');
+								arg.setFilterOptions({
+									Recipient: '',
+									Status: '',
+									DateTimeStart: '',
+									DateTimeEnd: '',
+									MinAmount: '',
+									MaxAmount: '',
+									SortingOptions: 'DateTime',
+									Ascending: 'asc',
+								});
+							}}
+						>
+							Restart filter
+						</Button>
+					</Box>
+				</TableCell>
+			</TableRow>
+		</TableHead>
 	);
 }
