@@ -59,14 +59,10 @@
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
     .table{
       
-    border: solid 2px rgba(12, 1, 1, 0.1);
-    width:96%;
+     width:100%;
     table-layout: fixed;
     background: #fff;
     font-family: 'Roboto', sans-serif;
-   margin-top: 10px;
-   margin-inline: auto;
-   border-radius: 8px;
  
   }
   .tableDetails{

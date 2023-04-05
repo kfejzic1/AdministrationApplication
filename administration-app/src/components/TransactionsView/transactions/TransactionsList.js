@@ -3,6 +3,7 @@ import { getTransactions } from '../../../services/TransactionsView/transactions
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
 import cn from '../css/Transactions.module.css';
+import cn1 from '../LoadingSpinner/LoadingSpinner.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
@@ -82,7 +83,7 @@ export const TransactionsList = arg => {
 				</div>
 			)}
 			{isLoading && (
-				<div>
+				<div className={cn1.spinnerRoot}>
 					<LoadingSpinner></LoadingSpinner>
 				</div>
 			)}
