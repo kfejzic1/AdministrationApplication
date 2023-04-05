@@ -34,16 +34,28 @@
   height: 30px;
 }
 .table{ 
-  
---borderRadius:4px;
-  width:100%;
+/* --borderRadius:4px; */
+  /* width:100%; */
   table-layout: fixed;
   background: #fff;
   font-family: 'Roboto', sans-serif;
-  margin:0 auto;
-  padding-bottom: 10px;
-  border-bottom: 2px solid grey; 
+  /*margin:0 auto;*/
+  /* padding-bottom: 10px; */
+  /* border-bottom: 2px solid grey;  */
+  /* border-collapse: separate; */
+  /* border-spacing: 0px 4px; */
+  /* display: flex; */
+  width: 100%;
+  border-collapse: separate;
+  margin-left: 3px;
+  margin-right: 3px;
 }
+
+.tableBody {
+  overflow: scroll;
+  width: 100%;
+}
+
 .tableTh{
   padding: 10px 15px 0px 15px;
   text-align: center;
@@ -51,10 +63,11 @@
   font-size: var(--text-size2) ;
   color: var(--_primary);
   vertical-align: middle;
+  white-space: nowrap;
 }
 .textInTh{
-
    color: var(--_primary);
+   margin-left: 10px;
 }
 .statusChooser{
   background-color: whitesmoke;
@@ -76,7 +89,7 @@ gap: 4px;
 display: flex;
 }
 .amountWrapperInput{
-width: 50%;
+max-width: 100px;
 padding: 9px;
 border-width: 1px;
 border-color: #80808060;
@@ -138,3 +151,10 @@ border-radius: var(--borderRadius) ;
 .invalidDateStart, .invalidDateEnd, .invalidTimeStart, .invalidTimeEnd {
   border: 2px solid red;
 }
+
+/* .table_responsive {
+    overflow-x: auto;
+    white-space: nowrap;
+    background-color: aquamarine;
+    width: 100%;
+} */

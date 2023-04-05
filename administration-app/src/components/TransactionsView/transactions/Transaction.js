@@ -6,7 +6,7 @@ export default function Transaction(arg) {
 		<Card
 			variant='outlined'
 			sx={{
-				marginInline: 5,
+				marginInline: 2,
 				marginTop: 2,
 				borderRadius: 3,
 				borderWidth: 1,
@@ -15,7 +15,7 @@ export default function Transaction(arg) {
 		>
 			<div className={cn.transaciton_root}>
 				<table className={cn.table}>
-					<tbody>
+					<tbody className={cn.tableBody}>
 						<tr>
 							<td className={cn.td}>{arg.prop.id}</td>
 							<td className={cn.td}>{parseDate(arg.prop.dateTime)}</td>
