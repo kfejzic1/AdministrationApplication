@@ -167,7 +167,7 @@ public class RegisterController : ControllerBase
                     return NotFound(new { message = "User not found! Google Social Login requires previous registration!" });
                 }
                 else {
-                    return Ok(_userService.SocialLogin(googleAccessTokenData.Email));
+                    return Ok(await _userService.SocialLogin(googleAccessTokenData.Email));
                 }
             }
             catch {
