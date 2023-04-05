@@ -14,6 +14,8 @@ using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Models;
 using AdministrationAPI.Helpers;
+using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Contracts.Responses;
 
 [AllowAnonymous]
 [ApiController]
@@ -124,6 +126,8 @@ public class RegisterController : ControllerBase
         }
     }
 
+
+    //fixme: should these methods be in login controller??
     [AllowAnonymous]
     [HttpGet("validate/facebook")]
     public async Task<IActionResult> ValidateFacebookToken([FromQuery] string token)
@@ -132,15 +136,15 @@ public class RegisterController : ControllerBase
 
         try
         {
-            dynamic result = await facebookClient.GetTaskAsync("me", new { fields = "id,name,email,last_name" });
+            dynamic facebookAccessTokenData = await facebookClient.GetTaskAsync("me", new { fields = "id,name,email,last_name" });
 
-            var user = _userService.GetUserByEmail(result.email);
+            var user = _userService.GetUserByEmail(facebookAccessTokenData.email);
 
-            if (user is not null) {
-                return Ok(new { tokenStatus = "Token valid", email = user.Email, registration = "Required" });
+            if (user is null) {
+                return NotFound(new { message = "User not found! Facebook Social Login requires previous registration!" });
             }
             else {
-                return Ok(new { tokenStatus = "Token valid", registration = "Not required" });
+                return Ok(_userService.SocialLogin(facebookAccessTokenData.email));
             }
         }
         catch
@@ -149,74 +153,26 @@ public class RegisterController : ControllerBase
         }
     }
 
-
     [AllowAnonymous]
     [HttpGet("validate/google")]
     public async Task<IActionResult> ValidateGoogleToken([FromQuery] string token)
     {
-        throw new NotImplementedException("Google Auth not implemented yet!");
-        // GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings()
-        // {
-        //     Audience = new[] { "630472771975-lerdhn72ooj165d8rt444oeone5tiak5.apps.googleusercontent.com" }
-        // };
+        using(HttpClient httpClient = new HttpClient()) {
+            try {
+                GoogleAccessTokenData googleAccessTokenData = await httpClient.GetFromJsonAsync<GoogleAccessTokenData>("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token);
 
-        // try {
-        //     GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(model.token);
+                var user = _userService.GetUserByEmail(googleAccessTokenData.Email);
 
-        //     return Ok(new { message = "Token valid" });
-        // }
-        // catch {
-        //     return BadRequest(new { message = "Token invalid" });
-        // }
-
-        // "https://oauth2.googleapis.com/tokeninfo?access_token=ACCESS_TOKEN"
-
-        var httpClient = new HttpClient();
-        var response = await httpClient.GetAsync($"https://oauth2.googleapis.com/tokeninfo?access_token={token}");
-        var content = response.Content.ReadAsStringAsync().Result;
-
-        var temporaryString = @"    ""issued_at"": ""1420262924658"",
-    ""scope"": ""READ"",
-    ""application_name"": ""ce1e94a2-9c3e-42fa-a2c6-1ee01815476b"",
-    ""refresh_token_issued_at"": ""1420262924658"",
-    ""status"": ""approved"",
-    ""refresh_token_status"": ""approved"",
-    ""api_product_list"": ""[PremiumWeatherAPI]"",
-    ""expires_in"": ""1799"", //--in seconds
-    ""developer.email"": ""tesla@weathersample.com"",
-    ""organization_id"": ""0"",
-    ""token_type"": ""BearerToken"",
-    ""refresh_token"": ""fYACGW7OCPtCNDEnRSnqFlEgogboFPMm"",
-    ""client_id"": ""5jUAdGv9pBouF0wOH5keAVI35GBtx3dT"",
-    ""access_token"": ""2l4IQtZXbn5WBJdL6EF7uenOWRsi"",
-    ""organization_name"": ""docs"",
-    ""refresh_token_expires_in"": ""86399"", //--in seconds
-    ""refresh_count"": ""0""";
-
-    var commaSeparated = temporaryString.Split(",");
-
-    var expiresInAttribute = commaSeparated.FirstOrDefault(attribute => attribute.Contains("expires_in"));
-    
-    var expiresInSeparated = expiresInAttribute!.Split(":");
-
-    // Ovaj sadrzi expires_in
-    // expiresInSeparated[0];
-
-    // Ovaj sadrzi broj, u ovom slucaju 1799
-    // expiresInSeparated[1];
-        //content.Split(",")
-        return Ok(expiresInSeparated[1]);
-
-    }
-
-    [AllowAnonymous]
-    [HttpGet("validate/microsoft")]
-    public async Task<IActionResult> ValidateMicrosoftToken([FromQuery] string token)
-    {
-        throw new NotImplementedException("Microsoft Auth not implemented yet!");
-        var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadJwtToken(token);
-
-        return Ok(jwtToken.ValidTo);
+                if (user is null) {
+                    return NotFound(new { message = "User not found! Google Social Login requires previous registration!" });
+                }
+                else {
+                    return Ok(_userService.SocialLogin(googleAccessTokenData.Email));
+                }
+            }
+            catch {
+                return BadRequest(new { message = "Token invalid" });
+            }
+        }
     }
 }
