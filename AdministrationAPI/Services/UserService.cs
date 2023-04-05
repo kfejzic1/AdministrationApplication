@@ -128,7 +128,7 @@ namespace AdministrationAPI.Services
                     Errors = new[] { "Provided email is not confirmed!" }
                 };
 
-            //TODO: SHVATI TOK SA 2FA ZA POTREBE SOCIAL LOGIN-A!!!
+            //TODO: check how social login works with 2FA
             if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
                 return new AuthenticationResult
                 {
