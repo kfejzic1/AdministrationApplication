@@ -1,4 +1,4 @@
-import cn from '../css/TransactionsHeader.module.css';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
 import TextField from '@mui/material/TextField';
 import ClearIcon from '@mui/icons-material/Clear';
 import SwapVertSharpIcon from '@mui/icons-material/SwapVertSharp';
@@ -9,6 +9,8 @@ import { Box, Button, TableCell, TableRow, TableHead, Input, Typography } from '
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MenuItem from '@mui/material/MenuItem';
 
 export default function TransactionsListHeader(arg) {
@@ -61,8 +63,8 @@ export default function TransactionsListHeader(arg) {
 			arg.setFilterOptions({
 				Recipient: recipientFilter,
 				Status: statusFilter,
-				DateTimeStart: startDate1,
-				DateTimeEnd: endDate1,
+				DateTimeStart: dateStartFilter,
+				DateTimeEnd: dateEndFilter,
 				MinAmount: amountFilterStart,
 				MaxAmount: amountFilterEnd,
 				SortingOptions: sortingColumn,
@@ -218,16 +220,14 @@ export default function TransactionsListHeader(arg) {
 	});*/
 
 	return (
-		<TableHead className={cn.Table}>
+		<TableHead>
 			<TableRow>
-				<TableCell className={cn.tableTh}>
-					<Typography variant='h6' className={cn.textInTh}>
-						ID
-					</Typography>
+				<TableCell>
+					<Typography variant='h6'>ID</Typography>
 				</TableCell>
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					{sortingColumn != 'DateTime' ? (
-						<div className={cn.unSort}>
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
@@ -236,7 +236,7 @@ export default function TransactionsListHeader(arg) {
 									setSortingDirection('asc');
 								}}
 							/>
-						</div>
+						</Box>
 					) : (
 						<TableSortLabel
 							direction={sortDirectionDate}
@@ -249,15 +249,13 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6' className={cn.textInTh}>
-								Date
-							</Typography>
+							<Typography variant='h6'>Date</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					{sortingColumn != 'Recipient' ? (
-						<div className={cn.unSort}>
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Recipient</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
@@ -267,7 +265,7 @@ export default function TransactionsListHeader(arg) {
 									setSortDirectionAmount('asc');
 								}}
 							/>
-						</div>
+						</Box>
 					) : (
 						<TableSortLabel
 							direction={sortDirectionRecipient}
@@ -280,15 +278,13 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6' className={cn.textInTh}>
-								Recipient
-							</Typography>
+							<Typography variant='h6'>Recipient</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					{sortingColumn != 'Amount' ? (
-						<div className={cn.unSort}>
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Amount </Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
@@ -298,7 +294,7 @@ export default function TransactionsListHeader(arg) {
 									setSortingColumn('Amount');
 								}}
 							/>
-						</div>
+						</Box>
 					) : (
 						<TableSortLabel
 							direction={sortDirectionAmount}
@@ -311,15 +307,13 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6' className={cn.textInTh}>
-								Amount
-							</Typography>
+							<Typography variant='h6'>Amount</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					{sortingColumn != 'Status' ? (
-						<div className={cn.unSort}>
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Status </Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
@@ -328,7 +322,7 @@ export default function TransactionsListHeader(arg) {
 									setSortingDirection('asc');
 								}}
 							/>
-						</div>
+						</Box>
 					) : (
 						<TableSortLabel
 							direction={sortDirectionStatus}
@@ -341,61 +335,39 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6' className={cn.textInTh}>
-								Status
-							</Typography>
+							<Typography variant='h6'>Status</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell className={cn.tableTh}></TableCell>
+				<TableCell></TableCell>
 			</TableRow>
 
 			<TableRow>
-				<TableCell className={cn.tableTh}></TableCell>
-				<TableCell className={cn.tableTh}>
-					<div className={cn.dateInputWrapper}>
-						<div className={cn.dateInput}>
-							<div className={cn.dateInputA}>Start:</div>
-							<div className={cn.dateInputA}>End:</div>
-						</div>
-						<div className={cn.dateInput}>
-							<input
-								type='date'
-								className={(startDateClass, cn.dateInputInput)}
-								format='dd-MM-y'
-								value={dateStartFilter}
-								onChange={handleDateStartFilterChange}
-							/>
-							<input
-								type='date'
-								className={(endDateClass, cn.dateInputInput)}
-								format='dd-MM-y'
-								value={dateEndFilter}
-								onChange={handleDateEndFilterChange}
-							/>
-						</div>
-						<div className={cn.dateInput}>
-							<input
-								type='time'
-								className={(startTimeClass, cn.dateInputInput)}
-								value={timeStartFilter}
-								onChange={handleTimeStartFilterChange}
-							/>
-
-							<input
-								type='time'
-								className={(endTimeClass, cn.dateInputInput)}
-								value={timeEndFilter}
-								onChange={handleTimeEndFilterChange}
-							/>
-						</div>
-					</div>
+				<TableCell></TableCell>
+				<TableCell>
+					<LocalizationProvider dateAdapter={AdapterDayjs}>
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, justifyContent: 'center' }}>
+							<DesktopDatePicker
+								label='Start'
+								onChange={a => {
+									console.log(JSON.stringify(a));
+									setDateStartFilter(JSON.stringify(a));
+								}}
+							></DesktopDatePicker>
+							<DesktopDatePicker
+								onChange={a => {
+									console.log(JSON.stringify(a));
+									setDateEndFilter(JSON.stringify(a));
+								}}
+								label='End'
+							></DesktopDatePicker>
+						</Box>
+					</LocalizationProvider>
 				</TableCell>
 
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					<TextField
 						value={recipientFilter}
-						size='small'
 						onChange={handleRecipientFilterChange}
 						InputProps={{
 							endAdornment: (
@@ -406,33 +378,29 @@ export default function TransactionsListHeader(arg) {
 						}}
 					></TextField>
 				</TableCell>
-				<TableCell className={cn.tableTh}>
-					<div className={cn.amountWrapper}>
-						<div className={cn.amountWrapperP}>Min:</div>
+				<TableCell>
+					<Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
 						<TextField
-							size='small'
+							label='Min'
 							variant='outlined'
 							type='number'
 							onChange={event => setAmountFilterStart(event.target.value)}
 						></TextField>
-						<div className={cn.amountWrapperP}>Max:</div>
 						<TextField
-							size='small'
+							label='Max'
 							variant='outlined'
 							type='number'
 							onChange={event => setAmountFilterEnd(event.target.value)}
 						></TextField>
-					</div>
+					</Box>
 				</TableCell>
-				<TableCell className={cn.tableTh}>
+				<TableCell>
 					<FormControl fullWidth>
 						<Select
 							labelId='filter-status-label'
 							id='filter-status'
 							value={statusFilter}
 							displayEmpty
-							label='Status'
-							size='small'
 							onChange={handleStatusFilterChange}
 						>
 							<MenuItem value='Processing'>Processing</MenuItem>
@@ -448,7 +416,6 @@ export default function TransactionsListHeader(arg) {
 				<TableCell>
 					<Box display={'flex'} gap={3} justifyContent={'center'}>
 						<Button
-							variant='contained'
 							onClick={() => {
 								updateFilterOptions();
 							}}
@@ -456,8 +423,6 @@ export default function TransactionsListHeader(arg) {
 							Click to filter
 						</Button>
 						<Button
-							variant='contained'
-							className={cn.filterBtn}
 							onClick={() => {
 								setRecipientFilter('');
 								setStatusFilter('');

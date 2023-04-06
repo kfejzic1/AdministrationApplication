@@ -1,4 +1,3 @@
-import cn from '../css/Transactions.module.css';
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
 import { Card, TableRow, TableCell, Button } from '@mui/material';
 export default function Transaction(arg) {
@@ -11,9 +10,8 @@ export default function Transaction(arg) {
 			<TableCell align='center'>{arg.prop.status}</TableCell>
 			<TableCell align='center'>
 				<Button
-					variant='contained'
 					onClick={() => {
-						arg.seetails(arg.prop);
+						arg.setDetails(arg.prop);
 					}}
 				>
 					Details
