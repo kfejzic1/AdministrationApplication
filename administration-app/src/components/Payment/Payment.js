@@ -1,11 +1,13 @@
-import cn from './Payment.module.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
 
+import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box } from '@mui/material';
+
 export const Payment = props => {
-	const { currency, recipientAccountNumber, recipientName, transactionAmount, type } = useParams();
+
+	const { currency, recipientAccountNumber, recipientName, transactionAmount, type, description } = useParams();
 	console.log('mozda je=', currency, recipientAccountNumber, recipientName);
 	const [transactionAmountState, setTransactionAmount] = useState(
 		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
@@ -18,6 +20,9 @@ export const Payment = props => {
 	);
 	const [currencyState, setCurrency] = useState(currency != undefined && currency != -1 ? currency : 'USD');
 	const [typeState, setType] = useState(type != undefined && type != -1 ? type : 'Payment');
+	const [descriptionState, setDescription] = useState(
+		description != undefined && description != -1 ? description: ''
+	)
 	const navigate = useNavigate();
 	console.log('currency', currencyState);
 	function handleSubmit(event) {
@@ -30,84 +35,233 @@ export const Payment = props => {
 	};
 
 	return (
-		<div className={cn.payment_root}>
-			<button onClick={goBackHandler} className={cn.backBtn}>
-				<span>{'<'}</span>
-			</button>
-			<div className={cn.payment_form}>
-				<h3 className={cn.h3}>New Transaction</h3>
+		<Box sx={{
+			"--primary": "#e7ebf0",
+			"--secondary": "#cfdeec",
+			"--secondary2": "#c4d7e9",
+			"--left": "#cbd6ba",
+			"--right": "#e4e9d5",
+			"--highlights": "#0f2027",
+			"--babyblue": "#000000",
+			"--bordercolor": "rgba(255, 255, 255, 0.3)",
+			"--text-size": "18px",
+			"--text-size2": "25px",
+			"--paddings": "40px 60px 60px 60px",
+			"--inputPadding": "12px",
+			"--formHeading": "60px",
+			"--formGap": "20px",
+			"--selectBtn": "12px",
+		
+			display: "flex",
+			justifyContent: "flex-start",
+			alignItems: "center",
+			height: "100vh",
+			backgroundImage: "url('http://localhost:3000/TransactionView/img/bg.png')",
+			backgroundPosition: "right",
+			backgroundSize: "70% 70%",
+			backgroundRepeat: "no-repeat",
+		}}>
+			<Button onClick={goBackHandler}
+				sx={{
+					color: 'black',
+					backgroundColor: '#f4a63d',
+					fontSize: 'var(--text-size2)',
+					border: '1px solid #000000a8',
+					alignSelf: 'center',
+					borderRadius: '5px',
+					padding: 'var(--inputPadding)',
+					marginLeft: '5px',
+				}}
+			>
+                <span>{'<'}</span>
+            </Button>
+			<Box 
+				sx={{
+					display: 'flex',
+					marginLeft: '10%',
+					flexDirection: 'column',
+					backgroundColor: '#d9d9d9',
+					padding: 'var(--paddings)',
+					borderRadius: '50px',
+					boxShadow: '0 0.3rem 0.7rem 0 var(--highlights)',
+					height: '95%'
+				}}
+			>
+				<Typography variant="h3" 
+					sx = {{
+						fontSize: 'var(--formHeading)',
+						fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+						fontWeight: 800,
+						color: 'black',
+						margin: 0,
+					}}>New Transaction</Typography>
 
-				<form className={cn.form2} onSubmit={handleSubmit}>
+				<FormControl 
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'center',
+						alignItems: 'center',
+						lineHeight: 'var(--formGap)',
+					}}
+					onSubmit={handleSubmit}>
 					<br />
 					<br />
-					<input
-						className={cn.input}
+					<TextField
+						label='Transaction amount'
 						type='number'
 						placeholder='Transaction amount'
 						value={transactionAmountState}
 						onChange={event => setTransactionAmount(event.target.value)}
+						sx = {{
+							padding: 'var(--inputPadding)',
+							borderRadius: '5px',
+							border: '0px',
+							width: '70%',
+							fontSize: 'var(--text-size)',
+						}}
 					/>
 					<br />
-					<div className={cn.selectWrap}>
-						<div className={cn.pWrapper}>
-							<div className={cn.pWrapperDiv}>Type:</div>
-						</div>
-						<select className={cn.select} value={typeState} onChange={event => setType(event.target.value)}>
-							<option value='Credit'>Credit</option>
-							<option value='Payment'>Payment</option>
-							<option value='Recip'>Recip</option>
-							<option value='Gift'>Gift</option>
-						</select>
-						<div className={cn.pWrapper}>
-							<div className={cn.pWrapperDiv}>Currency:</div>
-						</div>
-						<select className={cn.select} value={currencyState} onChange={event => setCurrency(event.target.value)}>
-							<option value='EUR'>EUR</option>
-							<option value='USD'>USD</option>
-							<option value='BAM'>BAM</option>
-							<option value='JPY'>JPY</option>
-							<option value='GBP'>GBP</option>
-							<option value='CAD'>CAD</option>
-							<option value='AUD'>AUD</option>
-							<option value='CHF'>CHF</option>
-							<option value='CNY'>CNY</option>
-							<option value='NZD'>NZD</option>
-							<option value='MXN'>MXN</option>
-							<option value='BRL'>BRL</option>
-						</select>
-					</div>
+					<Box sx={{
+							flexDirection: 'row',
+							justifyContent: 'space-around',
+							width: '70%',
+							display: 'flex',
+					}}>
+						<Box sx={{
+  								display: 'flex',
+  								justifyContent: 'center',
+  								alignItems: 'center',
+						}}>
+							<Box sx={{
+  									color: 'var(--babyblue)',
+  									display: 'inline-block',
+							}}>Type: </Box>
+						</Box>
+						<Select 
+							sx={{
+								color: 'black',
+								backgroundColor: '#f4a63d', // change color Type
+								alignSelf: 'flex-end',
+								borderRadius: '5px',
+								padding: 0,
+								//fontSize: 'var(--text-size)',
+								lineHeight: 1,
+							}}
+														  
+							value={typeState} onChange={event => setType(event.target.value)}>
+							<MenuItem value='Credit'>Credit</MenuItem>
+							<MenuItem value='Payment'>Payment</MenuItem>
+							<MenuItem value='Recip'>Recip</MenuItem>
+							<MenuItem value='Gift'>Gift</MenuItem>
+						</Select>
+						<Box sx={{
+  								display: 'flex',
+  								justifyContent: 'center',
+  								alignItems: 'center',
+						}}>
+							<Box sx={{
+  									color: 'var(--babyblue)',
+  									display: 'inline-block',
+							}}>Currency:</Box>
+						</Box>
+							<Select 
+								sx={{
+									color: 'black',
+									backgroundColor: '#f4a63d', // change color Currency
+									alignSelf: 'flex-end',
+									borderRadius: '5px',
+									padding: 0,
+									// fontSize: 'var(--text-size)',
+									lineHeight: 1,
+								}}		
+								value={currencyState} onChange={event => setCurrency(event.target.value)}>
+								<MenuItem value='EUR'>EUR</MenuItem>
+								<MenuItem value='USD'>USD</MenuItem>
+								<MenuItem value='BAM'>BAM</MenuItem>
+								<MenuItem value='JPY'>JPY</MenuItem>
+								<MenuItem value='GBP'>GBP</MenuItem>
+								<MenuItem value='CAD'>CAD</MenuItem>
+								<MenuItem value='AUD'>AUD</MenuItem>
+								<MenuItem value='CHF'>CHF</MenuItem>
+								<MenuItem value='CNY'>CNY</MenuItem>
+								<MenuItem value='NZD'>NZD</MenuItem>
+								<MenuItem value='MXN'>MXN</MenuItem>
+								<MenuItem value='BRL'>BRL</MenuItem>
+							</Select>
+						</Box>
 					<br />
 
-					<input
-						className={cn.input}
+					<TextField
+						label='Recipient name'
+						sx = {{
+							padding: 'var(--inputPadding)',
+							borderRadius: '5px',
+							border: '0px',
+							width: '70%',
+							fontSize: 'var(--text-size)',
+						}}
 						type='text'
-						placeholder='Recipient name'
+						placeholder='Write recipient name here'
 						value={recipientNameState}
 						onChange={event => setRecipientName(event.target.value)}
 					/>
 
 					<br />
 
-					<input
-						className={cn.input}
+					<TextField
+						label='Recipient account number'
+						sx = {{
+							padding: 'var(--inputPadding)',
+							borderRadius: '5px',
+							border: '0px',
+							width: '70%',
+							fontSize: 'var(--text-size)',
+						}}
 						type='text'
-						placeholder='Recipient account number'
+						placeholder='Write recipient account number here'
 						value={recipientAccountNumberState}
 						onChange={event => setRecipientAccountNumber(event.target.value)}
 					/>
 
 					<br />
+					
+					<TextField
+						label='Description'
+						sx = {{
+							padding: 'var(--inputPadding)',
+							borderRadius: '5px',
+							border: '0px',
+							width: '70%',
+							fontSize: 'var(--text-size)',
+						}}
+						type='text'
+						placeholder='Write description here'
+						value={descriptionState}
+						onChange={event => setDescription(event.target.value)}
+					/>
 
-					<button
-						className={cn.button}
+					<br />
+
+					<Button
 						type='submit'
+						sx = {{
+							color: 'white',
+							backgroundColor: '#f4a63d', // Changed color for Submit button
+							fontSize: 'var(--text-size2)',
+							border: '1px solid #000000a8',
+							alignSelf: 'center',
+							borderRadius: '5px',
+							padding: 'var(--inputPadding)'
+						}}
 						onClick={() => {
 							sendPaymentInfo({
 								amount: parseFloat(transactionAmountState),
 								currency: currencyState,
 								paymentType: typeState,
+								description: descriptionState,
 								recipientAccountNumber: recipientAccountNumberState,
-								recipientName: 'Test Recipient', //recipientAccountNumberState,
+								recipientName: 'Test Recipient' //recipientAccountNumberState,
 							})
 								.then(() => {
 									alert('Payment successfuly sent!');
@@ -120,15 +274,16 @@ export const Payment = props => {
 								currencyState,
 								recipientNameState,
 								recipientAccountNumberState,
+								descriptionState,
 								typeState,
 								transactionAmountState
 							);
 						}}
 					>
 						Submit
-					</button>
-				</form>
-			</div>
-		</div>
+					</Button>
+				</FormControl>
+			</Box>
+		</Box>
 	);
 };
