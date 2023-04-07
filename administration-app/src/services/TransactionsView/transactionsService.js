@@ -35,6 +35,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 				params: sortingOptions,
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				},
 			})
 				.then(function (response) {
@@ -202,6 +203,7 @@ export function getMaxAmount(mock) {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				},
 			})
 				.then(function (response) {
@@ -243,6 +245,7 @@ export function getTransactionDetails(id, mock) {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				},
 			})
 				.then(function (response) {

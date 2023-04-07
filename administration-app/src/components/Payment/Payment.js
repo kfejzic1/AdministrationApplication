@@ -6,7 +6,6 @@ import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
 import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box } from '@mui/material';
 
 export const Payment = props => {
-
 	const { currency, recipientAccountNumber, recipientName, transactionAmount, type, description } = useParams();
 	console.log('mozda je=', currency, recipientAccountNumber, recipientName);
 	const [transactionAmountState, setTransactionAmount] = useState(
@@ -20,9 +19,7 @@ export const Payment = props => {
 	);
 	const [currencyState, setCurrency] = useState(currency != undefined && currency != -1 ? currency : 'USD');
 	const [typeState, setType] = useState(type != undefined && type != -1 ? type : 'Payment');
-	const [descriptionState, setDescription] = useState(
-		description != undefined && description != -1 ? description: ''
-	)
+	const [descriptionState, setDescription] = useState(description != undefined && description != -1 ? description : '');
 	const navigate = useNavigate();
 	console.log('currency', currencyState);
 	function handleSubmit(event) {
@@ -35,33 +32,36 @@ export const Payment = props => {
 	};
 
 	return (
-		<Box sx={{
-			"--primary": "#e7ebf0",
-			"--secondary": "#cfdeec",
-			"--secondary2": "#c4d7e9",
-			"--left": "#cbd6ba",
-			"--right": "#e4e9d5",
-			"--highlights": "#0f2027",
-			"--babyblue": "#000000",
-			"--bordercolor": "rgba(255, 255, 255, 0.3)",
-			"--text-size": "18px",
-			"--text-size2": "25px",
-			"--paddings": "40px 60px 60px 60px",
-			"--inputPadding": "12px",
-			"--formHeading": "60px",
-			"--formGap": "20px",
-			"--selectBtn": "12px",
-		
-			display: "flex",
-			justifyContent: "flex-start",
-			alignItems: "center",
-			height: "100vh",
-			backgroundImage: "url('http://localhost:3000/TransactionView/img/bg.png')",
-			backgroundPosition: "right",
-			backgroundSize: "70% 70%",
-			backgroundRepeat: "no-repeat",
-		}}>
-			<Button onClick={goBackHandler}
+		<Box
+			sx={{
+				'--primary': '#e7ebf0',
+				'--secondary': '#cfdeec',
+				'--secondary2': '#c4d7e9',
+				'--left': '#cbd6ba',
+				'--right': '#e4e9d5',
+				'--highlights': '#0f2027',
+				'--babyblue': '#000000',
+				'--bordercolor': 'rgba(255, 255, 255, 0.3)',
+				'--text-size': '18px',
+				'--text-size2': '25px',
+				'--paddings': '40px 60px 60px 60px',
+				'--inputPadding': '12px',
+				'--formHeading': '60px',
+				'--formGap': '20px',
+				'--selectBtn': '12px',
+
+				display: 'flex',
+				justifyContent: 'flex-start',
+				alignItems: 'center',
+				height: '100vh',
+				backgroundImage: "url('http://siprojekat.duckdns.org:3000/TransactionView/img/bg.png')",
+				backgroundPosition: 'right',
+				backgroundSize: '70% 70%',
+				backgroundRepeat: 'no-repeat',
+			}}
+		>
+			<Button
+				onClick={goBackHandler}
 				sx={{
 					color: 'black',
 					backgroundColor: '#f4a63d',
@@ -73,9 +73,9 @@ export const Payment = props => {
 					marginLeft: '5px',
 				}}
 			>
-                <span>{'<'}</span>
-            </Button>
-			<Box 
+				<span>{'<'}</span>
+			</Button>
+			<Box
 				sx={{
 					display: 'flex',
 					marginLeft: '10%',
@@ -84,19 +84,23 @@ export const Payment = props => {
 					padding: 'var(--paddings)',
 					borderRadius: '50px',
 					boxShadow: '0 0.3rem 0.7rem 0 var(--highlights)',
-					height: '95%'
+					height: '95%',
 				}}
 			>
-				<Typography variant="h3" 
-					sx = {{
+				<Typography
+					variant='h3'
+					sx={{
 						fontSize: 'var(--formHeading)',
 						fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
 						fontWeight: 800,
 						color: 'black',
 						margin: 0,
-					}}>New Transaction</Typography>
+					}}
+				>
+					New Transaction
+				</Typography>
 
-				<FormControl 
+				<FormControl
 					sx={{
 						display: 'flex',
 						flexDirection: 'column',
@@ -104,7 +108,8 @@ export const Payment = props => {
 						alignItems: 'center',
 						lineHeight: 'var(--formGap)',
 					}}
-					onSubmit={handleSubmit}>
+					onSubmit={handleSubmit}
+				>
 					<br />
 					<br />
 					<TextField
@@ -113,7 +118,7 @@ export const Payment = props => {
 						placeholder='Transaction amount'
 						value={transactionAmountState}
 						onChange={event => setTransactionAmount(event.target.value)}
-						sx = {{
+						sx={{
 							padding: 'var(--inputPadding)',
 							borderRadius: '5px',
 							border: '0px',
@@ -122,23 +127,31 @@ export const Payment = props => {
 						}}
 					/>
 					<br />
-					<Box sx={{
+					<Box
+						sx={{
 							flexDirection: 'row',
 							justifyContent: 'space-around',
 							width: '70%',
 							display: 'flex',
-					}}>
-						<Box sx={{
-  								display: 'flex',
-  								justifyContent: 'center',
-  								alignItems: 'center',
-						}}>
-							<Box sx={{
-  									color: 'var(--babyblue)',
-  									display: 'inline-block',
-							}}>Type: </Box>
+						}}
+					>
+						<Box
+							sx={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
+							<Box
+								sx={{
+									color: 'var(--babyblue)',
+									display: 'inline-block',
+								}}
+							>
+								Type:{' '}
+							</Box>
 						</Box>
-						<Select 
+						<Select
 							sx={{
 								color: 'black',
 								backgroundColor: '#f4a63d', // change color Type
@@ -148,53 +161,62 @@ export const Payment = props => {
 								//fontSize: 'var(--text-size)',
 								lineHeight: 1,
 							}}
-														  
-							value={typeState} onChange={event => setType(event.target.value)}>
+							value={typeState}
+							onChange={event => setType(event.target.value)}
+						>
 							<MenuItem value='Credit'>Credit</MenuItem>
 							<MenuItem value='Payment'>Payment</MenuItem>
 							<MenuItem value='Recip'>Recip</MenuItem>
 							<MenuItem value='Gift'>Gift</MenuItem>
 						</Select>
-						<Box sx={{
-  								display: 'flex',
-  								justifyContent: 'center',
-  								alignItems: 'center',
-						}}>
-							<Box sx={{
-  									color: 'var(--babyblue)',
-  									display: 'inline-block',
-							}}>Currency:</Box>
-						</Box>
-							<Select 
+						<Box
+							sx={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
+							<Box
 								sx={{
-									color: 'black',
-									backgroundColor: '#f4a63d', // change color Currency
-									alignSelf: 'flex-end',
-									borderRadius: '5px',
-									padding: 0,
-									// fontSize: 'var(--text-size)',
-									lineHeight: 1,
-								}}		
-								value={currencyState} onChange={event => setCurrency(event.target.value)}>
-								<MenuItem value='EUR'>EUR</MenuItem>
-								<MenuItem value='USD'>USD</MenuItem>
-								<MenuItem value='BAM'>BAM</MenuItem>
-								<MenuItem value='JPY'>JPY</MenuItem>
-								<MenuItem value='GBP'>GBP</MenuItem>
-								<MenuItem value='CAD'>CAD</MenuItem>
-								<MenuItem value='AUD'>AUD</MenuItem>
-								<MenuItem value='CHF'>CHF</MenuItem>
-								<MenuItem value='CNY'>CNY</MenuItem>
-								<MenuItem value='NZD'>NZD</MenuItem>
-								<MenuItem value='MXN'>MXN</MenuItem>
-								<MenuItem value='BRL'>BRL</MenuItem>
-							</Select>
+									color: 'var(--babyblue)',
+									display: 'inline-block',
+								}}
+							>
+								Currency:
+							</Box>
 						</Box>
+						<Select
+							sx={{
+								color: 'black',
+								backgroundColor: '#f4a63d', // change color Currency
+								alignSelf: 'flex-end',
+								borderRadius: '5px',
+								padding: 0,
+								// fontSize: 'var(--text-size)',
+								lineHeight: 1,
+							}}
+							value={currencyState}
+							onChange={event => setCurrency(event.target.value)}
+						>
+							<MenuItem value='EUR'>EUR</MenuItem>
+							<MenuItem value='USD'>USD</MenuItem>
+							<MenuItem value='BAM'>BAM</MenuItem>
+							<MenuItem value='JPY'>JPY</MenuItem>
+							<MenuItem value='GBP'>GBP</MenuItem>
+							<MenuItem value='CAD'>CAD</MenuItem>
+							<MenuItem value='AUD'>AUD</MenuItem>
+							<MenuItem value='CHF'>CHF</MenuItem>
+							<MenuItem value='CNY'>CNY</MenuItem>
+							<MenuItem value='NZD'>NZD</MenuItem>
+							<MenuItem value='MXN'>MXN</MenuItem>
+							<MenuItem value='BRL'>BRL</MenuItem>
+						</Select>
+					</Box>
 					<br />
 
 					<TextField
 						label='Recipient name'
-						sx = {{
+						sx={{
 							padding: 'var(--inputPadding)',
 							borderRadius: '5px',
 							border: '0px',
@@ -211,7 +233,7 @@ export const Payment = props => {
 
 					<TextField
 						label='Recipient account number'
-						sx = {{
+						sx={{
 							padding: 'var(--inputPadding)',
 							borderRadius: '5px',
 							border: '0px',
@@ -225,10 +247,10 @@ export const Payment = props => {
 					/>
 
 					<br />
-					
+
 					<TextField
 						label='Description'
-						sx = {{
+						sx={{
 							padding: 'var(--inputPadding)',
 							borderRadius: '5px',
 							border: '0px',
@@ -245,14 +267,14 @@ export const Payment = props => {
 
 					<Button
 						type='submit'
-						sx = {{
+						sx={{
 							color: 'white',
 							backgroundColor: '#f4a63d', // Changed color for Submit button
 							fontSize: 'var(--text-size2)',
 							border: '1px solid #000000a8',
 							alignSelf: 'center',
 							borderRadius: '5px',
-							padding: 'var(--inputPadding)'
+							padding: 'var(--inputPadding)',
 						}}
 						onClick={() => {
 							sendPaymentInfo({
@@ -261,7 +283,7 @@ export const Payment = props => {
 								paymentType: typeState,
 								description: descriptionState,
 								recipientAccountNumber: recipientAccountNumberState,
-								recipientName: 'Test Recipient' //recipientAccountNumberState,
+								recipientName: 'Test Recipient', //recipientAccountNumberState,
 							})
 								.then(() => {
 									alert('Payment successfuly sent!');
