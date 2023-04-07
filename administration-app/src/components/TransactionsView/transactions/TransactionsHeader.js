@@ -1,6 +1,8 @@
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import TextField from '@mui/material/TextField';
 import ClearIcon from '@mui/icons-material/Clear';
+import Slider from '@mui/material/Slider';
+import * as React from 'react';
 import SwapVertSharpIcon from '@mui/icons-material/SwapVertSharp';
 import IconButton from '@mui/material/IconButton';
 import TableSortLabel from '@mui/material/TableSortLabel';
@@ -16,67 +18,50 @@ import MenuItem from '@mui/material/MenuItem';
 export default function TransactionsListHeader(arg) {
 	const [sortingColumn, setSortingColumn] = useState('');
 	const [sortingDirection, setSortingDirection] = useState('asc');
-	const [idFilter, setIdFilter] = useState('');
 	const [dateStartFilter, setDateStartFilter] = useState('');
 	const [dateEndFilter, setDateEndFilter] = useState('');
-	const [timeStartFilter, setTimeStartFilter] = useState('00:00:00');
-	const [timeEndFilter, setTimeEndFilter] = useState('00:00:00');
 	const [recipientFilter, setRecipientFilter] = useState('');
-	const [amountFilterStart, setAmountFilterStart] = useState('');
-	const [amountFilterEnd, setAmountFilterEnd] = useState('');
 	const [statusFilter, setStatusFilter] = useState('');
 
-	var textFieldAmountStart = '';
-	var textFieldAmountEnd = '';
-
-	const [styleErrorStart, setStyleErrorStart] = useState('black'); // it's used for border color for TextField "Amout" when wrong value is inputed
-	const [styleErrorEnd, setStyleErrorEnd] = useState('black');
-
-	const [sortDirectionId, setSortDirectionId] = useState('asc');
-	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
-	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
-	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
-	const [sortDirectionStatus, setSortDirectionStatus] = useState('asc');
-
-	const [isValidAmountStart, setValidAmountStart] = useState(true);
-	const [isValidAmountEnd, setValidAmountEnd] = useState(true);
-
-	const [startDateClass, setStartDateClass] = useState('');
-	const [endDateClass, setEndDateClass] = useState('');
-
-	const [startTimeClass, setStartTimeClass] = useState('');
-	const [endTimeClass, setEndTimeClass] = useState('');
-
+	const [amountMax, setAmountMax] = useState(arg.max);
 	useEffect(() => {
-		console.log('useEffect');
+		setAmountMax(arg.max);
+		if (arg.max < value1[1] && arg.max < value1[0]) setValue1([0, arg.max]);
+		else if (arg.max < value1[1]) setValue1([value1[0], arg.max]);
+	}, [arg.max]);
+	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
+
 	const updateFilterOptions = () => {
-		var startDate1 = dateStartFilter + 'T' + timeStartFilter;
-		console.log('updateFilterOptions', startDate1);
-		if (startDate1.length < 15) startDate1 = '';
-		var endDate1 = dateEndFilter + 'T' + timeEndFilter;
-		if (endDate1.length < 15) endDate1 = '';
-		if (parseFloat(amountFilterEnd) < parseFloat(amountFilterStart))
-			alert('Ending value cannot be lower then starting value');
-		else {
+		if (amountMax == value1[1] && 0 == value1[0])
 			arg.setFilterOptions({
 				Recipient: recipientFilter,
 				Status: statusFilter,
 				DateTimeStart: dateStartFilter,
 				DateTimeEnd: dateEndFilter,
-				MinAmount: amountFilterStart,
-				MaxAmount: amountFilterEnd,
+				MinAmount: '',
+				MaxAmount: '',
 				SortingOptions: sortingColumn,
 				Ascending: sortingDirection == 'asc' ? true : false,
 			});
-		}
+		else
+			arg.setFilterOptions({
+				Recipient: recipientFilter,
+				Status: statusFilter,
+				DateTimeStart: dateStartFilter,
+				DateTimeEnd: dateEndFilter,
+				MinAmount: value1[0],
+				MaxAmount: value1[1],
+				SortingOptions: sortingColumn,
+				Ascending: sortingDirection == 'asc' ? true : false,
+			});
 	};
-	const handleSortDirectionIdChange = () => {
-		const newSortDirection = sortDirectionId === 'asc' ? 'desc' : 'asc';
-		setSortDirectionId(newSortDirection);
-		updateFilterOptions();
-	};
+
+	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
+	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
+	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
+	const [sortDirectionStatus, setSortDirectionStatus] = useState('asc');
 
 	const handleSortDirectionDateChange = () => {
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
@@ -113,119 +98,32 @@ export default function TransactionsListHeader(arg) {
 		setSortingColumn('Status');
 		updateFilterOptions();
 	};
+	//min max slider
 
-	const handleIdFilterChange = event => {
-		setIdFilter(event.target.value);
-	};
+	const minDistance = 5;
+	const [value1, setValue1] = React.useState([0, amountMax]);
 
-	const handleDateStartFilterChange = event => {
-		const startDate = new Date(event.target.value);
-		const endDate = new Date(dateEndFilter);
+	const handleChange1 = (event, newValue, activeThumb) => {
+		console.log('Setting');
+		if (!Array.isArray(newValue)) {
+			return;
+		}
 
-		if (
-			new Date(startDate + 'T' + timeStartFilter) > new Date(endDate + 'T' + timeEndFilter) &&
-			event.target.value != ''
-		) {
-			alert('Starting date cannot be higher than ending date');
-			setStartDateClass('invalidDateStart');
+		if (activeThumb === 0) {
+			setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
 		} else {
-			setDateStartFilter(event.target.value);
-			setStartDateClass('datePickerStart');
+			setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
 		}
 	};
 
-	const handleDateEndFilterChange = event => {
-		const startDate = new Date(dateStartFilter);
-		const endDate = new Date(event.target.value);
-		if (
-			new Date(startDate + 'T' + timeStartFilter) > new Date(endDate + 'T' + timeEndFilter) &&
-			event.target.value != ''
-		) {
-			alert('Starting date cannot be higher than ending date');
-			setEndDateClass('invalidDateEnd');
-		} else {
-			setDateEndFilter(event.target.value);
-			setEndDateClass('datePickerEnd');
-		}
-	};
-
-	const handleTimeStartFilterChange = event => {
-		const startTime = event.target.value;
-		const endTime = timeEndFilter;
-
-		if (
-			new Date(dateStartFilter + 'T' + startTime) > new Date(dateEndFilter + 'T' + endTime) &&
-			endTime != '' &&
-			startTime != ''
-		) {
-			alert('Starting time cannot be highter then ending date');
-			setStartTimeClass('invalidTimeStart');
-		} else {
-			setTimeStartFilter(event.target.value);
-			setStartTimeClass('timePickerStart');
-		}
-	};
-
-	const handleTimeEndFilterChange = event => {
-		const startTime = timeStartFilter;
-		const endTime = event.target.value;
-		console.log('start=', startTime, endTime);
-		if (
-			new Date(dateStartFilter + 'T' + startTime) > new Date(dateEndFilter + 'T' + endTime) &&
-			endTime != '' &&
-			startTime != ''
-		) {
-			alert('Starting time cannot be highter then ending date');
-			setEndTimeClass('invalidTimeStart');
-		} else {
-			setTimeEndFilter(event.target.value);
-			setEndTimeClass('timePickerEnd');
-		}
-	};
-
-	const handleRecipientFilterChange = event => {
-		setRecipientFilter(event.target.value);
-	};
-
-	const handleStatusFilterChange = event => {
-		setStatusFilter(event.target.value);
-	};
-
-	const clearIdFilter = () => {
-		setIdFilter('');
-	};
-
-	const clearDateStartFilter = () => {
-		setDateStartFilter('');
-	};
-
-	const clearDateEndFilter = () => {
-		setDateEndFilter('');
-	};
-
-	const clearRecipientFilter = () => {
-		setRecipientFilter('');
-	};
-
-	/*const styles = theme => ({
-		textField: {
-			width: '90%',
-			marginLeft: 'auto',
-			mainRight: 'auto',
-			color: 'white',
-			paddingBottom: 0,
-			marginTop: 0,
-			fontWeight: 500,
-		},
-	});*/
-
+	//end of min max slider
 	return (
 		<TableHead>
 			<TableRow>
 				<TableCell>
 					<Typography variant='h6'>ID</Typography>
 				</TableCell>
-				<TableCell>
+				<TableCell align='center'>
 					{sortingColumn != 'DateTime' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
@@ -253,7 +151,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell>
+				<TableCell align='center'>
 					{sortingColumn != 'Recipient' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Recipient</Typography>
@@ -282,7 +180,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell>
+				<TableCell align='center'>
 					{sortingColumn != 'Amount' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Amount </Typography>
@@ -311,7 +209,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell>
+				<TableCell align='center'>
 					{sortingColumn != 'Status' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Status </Typography>
@@ -346,18 +244,26 @@ export default function TransactionsListHeader(arg) {
 				<TableCell></TableCell>
 				<TableCell>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
-						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, justifyContent: 'center' }}>
+						<Box
+							sx={{
+								display: 'flex',
+								flexDirection: 'row',
+								gap: 2,
+								justifyContent: 'center',
+							}}
+						>
 							<DesktopDatePicker
 								label='Start'
+								sx={{ width: 'auto' }}
+								maxDate={dateEndFilter}
 								onChange={a => {
-									console.log(JSON.stringify(a));
-									setDateStartFilter(JSON.stringify(a));
+									setDateStartFilter(a);
 								}}
 							></DesktopDatePicker>
 							<DesktopDatePicker
+								minDate={dateStartFilter}
 								onChange={a => {
-									console.log(JSON.stringify(a));
-									setDateEndFilter(JSON.stringify(a));
+									setDateEndFilter(a);
 								}}
 								label='End'
 							></DesktopDatePicker>
@@ -368,30 +274,27 @@ export default function TransactionsListHeader(arg) {
 				<TableCell>
 					<TextField
 						value={recipientFilter}
-						onChange={handleRecipientFilterChange}
-						InputProps={{
-							endAdornment: (
-								<IconButton onClick={clearRecipientFilter}>
-									<ClearIcon />
-								</IconButton>
-							),
+						onChange={e => {
+							setRecipientFilter(e.target.value);
 						}}
 					></TextField>
 				</TableCell>
 				<TableCell>
-					<Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-						<TextField
-							label='Min'
-							variant='outlined'
-							type='number'
-							onChange={event => setAmountFilterStart(event.target.value)}
-						></TextField>
-						<TextField
-							label='Max'
-							variant='outlined'
-							type='number'
-							onChange={event => setAmountFilterEnd(event.target.value)}
-						></TextField>
+					<Box>
+						<Box sx={{ flexDirection: 'row', display: 'flex', justifyContent: 'space-between' }}>
+							<Typography>Min: {value1[0]}</Typography>
+							<Typography>Max: {value1[1]}</Typography>
+						</Box>
+						<Slider
+							getAriaLabel={() => 'Minimum distance'}
+							value={value1}
+							min={0}
+							max={amountMax}
+							onChange={handleChange1}
+							valueLabelDisplay='auto'
+							getAriaValueText={a => a}
+							disableSwap
+						/>
 					</Box>
 				</TableCell>
 				<TableCell>
@@ -401,7 +304,9 @@ export default function TransactionsListHeader(arg) {
 							id='filter-status'
 							value={statusFilter}
 							displayEmpty
-							onChange={handleStatusFilterChange}
+							onChange={e => {
+								setStatusFilter(e.target.value);
+							}}
 						>
 							<MenuItem value='Processing'>Processing</MenuItem>
 							<MenuItem value='Pending'>Pending</MenuItem>
@@ -426,10 +331,9 @@ export default function TransactionsListHeader(arg) {
 							onClick={() => {
 								setRecipientFilter('');
 								setStatusFilter('');
-								setDateStartFilter('T');
-								setDateEndFilter('T');
-								setAmountFilterStart('');
-								setAmountFilterEnd('');
+								setDateStartFilter('');
+								setDateEndFilter('');
+								setValue1([0, amountMax]);
 								setSortingDirection('asc');
 								setSortingColumn('DateTime');
 								arg.setFilterOptions({
