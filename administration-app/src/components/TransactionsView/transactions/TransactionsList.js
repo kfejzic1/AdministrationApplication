@@ -1,8 +1,6 @@
 import { getTransactions } from '../../../services/TransactionsView/transactionsService';
-
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
-import cn1 from '../LoadingSpinner/LoadingSpinner.module.css';
 import TransactionDetails from './TransactionDetails';
 import React from 'react';
 import { createTheme, Box, Table, TableBody, TableContainer, Paper, Typography, ThemeProvider } from '@mui/material';
@@ -104,9 +102,9 @@ export const TransactionsList = arg => {
 					</Box>
 				)}
 				{isLoading && (
-					<div className={cn1.spinnerRoot}>
+					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 						<LoadingSpinner></LoadingSpinner>
-					</div>
+					</Box>
 				)}
 			</ThemeProvider>
 		</Box>
