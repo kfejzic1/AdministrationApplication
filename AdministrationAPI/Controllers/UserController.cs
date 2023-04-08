@@ -95,6 +95,12 @@ namespace AdministrationAPI.Controllers
             try
             {
                 User user = _userService.GetUserByName(smsInformationRequest.Username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User with specified username not found!" });
+                }
+
                 bool success = await _activationCodeService.SendSMSToUser(user);
 
                 if (success)
@@ -108,7 +114,8 @@ namespace AdministrationAPI.Controllers
             }
             catch
             {
-                return NotFound(new { message = "User with specified username not found!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "SMS not delivered!");
+            }
             
         }
 
