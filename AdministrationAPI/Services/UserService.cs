@@ -53,6 +53,13 @@ namespace AdministrationAPI.Services
             };
         }
 
+        public async Task<bool> DeleteUserAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
+        }
+
         public List<User> GetAllUsers()
         {
             var users = _userManager.Users.ToList();
@@ -112,6 +119,9 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
+
+        //public async Task<AuthenticationResult> FacebookSocialLogin(string token);
+        //public async Task<AuthenticationResult> GoogleSocialLogin(string token);
 
         //this method will be called after accesstoken validation
         //so only email is neccessary, not password
