@@ -81,20 +81,29 @@ namespace AdministrationAPI.Services
             using (var context = new VendorDbContext())
             {
                 var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
-
+                var vendorLocations = context.VendorLocations.ToList().FindAll(loc =>
+                {
+                    return loc.VendorId == id;
+                });
+                vendorLocations.ForEach(loc =>{
+                    var vendorPOS = context.VendorPOS.ToList().FindAll(pos =>{
+                        return pos.LocationId == loc.Id;
+                    });
+                    vendorPOS.ForEach(pos => {
+                        context.VendorPOS.Remove(pos);
+                    });
+                    context.VendorLocations.Remove(loc);
+                });
                 if (vendor != null)
                 {
                     context.Vendors.Remove(vendor);
                     context.SaveChanges();
                     return true;
                 }
-
+                context.SaveChanges();    
                 return false;
             }
         }
-
-        
-
     }
 }
 
