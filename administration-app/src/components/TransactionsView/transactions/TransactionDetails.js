@@ -14,7 +14,7 @@ export default function TransactionDetails(arg) {
 	});
 	const navigate = useNavigate();
 	useEffect(() => {
-		getTransactionDetails(arg.props.id).then(transaction => {
+		getTransactionDetails(arg.props.id, arg.mock).then(transaction => {
 			setProps(transaction.data);
 			arg.setIsLoading(false);
 		});

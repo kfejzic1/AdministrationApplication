@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { env } from '../../config/env';
+import { useNavigate } from 'react-router-dom';
 import { transactions } from './mock';
 export function getBasicTransactions(number = 10) {
 	return number < transactions.length
@@ -42,6 +43,8 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					resolveO(response);
 				})
 				.catch(function (err) {
+					//if (err.response.status === 401)
+					//	navigate('/login');
 					console.log('mockup');
 					sortingOptions = mockSortingOptons;
 					var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
@@ -214,6 +217,7 @@ export function getMaxAmount(mock) {
 					);
 				})
 				.catch(function (err) {
+					//	if (err.response.status === 401) navigate('/login');
 					resolveO(
 						transactions.reduce((max, item) => {
 							return item.amount > max ? item.amount : max;
@@ -252,6 +256,7 @@ export function getTransactionDetails(id, mock) {
 					resolve(response);
 				})
 				.catch(function (response) {
+					//if (err.response.status === 401) navigate('/login');
 					resolve({ data: transactions.filter(a => a.id == id)[0] });
 				});
 		else resolve({ data: transactions.filter(a => a.id == id)[0] });

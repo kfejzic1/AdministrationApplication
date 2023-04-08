@@ -17,7 +17,7 @@ import {
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
 export const TransactionsList = arg => {
-	const [mock, setMock] = useState(true);
+	const [mock, setMock] = useState(false);
 	const [maxAmount, setMaxAmount] = useState(100);
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
@@ -97,6 +97,7 @@ export const TransactionsList = arg => {
 						setPaymentInfo={arg.setPaymentInfo}
 						setIsLoading={setIsLoading}
 						setDetails={setDetails}
+						mock={mock}
 						props={details}
 					></TransactionDetails>
 				) : (
@@ -104,7 +105,7 @@ export const TransactionsList = arg => {
 						<Typography variant='h2' sx={{ bgcolor: '#fff', width: '100%', pb: 3 }} align='center'>
 							<Button
 								variant='text'
-								sx={{ color: '#000', fontSize: 30, fontFamily: mock ? 'fantasy' : 'cursive' }}
+								sx={{ color: '#000', fontSize: 30, fontFamily: !mock ? 'fantasy' : 'cursive' }}
 								onClick={() => {
 									setMock(!mock);
 								}}
