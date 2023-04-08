@@ -6,7 +6,7 @@ namespace AdministrationAPI.Services.Transaction
 {
     public interface ITransactionService
     {
-        Task<TransactionResponseDTO> GetTransactions(TransactionQueryOptions options);
+        Task<TransactionResponseDTO> GetTransactions(string userId, TransactionQueryOptions options);
         Task<TransactionDetailsDTO> GetTransactionByID(int id);
     }
 }

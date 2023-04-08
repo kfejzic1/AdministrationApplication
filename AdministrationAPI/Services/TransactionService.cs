@@ -21,7 +21,7 @@ namespace AdministrationAPI.Services.Transaction
         }
 
 
-        public async Task<TransactionResponseDTO> GetTransactions(TransactionQueryOptions options)
+        public async Task<TransactionResponseDTO> GetTransactions(string userId, TransactionQueryOptions options)
         {
 
             // Throw error if pageNumber or pageSize is less than 1
@@ -32,6 +32,8 @@ namespace AdministrationAPI.Services.Transaction
 
             var transactions = _context.Transactions.AsQueryable();
 
+            if (userId != "")
+                transactions = transactions.Where(t => t.UserId == userId || t.Recipient == userId);
             // Filter transactions
             if (options.DateTimeStart == null && options.DateTimeEnd != null) options.DateTimeStart = options.DateTimeEnd;
             if (options.DateTimeEnd == null && options.DateTimeStart != null) options.DateTimeEnd = options.DateTimeStart;
