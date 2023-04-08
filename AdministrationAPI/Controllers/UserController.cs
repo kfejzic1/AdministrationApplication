@@ -135,6 +135,60 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPost("login/facebook")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginFacebook([FromQuery] string token)
+        {
+            try
+            {
+                var authenticationResult = await _userService.FacebookSocialLogin(token);
+
+                if (authenticationResult.TwoFactorEnabled)
+                    return Ok(authenticationResult);
+
+                if (authenticationResult.Success)
+                    return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
+                else
+                    return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.LoginFacebook");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("login/google")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginGoogle([FromQuery] string token)
+        {
+            try
+            {
+                var authenticationResult = await _userService.GoogleSocialLogin(token);
+
+                if (authenticationResult.TwoFactorEnabled)
+                    return Ok(authenticationResult);
+
+                if (authenticationResult.Success)
+                    return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
+                else
+                    return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("login2FA")]
         [AllowAnonymous]
         public async Task<IActionResult> LoginWithCode([FromBody] Login2FARequest loginRequest)
