@@ -93,7 +93,6 @@ namespace AdministrationAPI.Services.Transaction
 
         public async Task<TransactionDetailsDTO> GetTransactionByID(int id)
         {
-            if (id < 1) throw new Exception("You have specified an invalid id.");
             var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
             if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
 
