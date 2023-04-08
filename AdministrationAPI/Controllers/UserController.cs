@@ -51,6 +51,21 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        //when frontend groups create test users
+        //they should be able to delete them without tinkering with database
+        [AllowAnonymous]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteUser([FromQuery] string username)
+        {
+            if (await _userService.DeleteUserAsync(username))
+            {
+                return Ok("User deleted");
+            }
+            else
+            {
+                return NotFound("User not found");
+            }
+        }
         [HttpGet("2fa-qrcode")]
         public async Task<IActionResult> Get2FAQRCode()
         {
