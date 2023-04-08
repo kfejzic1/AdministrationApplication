@@ -1,4 +1,4 @@
-﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Extensions;
@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using Facebook;
+using AdministrationAPI.Helpers;
+using AdministrationAPI.Models;
+using AdministrationAPI.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdministrationAPI.Controllers
 {
