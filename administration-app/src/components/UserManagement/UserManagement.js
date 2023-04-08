@@ -165,9 +165,9 @@ const UserManagement = () => {
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
 							<Select label='Role' name='role' defaultValue={selectedUser.role}>
-								<MenuItem value='standard'>Standard</MenuItem>
-								<MenuItem value='admin'>Admin</MenuItem>
-								<MenuItem value='limited'>Limited</MenuItem>
+								<MenuItem value='Standard'>Standard</MenuItem>
+								<MenuItem value='Admin'>Admin</MenuItem>
+								<MenuItem value='Limited'>Limited</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>
