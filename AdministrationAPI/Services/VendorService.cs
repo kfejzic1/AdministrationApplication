@@ -93,46 +93,7 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public bool UpdateAddress(int id, string address)
-        {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
-
-                if (vendor != null)
-                {
-                    vendor.Address = address;
-                    vendor.Modified = DateTime.UtcNow;
-                    context.SaveChanges();
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-
-        public bool DeleteAddress(int id)
-        {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
-
-                if (vendor != null)
-                {
-                    vendor.Address = null;
-                    vendor.Modified = DateTime.UtcNow;
-                    context.SaveChanges();
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-
-
-
+        
 
     }
 }
