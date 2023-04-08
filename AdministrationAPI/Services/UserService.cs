@@ -117,7 +117,8 @@ namespace AdministrationAPI.Services
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserId = user.Id
             };
         }
 
