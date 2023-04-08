@@ -68,7 +68,7 @@ public class ActivationCodeService : IActivationCodeService
         return true;
     }
 
-    public async Task GenerateCodeForUserAsync(User user)
+    public async Task<bool> GenerateCodeForUserAsync(User user)
     {
         Random random = new Random();
         String emailCode = random.Next(1000, 9999).ToString();
@@ -91,10 +91,12 @@ public class ActivationCodeService : IActivationCodeService
         try
         {
             await emailSender.SendEmailAsync(user.Email, emailCode);
+            return true;
         }
         catch (Exception ex)
         {
             LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateCodeForUserAsync");
+            return false;
         }
     }
 
