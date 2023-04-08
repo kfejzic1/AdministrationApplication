@@ -31,7 +31,7 @@ const ProfilePage = () => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		getUser(localStorage.getItem('userId')).then(res => {
+		getUser().then(res => {
 			setUser(res.data);
 			setIsLoading(false);
 			setIs2FAEnabled(res.data.isTwoFactorEnabled);
@@ -40,7 +40,7 @@ const ProfilePage = () => {
 	}, []);
 
 	const handle2FASetup = () => {
-		getTwoFactorQRCode(localStorage.getItem('userId')).then(res => {
+		getTwoFactorQRCode().then(res => {
 			setQrCode(res.data);
 		});
 
@@ -49,7 +49,7 @@ const ProfilePage = () => {
 
 	const toggle2FA = () => {
 		setIsLoading(true);
-		toggle2Factor(localStorage.getItem('userId')).then(res => {
+		toggle2Factor().then(res => {
 			if (res.data) setIs2FASettedUp(false);
 			setIs2FAEnabled(res.data);
 			setIsLoading(false);
