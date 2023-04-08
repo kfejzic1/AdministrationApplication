@@ -5,6 +5,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
+using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
@@ -120,48 +121,114 @@ namespace AdministrationAPI.Services
             };
         }
 
-        //public async Task<AuthenticationResult> FacebookSocialLogin(string token);
-        //public async Task<AuthenticationResult> GoogleSocialLogin(string token);
-
-        //this method will be called after accesstoken validation
-        //so only email is neccessary, not password
-        //also, in this method we are 100% sure that user already exists
-        //check was performed in /validate route's controller
-        public async Task<AuthenticationResult> SocialLogin(string email)
+        public async Task<AuthenticationResult> FacebookSocialLogin(string token)
         {
-            User user = GetUserByEmail(email);
-
-            if (!user.EmailConfirmed)
-                return new AuthenticationResult
-                {
-                    Errors = new[] { "Provided email is not confirmed!" }
-                };
-
-            //TODO: check how social login works with 2FA
-            if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
-                return new AuthenticationResult
-                {
-                    TwoFactorEnabled = true,
-                    Mail = email
-                };
-
-            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
-
-            var token = TokenUtilities.CreateToken(authClaims, _configuration);
-
-            return new AuthenticationResult
+            try
             {
-                Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                UserId = user.Id,
-                Mail = email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Address = user.Address,
-                PhoneNumber = user.PhoneNumber
-            };
+                var facebookClient = new FacebookClient(token);
+
+                dynamic facebookAccessTokenData = await facebookClient.GetTaskAsync("me", new { fields = "name,email,last_name" });
+
+                User user = GetUserByEmail(facebookAccessTokenData.email);
+
+                if (user is null)
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "User not found!" }
+                    };
+                }
+                else
+                {
+                    if (!user.EmailConfirmed)
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User didn't verify email!" }
+                        };
+
+                    if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                        return new AuthenticationResult
+                        {
+                            TwoFactorEnabled = true,
+                            Mail = user.Email
+                        };
+
+                    var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                    var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                    return new AuthenticationResult
+                    {
+                        Success = true,
+                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                        UserId = user.Id
+                    };
+                }
+            }
+            catch
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Invalid token!" }
+                };
+            }
         }
+
+
+        public async Task<AuthenticationResult> GoogleSocialLogin(string token)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    GoogleAccessTokenData googleAccessTokenData = await httpClient.GetFromJsonAsync<GoogleAccessTokenData>("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token);
+
+                    var user = GetUserByEmail(googleAccessTokenData.Email);
+
+                    if (user is null)
+                    {
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User not found!" }
+                        };
+                    }
+                    else
+                    {
+                        if (!user.EmailConfirmed)
+                            return new AuthenticationResult
+                            {
+                                Errors = new[] { "User didn't verify email!" }
+                            };
+
+                        if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                            return new AuthenticationResult
+                            {
+                                TwoFactorEnabled = true,
+                                Mail = user.Email
+                            };
+
+                        var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                        var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                        return new AuthenticationResult
+                        {
+                            Success = true,
+                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                            UserId = user.Id
+                        };
+                    }
+                }
+                catch
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "Invalid token!" }
+                    };
+                }
+            }
+        }
+
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
