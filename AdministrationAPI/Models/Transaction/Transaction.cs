@@ -9,6 +9,6 @@ namespace AdministrationAPI.Models.Transaction
         public string Account { get; set; } = string.Empty;
         public float Amount { get; set; }
         public TransactionStatus Status { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }
