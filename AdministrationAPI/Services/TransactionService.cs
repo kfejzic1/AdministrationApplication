@@ -1,12 +1,15 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
+using AdministrationAPI.Contracts.Requests;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models.Transaction;
+using AdministrationAPI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
-namespace AdministrationAPI.Services.Transaction
+
+namespace AdministrationAPI.Services
 {
     public class TransactionService : ITransactionService
     {
@@ -99,6 +102,21 @@ namespace AdministrationAPI.Services.Transaction
             if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
 
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
+        }
+
+        public async Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req)
+        {
+            var transaction = new Transaction();
+            transaction.Account = req.Account;
+            transaction.Amount = req.Amount;
+            transaction.DateTime = req.DateTime;
+            transaction.UserId = req.UserId;
+            transaction.Recipient = req.Recipient;
+            transaction.Status = req.Status;
+            transaction.Type = req.Type;
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<TransactionDetailsDTO>(transaction);
         }
     }
 }

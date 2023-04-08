@@ -1,10 +1,11 @@
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
 using AdministrationAPI.Models.Transaction;
-using AdministrationAPI.Services.Transaction;
+using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using AdministrationAPI.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -77,6 +78,22 @@ namespace AdministrationAPI.Controllers.Transaction
             }
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<TransactionDetailsDTO>> CreateTransaction([FromBody] TransactionCreateRequest req)
+        {
+            TransactionDetailsDTO res;
+            try
+            {
+                res = await _transactionService.CreateTransaction(req);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+            return res;
         }
 
     }
