@@ -8,23 +8,26 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { NavBar } from './components/NavBar/NavBar';
 import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
 import { Payment } from './components/Payment/Payment';
+import { useState } from 'react';
 
 import './App.css';
 
 function App() {
+	const [token, setToken] = useState(null);
 	return (
 		<div className='App'>
 			<Router>
-				<NavBar />
+				<NavBar token={token} setToken={setToken} />
 				<Routes>
 					<Route path='/' element={<h1 style={{ textAlign: 'center' }}>SI projekat</h1>} />
-					<Route 
+					<Route
 						path='/transactions'
 						element={
-						<ProtectedRoute>
-							<TransactionsList />
-						</ProtectedRoute>
-					} />
+							<ProtectedRoute>
+								<TransactionsList />
+							</ProtectedRoute>
+						}
+					/>
 					<Route
 						path='/payment/:currency/:type/:recipientName/:transactionAmount/:recipientAccountNumber'
 						element={
@@ -33,8 +36,8 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
-					<Route 
-						path='/payment' 
+					<Route
+						path='/payment'
 						element={
 							<ProtectedRoute>
 								<Payment />
@@ -46,7 +49,7 @@ function App() {
 						path='/user'
 						element={
 							<ProtectedRoute>
-								<ProfilePage />
+								<ProfilePage setToken={setToken} />
 							</ProtectedRoute>
 						}
 					/>
@@ -66,7 +69,7 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
-					<Route path='/login' element={<LoginForm />} />
+					<Route path='/login' element={<LoginForm setToken={setToken} />} />
 				</Routes>
 			</Router>
 		</div>
