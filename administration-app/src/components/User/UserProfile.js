@@ -21,7 +21,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
 import LogoutButton from '../Login/Logout';
 
-const ProfilePage = () => {
+const ProfilePage = props => {
 	const [user, setUser] = useState(null);
 	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
@@ -37,6 +37,7 @@ const ProfilePage = () => {
 			setIs2FAEnabled(res.data.isTwoFactorEnabled);
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
+		props.setToken(localStorage.getItem('token'));
 	}, []);
 
 	const handle2FASetup = () => {

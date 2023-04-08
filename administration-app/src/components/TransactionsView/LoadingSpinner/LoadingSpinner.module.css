@@ -15,7 +15,10 @@
   border-color: #510077 transparent #510077 transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
-
+.spinnerRoot{
+  display: flex;
+  justify-content: center;
+}
 .loading_spinner__overlay {
   height: 100%;
   width: 100%;

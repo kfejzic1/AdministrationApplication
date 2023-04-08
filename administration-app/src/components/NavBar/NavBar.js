@@ -2,97 +2,52 @@ import { Link } from 'react-router-dom';
 import cn from './css/NavBar.module.css';
 import LogoutButton from '../Login/Logout';
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
-export const NavBar = () => {
-	const token = localStorage.getItem('token');
-	const ActiveLink = styled(Link)`
-		display: flex;
-		margin: auto;
-		align-items: center;
-		height: 100%;
-		padding: 5px;
-		color: #333;
-		text-decoration: none;
-		transition: all 0.2s ease-in-out;
-		border-radius: 15px;
-
-		&:hover {
-			background-color: #ddd000;
-		}
-	`;
-	const nav_Links = {
-		display: 'flex',
-		listStyle: 'none',
-		margin: 0,
-		padding: 0,
-	};
-	const active = {
-		display: 'flex',
-		margin: 'auto',
-		alignItems: 'center',
-		height: '100%',
-		padding: '5px',
-		paddingRight: '15px',
-		paddingLeft: '15px',
-		color: '#333',
-		textDecoration: 'none',
-		transition: 'all 0.2s ease-in-out',
-		borderRadius: '15px',
-	};
+export const NavBar = props => {
+	useEffect(() => {
+		props.setToken(localStorage.getItem('token'));
+	}, []);
 
 	return (
-		<div>
-			<nav className={cn.nav_bar}>
-				<div className={cn.nav_logo}>Payment App</div>
-
-				{token ? ( //if user logged in,show all optons, else show only login option,
-					<ul style={nav_Links}>
-						<li>
-							<ActiveLink to='/' style={active}>
-								Home
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/transactions' style={active}>
-								Transactions
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/payment' style={active}>
-								Pay
-							</ActiveLink>
-						</li>
-
-						<li>
-							<ActiveLink to='/user' style={active}>
-								User
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/vendor-management' style={active}>
-								Vendor management
-							</ActiveLink>
-						</li>
-
-						<li>
-							<LogoutButton />
-						</li>
-					</ul>
-				) : (
-					<ul style={nav_Links}>
-						<li>
-							<ActiveLink to='/' style={active}>
-								Home
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/login' style={active}>
-								LogIn
-							</ActiveLink>
-						</li>
-					</ul>
-				)}
-			</nav>
-		</div>
+		<AppBar position='static' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+			{props.token ? (
+				<Toolbar>
+					<Typography variant='h6' sx={{ flexGrow: 1, color: '#000' }}>
+						Payment App
+					</Typography>
+					<Button component={Link} to='/' color='primary'>
+						Home
+					</Button>
+					<Button component={Link} to='/transactions' color='primary'>
+						Transactions
+					</Button>
+					<Button component={Link} to='/payment' color='primary'>
+						Payment
+					</Button>
+					<Button component={Link} to='/user' color='primary'>
+						User
+					</Button>
+					<Button component={Link} to='/vendor-management' color='primary'>
+						Vendor management
+					</Button>
+					<LogoutButton />)
+				</Toolbar>
+			) : (
+				<Toolbar>
+					<Typography variant='h6' sx={{ flexGrow: 1, color: '#000' }}>
+						Payment App
+					</Typography>
+					<Button component={Link} to='/' color='primary'>
+						Home
+					</Button>
+					<Button component={Link} to='/login' color='primary'>
+						Login
+					</Button>
+					)
+				</Toolbar>
+			)}
+		</AppBar>
 	);
 };
