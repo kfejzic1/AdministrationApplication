@@ -2,13 +2,17 @@ using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Services.Transaction;
-using AdministrationAPI.Utilities;
+using AdministrationAPI.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace AdministrationAPI.Controllers.Transaction
 {
 
     [Route("api/transactions")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TransactionController : ControllerBase
     {
 
@@ -27,9 +31,8 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
-                var headers = Request.Headers;
-                response = await _transactionService.GetTransactions(options);
-
+                var userId = ControlExtensions.GetId(HttpContext);
+                response = await _transactionService.GetTransactions(userId, options);
             }
             catch (Exception e)
             {
@@ -47,7 +50,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
-                response = await _transactionService.GetTransactions(options);
+                response = await _transactionService.GetTransactions("", options);
 
             }
             catch (Exception e)
