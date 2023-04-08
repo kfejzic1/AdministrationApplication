@@ -63,14 +63,15 @@ const LoginForm = () => {
 				<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
 					<LinearProgress />
 				</Box>
-				<Typography variant='h4'>Login</Typography>
+				<Typography variant='h4' data-testid="login-maintext">Login</Typography>
 				{errorMessage.length > 0 ? (
-					<Alert style={{ width: '80%' }} severity='error' variant='filled'>
+					<Alert data-testid="login-alert" style={{ width: '80%' }} severity='error' variant='filled'>
 						{errorMessage}
 					</Alert>
 				) : null}
 				<Input
 					className='user-data'
+					data-testid="login-email"
 					type='text'
 					placeholder='E-mail or Phone number'
 					onChange={e => {
@@ -79,6 +80,7 @@ const LoginForm = () => {
 				/>
 				<Input
 					className='user-data'
+					data-testid="login-pass"
 					type='password'
 					placeholder='Password'
 					onChange={e => {
@@ -89,7 +91,7 @@ const LoginForm = () => {
 				<Typography>
 					You are not registered? <a href='/'>Register</a>
 				</Typography>
-				<button className='login-btn' onClick={handleButtonClick}>
+				<button className='login-btn' data-testid="login-button" onClick={handleButtonClick}>
 					{' '}
 					Login
 				</button>
