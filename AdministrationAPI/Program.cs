@@ -1,7 +1,6 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
-using AdministrationAPI.Services.Transaction;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
