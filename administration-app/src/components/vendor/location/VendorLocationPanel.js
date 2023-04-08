@@ -128,7 +128,7 @@ function descendingComparator(a, b, orderBy) {
 	return 0;
 }
 
-export default function Location() {
+export default function VendorDetails() {
 	const dataArrived = false;
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
@@ -204,130 +204,102 @@ export default function Location() {
 	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - locations.length) : 0;
 
 	return (
-		<div>
-			<div
-				style={{
-					backgroundColor: '##ffffff00',
-					padding: '10px',
-					borderRadius: '5px',
-					width: '100%',
-					textAlign: 'center',
-				}}>
-				<div style={{ marginBottom: '10px' }}>
-					<Typography variant='h4' gutterBottom style={{ marginTop: '3%', color: 'black', fontWeight: 'bold' }}>
-						{vendor.name}
-					</Typography>
-				</div>
-				<div style={{ marginTop: '3%' }}>
-					<Typography variant='#ffffff00' gutterBottom style={{ marginTop: '9%', color: 'gray', fontWeight: 'bold' }}>
-						{vendor.companyDetails}
-					</Typography>
-				</div>
-				{/*
-  <div>
-    <Typography variant='body1' gutterBottom style={{color: 'black', fontWeight: 'bold'}}>
-      Phone: {vendor.phone}
-    </Typography>
-  </div>
-	*/}
-			</div>
-			<Box sx={{ height: '500px' }}>
-				<Box sx={{ width: '95%', margin: 'auto', pt: '1%' }}>
-					<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-						<LocationTableToolbar
-							fetchLocations={fetchData}
-							numSelected={selected.length}
-							selectedIds={selected}
-							vendorId={vendor.id}
-						/>
-						<ThemeProvider theme={tableTheme}>
-							<TableContainer>
-								<Table
-									className={classes.root}
-									sx={{ minWidth: '100%' }}
-									aria-labelledby='tableTitle'
-									size={dense ? 'small' : 'medium'}>
-									<LocationTableHead
-										numSelected={selected.length}
-										order={order}
-										orderBy={orderBy}
-										onSelectAllClick={handleSelectAllClick}
-										onRequestSort={handleRequestSort}
-										rowCount={locations.length}
-									/>
-									<TableBody>
-										{stableSort(locations, getComparator(order, orderBy))
-											.slice(page * rowsPerPage, (page + 1) * rowsPerPage * rowsPerPage)
-											.map((row, index) => {
-												const isItemSelected = isSelected(row.id);
-												const labelId = `enhanced-table-checkbox-${index}`;
+		<Box sx={{ height: '500px' }}>
+			<Box sx={{ width: '97%', margin: 'auto', pt: '1%' }}>
+				<Paper sx={{ width: '100%', mb: 2, border: 'none' }} elevation={2}>
+					<LocationTableToolbar
+						fetchLocations={fetchData}
+						numSelected={selected.length}
+						selectedIds={selected}
+						vendorId={vendor.id}
+					/>
+					<ThemeProvider theme={tableTheme}>
+						<TableContainer>
+							<Table
+								className={classes.root}
+								sx={{ minWidth: '90%' }}
+								aria-labelledby='tableTitle'
+								size={dense ? 'small' : 'medium'}>
+								<LocationTableHead
+									numSelected={selected.length}
+									order={order}
+									orderBy={orderBy}
+									onSelectAllClick={handleSelectAllClick}
+									onRequestSort={handleRequestSort}
+									rowCount={locations.length}
+								/>
+								<TableBody>
+									{stableSort(locations, getComparator(order, orderBy))
+										.slice(page * rowsPerPage, (page + 1) * rowsPerPage * rowsPerPage)
+										.map((row, index) => {
+											const isItemSelected = isSelected(row.id);
+											const labelId = `enhanced-table-checkbox-${index}`;
 
-												return (
-													<TableRow
-														classes={{
-															root: classes.tableRowRoot,
-															selected: classes.tableRowSelected,
-														}}
-														hover
-														onClick={event => handleClick(event, row.id)}
-														role='checkbox'
-														aria-checked={isItemSelected}
-														tabIndex={-1}
-														key={row.id}
-														selected={isItemSelected}
-														sx={{ cursor: 'pointer' }}>
-														<TableCell padding='checkbox'>
-															<Checkbox
-																color='secondary2'
-																checked={isItemSelected}
-																inputProps={{
-																	'aria-labelledby': labelId,
-																}}
-															/>
-														</TableCell>
-														<TableCell component='th' id={labelId} scope='row' padding='none'>
-															{row.id}
-														</TableCell>
-														<TableCell align='left'>{row.address}</TableCell>
-													</TableRow>
-												);
-											})}
-										{emptyRows > 0 && (
-											<TableRow
-												classes={{
-													root: classes.tableRowRoot,
-													selected: classes.tableRowSelected,
-												}}
-												style={{
-													height: (dense ? 33 : 53) * emptyRows,
-												}}>
-												<TableCell colSpan={5} />
-											</TableRow>
-										)}
-									</TableBody>
-								</Table>
-							</TableContainer>
-						</ThemeProvider>
-						<TablePagination
-							rowsPerPageOptions={[10, 25, 50, 100]}
-							component='div'
-							count={locations.length}
-							rowsPerPage={rowsPerPage}
-							page={page}
-							onPageChange={handleChangePage}
-							onRowsPerPageChange={handleChangeRowsPerPage}
-						/>
-					</Paper>
+											return (
+												<TableRow
+													classes={{
+														root: classes.tableRowRoot,
+														selected: classes.tableRowSelected,
+													}}
+													hover
+													onClick={event => handleClick(event, row.id)}
+													role='checkbox'
+													aria-checked={isItemSelected}
+													tabIndex={-1}
+													key={row.id}
+													selected={isItemSelected}
+													sx={{ cursor: 'pointer' }}>
+													<TableCell padding='checkbox'>
+														<Checkbox
+															color='secondary2'
+															checked={isItemSelected}
+															inputProps={{
+																'aria-labelledby': labelId,
+															}}
+														/>
+													</TableCell>
+													<TableCell component='th' id={labelId} scope='row' padding='none'>
+														{row.id}
+													</TableCell>
+													<TableCell align='left'>{row.address}</TableCell>
+												</TableRow>
+											);
+										})}
+									{emptyRows > 0 && (
+										<TableRow
+											classes={{
+												root: classes.tableRowRoot,
+												selected: classes.tableRowSelected,
+											}}
+											style={{
+												height: (dense ? 33 : 53) * emptyRows,
+											}}>
+											<TableCell colSpan={5} />
+										</TableRow>
+									)}
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</ThemeProvider>
+					<TablePagination
+						rowsPerPageOptions={[10, 25, 50, 100]}
+						component='div'
+						count={locations.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onPageChange={handleChangePage}
+						onRowsPerPageChange={handleChangeRowsPerPage}
+					/>
 					<ThemeProvider theme={theme}>
 						<FormControlLabel
 							className={classes.FormControlLabel}
-							sx={{ color: 'black' }}
+							sx={{ color: 'black', margin: '10px' }}
 							control={<Switch checked={dense} onChange={handleChangeDense} />}
 							label='Dense padding'
 						/>
 					</ThemeProvider>
-				</Box>
+				</Paper>
 			</Box>
-		</div>
+		</Box>
 	);
 }

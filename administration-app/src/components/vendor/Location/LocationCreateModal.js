@@ -114,37 +114,35 @@ export default function LocationCreateModal(props) {
 
 	return (
 		<div>
-			<div>
-				<form className={classes.root} onSubmit={handleSubmit}>
-					<Card className={classes.card}>
-						<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
-						<CardContent>
-							<Stack direction='row' spacing={2}>
-								<Grid container spacing={2}>
-									<Grid item xs={12}>
-										<TextField
-											className={classes.textField}
-											id='standard-basic'
-											label='Address'
-											variant='standard'
-											value={address}
-											required={true}
-											error={errors.address}
-											onChange={handleAddressChange}
-										/>
-									</Grid>
+			<form className={classes.root} onSubmit={handleSubmit}>
+				<Card className={classes.card}>
+					<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
+					<CardContent>
+						<Stack direction='row' spacing={2}>
+							<Grid container spacing={2}>
+								<Grid item xs={12}>
+									<TextField
+										className={classes.textField}
+										id='standard-basic'
+										label='Address'
+										variant='standard'
+										value={address}
+										required={true}
+										error={errors.address}
+										onChange={handleAddressChange}
+									/>
 								</Grid>
-							</Stack>
-						</CardContent>
-						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
-								Create
-							</Button>
-						</CardActions>
-					</Card>
-				</form>
-				<Loader open={open} loaderState={loaderState} />
-			</div>
+							</Grid>
+						</Stack>
+					</CardContent>
+					<CardActions className={classes.cardActions}>
+						<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
+							Create
+						</Button>
+					</CardActions>
+				</Card>
+			</form>
+			<Loader open={open} loaderState={loaderState} />
 		</div>
 	);
 }

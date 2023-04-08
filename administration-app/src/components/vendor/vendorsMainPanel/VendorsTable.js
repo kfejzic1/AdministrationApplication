@@ -149,7 +149,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function openLocations(id) {
-	window.open(`/B2BLocation/${id}`);
+	window.open(`/B2BDetails/${id}`);
 }
 
 export default function VendorsTable() {

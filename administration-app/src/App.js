@@ -2,8 +2,8 @@ import React from 'react';
 import LoginForm from './components/Login/Login';
 import ProfilePage from './components/User/UserProfile';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import VendorsTable from './components/vendor/vendorsPanel/VendorsTable';
-import Location from './components/vendor/Location/Location';
+import VendorsTable from './components/vendor/vendorsMainPanel/VendorsTable';
+import VendorDetails from './components/vendor/VendorDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import { NavBar } from './components/NavBar/NavBar';
 import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
@@ -42,10 +42,10 @@ function App() {
 						}
 					/>
 					<Route
-						path='/B2BLocation/:id'
+						path='/B2BDetails/:id'
 						element={
 							<ProtectedRoute>
-								<Location />
+								<VendorDetails />
 							</ProtectedRoute>
 						}
 					/>
