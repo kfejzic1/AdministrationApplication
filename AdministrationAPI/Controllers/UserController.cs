@@ -24,14 +24,12 @@ namespace AdministrationAPI.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IActivationCodeService _activationCodeService;
-        private readonly IConfiguration _configuration;
 
         public UserController(IUserService userService, IMapper mapper, IActivationCodeService activationCodeService, IConfiguration configuration)
         {
             _userService = userService;
             _mapper = mapper;
             _activationCodeService = activationCodeService;
-            _configuration = configuration;
         }
 
         [HttpGet]
@@ -94,29 +92,24 @@ namespace AdministrationAPI.Controllers
         [HttpGet("send/sms")]
         public async Task<IActionResult> SendCodeToPhone([FromQuery] SMSInformationRequest smsInformationRequest)
         {
-            //TODO: refactor, move sms sending logic to code service
-            User user;
             try
             {
-                user = _userService.GetUserByName(smsInformationRequest.Username);
+                User user = _userService.GetUserByName(smsInformationRequest.Username);
+                bool success = await _activationCodeService.SendSMSToUser(user);
+
+                if (success)
+                {
+                    return Ok(new { message = "SMS delivered" });
+                }
+                else
+                {
+                    return NotFound(new { message = "SMS activation code for user not found!" });
+                }
             }
             catch
             {
                 return NotFound(new { message = "User with specified username not found!" });
-            }
-
-
-            ActivationCode activationCodeForUser = await _activationCodeService.GetCodeForUser(user.Id);
-
-            if (activationCodeForUser == null)
-            {
-                return NotFound(new { message = "User not found" });
-            }
-
-            SMSSender SMSsender = new SMSSender(_configuration);
-            SMSsender.SendSMS(user.PhoneNumber, activationCodeForUser.SMSCode);
-
-            return Ok(new { message = "SMS delivered" });
+            
         }
 
         [AllowAnonymous]

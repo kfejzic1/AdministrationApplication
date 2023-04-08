@@ -12,21 +12,26 @@ using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using AdministrationAPI.Helpers;
+using Microsoft.Extensions.Configuration;
+using Twilio.Rest.Routes.V2;
 
 public class ActivationCodeService : IActivationCodeService
 {
     private AppDbContext _context;
     private UserManager<User> _userManager;
     private IUserService _userService;
+    private IConfiguration _config;
 
     public ActivationCodeService(
         AppDbContext context,
         UserManager<User> userManager,
-        IUserService userService)
+        IUserService userService,
+        IConfiguration config)
     {
         _context = context;
         _userManager = userManager;
         _userService = userService;
+        _config = config;
     }
     
 
@@ -105,5 +110,28 @@ public class ActivationCodeService : IActivationCodeService
         ActivationCode activationCode = await _context.ActivationCodes.Where(ac => ac.UserId.Equals(id)).FirstOrDefaultAsync();
 
         return activationCode;
+    }
+
+    public async Task<bool> SendSMSToUser(User user)
+    {
+        ActivationCode activationCodeForUser = await GetCodeForUser(user.Id);
+
+        if (activationCodeForUser == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            SMSSender SMSsender = new SMSSender(_config);
+            SMSsender.SendSMS(user.PhoneNumber, activationCodeForUser.SMSCode);
+
+            return true;
+        }
+        catch(Exception ex) 
+        {
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.SendSMSToUser");
+            return false;
+        }
     }
 }
