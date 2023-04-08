@@ -12,12 +12,9 @@ export function getAllUsers() {
 	});
 }
 
-export function getUser(id) {
+export function getUser() {
 	return axios(env.API_ENV.url + '/api/User', {
 		method: 'GET',
-		params: {
-			id,
-		},
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -60,12 +57,9 @@ export function twoFactorAuthentication(data) {
 	});
 }
 
-export function getTwoFactorQRCode(id) {
+export function getTwoFactorQRCode() {
 	return axios(env.API_ENV.url + '/api/User/2fa-qrcode', {
 		method: 'GET',
-		params: {
-			id,
-		},
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -73,12 +67,9 @@ export function getTwoFactorQRCode(id) {
 	});
 }
 
-export function toggle2FA(id) {
+export function toggle2FA() {
 	return axios(env.API_ENV.url + '/api/User/2fa-toggle', {
 		method: 'PATCH',
-		params: {
-			id,
-		},
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
