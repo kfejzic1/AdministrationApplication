@@ -11,6 +11,7 @@ using System;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Helpers;
 
 public class ActivationCodeService : IActivationCodeService
 {
@@ -27,12 +28,7 @@ public class ActivationCodeService : IActivationCodeService
         _userManager = userManager;
         _userService = userService;
     }
-
-    public async Task SaveCodeAsync(ActivationCode code)
-    {
-        _context.ActivationCodes.Add(code);
-        await _context.SaveChangesAsync();
-    }
+    
 
     public async Task<bool> ActivateEmailCodeAsync(string code, string username)
     {
@@ -70,6 +66,36 @@ public class ActivationCodeService : IActivationCodeService
         await _userManager.UpdateAsync(user);
 
         return true;
+    }
+
+    public async Task GenerateCodeForUserAsync(User user)
+    {
+        Random random = new Random();
+        String emailCode = random.Next(1000, 9999).ToString();
+        String smsCode = random.Next(1000, 9999).ToString();
+
+        ActivationCode activationCode = new ActivationCode
+        {
+            Id = new Guid(),
+            EmailCode = emailCode,
+            SMSCode = smsCode,
+            ActivatedEmail = false,
+            ActivatedSMS = false,
+            User = user
+        };
+
+        _context.ActivationCodes.Add(activationCode);
+        await _context.SaveChangesAsync();
+
+        EmailSender emailSender = new EmailSender();
+        try
+        {
+            await emailSender.SendEmailAsync(user.Email, emailCode);
+        }
+        catch (Exception ex)
+        {
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateCodeForUserAsync");
+        }
     }
 
     public async Task<ActivationCode> GetCodeForUser(string id)
