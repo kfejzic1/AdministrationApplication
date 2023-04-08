@@ -7,7 +7,8 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IUserService
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
-        Task<AuthenticationResult> SocialLogin(string email);
+        Task<AuthenticationResult> FacebookSocialLogin(string token);
+        Task<AuthenticationResult> GoogleSocialLogin(string token);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         public List<User> GetAssignedUsersForVendor(int vendorId);
         Task<UserDT> GetUser(string id);
@@ -18,5 +19,6 @@ namespace AdministrationAPI.Services.Interfaces
         Task<bool> Toggle2FA(string id);
         List<User> GetAllUsers();
         User GetUserByName(string name);
+        Task<bool> DeleteUserAsync(string username);
     }
 }
