@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Net;
+using AdministrationAPI.Contracts.Requests.Users;
 
 namespace AdministrationAPI.Controllers
 {
@@ -84,6 +86,49 @@ namespace AdministrationAPI.Controllers
             catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Toggle2FA");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("createUser")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateUser([FromBody] CreateRequest request)
+        {
+            try
+            {
+                if (_userService.GetUserByEmail(request.Email)!=null)
+                {
+                    var result = new ObjectResult(new { statusCode = 204, message = "User with this email already exists!" });
+                    result.StatusCode = 204;
+                    return result;
+                }
+
+                var createResult = await _userService.CreateUser(request);
+                if (createResult.Succeeded)
+                {
+                    var user =  _userService.GetUserByEmail(request.Email);
+                    if (user == null)
+                    {
+                        return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
+                    }
+
+                    _userService.SendConfirmationEmail(user.Id);
+
+                    var resultCreation = new ObjectResult(new { statusCode = 201, message = "User created and confirmation email is sent to " + user.Email + " succesfully" });
+                    resultCreation.StatusCode = 201;
+                    return resultCreation;
+                }
+                else return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
+
+
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.CreateUser");
                 return StatusCode(500, ex.Message);
             }
         }

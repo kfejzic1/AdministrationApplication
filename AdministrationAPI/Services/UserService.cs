@@ -1,6 +1,8 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
+using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
@@ -9,6 +11,7 @@ using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Text;
 
 namespace AdministrationAPI.Services
@@ -25,6 +28,7 @@ namespace AdministrationAPI.Services
             SignInManager<User> signInManager,
             IConfiguration configuration,
             IMapper mapper
+            
         )
         {
             _userManager = userManager;
@@ -227,6 +231,20 @@ namespace AdministrationAPI.Services
             // _userManager.SaveChanges();
 
             return result.Succeeded ? newUser : null;
+        }
+
+        public async Task<IdentityResult> CreateUser(CreateRequest request)
+        {
+            User newUser = _mapper.Map<User>(request);
+            return await _userManager.CreateAsync(newUser);
+        }
+
+        public async void SendConfirmationEmail(string email)
+        {
+            var user = GetUserByEmail(email);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendEmailAsync(email, token);
         }
     }
 }

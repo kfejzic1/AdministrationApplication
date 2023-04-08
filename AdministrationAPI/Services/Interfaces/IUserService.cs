@@ -1,6 +1,8 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdministrationAPI.Services.Interfaces
 {
@@ -17,5 +19,7 @@ namespace AdministrationAPI.Services.Interfaces
         Task<bool> Toggle2FA(string id);
         List<User> GetAllUsers();
         User GetUserByName(string name);
+        Task<IdentityResult> CreateUser(CreateRequest request);
+        void SendConfirmationEmail(string id);
     }
 }
