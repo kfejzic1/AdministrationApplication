@@ -283,9 +283,17 @@ namespace AdministrationAPI.Services
                 }
                 number++;
             }
-            
-                
-            return await _userManager.CreateAsync(newUser);
+
+            var result = await _userManager.CreateAsync(newUser);
+            if(result.Succeeded)
+            {
+               var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
+                if(!roleResult.Succeeded)
+                {
+                    return roleResult;
+                }
+            }
+            return result;
         }
 
         public async void SendConfirmationEmail(string email)
@@ -318,6 +326,8 @@ namespace AdministrationAPI.Services
             user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
             user.Address = request.Address;
+            await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+            await _userManager.AddToRoleAsync(user, request.Role);
 
             return await _userManager.UpdateAsync(user);
         }
