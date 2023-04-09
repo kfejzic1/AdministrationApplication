@@ -32,7 +32,6 @@ namespace AdministrationAPI.Services
             IConfiguration configuration,
             IMapper mapper,
             RoleManager<IdentityRole> roleManager
-
         )
         {
             _userManager = userManager;
@@ -222,6 +221,17 @@ namespace AdministrationAPI.Services
             return _userManager.Users.FirstOrDefault(u => u.Id == id);
         }
 
+        public async Task<GetUserResponse> GetUserWithRolesById(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
+            return new GetUserResponse()
+            {
+                user = user,
+                userRoles = (IEnumerable<IdentityRole>)await _userManager.GetRolesAsync(user),
+                roles = _roleManager.Roles.ToList()
+            };
+        }
+
         public User GetUserByFirstName(string firstName)
         {
             return _userManager.Users.FirstOrDefault(u => u.FirstName == firstName);
@@ -258,7 +268,7 @@ namespace AdministrationAPI.Services
                 }
                 number++;
             }
-
+            
                 
             return await _userManager.CreateAsync(newUser);
         }

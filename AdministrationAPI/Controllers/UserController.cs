@@ -252,14 +252,9 @@ namespace AdministrationAPI.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public IActionResult GetUser([FromRoute] string id)
+        public Task<GetUserResponse> GetUser([FromRoute] string id)
         {
-            var user = _userService.GetUserById(id);
-            if (user == null)
-            {
-                return Ok(user);
-            }
-            return BadRequest("Invalid ID");
+            return _userService.GetUserWithRolesById(id);
         }
 
         [HttpPost("forgotPassword")]
