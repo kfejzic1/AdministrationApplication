@@ -29,6 +29,7 @@ const UserManagement = () => {
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
 	useEffect(() => {
 		getAllUsers().then(response => {
@@ -108,12 +109,18 @@ const UserManagement = () => {
 
 	const handleResetPassword = user => {
 		requestPasswordReset({ id: user.id })
-			.then(response => console.log(response.data))
+			.then(response => {
+				setOpenSnackbarPassword(true);
+			})
 			.catch(error => console.error(error));
 	};
 
 	const handleSnackbarClose = () => {
 		setOpenSnackbar(false);
+	};
+
+	const handleSnackbarPasswordClose = () => {
+		setOpenSnackbarPassword(false);
 	};
 
 	return (
@@ -218,6 +225,11 @@ const UserManagement = () => {
 			<Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleSnackbarClose}>
 				<Alert onClose={handleSnackbarClose} severity='success'>
 					User saved successfully!
+				</Alert>
+			</Snackbar>
+			<Snackbar open={openSnackbarPassword} autoHideDuration={3000} onClose={handleSnackbarPasswordClose}>
+				<Alert onClose={handleSnackbarPasswordClose} severity='success'>
+					Email to reset password has been sent!
 				</Alert>
 			</Snackbar>
 		</div>
