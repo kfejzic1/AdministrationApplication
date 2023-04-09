@@ -50,7 +50,9 @@ namespace AdministrationAPI.Services
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
-                AuthenticatorKey = user.AuthenticatorKey
+                AuthenticatorKey = user.AuthenticatorKey,
+                IsEmailValidated = user.EmailConfirmed,
+                IsPhoneValidated = user.PhoneNumberConfirmed
             };
         }
 
