@@ -23,7 +23,7 @@ import {
 import { Alert } from '@mui/material';
 const initialUsers = [
 	{ id: 1, name: 'John', surname: 'Doe', email: 'john.doe@example.com', phone: '123-456-7890', role: 'Admin' },
-	{ id: 2, name: 'Jane', surname: 'Smith', email: 'jane.smith@example.com', phone: '555-555-5555', role: 'Standard' },
+	{ id: 2, name: 'Jane', surname: 'Smith', email: 'jane.smith@example.com', phone: '555-555-5555', role: 'User' },
 ];
 
 const UserManagement = () => {
@@ -138,10 +138,10 @@ const UserManagement = () => {
 						<TextField margin='dense' name='phone' label='Phone' fullWidth />
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
-							<Select label='Role' name='role' defaultValue={'Standard'}>
-								<MenuItem value='Standard'>Standard</MenuItem>
+							<Select label='Role' name='role' defaultValue={'User'}>
+								<MenuItem value='User'>User</MenuItem>
 								<MenuItem value='Admin'>Admin</MenuItem>
-								<MenuItem value='Limited'>Limited</MenuItem>
+								<MenuItem value='Restricted'>Restricted</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>
@@ -165,9 +165,9 @@ const UserManagement = () => {
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
 							<Select label='Role' name='role' defaultValue={selectedUser.role}>
-								<MenuItem value='Standard'>Standard</MenuItem>
+								<MenuItem value='User'>User</MenuItem>
 								<MenuItem value='Admin'>Admin</MenuItem>
-								<MenuItem value='Limited'>Limited</MenuItem>
+								<MenuItem value='Restricted'>Restricted</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>
