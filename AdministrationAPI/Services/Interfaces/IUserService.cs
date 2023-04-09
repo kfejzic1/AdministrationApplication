@@ -21,5 +21,7 @@ namespace AdministrationAPI.Services.Interfaces
         User GetUserByName(string name);
         Task<IdentityResult> CreateUser(CreateRequest request);
         void SendConfirmationEmail(string id);
+        User GetUserById(string id);
+        Task<IdentityResult> SetPassword(SetPasswordRequest request);
     }
 }

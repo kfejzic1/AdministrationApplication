@@ -184,6 +184,32 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPost("setPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SetPassword([FromBody] SetPasswordRequest request)
+        {
+            var customer = _userService.GetUserById(request.Id);
+            if (customer == null)
+            {
+                return NotFound("User not found.");
+            }
+            if (request.Password == null)
+            {
+                return BadRequest("Password can't be null");
+            }
+
+            var result = await _userService.SetPassword(request);
+
+            if (result.Succeeded)
+            {
+                return Ok("Password set succesfully");
+            }
+            else
+            {
+                return BadRequest("Invalid token");
+            }
+        }
+
         [HttpGet("all")]
         public IActionResult GetAllUsers()
         {

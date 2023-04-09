@@ -9,6 +9,7 @@ using AdministrationAPI.Utilities;
 using AutoMapper;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -212,6 +213,11 @@ namespace AdministrationAPI.Services
             return _userManager.Users.FirstOrDefault(u => u.Email == email);
         }
 
+        public User GetUserById(string id)
+        {
+            return _userManager.Users.FirstOrDefault(u => u.Id == id);
+        }
+
         public User GetUserByFirstName(string firstName)
         {
             return _userManager.Users.FirstOrDefault(u => u.FirstName == firstName);
@@ -246,5 +252,14 @@ namespace AdministrationAPI.Services
             EmailSender emailSender = new EmailSender();
             await emailSender.SendEmailAsync(email, token);
         }
+
+        public async Task<IdentityResult> SetPassword(SetPasswordRequest request)
+        {
+            var user = GetUserById(request.Id);
+            var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+
+            return result;
+        }
+
     }
 }
