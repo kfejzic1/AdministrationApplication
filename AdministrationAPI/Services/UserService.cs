@@ -265,7 +265,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendEmailAsync(email, token);
+            await emailSender.SendConfirmationEmailAsync(email, token);
         }
 
         public async Task<IdentityResult> SetPassword(SetPasswordRequest request)
@@ -295,7 +295,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendEmailAsync(email, token);
+            await emailSender.SendPasswordResetEmailAsync(email, token);
         }
 
     }
