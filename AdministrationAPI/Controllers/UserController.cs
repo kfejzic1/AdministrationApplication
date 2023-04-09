@@ -299,7 +299,7 @@ namespace AdministrationAPI.Controllers
             }
             else
             {
-                return BadRequest("Invalid token");
+                return BadRequest("Invalid token or token expired");
             }
 
         }
