@@ -293,7 +293,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendConfirmationEmailAsync(email, token);
+            await emailSender.SendConfirmationEmailAsync(email, $"http://localhost:3000/customer/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
         public async Task<IdentityResult> SetPassword(SetPasswordRequest request)
@@ -326,7 +326,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendPasswordResetEmailAsync(email, token);
+            await emailSender.SendPasswordResetEmailAsync(email, $"http://localhost:3000/customer/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
