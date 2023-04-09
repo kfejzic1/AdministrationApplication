@@ -117,8 +117,7 @@ namespace AdministrationAPI.Services
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                UserId = user.Id
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
 
@@ -161,8 +160,7 @@ namespace AdministrationAPI.Services
                     return new AuthenticationResult
                     {
                         Success = true,
-                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                        UserId = user.Id
+                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
                     };
                 }
             }
@@ -215,8 +213,7 @@ namespace AdministrationAPI.Services
                         return new AuthenticationResult
                         {
                             Success = true,
-                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                            UserId = user.Id
+                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
                         };
                     }
                 }
