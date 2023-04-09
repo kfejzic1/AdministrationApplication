@@ -1,5 +1,6 @@
 namespace AdministrationAPI.Helpers;
 
+using System.Net;
 using System.Net.Mail;
 public class EmailSender
 {
@@ -68,9 +69,9 @@ public class EmailSender
             mailMessage.From = new MailAddress("siprojekat@outlook.com");
             mailMessage.To.Add(new MailAddress(userEmail));
 
-            mailMessage.Subject = "Email confirm";
+            mailMessage.Subject = "Email confirmation";
             mailMessage.IsBodyHtml = true;
-            mailMessage.Body = "An account was made for you on our page. Please click the following link to confirm your email and set the password: " +token;
+            mailMessage.Body = "An account was made for you on our page. Please click the following link to confirm your email and set the password: " + token;
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
@@ -152,9 +153,9 @@ public class EmailSender
                 mailMessage.From = new MailAddress("lifeplannerdemo@gmail.com");
                 mailMessage.To.Add(new MailAddress(userEmail));
 
-                mailMessage.Subject = "Email confirm";
+                mailMessage.Subject = "Password reset";
                 mailMessage.IsBodyHtml = true;
-                mailMessage.Body = "An account was made for you on our page. Please click the following link to confirm your email and set the password: " + token;
+                mailMessage.Body = "Reset password request has been made. Please click the following link to reset your password: " + token;
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
