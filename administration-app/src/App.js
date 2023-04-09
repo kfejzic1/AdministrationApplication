@@ -9,6 +9,8 @@ import { NavBar } from './components/NavBar/NavBar';
 import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
 import { Payment } from './components/Payment/Payment';
 import UserManagement from './components/UserManagement/UserManagement';
+import { SetUserPassword } from './components/UserManagement/SetUserPassword';
+import { ResetUserPassword } from './components/UserManagement/ResetUserPassword';
 
 import './App.css';
 
@@ -59,6 +61,8 @@ function App() {
 						}
 					/>
 					<Route path='/login' element={<LoginForm />} />
+					<Route path='/user/setpassword' element={<SetUserPassword />} />
+					<Route path='/user/resetpassword' element={<ResetUserPassword />} />
 				</Routes>
 			</Router>
 		</div>

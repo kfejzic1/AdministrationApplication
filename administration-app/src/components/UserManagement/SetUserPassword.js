@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { LinearProgress, Alert, TextField, Button } from '@mui/material';
-import { setCustomerPassword } from '../../services/userManagementService';
+import { setUserPassword } from '../../services/userManagementService';
 import { useLocation } from 'react-router-dom';
-export const CustomerPassword = () => {
+export const SetUserPassword = () => {
 	const setPasswordRequest = {
 		id: '',
 		token: '',
@@ -57,7 +57,7 @@ export const CustomerPassword = () => {
 			setPasswordRequest.password = password;
 			setOpen(true);
 
-			setCustomerPassword(setPasswordRequest)
+			setUserPassword(setPasswordRequest)
 				.then(() => {
 					setOpen(false);
 					setSuccessMessage('Your new password has been set.');

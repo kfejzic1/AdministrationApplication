@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createUser, editUser, getAllUsers } from '../../services/userManagementService';
+import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
 import {
 	Button,
 	Dialog,
@@ -22,13 +22,9 @@ import {
 	MenuItem,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-const initialUsers = [
-	{ id: 1, name: 'John', surname: 'Doe', email: 'john.doe@example.com', phone: '123-456-7890', role: 'Admin' },
-	{ id: 2, name: 'Jane', surname: 'Smith', email: 'jane.smith@example.com', phone: '555-555-5555', role: 'User' },
-];
 
 const UserManagement = () => {
-	const [users, setUsers] = useState(initialUsers);
+	const [users, setUsers] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
@@ -111,7 +107,9 @@ const UserManagement = () => {
 	};
 
 	const handleResetPassword = user => {
-		// TODO: Implement reset password functionality
+		requestPasswordReset({ id: user.id })
+			.then(response => console.log(response.data))
+			.catch(error => console.error(error));
 	};
 
 	const handleSnackbarClose = () => {

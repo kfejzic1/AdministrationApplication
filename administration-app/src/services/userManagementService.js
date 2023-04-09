@@ -13,7 +13,7 @@ export function createUser(request) {
 }
 
 export function setUserPassword(request) {
-	return axios(env.API_ENV.url + '/api/Customer/setCustomerPassword', {
+	return axios(env.API_ENV.url + '/api/User/setPassword', {
 		method: 'POST',
 		data: request,
 		headers: {
@@ -23,7 +23,7 @@ export function setUserPassword(request) {
 }
 
 export function resetUserPassword(request) {
-	return axios(env.API_ENV.url + '/api/Customer/resetCustomerPassword', {
+	return axios(env.API_ENV.url + '/api/User/resetPassword', {
 		method: 'PATCH',
 		data: request,
 		headers: {
@@ -34,16 +34,6 @@ export function resetUserPassword(request) {
 
 export function getAllUsers() {
 	return axios(env.API_ENV.url + '/api/User/allWithRoles', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + localStorage.getItem('token'),
-		},
-	});
-}
-
-export function findCustomerById(id) {
-	return axios(env.API_ENV.url + `/api/Customer/getCustomer/${id}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -64,7 +54,7 @@ export function editUser(editUserRequest) {
 }
 
 export function requestPasswordReset(id) {
-	return axios(env.API_ENV.url + '/api/Customer/forgotCustomerPassword', {
+	return axios(env.API_ENV.url + '/api/User/forgotPassword', {
 		method: 'POST',
 		data: id,
 		headers: {
