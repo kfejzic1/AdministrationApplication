@@ -38,13 +38,6 @@ namespace AdministrationAPI.Services
                     }
 
                     vendorDbContext.Add(document);
-
-                    var vendorPaymentTermContracts = new VendorPaymentTermContract
-                    {
-                        ContractId = document.Id,
-                        PaymentTermId = paymentTermId
-                    };
-                    vendorDbContext.Add(vendorPaymentTermContracts);
                     vendorDbContext.SaveChanges();
 
                     return document.Id;

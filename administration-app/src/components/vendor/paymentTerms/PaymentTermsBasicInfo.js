@@ -46,15 +46,20 @@ export default function VendorPaymentTerms(props) {
 		const files = Array.from(event.target.files);
 		const [file] = files;
 
-		console.log('file', files);
 		setContracts(file);
-
-		//Prvo se kreira payment term, njegov Id se proslijedi prilikom slanja contracts
-		var paymentTermId = 1;
 		const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'vendor/contracts', props.vendorName))));
 		Promise.allSettled(calls).then(res => {
 			var documentIds = res.map(x => x.value.data);
-
+			var request = {
+				startDate: new Date(),
+				expiryDate: new Date(),
+				invoiceFrequencyTypeId: 1,
+				documentIds,
+				dueDate: new Date(),
+			};
+			createPaymentTerm(request)
+				.then(res => console.log('res', res))
+				.catch(err => console.log('err', err));
 			setContracts([]);
 		});
 	};

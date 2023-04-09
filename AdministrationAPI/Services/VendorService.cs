@@ -349,12 +349,12 @@ namespace AdministrationAPI.Services
                 vendorDbContext.SaveChanges();
 
                 //Create bond between contracts and payment terms
-                foreach (var doc in request.Contracts)
+                foreach (var documentId in request.DocumentIds)
                 {
                     var paymentTermContract = new VendorPaymentTermContract
                     {
-                        PaymentTermId = request.Id,
-                        ContractId = doc.Id,
+                        PaymentTermId = paymentTerm.Id,
+                        ContractId = documentId,
                     };
                     vendorDbContext.VendorPaymentTermContract.Add(paymentTermContract);
                 }
