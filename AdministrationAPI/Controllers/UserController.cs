@@ -249,6 +249,12 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("roles")]
+        [AllowAnonymous]
+        public IEnumerable<IdentityRole> GetRoles()
+        {
+            return _userService.GetRoles();
+        }
 
         [HttpGet("{id}")]
         [AllowAnonymous]

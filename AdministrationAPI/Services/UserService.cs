@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -230,6 +231,11 @@ namespace AdministrationAPI.Services
                 userRoles = (IEnumerable<IdentityRole>)await _userManager.GetRolesAsync(user),
                 roles = _roleManager.Roles.ToList()
             };
+        }
+
+        public IEnumerable<IdentityRole> GetRoles()
+        {
+            return _roleManager.Roles;
         }
 
         public User GetUserByFirstName(string firstName)
