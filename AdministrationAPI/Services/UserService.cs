@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Text;
+using static QRCoder.PayloadGenerator;
 
 namespace AdministrationAPI.Services
 {
@@ -261,7 +262,14 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> CreateUser(CreateRequest request)
         {
-            User newUser = _mapper.Map<User>(request);
+            var newUser = new User 
+            {  
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+            };
+
             var usernameTemplate = $"{request.FirstName.First()}{request.LastName}";
             int number = 1;
             while(true)
@@ -304,7 +312,10 @@ namespace AdministrationAPI.Services
         {
             
             var user = GetUserById(request.Id);
-            user = _mapper.Map<User>(user);
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
 
             return await _userManager.UpdateAsync(user);
         }
