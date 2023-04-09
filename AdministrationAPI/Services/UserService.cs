@@ -281,7 +281,7 @@ namespace AdministrationAPI.Services
             return result;
         }
 
-        public async Task<IdentityResult> EditCustomer(EditRequest request)
+        public async Task<IdentityResult> EditUser(EditRequest request)
         {
 
             var user = GetUserById(request.Id);
