@@ -268,7 +268,7 @@ namespace AdministrationAPI.Services
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Address = "NoAddress"
+                Address = request.Address
             };
 
             var usernameTemplate = $"{request.FirstName.ToLower().First()}{request.LastName.ToLower()}";
@@ -317,6 +317,7 @@ namespace AdministrationAPI.Services
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
 
             return await _userManager.UpdateAsync(user);
         }
