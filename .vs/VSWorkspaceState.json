@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\AdministrationAPI"
+    "\\AdministrationAPI",
+    "\\AdministrationAPI\\Migrations"
   ],
   "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
   "PreviewInSolutionExplorer": false
