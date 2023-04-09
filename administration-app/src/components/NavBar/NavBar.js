@@ -73,7 +73,11 @@ export const NavBar = () => {
 								Vendor management
 							</ActiveLink>
 						</li>
-
+						<li>
+							<ActiveLink to='/user-management' style={active}>
+								User management
+							</ActiveLink>
+						</li>
 						<li>
 							<LogoutButton />
 						</li>

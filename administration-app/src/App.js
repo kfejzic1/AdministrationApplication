@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { NavBar } from './components/NavBar/NavBar';
 import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
 import { Payment } from './components/Payment/Payment';
+import UserManagement from './components/UserManagement/UserManagement';
 
 import './App.css';
 
@@ -46,6 +47,14 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Location />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/user-management'
+						element={
+							<ProtectedRoute>
+								<UserManagement />
 							</ProtectedRoute>
 						}
 					/>
