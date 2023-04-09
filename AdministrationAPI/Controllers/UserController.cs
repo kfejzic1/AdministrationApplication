@@ -281,7 +281,28 @@ namespace AdministrationAPI.Controllers
 
         }
 
+        [HttpPatch("resetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] SetPasswordRequest request)
+        {
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+           
+            var result = await _userService.ResetPasswordAsync(request);
 
+            if (result.Succeeded)
+            {
+                return Ok("Password successfully changed.");
+            }
+            else
+            {
+                return BadRequest("Invalid token");
+            }
+
+        }
 
         [HttpGet("{name}")]
         public IActionResult GetUserByName([FromRoute] string name)
