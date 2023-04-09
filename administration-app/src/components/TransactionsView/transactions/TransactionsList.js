@@ -2,6 +2,8 @@ import { getMaxAmount, getTransactions } from '../../../services/TransactionsVie
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
 import TransactionDetails from './TransactionDetails';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import {
 	createTheme,
@@ -27,6 +29,7 @@ export const TransactionsList = arg => {
 	const [hasMore, setHasMore] = useState(true);
 	const [schouldLoad, setSchouldLoad] = useState(false);
 	const [counter, setCounter] = useState(1);
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (hasMore) {
 			loadTransactions();
@@ -47,28 +50,41 @@ export const TransactionsList = arg => {
 			setCounter(1);
 			tempCounter = 1;
 		}
-		getMaxAmount(mock).then(amount => {
-			setMaxAmount(amount);
-			getTransactions(tempCounter, 15, filterOptions, mock)
-				.then(transactions1 => {
-					var temp1 = [...transactionsRaw, ...transactions1.data];
-					if ('clear-load' == a) {
-						temp1 = transactions1.data;
-					}
-					setTransactionsRaw(temp1);
-					var transactionsdata = temp1.map((item, index) => (
-						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
-					));
-					setTransactions(transactionsdata);
-					setHasMore(true);
-					setCounter(counter + 1);
-					setIsLoading(false);
-				})
-				.catch(e => {
-					setHasMore(false);
-					setIsLoading(false);
-				});
-		});
+		getMaxAmount(mock)
+			.then(amount => {
+				setMaxAmount(amount);
+				console.log('postvalne amoutn', amount);
+				getTransactions(tempCounter, 15, filterOptions, mock)
+					.then(transactions1 => {
+						var temp1 = [...transactionsRaw, ...transactions1.data];
+						if ('clear-load' == a) {
+							temp1 = transactions1.data;
+						}
+						setTransactionsRaw(temp1);
+						var transactionsdata = temp1.map((item, index) => (
+							<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
+						));
+						setTransactions(transactionsdata);
+						setHasMore(true);
+						setCounter(counter + 1);
+						setIsLoading(false);
+					})
+					.catch(e => {
+						if (e == 401) {
+							alert('Your session has been expired, please login again.');
+							navigate('/login');
+						} else {
+							setHasMore(false);
+							setIsLoading(false);
+						}
+					});
+			})
+			.catch(e => {
+				if (e == 401) {
+					alert('Your session has been expired, please login again.');
+					navigate('/login');
+				}
+			});
 	}
 
 	function handleScroll(e) {

@@ -43,84 +43,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					resolveO(response);
 				})
 				.catch(function (err) {
-					//if (err.response.status === 401)
-					//	navigate('/login');
-					console.log('mockup');
-					sortingOptions = mockSortingOptons;
-					var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-					if (sortingOptions != null) {
-						if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
-							temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
-						}
-						console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
-
-						if (sortingOptions.Status && sortingOptions.Status != '') {
-							temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
-						}
-
-						if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
-							temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
-						}
-						if (sortingOptions.MaxAmount && sortingOptions.MaxAmount != '') {
-							temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
-						}
-
-						if (sortingOptions.DateTimeStart && sortingOptions.DateTimeStart.length > 14) {
-							temp = temp.filter(
-								transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart)
-							);
-						}
-						if (sortingOptions.DateTimeEnd && sortingOptions.DateTimeEnd.length > 14) {
-							temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
-						}
-
-						if (sortingOptions.SortingOptions && sortingOptions.SortingOptions != '') {
-							if (sortingOptions.SortingOptions == 'DateTime')
-								temp = temp.sort((a, b) => {
-									if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-							if (sortingOptions.SortingOptions == 'Status') {
-								temp = temp.sort((a, b) => {
-									if (a.status.localeCompare(b.status) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-							}
-							if (sortingOptions.SortingOptions == 'Amount') {
-								temp = temp.sort((a, b) => {
-									if (a.amount - b.amount > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-							}
-							if (sortingOptions.SortingOptions == 'Recipient') {
-								temp = temp.sort((a, b) => {
-									if (a.recipient.localeCompare(b.recipient) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-							}
-						}
-					}
-					resolveO({ data: temp });
+					reject(401);
 				});
 		else {
 			sortingOptions = mockSortingOptons;
@@ -217,12 +140,7 @@ export function getMaxAmount(mock) {
 					);
 				})
 				.catch(function (err) {
-					//	if (err.response.status === 401) navigate('/login');
-					resolveO(
-						transactions.reduce((max, item) => {
-							return item.amount > max ? item.amount : max;
-						}, 0)
-					);
+					reject(401);
 				});
 		else
 			resolveO(
@@ -231,15 +149,6 @@ export function getMaxAmount(mock) {
 				}, 0)
 			);
 	});
-	/*
-return axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
-		method: 'GET',
-		params: sortingOptions,
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-*/
 }
 
 export function getTransactionDetails(id, mock) {
@@ -257,7 +166,7 @@ export function getTransactionDetails(id, mock) {
 				})
 				.catch(function (response) {
 					//if (err.response.status === 401) navigate('/login');
-					resolve({ data: transactions.filter(a => a.id == id)[0] });
+					reject(401);
 				});
 		else resolve({ data: transactions.filter(a => a.id == id)[0] });
 	});

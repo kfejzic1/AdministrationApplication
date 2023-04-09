@@ -26,15 +26,15 @@ export default function TransactionsListHeader(arg) {
 	const [amountMax, setAmountMax] = useState(arg.max);
 	useEffect(() => {
 		setAmountMax(arg.max);
-		if (arg.max < value1[1] && arg.max < value1[0]) setValue1([0, arg.max]);
-		else if (arg.max < value1[1]) setValue1([value1[0], arg.max]);
+		if (arg.max < value1[1] && arg.max < value1[0]) setValue1([0, 10000]);
+		else if (arg.max < value1[1]) setValue1([value1[0], 10000]);
+		else setValue1([0, 10000]);
 	}, [arg.max]);
 	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
-
 	const updateFilterOptions = () => {
-		if (amountMax == value1[1] && 0 == value1[0])
+		if (amountMax - 10 < value1[1] && 0 == value1[0])
 			arg.setFilterOptions({
 				Recipient: recipientFilter,
 				Status: statusFilter,
@@ -271,7 +271,7 @@ export default function TransactionsListHeader(arg) {
 					</LocalizationProvider>
 				</TableCell>
 
-				<TableCell>
+				<TableCell align='center'>
 					<TextField
 						value={recipientFilter}
 						onChange={e => {
@@ -282,16 +282,15 @@ export default function TransactionsListHeader(arg) {
 				<TableCell>
 					<Box>
 						<Box sx={{ flexDirection: 'row', display: 'flex', justifyContent: 'space-between' }}>
-							<Typography>Min: {value1[0]}</Typography>
-							<Typography>Max: {value1[1]}</Typography>
+							<Typography>Min: {parseInt((amountMax * value1[0]) / 10000)}</Typography>
+							<Typography>Max: {parseInt((amountMax * value1[1]) / 10000)}</Typography>
 						</Box>
 						<Slider
 							getAriaLabel={() => 'Minimum distance'}
 							value={value1}
 							min={0}
-							max={amountMax}
+							max={10000}
 							onChange={handleChange1}
-							valueLabelDisplay='auto'
 							getAriaValueText={a => a}
 							disableSwap
 						/>
