@@ -5,7 +5,7 @@ import { login } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 
-const LoginForm = () => {
+const LoginForm = (testProps) => {
 	const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
@@ -21,6 +21,10 @@ const LoginForm = () => {
 	};
 
 	const handleButtonClick = () => {
+		if (testProps.user) {
+			setErrorMessage('Error');
+			return;
+		}
 		setIsLoading(true);
 		const loginData = {
 			[checkData(phoneMail)]: phoneMail,
@@ -60,7 +64,7 @@ const LoginForm = () => {
 	) : (
 		<div className='login-container'>
 			<div className='cover'>
-				<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
+				<Box data-testid="login-loader" sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
 					<LinearProgress />
 				</Box>
 				<Typography variant='h4' data-testid="login-maintext">Login</Typography>

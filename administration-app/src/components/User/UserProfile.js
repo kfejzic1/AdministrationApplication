@@ -21,8 +21,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
 import LogoutButton from '../Login/Logout';
 
-const ProfilePage = () => {
-	const [user, setUser] = useState(null);
+const ProfilePage = (testProps) => {
+	const [user, setUser] = useState(testProps.user ? testProps.user : null);
 	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
@@ -63,7 +63,7 @@ const ProfilePage = () => {
 
 	return (
 		<div className='container'>
-			<Box className='profile-banner rounded-left text-center'>
+			<Box className='profile-banner rounded-left text-center' data-testid="user-banner">
 				<Box
 					className='mt-4'
 					component='img'
@@ -74,12 +74,13 @@ const ProfilePage = () => {
 					style={{ borderRadius: 125 }}
 					alt='profile-pic'
 					src='https://imgur.com/NAGTvvz.png'
+					data-testid="user-image"
 				/>
 			</Box>
 
 			<Box>
 				<Box className='profile-main text-center'>
-					<Typography variant='h3' style={{ background: 'white' }}>
+					<Typography variant='h3' style={{ background: 'white' }} data-testid="user-name">
 						{user?.userName}
 					</Typography>
 				</Box>
@@ -87,31 +88,31 @@ const ProfilePage = () => {
 				<hr style={{ margin: 'auto' }} />
 
 				<Box className='profile-details'>
-					<TableContainer className='profile-info' component={Paper}>
+					<TableContainer className='profile-info' component={Paper} data-testid="user-details">
 						<Table>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									First Name
 								</TableCell>
-								<TableCell align='center'>{user?.firstName}</TableCell>
+								<TableCell align='center' data-testid="user-firstname">{user?.firstName}</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Last Name
 								</TableCell>
-								<TableCell align='center'>{user?.lastName}</TableCell>
+								<TableCell align='center' data-testid="user-lastname">{user?.lastName}</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Email
 								</TableCell>
-								<TableCell align='center'>{user?.email}</TableCell>
+								<TableCell align='center' data-testid="user-email">{user?.email}</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Phone
 								</TableCell>
-								<TableCell align='center'>{user?.phone}</TableCell>
+								<TableCell align='center' data-testid="user-phone">{user?.phone}</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
@@ -139,7 +140,7 @@ const ProfilePage = () => {
 						<LinearProgress />
 					</Box>
 				</Box>
-				<Box className='text-center'>
+				<Box className='text-center' data-testid='user-logout'>
 					<LogoutButton />
 				</Box>
 			</Box>
