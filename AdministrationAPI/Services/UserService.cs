@@ -298,5 +298,12 @@ namespace AdministrationAPI.Services
             await emailSender.SendPasswordResetEmailAsync(email, token);
         }
 
+        public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
+        {
+            var user = GetUserById(request.Id);
+            var result = await _userManager.ResetPasswordAsync(user,request.Token,request.Password);
+            return result;
+        }
+
     }
 }

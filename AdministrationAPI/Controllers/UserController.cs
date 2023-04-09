@@ -281,6 +281,8 @@ namespace AdministrationAPI.Controllers
 
         }
 
+
+
         [HttpGet("{name}")]
         public IActionResult GetUserByName([FromRoute] string name)
         {
