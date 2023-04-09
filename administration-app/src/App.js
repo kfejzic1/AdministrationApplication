@@ -9,7 +9,6 @@ import { NavBar } from './components/NavBar/NavBar';
 import { TransactionsList } from './components/TransactionsView/transactions/TransactionsList';
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
-
 import './App.css';
 
 function App() {
