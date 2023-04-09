@@ -3,8 +3,6 @@ using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services
 {

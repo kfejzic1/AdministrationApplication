@@ -6,8 +6,6 @@ namespace AdministrationAPI.Contracts.Requests
         public DateTime? Created { get; set; }
         public string? CreatedBy { get; set; }
         public int VendorId { get; set; }
-        public DateTime? Modified { get; set; }
-        public int? ModifiedBy { get; set; }
     }
 
     public class VendorLocationUpdateRequest

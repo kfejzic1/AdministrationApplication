@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,6 +34,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.Create(request));
             }
             catch (DataException ex)
@@ -112,6 +114,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorLocationService.Create(request));
             }
             catch (DataException ex)
@@ -202,6 +205,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                request.ModifiedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorLocationService.Update(request));
             }
             catch (DataException ex)
@@ -220,6 +224,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorPOSService.Create(request));
             }
             catch (DataException ex)
@@ -237,6 +242,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                request.ModifiedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorPOSService.Update(request.Id, request));
             }
             catch (DataException ex)
