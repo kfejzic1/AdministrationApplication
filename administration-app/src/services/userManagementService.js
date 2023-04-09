@@ -12,7 +12,7 @@ export function createUser(request) {
 	});
 }
 
-export function setCustomerPassword(request) {
+export function setUserPassword(request) {
 	return axios(env.API_ENV.url + '/api/Customer/setCustomerPassword', {
 		method: 'POST',
 		data: request,
@@ -22,7 +22,7 @@ export function setCustomerPassword(request) {
 	});
 }
 
-export function resetCustomerPassword(request) {
+export function resetUserPassword(request) {
 	return axios(env.API_ENV.url + '/api/Customer/resetCustomerPassword', {
 		method: 'PATCH',
 		data: request,
@@ -32,12 +32,12 @@ export function resetCustomerPassword(request) {
 	});
 }
 
-export function getAllCustomers() {
-	return axios(env.API_ENV.url + '/api/User', {
+export function getAllUsers() {
+	return axios(env.API_ENV.url + '/api/User/allWithRoles', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer' + localStorage.getItem('token'),
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }
@@ -47,7 +47,7 @@ export function findCustomerById(id) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer' + localStorage.getItem('token'),
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }
