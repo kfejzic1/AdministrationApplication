@@ -1,4 +1,4 @@
-import { getMaxAmount, getTransactions } from '../../../services/TransactionsView/transactionsService';
+import { getTransactions } from '../../../services/TransactionsView/transactionsService';
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
 import TransactionDetails from './TransactionDetails';
@@ -22,7 +22,6 @@ import Modal from '@material-ui/core/Modal';
 export const TransactionsList = arg => {
 	const [alertShowing, setAlertShowing] = useState(false);
 	const [mock, setMock] = useState(false);
-	const [maxAmount, setMaxAmount] = useState(100);
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
@@ -52,38 +51,27 @@ export const TransactionsList = arg => {
 			setCounter(1);
 			tempCounter = 1;
 		}
-		getMaxAmount(mock)
-			.then(amount => {
-				setMaxAmount(amount);
-				console.log('postvalne amoutn', amount);
-				getTransactions(tempCounter, 15, filterOptions, mock)
-					.then(transactions1 => {
-						var temp1 = [...transactionsRaw, ...transactions1.data];
-						if ('clear-load' == a) {
-							temp1 = transactions1.data;
-						}
-						setTransactionsRaw(temp1);
-						var transactionsdata = temp1.map((item, index) => (
-							<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
-						));
-						setTransactions(transactionsdata);
-						setHasMore(true);
-						setCounter(counter + 1);
-						setIsLoading(false);
-					})
-					.catch(e => {
-						if (e == 401 && !alertShowing) {
-							setAlertShowing(true);
-							
-						} else {
-							setHasMore(false);
-							setIsLoading(false);
-						}
-					});
+		getTransactions(tempCounter, 15, filterOptions, mock)
+			.then(transactions1 => {
+				var temp1 = [...transactionsRaw, ...transactions1.data];
+				if ('clear-load' == a) {
+					temp1 = transactions1.data;
+				}
+				setTransactionsRaw(temp1);
+				var transactionsdata = temp1.map((item, index) => (
+					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
+				));
+				setTransactions(transactionsdata);
+				setHasMore(true);
+				setCounter(counter + 1);
+				setIsLoading(false);
 			})
 			.catch(e => {
-				if (!alertShowing && e == 401) {
+				if (e == 401 && !alertShowing) {
 					setAlertShowing(true);
+				} else {
+					setHasMore(false);
+					setIsLoading(false);
 				}
 			});
 	}
@@ -136,10 +124,7 @@ export const TransactionsList = arg => {
 							<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
 								<TableContainer>
 									<Table>
-										<TransactionsListHeader
-											max={maxAmount}
-											setFilterOptions={setFilterOptions}
-										></TransactionsListHeader>
+										<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
 										<TableBody>{transactions}</TableBody>
 									</Table>
 								</TableContainer>

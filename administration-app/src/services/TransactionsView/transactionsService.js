@@ -122,34 +122,6 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 		}
 	});
 }
-export function getMaxAmount(mock) {
-	return new Promise(function (resolveO, reject) {
-		if (!mock)
-			axios(env.API_ENV.url + '/api/transactions', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
-				.then(function (response) {
-					resolveO(
-						response.data.reduce((max, item) => {
-							return item.amount > max ? item.amount : max;
-						}, 0)
-					);
-				})
-				.catch(function (err) {
-					if (err.response.status == 401) reject(401);
-				});
-		else
-			resolveO(
-				transactions.reduce((max, item) => {
-					return item.amount > max ? item.amount : max;
-				}, 0)
-			);
-	});
-}
 
 export function getTransactionDetails(id, mock) {
 	return new Promise((resolve, reject) => {
