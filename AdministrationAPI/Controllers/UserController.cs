@@ -113,7 +113,7 @@ namespace AdministrationAPI.Controllers
                         return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
                     }
 
-                    _userService.SendConfirmationEmail(user.Id);
+                    _userService.SendConfirmationEmail(user.Email);
 
                     var resultCreation = new ObjectResult(new { statusCode = 201, message = "User created and confirmation email is sent to " + user.Email + " succesfully" });
                     resultCreation.StatusCode = 201;
