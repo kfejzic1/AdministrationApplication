@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Net;
 using AdministrationAPI.Contracts.Requests.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdministrationAPI.Controllers
 {
@@ -290,7 +291,6 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User not found.");
             }
-           
             var result = await _userService.ResetPasswordAsync(request);
 
             if (result.Succeeded)

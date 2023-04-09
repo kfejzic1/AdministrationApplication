@@ -24,19 +24,22 @@ namespace AdministrationAPI.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IConfiguration configuration,
-            IMapper mapper
-            
+            IMapper mapper,
+            RoleManager<IdentityRole> roleManager
+
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public async Task<UserDT> GetUser(string id)
