@@ -13,6 +13,8 @@ using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
+using AdministrationAPI.Contracts.Requests.Users;
 
 namespace AdministrationAPI.Controllers
 {
@@ -192,6 +194,49 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPost("create")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateUser([FromBody] CreateRequest request)
+        {
+            try
+            {
+                if (_userService.GetUserByEmail(request.Email) != null)
+                {
+                    var result = new ObjectResult(new { statusCode = 204, message = "User with this email already exists!" });
+                    result.StatusCode = 204;
+                    return result;
+                }
+
+                var createResult = await _userService.CreateUser(request);
+                if (createResult.Succeeded)
+                {
+                    var user = _userService.GetUserByEmail(request.Email);
+                    if (user == null)
+                    {
+                        return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
+                    }
+
+                    _userService.SendConfirmationEmail(user.Email);
+
+                    var resultCreation = new ObjectResult(new { statusCode = 201, message = "User created and confirmation email has been sent to " + user.Email + " succesfully" });
+                    resultCreation.StatusCode = 201;
+                    return resultCreation;
+                }
+                else return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
+
+
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.CreateUser");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
@@ -297,7 +342,64 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPost("setPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SetUserPassword([FromBody] SetPasswordRequest request)
+        {
+            var customer = _userService.GetUserById(request.Id);
+            if (customer == null)
+            {
+                return NotFound("User not found.");
+            }
+            if (request.Password == null)
+            {
+                return BadRequest("Password can't be null");
+            }
+
+            var result = await _userService.SetPassword(request);
+
+            if (result.Succeeded)
+            {
+                return Ok("Password set succesfully");
+            }
+            else
+            {
+                return BadRequest("Invalid token");
+            }
+        }
+
+        [HttpPatch("edit")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditUser([FromBody] EditRequest request)
+        {
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            var result = await _userService.EditUser(request);
+            if (result.Succeeded)
+            {
+                return Ok("User successfully updated");
+            }
+            else
+            {
+                return BadRequest("Error while updating user");
+            }
+        }
+
+        [HttpGet("allWithRoles")]
+        [AllowAnonymous]
+        public IActionResult GetAllUsersWithRoles()
+        {
+            var users = _userService.GetAllUsers();
+            var usersWithRoles = users.Select(u => _userService.GetUserWithRolesById(u.Id));
+            return Ok(usersWithRoles);
+
+        }
+
         [HttpGet("all")]
+        [AllowAnonymous]
         public IActionResult GetAllUsers()
         {
             try
@@ -314,6 +416,61 @@ namespace AdministrationAPI.Controllers
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
                 return StatusCode(500, ex.Message);
             }
+        }
+        [HttpGet("roles")]
+        [AllowAnonymous]
+        public IEnumerable<IdentityRole> GetRoles()
+        {
+            return _userService.GetRoles();
+        }
+
+        [HttpGet("byId/{id}")]
+        [AllowAnonymous]
+        public Task<GetUserResponse> GetUser([FromRoute] string id)
+        {
+            return _userService.GetUserWithRolesById(id);
+        }
+
+        [HttpPost("forgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+            if (user.EmailConfirmed == false)
+            {
+                return BadRequest("User didn't finish the account creation process");
+            }
+
+            _userService.SendPasswordResetEmail(user.Email);
+
+            return new ObjectResult(new { statusCode = 201, message = "Password reset link has been sent to user's email succesfully" });
+
+        }
+
+        [HttpPatch("resetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] SetPasswordRequest request)
+        {
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+            var result = await _userService.ResetPasswordAsync(request);
+
+            if (result.Succeeded)
+            {
+                return Ok("Password successfully changed.");
+            }
+            else
+            {
+                return BadRequest("Invalid token or token expired");
+            }
+
         }
 
         [HttpGet("{name}")]

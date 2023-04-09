@@ -12,7 +12,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("SqliteMain");
+var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
 builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
@@ -72,12 +72,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
 builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>();
 
 
 var provider = builder.Services.BuildServiceProvider();
@@ -94,6 +95,23 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+if (!await roleManager.RoleExistsAsync("Admin"))
+{
+    await roleManager.CreateAsync(new IdentityRole("Admin"));
+}
+
+if (!await roleManager.RoleExistsAsync("User"))
+{
+    await roleManager.CreateAsync(new IdentityRole("User"));
+}
+
+if (!await roleManager.RoleExistsAsync("Restricted"))
+{
+    await roleManager.CreateAsync(new IdentityRole("Restricted"));
+}
 
 // Configure the HTTP request pipeline.
 

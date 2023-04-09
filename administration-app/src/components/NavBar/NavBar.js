@@ -30,6 +30,9 @@ export const NavBar = props => {
 					<Button component={Link} to='/vendor-management' color='primary'>
 						Vendor management
 					</Button>
+					<Button component={Link} to='/user-management' color='primary'>
+						User management
+					</Button>
 					<LogoutButton />
 				</Toolbar>
 			) : (

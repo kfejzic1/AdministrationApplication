@@ -2,12 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\AdministrationAPI",
-    "\\AdministrationAPI\\Contracts",
-    "\\AdministrationAPI\\Contracts\\Requests",
-    "\\AdministrationAPI\\Controllers",
-    "\\AdministrationAPI\\Migrations",
-    "\\AdministrationAPI\\Models",
-    "\\AdministrationAPI\\Services"
+    "\\AdministrationAPI\\Migrations"
   ],
   "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
   "PreviewInSolutionExplorer": false
