@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   si:
+    build: .
     image: siprojekat:latest
     container_name: siprojekat
     ports:
