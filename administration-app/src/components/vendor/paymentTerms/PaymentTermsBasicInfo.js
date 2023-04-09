@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getVendor } from '../../../services/vendorService';
-import { getAllVendorLocations } from '../../../services/vendorService';
+import { createPaymentTerm, uploadFile } from '../../../services/vendorService';
 import {
 	Box,
 	Table,
@@ -16,6 +15,7 @@ import {
 	Paper,
 	Typography,
 	Divider,
+	Button,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -39,7 +39,26 @@ const useStyles = makeStyles({
 	root: {},
 });
 
-export default function VendorPaymentTerms() {
+export default function VendorPaymentTerms(props) {
+	const [contracts, setContracts] = useState([]);
+
+	const handleChange = event => {
+		const files = Array.from(event.target.files);
+		const [file] = files;
+
+		console.log('file', files);
+		setContracts(file);
+
+		//Prvo se kreira payment term, njegov Id se proslijedi prilikom slanja contracts
+		var paymentTermId = 1;
+		const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'vendor/contracts', props.vendorName))));
+		Promise.allSettled(calls).then(res => {
+			var documentIds = res.map(x => x.value.data);
+
+			setContracts([]);
+		});
+	};
+
 	return (
 		<Box sx={{ mt: 2, mb: 2, minHeight: '100px' }}>
 			<Box sx={{ width: '97%', margin: 'auto', pt: '1%' }}>
@@ -57,7 +76,20 @@ export default function VendorPaymentTerms() {
 						Payment Terms
 					</Typography>
 					<Divider />
-					AAAA
+					<input
+						accept='.pdf'
+						// className={classes.input}
+						style={{ display: 'none' }}
+						id='raised-button-file'
+						multiple
+						type='file'
+						onChange={handleChange}
+					/>
+					<label htmlFor='raised-button-file'>
+						<Button variant='raised' component='span'>
+							Upload
+						</Button>
+					</label>
 				</Paper>
 			</Box>
 		</Box>

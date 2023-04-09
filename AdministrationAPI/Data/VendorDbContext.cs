@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models.Vendor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,10 @@ namespace AdministrationAPI.Data
         public DbSet<VendorUser> VendorUsers { get; set; }
         public DbSet<VendorLocation> VendorLocations { get; set; }
         public DbSet<VendorPOS> VendorPOS { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
+        public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -19,11 +24,12 @@ namespace AdministrationAPI.Data
             .AddJsonFile("appsettings.json")
             .Build();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+            var connectionString = configuration.GetConnectionString("SqliteMain");
 
             Console.WriteLine("Default connection string: " + connectionString);
 
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseSqlite(connectionString);
+            //optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }

@@ -16,9 +16,8 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
-builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
-builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
+builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();

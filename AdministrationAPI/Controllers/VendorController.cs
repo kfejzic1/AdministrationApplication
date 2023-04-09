@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Vendors;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
@@ -16,17 +17,15 @@ namespace AdministrationAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VendorController : ControllerBase
     {
-        private readonly IVendorLocationService _vendorLocationService;
         private readonly IVendorService _vendorService;
+        private readonly IDocumentService _documentService;
         private readonly IUserService _userService;
-        private readonly IVendorPOSService _vendorPOSService;
 
-        public VendorController(IVendorService vendorService, IUserService userService, IVendorLocationService vendorLocationService, IVendorPOSService vendorPOSService)
+        public VendorController(IVendorService vendorService, IDocumentService documentService, IUserService userService)
         {
             _vendorService = vendorService;
+            _documentService = documentService;
             _userService = userService;
-            _vendorLocationService = vendorLocationService;
-            _vendorPOSService = vendorPOSService;
         }
 
         [HttpPost]
@@ -61,11 +60,10 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Delete");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Delete");
                 return StatusCode(500, ex.Message);
             }
         }
-
 
         [HttpGet]
         public IActionResult GetVendors()
@@ -104,7 +102,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -115,7 +113,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 request.CreatedBy = ControlExtensions.GetId(HttpContext);
-                return Ok(_vendorLocationService.Create(request));
+                return Ok(_vendorService.CreateLocation(request));
             }
             catch (DataException ex)
             {
@@ -133,7 +131,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorLocationService.Delete(request));
+                return Ok(_vendorService.DeleteLocation(request));
             }
             catch (DataException ex)
             {
@@ -141,7 +139,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Delete");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Delete");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -151,7 +149,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorLocationService.Get(locationId));
+                return Ok(_vendorService.Get(locationId));
             }
             catch (DataException ex)
             {
@@ -159,7 +157,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -169,7 +167,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorLocationService.GetAll());
+                return Ok(_vendorService.GetAll());
             }
             catch (DataException ex)
             {
@@ -177,7 +175,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -187,7 +185,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorLocationService.GetAllWithVendorId(vendorId));
+                return Ok(_vendorService.GetAllLocationsWithVendorId(vendorId));
             }
             catch (DataException ex)
             {
@@ -195,7 +193,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -206,7 +204,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 request.ModifiedBy = ControlExtensions.GetId(HttpContext);
-                return Ok(_vendorLocationService.Update(request));
+                return Ok(_vendorService.UpdateLocation(request));
             }
             catch (DataException ex)
             {
@@ -214,7 +212,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Update");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Update");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -225,7 +223,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 request.CreatedBy = ControlExtensions.GetId(HttpContext);
-                return Ok(_vendorPOSService.Create(request));
+                return Ok(_vendorService.CreatePOS(request));
             }
             catch (DataException ex)
             {
@@ -233,17 +231,18 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpPut("POS/Update")]
         public IActionResult POSUpdate([FromBody] POSUpdateRequest request)
         {
             try
             {
                 request.ModifiedBy = ControlExtensions.GetId(HttpContext);
-                return Ok(_vendorPOSService.Update(request.Id, request));
+                return Ok(_vendorService.UpdatePOS(request.Id, request));
             }
             catch (DataException ex)
             {
@@ -251,7 +250,7 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Update");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Update");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -261,7 +260,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorPOSService.Delete(request.Id));
+                return Ok(_vendorService.Delete(request.Id));
             }
             catch (DataException ex)
             {
@@ -269,17 +268,17 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Delete");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Delete");
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpGet("POS/{locationId}")]
         public IActionResult GetPOSs([FromRoute] int locationId)
         {
-
             try
             {
-                var vendors = _vendorPOSService.GetAll(locationId);
+                var vendors = _vendorService.GetAllPOS(locationId);
                 vendors.ForEach(vendor =>
                 {
                     vendor.LocationId = locationId;
@@ -293,10 +292,35 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "POSController.Create");
+                LoggerUtility.Logger.LogException(ex, "VendorController.Create");
                 return StatusCode(500, ex.Message);
             }
         }
 
+        [HttpPost("PaymentTerm/Create")]
+        public IActionResult AddPaymentTerm([FromBody] PaymentTermRequest paymentTermRequest)
+        {
+            try
+            {
+                paymentTermRequest.CreatedBy = ControlExtensions.GetId(HttpContext);
+                //Create payment terms and bond documents
+                _vendorService.CreatePaymentTerm(paymentTermRequest);
+
+                return Ok();
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return StatusCode(409, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "VendorController.PaymentTerms");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
