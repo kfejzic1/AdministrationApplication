@@ -43,7 +43,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					resolveO(response);
 				})
 				.catch(function (err) {
-					reject(401);
+					if (err.response.status == 401) reject(401);
 				});
 		else {
 			sortingOptions = mockSortingOptons;
@@ -140,7 +140,7 @@ export function getMaxAmount(mock) {
 					);
 				})
 				.catch(function (err) {
-					reject(401);
+					if (err.response.status == 401) reject(401);
 				});
 		else
 			resolveO(

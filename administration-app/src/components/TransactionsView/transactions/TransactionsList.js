@@ -18,7 +18,9 @@ import {
 } from '@mui/material';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
+import Modal from '@material-ui/core/Modal';
 export const TransactionsList = arg => {
+	const [alertShowing, setAlertShowing] = useState(false);
 	const [mock, setMock] = useState(false);
 	const [maxAmount, setMaxAmount] = useState(100);
 	const [filterOptions, setFilterOptions] = useState(null);
@@ -70,9 +72,9 @@ export const TransactionsList = arg => {
 						setIsLoading(false);
 					})
 					.catch(e => {
-						if (e == 401) {
-							alert('Your session has been expired, please login again.');
-							navigate('/login');
+						if (e == 401 && !alertShowing) {
+							setAlertShowing(true);
+							
 						} else {
 							setHasMore(false);
 							setIsLoading(false);
@@ -80,9 +82,8 @@ export const TransactionsList = arg => {
 					});
 			})
 			.catch(e => {
-				if (e == 401) {
-					alert('Your session has been expired, please login again.');
-					navigate('/login');
+				if (!alertShowing && e == 401) {
+					setAlertShowing(true);
 				}
 			});
 	}
@@ -110,6 +111,8 @@ export const TransactionsList = arg => {
 				{details != null ? (
 					// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
 					<TransactionDetails
+						alertShowing={alertShowing}
+						setAlertShowing={setAlertShowing}
 						setPaymentInfo={arg.setPaymentInfo}
 						setIsLoading={setIsLoading}
 						setDetails={setDetails}
@@ -150,6 +153,40 @@ export const TransactionsList = arg => {
 					</Box>
 				)}
 			</ThemeProvider>
+			<Modal
+				open={alertShowing}
+				onClose={() => {
+					navigate('/login');
+				}}
+			>
+				<Box
+					sx={{
+						backgroundColor: '#f44336',
+						color: '#fff',
+						padding: 7,
+						position: 'fixed',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
+						zIndex: '9999',
+						borderRadius: 3,
+						textAlign: 'center',
+					}}
+				>
+					<Typography>Your session has been expired, please login again.</Typography>
+					<Button
+						variant='contained'
+						color='primary'
+						align='center'
+						sx={{ mt: 3 }}
+						onClick={() => {
+							navigate('/login');
+						}}
+					>
+						Log in
+					</Button>
+				</Box>
+			</Modal>
 		</Box>
 	);
 };

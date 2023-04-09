@@ -18,8 +18,8 @@ import MenuItem from '@mui/material/MenuItem';
 export default function TransactionsListHeader(arg) {
 	const [sortingColumn, setSortingColumn] = useState('');
 	const [sortingDirection, setSortingDirection] = useState('asc');
-	const [dateStartFilter, setDateStartFilter] = useState('');
-	const [dateEndFilter, setDateEndFilter] = useState('');
+	const [dateStartFilter, setDateStartFilter] = useState(null);
+	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
 	const [statusFilter, setStatusFilter] = useState('');
 
@@ -29,12 +29,13 @@ export default function TransactionsListHeader(arg) {
 		if (arg.max < value1[1] && arg.max < value1[0]) setValue1([0, 10000]);
 		else if (arg.max < value1[1]) setValue1([value1[0], 10000]);
 		else setValue1([0, 10000]);
+		updateFilterOptions();
 	}, [arg.max]);
 	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
 	const updateFilterOptions = () => {
-		if (amountMax - 10 < value1[1] && 0 == value1[0])
+		if (amountMax - 10 < (amountMax * value1[1]) / 10000 && 0 == value1[0])
 			arg.setFilterOptions({
 				Recipient: recipientFilter,
 				Status: statusFilter,
@@ -51,8 +52,8 @@ export default function TransactionsListHeader(arg) {
 				Status: statusFilter,
 				DateTimeStart: dateStartFilter,
 				DateTimeEnd: dateEndFilter,
-				MinAmount: value1[0],
-				MaxAmount: value1[1],
+				MinAmount: (amountMax * value1[0]) / 10000,
+				MaxAmount: (amountMax * value1[1]) / 10000,
 				SortingOptions: sortingColumn,
 				Ascending: sortingDirection == 'asc' ? true : false,
 			});
@@ -256,12 +257,14 @@ export default function TransactionsListHeader(arg) {
 								label='Start'
 								sx={{ width: 'auto' }}
 								maxDate={dateEndFilter}
+								value={dateStartFilter}
 								onChange={a => {
 									setDateStartFilter(a);
 								}}
 							></DesktopDatePicker>
 							<DesktopDatePicker
 								minDate={dateStartFilter}
+								value={dateEndFilter}
 								onChange={a => {
 									setDateEndFilter(a);
 								}}
@@ -330,9 +333,9 @@ export default function TransactionsListHeader(arg) {
 							onClick={() => {
 								setRecipientFilter('');
 								setStatusFilter('');
-								setDateStartFilter('');
-								setDateEndFilter('');
-								setValue1([0, amountMax]);
+								setDateStartFilter(null);
+								setDateEndFilter(null);
+								setValue1([0, 10000]);
 								setSortingDirection('asc');
 								setSortingColumn('DateTime');
 								arg.setFilterOptions({
