@@ -25,7 +25,7 @@ import LogoutButton from '../Login/Logout';
 
 
 
-const ProfilePage = () => {
+const ProfilePage = (props) => {
 	const [user, setUser] = useState(null);
 	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
@@ -36,11 +36,11 @@ const ProfilePage = () => {
 
 	const RedTableCell = withStyles({
 		root: {
-			border: '2px solid red',
-			borderBottom: '2px solid red',
+		  border: '2px solid red',
+		  borderBottom: '2px solid red',
+		  borderRadius: '10px', // Add this line to add rounded corners
 		},
 	  })(TableCell);
-
 
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [showTooltipMail, setShowTooltipMail] = useState(false);
@@ -150,7 +150,7 @@ const ProfilePage = () => {
 									<Tooltip
 									title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
 									open={showTooltipMail}
-									placement="top-end"
+									placement="right-start"
 									>
 										<RedTableCell 
 											onMouseEnter={handleInputMouseEnterMail}
@@ -179,7 +179,7 @@ const ProfilePage = () => {
 									<Tooltip
 										title={<Typography fontSize={15}>Phone is not confirmed/verified</Typography>}
 										open={showTooltip}
-										placement="top-end"
+										placement="right-start"
 									>
 										<RedTableCell 
 											onMouseEnter={handleInputMouseEnter}
