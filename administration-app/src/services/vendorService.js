@@ -111,7 +111,7 @@ export async function uploadFile(file, folder, vendorName) {
 	let data = new FormData();
 	data.append('file', file, file.name);
 	data.append('Folder', folder);
-	data.append('VendorName', vendorName);
+	data.append('NodeName', vendorName);
 
 	return axios.post(env.API_ENV.url + '/api/Document/UploadDocument', data, {
 		headers: {

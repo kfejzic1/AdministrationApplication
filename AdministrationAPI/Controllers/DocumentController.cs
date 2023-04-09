@@ -38,7 +38,7 @@ namespace AdministrationAPI.Controllers
                         var document = new Document
                         {
                             FileName = file.FileName.ToString(),
-                            Folder = httpRequest.Form["Folder"].ToString() + '/' + httpRequest.Form["VendorName"].ToString(),
+                            Folder = httpRequest.Form["Folder"].ToString() + '/' + httpRequest.Form["NodeName"].ToString(),
                             CreatedBy = ControlExtensions.GetId(HttpContext),
                             Created = DateTime.Now,
                         };
