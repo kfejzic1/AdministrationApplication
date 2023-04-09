@@ -106,15 +106,17 @@ const useStyles = makeStyles({
 		},
 
 		'&.MuiButton-text': {
-			backgroundColor: '#ffaf36',
-			border: '1px solid #bbb8b8',
-			color: '#000000',
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			alignItems: 'center',
+			borderRadius: '10px',
+			color: '#222222',
 			textTransform: 'none',
-			width: 'auto',
+			width: '40%',
 			padding: '1px 15px',
+			boxShadow: 'rgba(0, 0, 0, .3) 2px 8px 8px -5px',
 			'&:hover': {
-				border: '1px solid #000000',
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #ffb649 2%, #ffffff)',
+				boxShadow: 'rgba(0, 0, 0, .2) 15px 28px 25px -18px',
 			},
 		},
 	},
@@ -281,11 +283,10 @@ export default function VendorsTable() {
 														<Chip key={user.Id} label={user.userName} style={{ margin: '3px' }} />
 													))}
 												</TableCell>
-												<TableCell>
+												<TableCell align='right'>
 													<Button
 														className={`${classes.button}`}
 														variant='text'
-														align='center'
 														onClick={() => {
 															openLocations(row.id);
 														}}>

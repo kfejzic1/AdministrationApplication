@@ -223,13 +223,6 @@ export default function Location() {
 						{vendor.companyDetails}
 					</Typography>
 				</div>
-				{/*
-  <div>
-    <Typography variant='body1' gutterBottom style={{color: 'black', fontWeight: 'bold'}}>
-      Phone: {vendor.phone}
-    </Typography>
-  </div>
-	*/}
 			</div>
 			<Box sx={{ height: '500px' }}>
 				<Box sx={{ width: '95%', margin: 'auto', pt: '1%' }}>

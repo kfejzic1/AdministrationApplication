@@ -19,8 +19,11 @@ const useStyles = makeStyles(theme => ({
 	button: {
 		marginRight: '20px',
 		'&.MuiButton-contained': {
-			backgroundColor: '#ffaf36',
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '10px',
 			color: 'black',
+			width: '15rem',
+			height: '30px',
 			'&:hover': {
 				backgroundColor: '#ea8c00',
 				boxShadow: 'none',
@@ -32,8 +35,10 @@ const useStyles = makeStyles(theme => ({
 			},
 		},
 		'&.MuiButton-outlined': {
-			color: '#ff9a00',
-			border: '2px solid #ffaf36',
+			color: '#ff7200',
+			height: '30px',
+			width: '15rem',
+			border: '2px solid #ff7200',
 			'&:hover': {
 				border: '2px solid #000000',
 				color: '#000000',

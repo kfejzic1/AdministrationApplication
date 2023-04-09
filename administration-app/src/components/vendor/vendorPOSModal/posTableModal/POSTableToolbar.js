@@ -10,31 +10,36 @@ import POSCreateModal from "../posCreateModal/POSCreateModal";
 import { makeStyles } from "@material-ui/core/styles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Loader from "../../../loaderDialog/Loader";
-const useStyles = makeStyles((theme) => ({
-  button: {
-    marginRight: "20px",
-    "&.MuiButton-contained": {
-      backgroundColor: "#ffaf36",
-      color: "black",
-      "&:hover": {
-        backgroundColor: "#ea8c00",
-        boxShadow: "none",
-      },
-      "&:disabled": {
-        backgroundColor: "#ffffff",
-        boxShadow: "none",
-        color: "#d3d3d3",
-      },
-    },
-    "&.MuiButton-outlined": {
-      color: "#ff9a00",
-      border: "2px solid #ffaf36",
-      "&:hover": {
-        border: "2px solid #000000",
-        color: "#000000",
-      },
-    },
-  },
+const useStyles = makeStyles(theme => ({
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '10px',
+			color: 'black',
+			width: '15rem',
+			height: '30px',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ff7200',
+			height: '30px',
+			width: '15rem',
+			border: '2px solid #ff7200',
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000',
+			},
+		},
+	},
 }));
 
 const tableTheme = createTheme({
