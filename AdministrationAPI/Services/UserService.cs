@@ -247,6 +247,11 @@ namespace AdministrationAPI.Services
             while(true)
             {
                 string newUsername = $"{usernameTemplate}{number}";
+                if (_userManager.Users.FirstOrDefault(u => u.UserName == newUsername) == null)
+                {
+                    newUser.UserName= newUsername;
+                    break;
+                }
                 number++;
             }
 
@@ -266,6 +271,11 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserById(request.Id);
             var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+            if (result.Succeeded)
+            {
+               var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
+                return passwordSet;
+            }
 
             return result;
         }
