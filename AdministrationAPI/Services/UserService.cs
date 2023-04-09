@@ -262,15 +262,16 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> CreateUser(CreateRequest request)
         {
-            var newUser = new User 
+            var newUser = new User() 
             {  
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
+                Address = "NoAddress"
             };
 
-            var usernameTemplate = $"{request.FirstName.First()}{request.LastName}";
+            var usernameTemplate = $"{request.FirstName.ToLower().First()}{request.LastName.ToLower()}";
             int number = 1;
             while(true)
             {
