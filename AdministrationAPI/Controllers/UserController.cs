@@ -210,6 +210,21 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPatch("editCustomer")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditCustomer([FromBody] EditRequest request)
+        {
+            var result = await _userService.EditCustomer(request);
+            if (result)
+            {
+                return Ok("User successfully updated");
+            }
+            else
+            {
+                return BadRequest("Error while updating user");
+            }
+        }
+
         [HttpGet("all")]
         public IActionResult GetAllUsers()
         {
