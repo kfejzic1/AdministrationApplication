@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 			borderRadius: '10px',
 			color: 'black',
 			'&:hover': {
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'none',
 			},
 			'&:disabled': {
@@ -31,9 +31,8 @@ const useStyles = makeStyles(theme => ({
 			},
 		},
 		'&.MuiButton-outlined': {
-			color: '#ff7200',
-
-			border: '2px solid #ff7200',
+			color: '#ffb649',
+			border: '2px solid #ffb649',
 			'&:hover': {
 				border: '2px solid #000000',
 				color: '#000000',

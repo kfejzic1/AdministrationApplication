@@ -78,6 +78,9 @@ const useStyles = makeStyles({
 		'& .MuiTableBody-root .Mui-selected:hover': {
 			backgroundColor: '#ffc976',
 		},
+		'& .css-177gid-MuiTableCell-root':{
+			padding: '10px'
+		}
 	},
 
 	button: {
@@ -115,7 +118,7 @@ const useStyles = makeStyles({
 			padding: '1px 15px',
 			boxShadow: 'rgba(0, 0, 0, .3) 2px 8px 8px -5px',
 			'&:hover': {
-				backgroundImage: 'linear-gradient(144deg, #ffb649 2%, #ffffff)',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'rgba(0, 0, 0, .2) 15px 28px 25px -18px',
 			},
 		},
@@ -273,7 +276,6 @@ export default function VendorsTable() {
 													/>
 												</TableCell>
 												<TableCell component='th' id={labelId} scope='row' padding='none'>
-													{row.id}
 												</TableCell>
 												<TableCell align='left'>{row.name}</TableCell>
 												<TableCell align='left'>{row.companyDetails}</TableCell>
@@ -283,8 +285,9 @@ export default function VendorsTable() {
 														<Chip key={user.Id} label={user.userName} style={{ margin: '3px' }} />
 													))}
 												</TableCell>
-												<TableCell align='right'>
+												<TableCell align='right' padding='15px'>
 													<Button
+														title='Details'
 														className={`${classes.button}`}
 														variant='text'
 														onClick={() => {
