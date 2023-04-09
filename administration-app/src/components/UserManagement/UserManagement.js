@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllUsers } from '../../services/userService';
-import { createUser } from '../../services/userManagementService';
+import { createUser, editUser, getAllUsers } from '../../services/userManagementService';
 import {
 	Button,
 	Dialog,
@@ -34,12 +33,24 @@ const UserManagement = () => {
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-
+	const [change, setChange] = useState(false);
 	useEffect(() => {
 		getAllUsers().then(response => {
-			setUsers(response.data);
+			setUsers(
+				response.data.map(u => {
+					return {
+						id: u.result.user.id,
+						firstName: u.result.user.firstName,
+						lastName: u.result.user.lastName,
+						email: u.result.user.email,
+						phoneNumber: u.result.user.phoneNumber,
+						address: u.result.user.address,
+						role: u.result.userRole,
+					};
+				})
+			);
 		});
-	});
+	}, [change]);
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
 	};
@@ -63,6 +74,7 @@ const UserManagement = () => {
 			.then(response => {
 				setOpenCreateDialog(false);
 				setOpenSnackbar(true);
+				setChange(!change);
 			})
 			.catch(error => console.error(error));
 	};
@@ -81,17 +93,21 @@ const UserManagement = () => {
 		event.preventDefault();
 		const form = event.target;
 		const updatedUser = {
-			...selectedUser,
-			name: form.name.value,
-			surname: form.surname.value,
+			id: selectedUser.id,
+			firstName: form.name.value,
+			lastName: form.surname.value,
 			email: form.email.value,
-			phone: form.phone.value,
+			phoneNumber: form.phone.value,
+			address: form.address.value,
 			role: form.role.value,
 		};
-		const updatedUsers = users.map(user => (user.id === selectedUser.id ? updatedUser : user));
-		setUsers(updatedUsers);
-		setOpenUpdateDialog(false);
-		setOpenSnackbar(true);
+		editUser(updatedUser)
+			.then(response => {
+				setOpenUpdateDialog(false);
+				setOpenSnackbar(true);
+				setChange(!change);
+			})
+			.catch(error => console.error(error));
 	};
 
 	const handleResetPassword = user => {
@@ -189,7 +205,7 @@ const UserManagement = () => {
 								<MenuItem value='User'>User</MenuItem>
 								<MenuItem value='Admin'>Admin</MenuItem>
 								<MenuItem value='Restricted'>Restricted</MenuItem>
-								<MenuItem value={undefined}>No role</MenuItem>
+								<MenuItem value=''>No role</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>

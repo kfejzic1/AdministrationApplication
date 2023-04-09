@@ -232,6 +232,7 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet("allWithRoles")]
+        [AllowAnonymous]
         public IActionResult GetAllUsersWithRoles()
         {
             var users = _userService.GetAllUsers();
