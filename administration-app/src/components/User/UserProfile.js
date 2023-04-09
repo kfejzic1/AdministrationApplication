@@ -19,9 +19,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
-import LogoutButton from '../Login/Logout';
 import OneSignal from 'react-onesignal';
-import addNotification from 'react-push-notification';
 
 const ProfilePage = props => {
 	const [user, setUser] = useState(null);
