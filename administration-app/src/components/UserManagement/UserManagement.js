@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllUsers } from '../../services/userService';
+import { createUser } from '../../services/userManagementService';
 import {
 	Button,
 	Dialog,
@@ -51,16 +52,19 @@ const UserManagement = () => {
 		event.preventDefault();
 		const form = event.target;
 		const newUser = {
-			id: users.length + 1,
-			name: form.name.value,
-			surname: form.surname.value,
+			firstName: form.name.value,
+			lastName: form.surname.value,
 			email: form.email.value,
-			phone: form.phone.value,
+			phoneNumber: form.phone.value,
+			address: form.address.value,
 			role: form.role.value,
 		};
-		setUsers([...users, newUser]);
-		setOpenCreateDialog(false);
-		setOpenSnackbar(true);
+		createUser(newUser)
+			.then(response => {
+				setOpenCreateDialog(false);
+				setOpenSnackbar(true);
+			})
+			.catch(error => console.error(error));
 	};
 
 	const handleUpdateDialogOpen = user => {
@@ -144,6 +148,7 @@ const UserManagement = () => {
 						<TextField margin='dense' name='surname' label='Surname' fullWidth />
 						<TextField margin='dense' name='email' label='Email' fullWidth />
 						<TextField margin='dense' name='phone' label='Phone' fullWidth />
+						<TextField margin='dense' name='address' label='Address' fullWidth />
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
 							<Select label='Role' name='role' defaultValue={'User'}>
@@ -177,12 +182,14 @@ const UserManagement = () => {
 						<TextField margin='dense' name='surname' label='Surname' fullWidth defaultValue={selectedUser.lastName} />
 						<TextField margin='dense' name='email' label='Email' fullWidth defaultValue={selectedUser.email} />
 						<TextField margin='dense' name='phone' label='Phone' fullWidth defaultValue={selectedUser.phoneNumber} />
+						<TextField margin='dense' name='address' label='Address' fullWidth defaultValue={selectedUser.address} />
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
 							<Select label='Role' name='role' defaultValue={selectedUser.role}>
 								<MenuItem value='User'>User</MenuItem>
 								<MenuItem value='Admin'>Admin</MenuItem>
 								<MenuItem value='Restricted'>Restricted</MenuItem>
+								<MenuItem value={undefined}>No role</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>

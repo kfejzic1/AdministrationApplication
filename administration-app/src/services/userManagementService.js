@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { env } from '../config/env';
 
-export function createCustomer(request) {
-	return axios(env.API_ENV.url + '/api/Customer/createCustomer', {
+export function createUser(request) {
+	return axios(env.API_ENV.url + '/api/User/create', {
 		method: 'POST',
 		data: request,
 		headers: {
