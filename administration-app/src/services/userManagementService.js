@@ -52,8 +52,8 @@ export function findCustomerById(id) {
 	});
 }
 
-export function editCustomer(editUserRequest) {
-	return axios(env.API_ENV.url + '/api/Customer/editCustomer', {
+export function editUser(editUserRequest) {
+	return axios(env.API_ENV.url + '/api/User/edit', {
 		method: 'PATCH',
 		data: editUserRequest,
 		headers: {

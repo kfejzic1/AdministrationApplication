@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllUsers } from '../../services/userService';
-import { createUser } from '../../services/userManagementService';
+import { createUser, editUser } from '../../services/userManagementService';
 import {
 	Button,
 	Dialog,
@@ -39,7 +39,7 @@ const UserManagement = () => {
 		getAllUsers().then(response => {
 			setUsers(response.data);
 		});
-	});
+	}, [users]);
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
 	};
@@ -81,15 +81,22 @@ const UserManagement = () => {
 		event.preventDefault();
 		const form = event.target;
 		const updatedUser = {
-			...selectedUser,
-			name: form.name.value,
-			surname: form.surname.value,
+			id: selectedUser.id,
+			firstName: form.name.value,
+			lastName: form.surname.value,
 			email: form.email.value,
-			phone: form.phone.value,
+			phoneNumber: form.phone.value,
+			address: form.address.value,
 			role: form.role.value,
 		};
-		const updatedUsers = users.map(user => (user.id === selectedUser.id ? updatedUser : user));
-		setUsers(updatedUsers);
+		console.log(updatedUser);
+		editUser(updatedUser)
+			.then(response => {
+				console.log(response);
+				setOpenCreateDialog(false);
+				setOpenSnackbar(true);
+			})
+			.catch(error => console.error(error));
 		setOpenUpdateDialog(false);
 		setOpenSnackbar(true);
 	};
