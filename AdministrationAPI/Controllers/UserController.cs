@@ -115,7 +115,7 @@ namespace AdministrationAPI.Controllers
 
                     _userService.SendConfirmationEmail(user.Email);
 
-                    var resultCreation = new ObjectResult(new { statusCode = 201, message = "User created and confirmation email is sent to " + user.Email + " succesfully" });
+                    var resultCreation = new ObjectResult(new { statusCode = 201, message = "User created and confirmation email has been sent to " + user.Email + " succesfully" });
                     resultCreation.StatusCode = 201;
                     return resultCreation;
                 }
@@ -279,7 +279,7 @@ namespace AdministrationAPI.Controllers
 
              _userService.SendPasswordResetEmail(user.Email);
 
-            return Ok("You may now reset your password");
+            return new ObjectResult(new { statusCode = 201, message = "Password reset link has been sent to user's email succesfully" });
 
         }
 
