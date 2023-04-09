@@ -96,11 +96,14 @@ namespace AdministrationAPI.Services
             return response;
         }
 
-        public async Task<TransactionDetailsDTO> GetTransactionByID(int id)
+        public async Task<TransactionDetailsDTO> GetTransactionByID(int id, string userId)
         {
             var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
             if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
-
+            if (dbTransaction.UserId != userId && dbTransaction.Recipient != userId)
+            {
+                throw new Exception("You don't have Transaction with this ID");
+            }
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
         }
 

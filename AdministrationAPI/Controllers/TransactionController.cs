@@ -69,8 +69,8 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
-                response = await _transactionService.GetTransactionByID(id);
-
+                var userId = ControlExtensions.GetId(HttpContext);
+                response = await _transactionService.GetTransactionByID(id, userId);
             }
             catch (Exception e)
             {
