@@ -1,7 +1,9 @@
-import { getMaxAmount, getTransactions } from '../../../services/TransactionsView/transactionsService';
+import { getTransactions } from '../../../services/TransactionsView/transactionsService';
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
 import TransactionDetails from './TransactionDetails';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import {
 	createTheme,
@@ -16,9 +18,10 @@ import {
 } from '@mui/material';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
+import Modal from '@material-ui/core/Modal';
 export const TransactionsList = arg => {
+	const [alertShowing, setAlertShowing] = useState(false);
 	const [mock, setMock] = useState(false);
-	const [maxAmount, setMaxAmount] = useState(100);
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
@@ -27,6 +30,7 @@ export const TransactionsList = arg => {
 	const [hasMore, setHasMore] = useState(true);
 	const [schouldLoad, setSchouldLoad] = useState(false);
 	const [counter, setCounter] = useState(1);
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (hasMore) {
 			loadTransactions();
@@ -34,6 +38,8 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		console.log('treba lo bi da rai');
+		setHasMore(true);
 		setCounter(1);
 		loadTransactions('clear-load');
 	}, [filterOptions]);
@@ -47,14 +53,19 @@ export const TransactionsList = arg => {
 			setCounter(1);
 			tempCounter = 1;
 		}
-		getMaxAmount(mock).then(amount => {
-			setMaxAmount(amount);
-			getTransactions(tempCounter, 15, filterOptions, mock)
-				.then(transactions1 => {
+		getTransactions(tempCounter, 15, filterOptions, mock)
+			.then(transactions1 => {
+				if (transactions1.data.length == 0 && tempCounter != 1) {
+					setHasMore(false);
+					setIsLoading(false);
+				} else {
+					console.log('No tran2sactions');
 					var temp1 = [...transactionsRaw, ...transactions1.data];
+					if (transactions1.data.length == 0) temp1 = transactions1.data;
 					if ('clear-load' == a) {
 						temp1 = transactions1.data;
 					}
+					console.log(transactions1.data, 'tempkj');
 					setTransactionsRaw(temp1);
 					var transactionsdata = temp1.map((item, index) => (
 						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
@@ -63,12 +74,16 @@ export const TransactionsList = arg => {
 					setHasMore(true);
 					setCounter(counter + 1);
 					setIsLoading(false);
-				})
-				.catch(e => {
+				}
+			})
+			.catch(e => {
+				if (e == 401 && !alertShowing) {
+					setAlertShowing(true);
+				} else {
 					setHasMore(false);
 					setIsLoading(false);
-				});
-		});
+				}
+			});
 	}
 
 	function handleScroll(e) {
@@ -94,6 +109,8 @@ export const TransactionsList = arg => {
 				{details != null ? (
 					// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
 					<TransactionDetails
+						alertShowing={alertShowing}
+						setAlertShowing={setAlertShowing}
 						setPaymentInfo={arg.setPaymentInfo}
 						setIsLoading={setIsLoading}
 						setDetails={setDetails}
@@ -117,10 +134,7 @@ export const TransactionsList = arg => {
 							<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
 								<TableContainer>
 									<Table>
-										<TransactionsListHeader
-											max={maxAmount}
-											setFilterOptions={setFilterOptions}
-										></TransactionsListHeader>
+										<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
 										<TableBody>{transactions}</TableBody>
 									</Table>
 								</TableContainer>
@@ -128,12 +142,46 @@ export const TransactionsList = arg => {
 						</Box>
 					</Box>
 				)}
-				{isLoading && (
+				{hasMore && isLoading && (
 					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 						<LoadingSpinner></LoadingSpinner>
 					</Box>
 				)}
 			</ThemeProvider>
+			<Modal
+				open={alertShowing}
+				onClose={() => {
+					navigate('/login');
+				}}
+			>
+				<Box
+					sx={{
+						backgroundColor: '#f44336',
+						color: '#fff',
+						padding: 7,
+						position: 'fixed',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
+						zIndex: '9999',
+						borderRadius: 3,
+						textAlign: 'center',
+					}}
+				>
+					<Typography>Your session has been expired, please login again.</Typography>
+					<Button
+						variant='contained'
+						color='primary'
+						align='center'
+						sx={{ mt: 3 }}
+						onClick={() => {
+							navigate('/login');
+						}}
+					>
+						Log in
+					</Button>
+				</Box>
+			</Modal>
 		</Box>
 	);
 };

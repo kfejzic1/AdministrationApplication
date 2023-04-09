@@ -11,18 +11,21 @@ import { alpha } from '@mui/material/styles';
 import { Stack } from '@mui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LocationCreateModal from './LocationCreateModal';
-import LocationEditModal from './LocationEditModal';
+import LocationCreateModal from './locationCreateModal/LocationCreateModal';
+import LocationEditModal from './locationEditModal/LocationEditModal';
 import Loader from '../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
 	button: {
 		marginRight: '20px',
 		'&.MuiButton-contained': {
-			backgroundColor: '#ffaf36',
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '10px',
 			color: 'black',
+			width: '15rem',
+			height: '30px',
 			'&:hover': {
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'none',
 			},
 			'&:disabled': {
@@ -32,8 +35,10 @@ const useStyles = makeStyles(theme => ({
 			},
 		},
 		'&.MuiButton-outlined': {
-			color: '#ff9a00',
-			border: '2px solid #ffaf36',
+			color: '#ffb649',
+			height: '30px',
+			width: '15rem',
+			border: '2px solid #ffb649',
 			'&:hover': {
 				border: '2px solid #000000',
 				color: '#000000',
