@@ -256,7 +256,7 @@ namespace AdministrationAPI.Controllers
             return _userService.GetRoles();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("byId/{id}")]
         [AllowAnonymous]
         public Task<GetUserResponse> GetUser([FromRoute] string id)
         {
