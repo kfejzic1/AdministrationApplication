@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 
-const LoginForm = () => {
+const LoginForm = props => {
 	const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
@@ -13,6 +13,10 @@ const LoginForm = () => {
 	const [email, setEmail] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		props.setToken(localStorage.getItem('token'));
+	}, []);
 
 	const checkData = input => {
 		const regex = new RegExp('^[0-9]+$');
@@ -41,6 +45,7 @@ const LoginForm = () => {
 
 				localStorage.setItem('token', token);
 				localStorage.setItem('userId', userId);
+				props.setToken(token);
 				navigate('/user');
 			})
 			.catch(err => {
