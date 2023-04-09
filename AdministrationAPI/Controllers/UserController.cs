@@ -249,6 +249,18 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public IActionResult GetUser([FromRoute] string id)
+        {
+            var user = _userService.GetUserById(id);
+            if (user == null)
+            {
+                return Ok(user);
+            }
+            return BadRequest("Invalid ID");
+        }
+
         [HttpGet("{name}")]
         public IActionResult GetUserByName([FromRoute] string name)
         {
