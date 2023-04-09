@@ -35,15 +35,20 @@ const useStyles = makeStyles(theme => ({
 		margin: 'auto',
 		border: 'none',
 	},
-	card: { border: 'none' },
+	card: { 
+		border: 'none',
+		padding: '5px',
+	},
 	button: {
 		width: '250px',
 		marginRight: '20px',
-		'&.MuiButton-standard': {
-			backgroundColor: '#ffaf36',
+		'&.MuiButton-contained': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '15px',
 			color: 'black',
+			width: '8rem',
 			'&:hover': {
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'none',
 			},
 			'&:disabled': {
@@ -258,7 +263,7 @@ function VendorCreateModal(props) {
 						</Stack>
 					</CardContent>
 					<CardActions className={classes.cardActions}>
-						<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
+						<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
 							Create
 						</Button>
 					</CardActions>
