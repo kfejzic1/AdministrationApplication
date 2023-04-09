@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import { Box } from '@mui/system';
+import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
 	Typography,
 	Table,
@@ -21,6 +23,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
 import LogoutButton from '../Login/Logout';
 
+
+
 const ProfilePage = () => {
 	const [user, setUser] = useState(null);
 	const [qrCode, setQrCode] = useState(null);
@@ -28,6 +32,18 @@ const ProfilePage = () => {
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	
+
+	const RedTableCell = withStyles({
+		root: {
+			border: '2px solid red',
+			borderBottom: '2px solid red',
+		},
+	  })(TableCell);
+
+
+	const [showTooltip, setShowTooltip] = useState(false);
+	const [showTooltipMail, setShowTooltipMail] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -38,6 +54,8 @@ const ProfilePage = () => {
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
 	}, []);
+
+	console.log("Kod usera ispisuje : " + JSON.stringify(user));
 
 	const handle2FASetup = () => {
 		getTwoFactorQRCode(localStorage.getItem('userId')).then(res => {
@@ -60,6 +78,22 @@ const ProfilePage = () => {
 		setIs2FASettedUp(true);
 		setShowDialog(false);
 	};
+
+	function handleInputMouseEnter() {
+		setShowTooltip(true);
+	}
+
+	function handleInputMouseLeave() {
+		setShowTooltip(false);
+	}
+
+	function handleInputMouseEnterMail() {
+		setShowTooltipMail(true);
+	}
+
+	function handleInputMouseLeaveMail() {
+		setShowTooltipMail(false);
+	}
 
 	return (
 		<div className='container'>
@@ -105,21 +139,66 @@ const ProfilePage = () => {
 								<TableCell align='center' variant='head'>
 									Email
 								</TableCell>
-								<TableCell align='center'>{user?.email}</TableCell>
+								
+								{user?.isTwoFactorEnabled ? (
+									<TableCell 						
+										align='center'
+									>{user?.email}
+									</TableCell>
+								): (
+									<Tooltip
+									title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
+									open={showTooltipMail}
+									placement="top-end"
+									>
+										<RedTableCell 
+											onMouseEnter={handleInputMouseEnterMail}
+											onMouseLeave={handleInputMouseLeaveMail}
+											align='center'
+										>
+											{user?.email}
+										</RedTableCell>
+									</Tooltip>
+								)}
+										
+						
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Phone
 								</TableCell>
-								<TableCell align='center'>{user?.phone}</TableCell>
+
+								{user?.isTwoFactorEnabled  ? (
+									<TableCell 						
+										align='center'
+									>{user?.phone}
+									</TableCell>
+									
+								):(
+									<Tooltip
+										title={<Typography fontSize={15}>Phone is not confirmed/verified</Typography>}
+										open={showTooltip}
+										placement="top-end"
+									>
+										<RedTableCell 
+											onMouseEnter={handleInputMouseEnter}
+											onMouseLeave={handleInputMouseLeave}
+											align='center'
+										>{user?.phone}
+										</RedTableCell>
+									</Tooltip>
+								)}
+
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Two-Factor Authentication:
 								</TableCell>
+
 								<TableCell align='center'>
 									<Button onClick={toggle2FA}>{is2FAEnabled ? 'Disable' : 'Enable'}</Button>
 								</TableCell>
+							
 							</TableRow>
 							{is2FAEnabled ? (
 								<TableRow>
