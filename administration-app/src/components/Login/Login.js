@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box } from '@mui/material';
 import TwoFactorView from './TwoFactor';
+import { GoogleLoginButton, FacebookLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 
 const LoginForm = props => {
 	const [phoneMail, setPhoneMail] = useState('');
@@ -23,6 +24,10 @@ const LoginForm = props => {
 		if (input.length <= 10 && input.match(regex)) return 'phone';
 		else return 'email';
 	};
+
+	const handleFacebookLogin = () => {
+		console.log("Login Facebook");
+	}
 
 	const handleButtonClick = () => {
 		setIsLoading(true);
@@ -63,41 +68,45 @@ const LoginForm = props => {
 	return isTwoFactorEnabled && email ? (
 		<TwoFactorView userData={phoneMail}></TwoFactorView>
 	) : (
-		<div className='login-container'>
-			<div className='cover'>
-				<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
-					<LinearProgress />
-				</Box>
-				<Typography variant='h4'>Login</Typography>
-				{errorMessage.length > 0 ? (
-					<Alert style={{ width: '80%' }} severity='error' variant='filled'>
-						{errorMessage}
-					</Alert>
-				) : null}
-				<Input
-					className='user-data'
-					type='text'
-					placeholder='E-mail or Phone number'
-					onChange={e => {
-						setPhoneMail(e.target.value);
-					}}
-				/>
-				<Input
-					className='user-data'
-					type='password'
-					placeholder='Password'
-					onChange={e => {
-						setPassword(e.target.value);
-					}}
-				/>
+		<div className='login-page'>
+			<div className='login-container'>
+				<div className='cover'>
+					<Box sx={{ width: '90%' }} visibility={isLoading ? 'visible' : 'hidden'}>
+						<LinearProgress />
+					</Box>
+					<Typography variant='h4'>Login</Typography>
+					{errorMessage.length > 0 ? (
+						<Alert style={{ width: '80%' }} severity='error' variant='filled'>
+							{errorMessage}
+						</Alert>
+					) : null}
+					<Input
+						className='user-data'
+						type='text'
+						placeholder='E-mail or Phone number'
+						onChange={e => {
+							setPhoneMail(e.target.value);
+						}}
+					/>
+					<Input
+						className='user-data'
+						type='password'
+						placeholder='Password'
+						onChange={e => {
+							setPassword(e.target.value);
+						}}
+					/>
 
-				<Typography>
-					You are not registered? <a href='/'>Register</a>
-				</Typography>
-				<button className='login-btn' onClick={handleButtonClick}>
-					{' '}
-					Login
-				</button>
+					<GoogleLoginButton style={{width: '80%'}}/>
+					<FacebookLoginButton style={{width: '80%'}}/>
+					<Typography>
+						You are not registered? <a href='/'>Register</a>
+					</Typography>
+					<button className='login-btn' onClick={handleButtonClick}>
+						{' '}
+						Login
+					</button>
+				</div>
 			</div>
 		</div>
 	);

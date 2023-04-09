@@ -1,9 +1,15 @@
 .login-container{
     height: 100vh;
     width: 100%;
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-height: 750px) {
+    .login-container {
+        margin-top: 25px;
+    }
 }
 
 .cover{

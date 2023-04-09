@@ -47,6 +47,26 @@ export function login(data) {
 	});
 }
 
+export function loginGoogle(data) {
+	return axios(env.API_ENV.url + '/api/User/login/google', {
+		method: 'POST',
+		data: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+}
+
+export function loginFacebook(data) {
+	return axios(env.API_ENV.url + '/api/User/login/facebook', {
+		method: 'POST',
+		data: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+}
+
 export function twoFactorAuthentication(data) {
 	return axios(env.API_ENV.url + '/api/User/login2FA', {
 		method: 'POST',
