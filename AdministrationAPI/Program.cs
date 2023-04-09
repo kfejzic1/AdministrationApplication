@@ -94,6 +94,23 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using var scope = app.Services.CreateScope();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+if (!await roleManager.RoleExistsAsync("Admin"))
+{
+    await roleManager.CreateAsync(new IdentityRole("Admin"));
+}
+
+if (!await roleManager.RoleExistsAsync("User"))
+{
+    await roleManager.CreateAsync(new IdentityRole("User"));
+}
+
+if (!await roleManager.RoleExistsAsync("Restricted"))
+{
+    await roleManager.CreateAsync(new IdentityRole("Restricted"));
+}
+
 // Configure the HTTP request pipeline.
 
 app.UseMiddleware<TokenExpirationHandler>();
