@@ -9,62 +9,45 @@ export const NavBar = props => {
 	}, []);
 
 	return (
-		<div>
-			<nav className={cn.nav_bar}>
-				<div className={cn.nav_logo}>Payment App</div>
-
-				{token ? ( //if user logged in,show all optons, else show only login option,
-					<ul style={nav_Links}>
-						<li>
-							<ActiveLink to='/' style={active}>
-								Home
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/transactions' style={active}>
-								Transactions
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/payment' style={active}>
-								Pay
-							</ActiveLink>
-						</li>
-
-						<li>
-							<ActiveLink to='/user' style={active}>
-								User
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/vendor-management' style={active}>
-								Vendor management
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/user-management' style={active}>
-								User management
-							</ActiveLink>
-						</li>
-						<li>
-							<LogoutButton />
-						</li>
-					</ul>
-				) : (
-					<ul style={nav_Links}>
-						<li>
-							<ActiveLink to='/' style={active}>
-								Home
-							</ActiveLink>
-						</li>
-						<li>
-							<ActiveLink to='/login' style={active}>
-								LogIn
-							</ActiveLink>
-						</li>
-					</ul>
-				)}
-			</nav>
-		</div>
+		<AppBar position='static' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+			{props.token ? (
+				<Toolbar>
+					<Typography variant='h6' sx={{ flexGrow: 1, color: '#000' }}>
+						Payment App
+					</Typography>
+					<Button component={Link} to='/' color='primary'>
+						Home
+					</Button>
+					<Button component={Link} to='/transactions' color='primary'>
+						Transactions
+					</Button>
+					<Button component={Link} to='/payment' color='primary'>
+						Payment
+					</Button>
+					<Button component={Link} to='/user' color='primary'>
+						User
+					</Button>
+					<Button component={Link} to='/vendor-management' color='primary'>
+						Vendor management
+					</Button>
+					<Button component={Link} to='/user-management' color='primary'>
+						User management
+					</Button>
+					<LogoutButton />
+				</Toolbar>
+			) : (
+				<Toolbar>
+					<Typography variant='h6' sx={{ flexGrow: 1, color: '#000' }}>
+						Payment App
+					</Typography>
+					<Button component={Link} to='/' color='primary'>
+						Home
+					</Button>
+					<Button component={Link} to='/login' color='primary'>
+						Login
+					</Button>
+				</Toolbar>
+			)}
+		</AppBar>
 	);
 };

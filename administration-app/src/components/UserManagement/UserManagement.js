@@ -132,8 +132,8 @@ const UserManagement = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>Name</TableCell>
-							<TableCell>Surname</TableCell>
+							<TableCell>First name</TableCell>
+							<TableCell>Last name</TableCell>
 							<TableCell>Email</TableCell>
 							<TableCell>Phone</TableCell>
 							<TableCell>Address</TableCell>
