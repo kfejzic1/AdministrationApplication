@@ -229,8 +229,8 @@ namespace AdministrationAPI.Services
             return new GetUserResponse()
             {
                 user = user,
-                userRoles = (IEnumerable<IdentityRole>)await _userManager.GetRolesAsync(user),
-                roles = _roleManager.Roles.ToList()
+                userRole = await _userManager.GetRolesAsync(user),
+               
             };
         }
 
