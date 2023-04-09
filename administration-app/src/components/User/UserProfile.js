@@ -47,18 +47,19 @@ const ProfilePage = () => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		getUser(localStorage.getItem('userId')).then(res => {
+		getUser().then(res => {
 			setUser(res.data);
 			setIsLoading(false);
 			setIs2FAEnabled(res.data.isTwoFactorEnabled);
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
+		props.setToken(localStorage.getItem('token'));
 	}, []);
 
 	console.log("Kod usera ispisuje : " + JSON.stringify(user));
 
 	const handle2FASetup = () => {
-		getTwoFactorQRCode(localStorage.getItem('userId')).then(res => {
+		getTwoFactorQRCode().then(res => {
 			setQrCode(res.data);
 		});
 
@@ -67,7 +68,7 @@ const ProfilePage = () => {
 
 	const toggle2FA = () => {
 		setIsLoading(true);
-		toggle2Factor(localStorage.getItem('userId')).then(res => {
+		toggle2Factor().then(res => {
 			if (res.data) setIs2FASettedUp(false);
 			setIs2FAEnabled(res.data);
 			setIsLoading(false);
@@ -140,7 +141,7 @@ const ProfilePage = () => {
 									Email
 								</TableCell>
 								
-								{user?.isTwoFactorEnabled ? (
+								{user?.isEmailValidated? (
 									<TableCell 						
 										align='center'
 									>{user?.email}
@@ -168,7 +169,7 @@ const ProfilePage = () => {
 									Phone
 								</TableCell>
 
-								{user?.isTwoFactorEnabled  ? (
+								{user?.isPhoneValidated  ? (
 									<TableCell 						
 										align='center'
 									>{user?.phone}

@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Extensions;
 using AdministrationAPI.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,13 +26,14 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUser([FromQuery] string id)
+        public async Task<IActionResult> GetUser()
         {
             try
             {
-                var userFetchResult = await _userService.GetUser(id);
+                var userId = ControlExtensions.GetId(HttpContext);
+                var user = await _userService.GetUser(userId);
 
-                return Ok(userFetchResult);
+                return Ok(user);
             }
             catch (DataException ex)
             {
@@ -45,11 +47,12 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet("2fa-qrcode")]
-        public async Task<IActionResult> Get2FAQRCode([FromQuery] string id)
+        public async Task<IActionResult> Get2FAQRCode()
         {
             try
             {
-                var qrCode = await _userService.GetTwoFactorQRCode(id);
+                var userId = ControlExtensions.GetId(HttpContext);
+                var qrCode = await _userService.GetTwoFactorQRCode(userId);
 
                 return Ok(qrCode);
             }
@@ -65,11 +68,12 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPatch("2fa-toggle")]
-        public async Task<IActionResult> Toggle2FA([FromQuery] string id)
+        public async Task<IActionResult> Toggle2FA()
         {
             try
             {
-                var result = await _userService.Toggle2FA(id);
+                var userId = ControlExtensions.GetId(HttpContext);
+                var result = await _userService.Toggle2FA(userId);
 
                 return Ok(result);
             }
