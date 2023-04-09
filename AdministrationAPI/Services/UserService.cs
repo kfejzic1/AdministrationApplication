@@ -242,6 +242,15 @@ namespace AdministrationAPI.Services
         public async Task<IdentityResult> CreateUser(CreateRequest request)
         {
             User newUser = _mapper.Map<User>(request);
+            var usernameTemplate = $"{request.FirstName.First()}{request.LastName}";
+            int number = 1;
+            while(true)
+            {
+                string newUsername = $"{usernameTemplate}{number}";
+                number++;
+            }
+
+                
             return await _userManager.CreateAsync(newUser);
         }
 
