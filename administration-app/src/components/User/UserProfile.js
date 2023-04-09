@@ -141,26 +141,26 @@ const ProfilePage = (props) => {
 									Email
 								</TableCell>
 								
-								{user?.isEmailValidated? (
-									<TableCell 						
-										align='center'
-									>{user?.email}
-									</TableCell>
-								): (
-									<Tooltip
-									title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
-									open={showTooltipMail}
-									placement="right-start"
-									>
-										<RedTableCell 
-											onMouseEnter={handleInputMouseEnterMail}
-											onMouseLeave={handleInputMouseLeaveMail}
+									{user?.isEmailValidated? (
+										<TableCell 						
 											align='center'
+										>{user?.email}
+										</TableCell>
+									): (
+										<Tooltip
+										title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
+										open={showTooltipMail}
+										placement="right-start"
 										>
-											{user?.email}
-										</RedTableCell>
-									</Tooltip>
-								)}
+											<RedTableCell 
+												onMouseEnter={handleInputMouseEnterMail}
+												onMouseLeave={handleInputMouseLeaveMail}
+												align='center'
+											>
+												{user?.email}
+											</RedTableCell>
+										</Tooltip>
+									)}
 										
 						
 							</TableRow>
