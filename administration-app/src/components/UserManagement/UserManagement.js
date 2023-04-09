@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAllUsers } from '../../services/userService';
 import {
 	Button,
 	Dialog,
@@ -33,6 +34,11 @@ const UserManagement = () => {
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 
+	useEffect(() => {
+		getAllUsers().then(response => {
+			setUsers(response.data);
+		});
+	});
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
 	};
@@ -105,6 +111,7 @@ const UserManagement = () => {
 							<TableCell>Surname</TableCell>
 							<TableCell>Email</TableCell>
 							<TableCell>Phone</TableCell>
+							<TableCell>Address</TableCell>
 							<TableCell>Role</TableCell>
 							<TableCell>Actions</TableCell>
 						</TableRow>
@@ -112,10 +119,11 @@ const UserManagement = () => {
 					<TableBody>
 						{users.map(user => (
 							<TableRow key={user.id}>
-								<TableCell>{user.name}</TableCell>
-								<TableCell>{user.surname}</TableCell>
+								<TableCell>{user.firstName}</TableCell>
+								<TableCell>{user.lastName}</TableCell>
 								<TableCell>{user.email}</TableCell>
-								<TableCell>{user.phone}</TableCell>
+								<TableCell>{user.phoneNumber}</TableCell>
+								<TableCell>{user.address}</TableCell>
 								<TableCell>{user.role}</TableCell>
 								<TableCell>
 									<IconButton onClick={() => handleUpdateDialogOpen(user)}>Edit</IconButton>
@@ -158,10 +166,17 @@ const UserManagement = () => {
 				<DialogContent>
 					<DialogContentText>Please update the user information below.</DialogContentText>
 					<form onSubmit={handleUpdateUser}>
-						<TextField autoFocus margin='dense' name='name' label='Name' fullWidth defaultValue={selectedUser.name} />
-						<TextField margin='dense' name='surname' label='Surname' fullWidth defaultValue={selectedUser.surname} />
+						<TextField
+							autoFocus
+							margin='dense'
+							name='name'
+							label='Name'
+							fullWidth
+							defaultValue={selectedUser.firstName}
+						/>
+						<TextField margin='dense' name='surname' label='Surname' fullWidth defaultValue={selectedUser.lastName} />
 						<TextField margin='dense' name='email' label='Email' fullWidth defaultValue={selectedUser.email} />
-						<TextField margin='dense' name='phone' label='Phone' fullWidth defaultValue={selectedUser.phone} />
+						<TextField margin='dense' name='phone' label='Phone' fullWidth defaultValue={selectedUser.phoneNumber} />
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Role</InputLabel>
 							<Select label='Role' name='role' defaultValue={selectedUser.role}>

@@ -97,7 +97,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                if (_userService.GetUserByEmail(request.Email)!=null)
+                if (_userService.GetUserByEmail(request.Email) != null)
                 {
                     var result = new ObjectResult(new { statusCode = 204, message = "User with this email already exists!" });
                     result.StatusCode = 204;
@@ -107,7 +107,7 @@ namespace AdministrationAPI.Controllers
                 var createResult = await _userService.CreateUser(request);
                 if (createResult.Succeeded)
                 {
-                    var user =  _userService.GetUserByEmail(request.Email);
+                    var user = _userService.GetUserByEmail(request.Email);
                     if (user == null)
                     {
                         return new ObjectResult(new { statusCode = 505, message = "Error while creating customer" });
@@ -216,7 +216,7 @@ namespace AdministrationAPI.Controllers
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
             var user = _userService.GetUserById(request.Id);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest("User doesn't exist");
             }
@@ -232,6 +232,7 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet("all")]
+        [AllowAnonymous]
         public IActionResult GetAllUsers()
         {
             try
@@ -272,12 +273,12 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User not found");
             }
-            if(user.EmailConfirmed == false)
+            if (user.EmailConfirmed == false)
             {
                 return BadRequest("User didn't finish the account creation process");
             }
 
-             _userService.SendPasswordResetEmail(user.Email);
+            _userService.SendPasswordResetEmail(user.Email);
 
             return new ObjectResult(new { statusCode = 201, message = "Password reset link has been sent to user's email succesfully" });
 
