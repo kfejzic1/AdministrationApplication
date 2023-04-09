@@ -34,9 +34,16 @@ namespace AdministrationAPI.Services
             using (var context = new VendorDbContext())
             {
                 var vendorLocation = context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
-
                 if (vendorLocation != null)
                 {
+                    var vendorPOS = context.VendorPOS.ToList().FindAll(pos =>
+                    {
+                        return pos.LocationId == vendorLocation.Id;
+                    });
+                    vendorPOS.ForEach(pos =>
+                    {
+                        context.VendorPOS.Remove(pos);
+                    });
                     context.VendorLocations.Remove(vendorLocation);
                     context.SaveChanges();
                     return true;
@@ -108,9 +115,9 @@ namespace AdministrationAPI.Services
         {
             using (var context = new VendorDbContext())
             {
-                var vendorLocation = context.VendorLocations.FirstOrDefault(l=>l.Id == request.Id);
-                
-                if (vendorLocation!=null)
+                var vendorLocation = context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
+
+                if (vendorLocation != null)
                 {
                     vendorLocation.Address = request.Address;
                     vendorLocation.Modified = DateTime.UtcNow;
@@ -123,6 +130,6 @@ namespace AdministrationAPI.Services
                 return false;
             }
         }
-        
+
     }
 }

@@ -20,7 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LocationTableToolbar from './LocationTableToolbar';
 import LocationTableHead from './LocationTableHead';
-import Skeleton from '@mui/material/Skeleton';
 
 const theme = createTheme({
 	components: {
@@ -129,7 +128,6 @@ function descendingComparator(a, b, orderBy) {
 }
 
 export default function Location() {
-	const dataArrived = false;
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [selected, setSelected] = useState([]);
@@ -143,7 +141,6 @@ export default function Location() {
 	const fetchData = async () => {
 		getVendor(params.id).then(res => {
 			setVendor(res.data);
-			dataArrived = true;
 		});
 		getAllVendorLocations(params.id).then(res => {
 			setLocations(res.data);
@@ -223,13 +220,6 @@ export default function Location() {
 						{vendor.companyDetails}
 					</Typography>
 				</div>
-				{/*
-  <div>
-    <Typography variant='body1' gutterBottom style={{color: 'black', fontWeight: 'bold'}}>
-      Phone: {vendor.phone}
-    </Typography>
-  </div>
-	*/}
 			</div>
 			<Box sx={{ height: '500px' }}>
 				<Box sx={{ width: '95%', margin: 'auto', pt: '1%' }}>
@@ -286,7 +276,6 @@ export default function Location() {
 															/>
 														</TableCell>
 														<TableCell component='th' id={labelId} scope='row' padding='none'>
-															{row.id}
 														</TableCell>
 														<TableCell align='left'>{row.address}</TableCell>
 													</TableRow>

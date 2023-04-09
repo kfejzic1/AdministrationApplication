@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Box,
+	CardActions,
   Table,
   TableBody,
   TableCell,
@@ -245,7 +246,7 @@ export default function POSTable(props) {
                           scope="row"
                           padding="none"
                         >
-                          {row.id}
+                          
                         </TableCell>
                         <TableCell align="left">{row.name}</TableCell>
                       </TableRow>
@@ -277,15 +278,15 @@ export default function POSTable(props) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
-      <ThemeProvider theme={theme}>
+        <CardActions className={classes.cardActions}>
         <FormControlLabel
           className={classes.FormControlLabel}
           sx={{ color: "black" }}
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Dense padding"
         />
-      </ThemeProvider>
+        </CardActions>
+      </Paper>
     </Box>
   );
 }

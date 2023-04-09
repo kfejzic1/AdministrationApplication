@@ -12,7 +12,6 @@ import {
 import { Stack } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import './posCreateModal.css';
-import naslovna from './slika1ChangedColor.png';
 import { Create } from '../../../../services/posService';
 import Loader from '../../../loaderDialog/Loader';
 
@@ -24,14 +23,19 @@ const useStyles = makeStyles(theme => ({
 		margin: 'auto',
 		border: 'none',
 	},
-	card: { border: 'none' },
+	card: { 
+		border: 'none',
+		padding: '5px',
+	},
 	button: {
-		marginRight: '20px',
-		'&.MuiButton-outlined': {
-			backgroundColor: '#ffaf36',
+		marginRight: '5%',
+		'&.MuiButton-contained': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '15px',
 			color: 'black',
+			width: '8rem',
 			'&:hover': {
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'none',
 			},
 			'&:disabled': {
@@ -139,9 +143,9 @@ function PosCreateModal(props) {
 									<Grid item xs={12}>
 										<TextField
 											className={classes.textField}
-											id='outlined-basic'
+											id='standard-basic'
 											label='Name'
-											variant='outlined'
+											variant='standard'
 											value={name}
 											required={true}
 											error={errors.name}
@@ -149,13 +153,10 @@ function PosCreateModal(props) {
 										/>
 									</Grid>
 								</Grid>
-								<div className='imageBcg'>
-									<img src={naslovna} alt='your-image-description' />
-								</div>
 							</Stack>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='outlined' type='submit' value='Submit' onClick={handleSubmit}>
+							<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
 								Create
 							</Button>
 						</CardActions>
