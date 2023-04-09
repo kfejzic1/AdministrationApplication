@@ -23,5 +23,6 @@ namespace AdministrationAPI.Services.Interfaces
         void SendConfirmationEmail(string id);
         User GetUserById(string id);
         Task<IdentityResult> SetPassword(SetPasswordRequest request);
+        Task<IdentityResult> EditCustomer(EditRequest request);
     }
 }

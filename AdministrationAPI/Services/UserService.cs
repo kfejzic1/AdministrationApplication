@@ -10,6 +10,7 @@ using AutoMapper;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -278,6 +279,15 @@ namespace AdministrationAPI.Services
             }
 
             return result;
+        }
+
+        public async Task<IdentityResult> EditCustomer(EditRequest request)
+        {
+
+            var user = GetUserById(request.Id);
+            user = _mapper.Map<User>(user);
+
+            return await _userManager.UpdateAsync(user);
         }
 
     }

@@ -90,7 +90,7 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPost("createUser")]
+        [HttpPost("create")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromBody] CreateRequest request)
         {
@@ -186,7 +186,7 @@ namespace AdministrationAPI.Controllers
 
         [HttpPost("setPassword")]
         [AllowAnonymous]
-        public async Task<IActionResult> SetPassword([FromBody] SetPasswordRequest request)
+        public async Task<IActionResult> SetUserPassword([FromBody] SetPasswordRequest request)
         {
             var customer = _userService.GetUserById(request.Id);
             if (customer == null)
@@ -210,12 +210,17 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPatch("editCustomer")]
+        [HttpPatch("edit")]
         [AllowAnonymous]
-        public async Task<IActionResult> EditCustomer([FromBody] EditRequest request)
+        public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
-            var result = await _userService.EditCustomer(request);
-            if (result)
+            var user = _userService.GetUserById(request.Id);
+            if(user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            var result = await _userService.EditUser(request);
+            if (result.Succeeded)
             {
                 return Ok("User successfully updated");
             }
