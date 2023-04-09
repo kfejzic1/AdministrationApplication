@@ -283,11 +283,19 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> EditUser(EditRequest request)
         {
-
+            
             var user = GetUserById(request.Id);
             user = _mapper.Map<User>(user);
 
             return await _userManager.UpdateAsync(user);
+        }
+
+        public async void SendPasswordResetEmail(string email)
+        {
+            var user = GetUserByEmail(email);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendEmailAsync(email, token);
         }
 
     }

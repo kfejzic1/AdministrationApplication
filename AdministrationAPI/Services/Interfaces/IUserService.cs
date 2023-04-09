@@ -24,5 +24,6 @@ namespace AdministrationAPI.Services.Interfaces
         User GetUserById(string id);
         Task<IdentityResult> SetPassword(SetPasswordRequest request);
         Task<IdentityResult> EditUser(EditRequest request);
+        void SendPasswordResetEmail(string email);
     }
 }

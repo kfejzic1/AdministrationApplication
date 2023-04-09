@@ -261,6 +261,26 @@ namespace AdministrationAPI.Controllers
             return BadRequest("Invalid ID");
         }
 
+        [HttpPost("forgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+            if(user.EmailConfirmed == false)
+            {
+                return BadRequest("User didn't finish the account creation process");
+            }
+
+             _userService.SendPasswordResetEmail(user.Email);
+
+            return Ok("You may now reset your password");
+
+        }
+
         [HttpGet("{name}")]
         public IActionResult GetUserByName([FromRoute] string name)
         {
