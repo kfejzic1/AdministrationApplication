@@ -19,7 +19,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
-import LogoutButton from '../Login/Logout';
+import OneSignal from 'react-onesignal';
 
 const ProfilePage = props => {
 	const [user, setUser] = useState(null);
@@ -38,6 +38,7 @@ const ProfilePage = props => {
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
 		props.setToken(localStorage.getItem('token'));
+		OneSignal.init({ appId: 'f5a0e436-9c1a-4f3f-81bd-2ce6a01ab8b7' });
 	}, []);
 
 	const handle2FASetup = () => {
@@ -139,9 +140,6 @@ const ProfilePage = props => {
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>
-				</Box>
-				<Box className='text-center'>
-					<LogoutButton />
 				</Box>
 			</Box>
 
