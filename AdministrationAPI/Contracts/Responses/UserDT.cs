@@ -9,5 +9,7 @@ namespace AdministrationAPI.Contracts.Responses
         public string Phone { get; set; }
         public bool IsTwoFactorEnabled { get; set; }
         public string AuthenticatorKey { get; set; }
+        public bool IsEmailValidated { get; set; }
+        public bool IsPhoneValidated { get; set; }
     }
 }
