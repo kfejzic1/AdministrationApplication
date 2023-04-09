@@ -8,6 +8,7 @@ namespace AdministrationAPI.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
+        public string? AccountNumber { get; set; }
 
         public ActivationCode ActivationCode { get; set; }
 

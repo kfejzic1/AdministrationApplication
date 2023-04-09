@@ -477,3 +477,5 @@ $RECYCLE.BIN/
 *.lnk
 
 *.db*
+Migrations
+JSON
