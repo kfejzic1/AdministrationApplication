@@ -7,6 +7,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
+using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -59,8 +60,17 @@ namespace AdministrationAPI.Services
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
-                AuthenticatorKey = user.AuthenticatorKey
+                AuthenticatorKey = user.AuthenticatorKey,
+                IsEmailValidated = user.EmailConfirmed,
+                IsPhoneValidated = user.PhoneNumberConfirmed
             };
+        }
+
+        public async Task<bool> DeleteUserAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
         }
 
         public List<User> GetAllUsers()
@@ -122,6 +132,113 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
+
+        public async Task<AuthenticationResult> FacebookSocialLogin(string token)
+        {
+            try
+            {
+                var facebookClient = new FacebookClient(token);
+
+                dynamic facebookAccessTokenData = await facebookClient.GetTaskAsync("me", new { fields = "name,email,last_name" });
+
+                User user = GetUserByEmail(facebookAccessTokenData.email);
+
+                if (user is null)
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "User not found!" }
+                    };
+                }
+                else
+                {
+                    if (!user.EmailConfirmed)
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User didn't verify email!" }
+                        };
+
+                    if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                        return new AuthenticationResult
+                        {
+                            TwoFactorEnabled = true,
+                            Mail = user.Email
+                        };
+
+                    var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                    var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                    return new AuthenticationResult
+                    {
+                        Success = true,
+                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                    };
+                }
+            }
+            catch
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Invalid token!" }
+                };
+            }
+        }
+
+
+        public async Task<AuthenticationResult> GoogleSocialLogin(string token)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    GoogleAccessTokenData googleAccessTokenData = await httpClient.GetFromJsonAsync<GoogleAccessTokenData>("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token);
+
+                    var user = GetUserByEmail(googleAccessTokenData.Email);
+
+                    if (user is null)
+                    {
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User not found!" }
+                        };
+                    }
+                    else
+                    {
+                        if (!user.EmailConfirmed)
+                            return new AuthenticationResult
+                            {
+                                Errors = new[] { "User didn't verify email!" }
+                            };
+
+                        if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                            return new AuthenticationResult
+                            {
+                                TwoFactorEnabled = true,
+                                Mail = user.Email
+                            };
+
+                        var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                        var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                        return new AuthenticationResult
+                        {
+                            Success = true,
+                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                        };
+                    }
+                }
+                catch
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "Invalid token!" }
+                    };
+                }
+            }
+        }
+
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {

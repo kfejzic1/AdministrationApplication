@@ -1,13 +1,27 @@
 import { getTransactions } from '../../../services/TransactionsView/transactionsService';
-
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
-import cn from '../css/Transactions.module.css';
 import TransactionDetails from './TransactionDetails';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import {
+	createTheme,
+	Box,
+	Button,
+	Table,
+	TableBody,
+	TableContainer,
+	Paper,
+	Typography,
+	ThemeProvider,
+} from '@mui/material';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
+import Modal from '@material-ui/core/Modal';
 export const TransactionsList = arg => {
+	const [alertShowing, setAlertShowing] = useState(false);
+	const [mock, setMock] = useState(false);
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [details, setDetails] = useState(null);
 	const [transactionsRaw, setTransactionsRaw] = useState([]);
@@ -16,6 +30,7 @@ export const TransactionsList = arg => {
 	const [hasMore, setHasMore] = useState(true);
 	const [schouldLoad, setSchouldLoad] = useState(false);
 	const [counter, setCounter] = useState(1);
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (hasMore) {
 			loadTransactions();
@@ -23,6 +38,8 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		console.log('treba lo bi da rai');
+		setHasMore(true);
 		setCounter(1);
 		loadTransactions('clear-load');
 	}, [filterOptions]);
@@ -36,24 +53,36 @@ export const TransactionsList = arg => {
 			setCounter(1);
 			tempCounter = 1;
 		}
-		getTransactions(tempCounter, 15, filterOptions)
+		getTransactions(tempCounter, 15, filterOptions, mock)
 			.then(transactions1 => {
-				var temp1 = [...transactionsRaw, ...transactions1.data];
-				if ('clear-load' == a) {
-					temp1 = transactions1.data;
+				if (transactions1.data.length == 0 && tempCounter != 1) {
+					setHasMore(false);
+					setIsLoading(false);
+				} else {
+					console.log('No tran2sactions');
+					var temp1 = [...transactionsRaw, ...transactions1.data];
+					if (transactions1.data.length == 0) temp1 = transactions1.data;
+					if ('clear-load' == a) {
+						temp1 = transactions1.data;
+					}
+					console.log(transactions1.data, 'tempkj');
+					setTransactionsRaw(temp1);
+					var transactionsdata = temp1.map((item, index) => (
+						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
+					));
+					setTransactions(transactionsdata);
+					setHasMore(true);
+					setCounter(counter + 1);
+					setIsLoading(false);
 				}
-				setTransactionsRaw(temp1);
-				var transactionsdata = temp1.map((item, index) => (
-					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
-				));
-				setTransactions(transactionsdata);
-				setHasMore(true);
-				setCounter(counter + 1);
-				setIsLoading(false);
 			})
 			.catch(e => {
-				setHasMore(false);
-				setIsLoading(false);
+				if (e == 401 && !alertShowing) {
+					setAlertShowing(true);
+				} else {
+					setHasMore(false);
+					setIsLoading(false);
+				}
 			});
 	}
 
@@ -62,30 +91,97 @@ export const TransactionsList = arg => {
 			setSchouldLoad(true);
 		}
 	}
+	const theme = createTheme({
+		components: {
+			// Name of the component
+			MuiButton: {
+				defaultProps: {
+					// The props to change the default for.
+					variant: 'contained', // No more ripple, on the whole application 💣!
+				},
+			},
+		},
+	});
 
 	return (
-		<div className={cn.transactions_root}>
-			{details != null ? (
-				// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
-				<TransactionDetails
-					setPaymentInfo={arg.setPaymentInfo}
-					setIsLoading={setIsLoading}
-					setDetails={setDetails}
-					props={details}
-				></TransactionDetails>
-			) : (
-				<div className={cn.rootN}>
-					<h1 className={cn.h1}>Transactions</h1>
-					<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
-
-					{transactions}
-				</div>
-			)}
-			{isLoading && (
-				<div>
-					<LoadingSpinner></LoadingSpinner>
-				</div>
-			)}
-		</div>
+		<Box>
+			<ThemeProvider theme={theme}>
+				{details != null ? (
+					// ovdje treba uraditi rutu na localhost:3000/transaction/id/brojId
+					<TransactionDetails
+						alertShowing={alertShowing}
+						setAlertShowing={setAlertShowing}
+						setPaymentInfo={arg.setPaymentInfo}
+						setIsLoading={setIsLoading}
+						setDetails={setDetails}
+						mock={mock}
+						props={details}
+					></TransactionDetails>
+				) : (
+					<Box sx={{ bgcolor: '#eceff1' }}>
+						<Typography variant='h2' sx={{ bgcolor: '#fff', width: '100%', pb: 3 }} align='center'>
+							<Button
+								variant='text'
+								sx={{ color: '#000', fontSize: 30, fontFamily: !mock ? 'fantasy' : 'cursive' }}
+								onClick={() => {
+									setMock(!mock);
+								}}
+							>
+								Transactions
+							</Button>
+						</Typography>
+						<Box sx={{ width: '95%', margin: 'auto', pt: '15px' }}>
+							<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
+								<TableContainer>
+									<Table>
+										<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
+										<TableBody>{transactions}</TableBody>
+									</Table>
+								</TableContainer>
+							</Paper>
+						</Box>
+					</Box>
+				)}
+				{hasMore && isLoading && (
+					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+						<LoadingSpinner></LoadingSpinner>
+					</Box>
+				)}
+			</ThemeProvider>
+			<Modal
+				open={alertShowing}
+				onClose={() => {
+					navigate('/login');
+				}}
+			>
+				<Box
+					sx={{
+						backgroundColor: '#f44336',
+						color: '#fff',
+						padding: 7,
+						position: 'fixed',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
+						zIndex: '9999',
+						borderRadius: 3,
+						textAlign: 'center',
+					}}
+				>
+					<Typography>Your session has been expired, please login again.</Typography>
+					<Button
+						variant='contained'
+						color='primary'
+						align='center'
+						sx={{ mt: 3 }}
+						onClick={() => {
+							navigate('/login');
+						}}
+					>
+						Log in
+					</Button>
+				</Box>
+			</Modal>
+		</Box>
 	);
 };

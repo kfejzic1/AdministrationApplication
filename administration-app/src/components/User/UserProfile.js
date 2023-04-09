@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import { Box } from '@mui/system';
+import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
 	Typography,
 	Table,
@@ -19,15 +21,29 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
-import LogoutButton from '../Login/Logout';
+import OneSignal from 'react-onesignal';
 
-const ProfilePage = () => {
+
+
+const ProfilePage = (props) => {
 	const [user, setUser] = useState(null);
 	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	
+
+	const RedTableCell = withStyles({
+		root: {
+		  border: '2px solid red',
+		  borderBottom: '2px solid red',
+		  borderRadius: '10px', // Add this line to add rounded corners
+		},
+	  })(TableCell);
+
+	const [showTooltip, setShowTooltip] = useState(false);
+	const [showTooltipMail, setShowTooltipMail] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -37,7 +53,11 @@ const ProfilePage = () => {
 			setIs2FAEnabled(res.data.isTwoFactorEnabled);
 			setIs2FASettedUp(res.data.authenticatorKey ? true : false);
 		});
+		props.setToken(localStorage.getItem('token'));
+		OneSignal.init({ appId: 'f5a0e436-9c1a-4f3f-81bd-2ce6a01ab8b7' });
 	}, []);
+
+	console.log("Kod usera ispisuje : " + JSON.stringify(user));
 
 	const handle2FASetup = () => {
 		getTwoFactorQRCode().then(res => {
@@ -60,6 +80,22 @@ const ProfilePage = () => {
 		setIs2FASettedUp(true);
 		setShowDialog(false);
 	};
+
+	function handleInputMouseEnter() {
+		setShowTooltip(true);
+	}
+
+	function handleInputMouseLeave() {
+		setShowTooltip(false);
+	}
+
+	function handleInputMouseEnterMail() {
+		setShowTooltipMail(true);
+	}
+
+	function handleInputMouseLeaveMail() {
+		setShowTooltipMail(false);
+	}
 
 	return (
 		<div className='container'>
@@ -105,21 +141,66 @@ const ProfilePage = () => {
 								<TableCell align='center' variant='head'>
 									Email
 								</TableCell>
-								<TableCell align='center'>{user?.email}</TableCell>
+								
+									{user?.isEmailValidated? (
+										<TableCell 						
+											align='center'
+										>{user?.email}
+										</TableCell>
+									): (
+										<Tooltip
+										title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
+										open={showTooltipMail}
+										placement="right-start"
+										>
+											<RedTableCell 
+												onMouseEnter={handleInputMouseEnterMail}
+												onMouseLeave={handleInputMouseLeaveMail}
+												align='center'
+											>
+												{user?.email}
+											</RedTableCell>
+										</Tooltip>
+									)}
+										
+						
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Phone
 								</TableCell>
-								<TableCell align='center'>{user?.phone}</TableCell>
+
+								{user?.isPhoneValidated  ? (
+									<TableCell 						
+										align='center'
+									>{user?.phone}
+									</TableCell>
+									
+								):(
+									<Tooltip
+										title={<Typography fontSize={15}>Phone is not confirmed/verified</Typography>}
+										open={showTooltip}
+										placement="right-start"
+									>
+										<RedTableCell 
+											onMouseEnter={handleInputMouseEnter}
+											onMouseLeave={handleInputMouseLeave}
+											align='center'
+										>{user?.phone}
+										</RedTableCell>
+									</Tooltip>
+								)}
+
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Two-Factor Authentication:
 								</TableCell>
+
 								<TableCell align='center'>
 									<Button onClick={toggle2FA}>{is2FAEnabled ? 'Disable' : 'Enable'}</Button>
 								</TableCell>
+							
 							</TableRow>
 							{is2FAEnabled ? (
 								<TableRow>
@@ -138,9 +219,6 @@ const ProfilePage = () => {
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>
-				</Box>
-				<Box className='text-center'>
-					<LogoutButton />
 				</Box>
 			</Box>
 

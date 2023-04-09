@@ -1,10 +1,9 @@
 import { getTransactionDetails } from '../../../services/TransactionsView/transactionsService';
-import cn from '../css/Transactions.module.css';
 import { useEffect, useState } from 'react';
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
+import { Box, Button, TableCell, TableRow, TableHead, Table, Input, Typography, TableBody } from '@mui/material';
 export default function TransactionDetails(arg) {
 	const [props, setProps] = useState({
 		type: 'loading',
@@ -15,113 +14,61 @@ export default function TransactionDetails(arg) {
 	});
 	const navigate = useNavigate();
 	useEffect(() => {
-		getTransactionDetails(arg.props.id).then(transaction => {
-			setProps(transaction.data);
-			arg.setIsLoading(false);
-		});
+		getTransactionDetails(arg.props.id, arg.mock)
+			.then(transaction => {
+				setProps(transaction.data);
+				arg.setIsLoading(false);
+			})
+			.catch(err => {
+				if (err == 401 && !arg.alertShowing) {
+					arg.setAlertShowing(true);
+				}
+			});
 	}, []);
 	return (
-		/*<div>
-			<div>
-				<TransactionsDetailsHeader /> 
-			</div>
-			<div className='transaction-margin'>
-				<div className='transaction-container'>
-					<div className='transaction-column'>
-						<p>{props.id}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.date}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.recipient}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.amount}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.status}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.currency}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.nameOfThePayee}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.bankAccount}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.nameOfTheBank}</p>
-					</div>
-					<div className='transaction-column'>
-						<p>{props.methodOfPayment}</p>
-					</div>
-					
-					<div className='vertical-align-div'>
-						<div
-							className='detailsBtn'
+		<Box sx={{ bgcolor: '#eceff1', width: '100%', height: '100%' }}>
+			<Typography variant='h2' sx={{ bgcolor: '#fff', width: '100%', pb: 3, mb: 3 }} align='center'>
+				Transaction details
+			</Typography>
+			<Table sx={{ width: '95%', m: 'auto', bgcolor: '#fff' }}>
+				<TableHead>
+					<TableRow>
+						<TableCell align='center'>ID</TableCell>
+						<TableCell align='center'>Date</TableCell>
+						<TableCell align='center'>Recipient</TableCell>
+						<TableCell align='center'>Amount</TableCell>
+						<TableCell align='center'>Status</TableCell>
+						<TableCell align='center'>Bank Account</TableCell>
+						<TableCell align='center'>Name of the Payee</TableCell>
+						<TableCell align='center'></TableCell>
+					</TableRow>
+				</TableHead>
+				<TableRow>
+					<TableCell align='center'>{arg.props.id}</TableCell>
+					<TableCell align='center'>{parseDate(props.dateTime)}</TableCell>
+					<TableCell align='center'>{props.recipient}</TableCell>
+					<TableCell align='center'>{props.amount}</TableCell>
+					<TableCell align='center'>{props.status}</TableCell>
+					<TableCell align='center'>{props.account}</TableCell>
+					<TableCell align='center'>{props.type}</TableCell>
+					<TableCell sx={{ justifyContent: 'space-around', display: 'flex', flexDirection: 'row' }}>
+						<Button
 							onClick={() => {
-								setDetails(null);
+								arg.setDetails(null);
 							}}
 						>
-							<p>Close</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>*/
-		<div className={cn.transactoin_root}>
-			<table className={cn.tableDetails}>
-				<thead>
-					<tr>
-						<th className={cn.th}>ID</th>
-						<th className={cn.th}>Date</th>
-						<th className={cn.th}>Recipient</th>
-						<th className={cn.th}>Amount</th>
-						<th className={cn.th}>Status</th>
-						<th className={cn.th}>Bank Account</th>
-						<th className={cn.th}>Name of the Payee</th>
-						<th className={cn.th}></th>
-					</tr>
-				</thead>
-				<tr>
-					<th colSpan={8}>
-						<hr className={cn.hr} />
-					</th>
-				</tr>
-				<tbody>
-					<tr className={cn.tbodyDetails}>
-						<td className={cn.td}>{arg.props.id}</td>
-						<td className={cn.td}>{parseDate(props.dateTime)}</td>
-						<td className={cn.td}>{props.recipient}</td>
-						<td className={cn.td}>{props.amount}</td>
-						<td className={cn.td}>{props.status}</td>
-						<td className={cn.td}>{props.account}</td>
-						<td className={cn.td}>{props.type}</td>
-						<td className={cn.td}>
-							<div className={cn.closeBtnDiv}>
-								<button
-									className={cn.closeBtn}
-									onClick={() => {
-										arg.setDetails(null);
-									}}
-								>
-									<p className={cn.pNoMargin}>Close</p>
-								</button>
-								<button
-									className={cn.closeBtn}
-									onClick={() => {
-										navigate('/payment/USD/Payment/' + props.recipient + '/' + props.amount + '/' + props.account);
-									}}
-								>
-									<p className={cn.pNoMargin}>Reuse</p>
-								</button>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+							Close
+						</Button>
+						<Button
+							onClick={() => {
+								navigate('/payment/USD/Payment/' + props.recipient + '/' + props.amount + '/' + props.account);
+							}}
+						>
+							Reuse
+						</Button>
+					</TableCell>
+				</TableRow>
+			</Table>
+		</Box>
 	);
 }

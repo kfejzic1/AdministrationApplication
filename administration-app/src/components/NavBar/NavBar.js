@@ -1,44 +1,12 @@
 import { Link } from 'react-router-dom';
-import cn from './css/NavBar.module.css';
 import LogoutButton from '../Login/Logout';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
-export const NavBar = () => {
-	const token = localStorage.getItem('token');
-	const ActiveLink = styled(Link)`
-		display: flex;
-		margin: auto;
-		align-items: center;
-		height: 100%;
-		padding: 5px;
-		color: #333;
-		text-decoration: none;
-		transition: all 0.2s ease-in-out;
-		border-radius: 15px;
-
-		&:hover {
-			background-color: #ddd000;
-		}
-	`;
-	const nav_Links = {
-		display: 'flex',
-		listStyle: 'none',
-		margin: 0,
-		padding: 0,
-	};
-	const active = {
-		display: 'flex',
-		margin: 'auto',
-		alignItems: 'center',
-		height: '100%',
-		padding: '5px',
-		paddingRight: '15px',
-		paddingLeft: '15px',
-		color: '#333',
-		textDecoration: 'none',
-		transition: 'all 0.2s ease-in-out',
-		borderRadius: '15px',
-	};
+export const NavBar = props => {
+	useEffect(() => {
+		props.setToken(localStorage.getItem('token'));
+	}, []);
 
 	return (
 		<div>

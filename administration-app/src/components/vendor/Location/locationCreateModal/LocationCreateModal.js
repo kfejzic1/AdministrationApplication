@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button, TextField, Grid, Card, CardHeader, CardContent, CardActions } from '@material-ui/core';
 import { Stack } from '@mui/material';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { editVendorLocation } from '../../../services/vendorService';
-import { getUserId } from '../../../services/userService';
-import { getVendorLocation } from '../../../services/vendorService';
-import Loader from '../../loaderDialog/Loader';
+import { createVendorLocation } from '../../../../services/vendorService';
+import { getUserId } from '../../../../services/userService';
+import Loader from '../../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -17,14 +16,19 @@ const useStyles = makeStyles(theme => ({
 		margin: 'auto',
 		border: 'none',
 	},
-	card: { border: 'none' },
+	card: { 
+		border: 'none',
+		padding: '5px',
+	},
 	button: {
-		marginRight: '20px',
-		'&.MuiButton-outlined': {
-			backgroundColor: '#ffaf36',
+		marginRight: '5%',
+		'&.MuiButton-contained': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '15px',
 			color: 'black',
+			width: '8rem',
 			'&:hover': {
-				backgroundColor: '#ea8c00',
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
 				boxShadow: 'none',
 			},
 			'&:disabled': {
@@ -59,24 +63,15 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function LocationEditModal(props) {
+export default function LocationCreateModal(props) {
 	const location = {
 		address: '',
-		modifiedBy: -1,
+		createdBy: -1,
 		vendorId: -1,
 	};
 
 	const classes = useStyles();
 	const [address, setAddress] = useState('');
-
-	const fetchData = async () => {
-		getVendorLocation(props.locationId[0]).then(res => {
-			setAddress(res.data.address);
-		});
-	};
-	useEffect(() => {
-		fetchData();
-	}, []);
 
 	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
 
@@ -107,10 +102,9 @@ export default function LocationEditModal(props) {
 			setOpen(true);
 			location.address = address;
 
-			location.id = props.locationId[0];
-			location.modifiedBy = getUserId();
+			location.createdBy = getUserId();
 			location.vendorId = props.vendorId;
-			editVendorLocation(location)
+			createVendorLocation(location)
 				.then(res => {
 					setLoaderState({ ...loaderState, loading: false, success: true });
 					setOpen(false);
@@ -125,19 +119,19 @@ export default function LocationEditModal(props) {
 
 	return (
 		<div>
-			<div>
+			<div className='container'>
 				<form className={classes.root} onSubmit={handleSubmit}>
 					<Card className={classes.card}>
-						<CardHeader align='left' title={'Edit B2B Location'}></CardHeader>
+						<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
 						<CardContent>
 							<Stack direction='row' spacing={2}>
 								<Grid container spacing={2}>
 									<Grid item xs={12}>
 										<TextField
 											className={classes.textField}
-											id='outlined-basic'
+											id='standard-basic'
 											label='Address'
-											variant='outlined'
+											variant='standard'
 											value={address}
 											required={true}
 											error={errors.address}
@@ -148,8 +142,8 @@ export default function LocationEditModal(props) {
 							</Stack>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='outlined' type='submit' value='Submit' onClick={handleSubmit}>
-								Confirm
+							<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
+								Create
 							</Button>
 						</CardActions>
 					</Card>

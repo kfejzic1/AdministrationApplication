@@ -11,28 +11,29 @@ using System;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Helpers;
+using Microsoft.Extensions.Configuration;
+using Twilio.Rest.Routes.V2;
 
 public class ActivationCodeService : IActivationCodeService
 {
     private AppDbContext _context;
     private UserManager<User> _userManager;
     private IUserService _userService;
+    private IConfiguration _config;
 
     public ActivationCodeService(
         AppDbContext context,
         UserManager<User> userManager,
-        IUserService userService)
+        IUserService userService,
+        IConfiguration config)
     {
         _context = context;
         _userManager = userManager;
         _userService = userService;
+        _config = config;
     }
-
-    public async Task SaveCodeAsync(ActivationCode code)
-    {
-        _context.ActivationCodes.Add(code);
-        await _context.SaveChangesAsync();
-    }
+    
 
     public async Task<bool> ActivateEmailCodeAsync(string code, string username)
     {
@@ -72,10 +73,65 @@ public class ActivationCodeService : IActivationCodeService
         return true;
     }
 
+    public async Task<bool> GenerateCodeForUserAsync(User user)
+    {
+        Random random = new Random();
+        String emailCode = random.Next(1000, 9999).ToString();
+        String smsCode = random.Next(1000, 9999).ToString();
+
+        ActivationCode activationCode = new ActivationCode
+        {
+            Id = new Guid(),
+            EmailCode = emailCode,
+            SMSCode = smsCode,
+            ActivatedEmail = false,
+            ActivatedSMS = false,
+            User = user
+        };
+
+        _context.ActivationCodes.Add(activationCode);
+        await _context.SaveChangesAsync();
+
+        EmailSender emailSender = new EmailSender();
+        try
+        {
+            await emailSender.SendEmailAsync(user.Email, emailCode);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateCodeForUserAsync");
+            return false;
+        }
+    }
+
     public async Task<ActivationCode> GetCodeForUser(string id)
     {
         ActivationCode activationCode = await _context.ActivationCodes.Where(ac => ac.UserId.Equals(id)).FirstOrDefaultAsync();
 
         return activationCode;
+    }
+
+    public async Task<bool> SendSMSToUser(User user)
+    {
+        ActivationCode activationCodeForUser = await GetCodeForUser(user.Id);
+
+        if (activationCodeForUser == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            SMSSender SMSsender = new SMSSender(_config);
+            SMSsender.SendSMS(user.PhoneNumber, activationCodeForUser.SMSCode);
+
+            return true;
+        }
+        catch(Exception ex) 
+        {
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.SendSMSToUser");
+            return false;
+        }
     }
 }

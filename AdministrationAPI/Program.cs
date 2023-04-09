@@ -1,8 +1,8 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
-using AdministrationAPI.Services.Transaction;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Services.Transaction;
 using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +22,8 @@ builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ITemplateService, TemplateService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -73,6 +75,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
+builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()
