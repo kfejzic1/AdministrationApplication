@@ -53,18 +53,23 @@ export const TransactionsList = arg => {
 		}
 		getTransactions(tempCounter, 15, filterOptions, mock)
 			.then(transactions1 => {
-				var temp1 = [...transactionsRaw, ...transactions1.data];
-				if ('clear-load' == a) {
-					temp1 = transactions1.data;
+				if (transactions1.data.length == 0) {
+					setHasMore(false);
+					setIsLoading(false);
+				} else {
+					var temp1 = [...transactionsRaw, ...transactions1.data];
+					if ('clear-load' == a) {
+						temp1 = transactions1.data;
+					}
+					setTransactionsRaw(temp1);
+					var transactionsdata = temp1.map((item, index) => (
+						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
+					));
+					setTransactions(transactionsdata);
+					setHasMore(true);
+					setCounter(counter + 1);
+					setIsLoading(false);
 				}
-				setTransactionsRaw(temp1);
-				var transactionsdata = temp1.map((item, index) => (
-					<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
-				));
-				setTransactions(transactionsdata);
-				setHasMore(true);
-				setCounter(counter + 1);
-				setIsLoading(false);
 			})
 			.catch(e => {
 				if (e == 401 && !alertShowing) {
@@ -132,7 +137,7 @@ export const TransactionsList = arg => {
 						</Box>
 					</Box>
 				)}
-				{isLoading && (
+				{hasMore && isLoading && (
 					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 						<LoadingSpinner></LoadingSpinner>
 					</Box>
