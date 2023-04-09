@@ -14,10 +14,16 @@ export default function TransactionDetails(arg) {
 	});
 	const navigate = useNavigate();
 	useEffect(() => {
-		getTransactionDetails(arg.props.id, arg.mock).then(transaction => {
-			setProps(transaction.data);
-			arg.setIsLoading(false);
-		});
+		getTransactionDetails(arg.props.id, arg.mock)
+			.then(transaction => {
+				setProps(transaction.data);
+				arg.setIsLoading(false);
+			})
+			.catch(err => {
+				if (err == 401 && !arg.alertShowing) {
+					arg.setAlertShowing(true);
+				}
+			});
 	}, []);
 	return (
 		<Box sx={{ bgcolor: '#eceff1', width: '100%', height: '100%' }}>
