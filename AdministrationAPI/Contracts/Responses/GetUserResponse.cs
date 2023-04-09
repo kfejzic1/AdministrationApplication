@@ -7,6 +7,5 @@ namespace AdministrationAPI.Contracts.Responses
     {
         public User user { get; set; }
         public IdentityRole userRole { get; set; }
-        public IEnumerable<IdentityRole> roles { get; set; }
     }
 }
