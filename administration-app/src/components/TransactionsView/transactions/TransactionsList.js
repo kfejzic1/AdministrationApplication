@@ -38,6 +38,7 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		setHasMore(true);
 		setCounter(1);
 		loadTransactions('clear-load');
 	}, [filterOptions]);
