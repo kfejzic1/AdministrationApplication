@@ -17,6 +17,8 @@ namespace AdministrationAPI.Contracts.Requests.Users
         public string PhoneNumber { get; set; }
         [Required]
         public string Address { get; set; }
+        [Required]
+        public string Role { get; set; }
 
     }
 }
