@@ -302,10 +302,10 @@ export default function TransactionsListHeader(arg) {
 									amountMin.includes('e') ||
 									amountMax.includes('+') ||
 									amountMin.includes('+') ||
-									amountMax < 0 ||
-									amountMin < 0 ||
-									amountMax < amountMin ||
-									(amountMin == '' && amountMax !== '')
+									parseInt(amountMax) < 0 ||
+									parseInt(amountMin) < 0 ||
+									parseInt(amountMax) < parseInt(amountMin) ||
+									(parseInt(amountMin) == '' && parseInt(amountMax) !== '')
 								)
 									alert('Invalid amount filter value!');
 								else updateFilterOptions();
