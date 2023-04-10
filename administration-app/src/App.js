@@ -10,6 +10,8 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
+import UserManagementNovi from './components/UserManagement/UserManagementNovi';
+
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { ResetUserPassword } from './components/UserManagement/ResetUserPassword';
 
@@ -83,6 +85,7 @@ function App() {
 					<Route path='/login' element={<LoginForm setToken={setToken} />} />
 					<Route path='/user/setpassword' element={<SetUserPassword />} />
 					<Route path='/user/resetpassword' element={<ResetUserPassword />} />
+					<Route path='user-management-novi' element={<UserManagementNovi />} />
 				</Routes>
 			</Router>
 		</div>
