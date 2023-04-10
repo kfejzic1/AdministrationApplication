@@ -35,6 +35,8 @@ import { Stack } from '@mui/system';
 import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import LockResetIcon from '@mui/icons-material/LockReset';
+import EditIcon from '@mui/icons-material/Edit';
 
 const theme = createTheme({
 	components: {
@@ -310,18 +312,18 @@ const UserManagement = () => {
 															handleUpdateDialogOpen(user);
 														}}
 													>
-														Edit
+														<EditIcon></EditIcon>
 													</Button>
 													<Button
 														size='small'
-														title='ResetPassword'
+														title='Reset password'
 														className={`${classes.button}`}
 														variant='outline'
 														onClick={() => {
 															handleResetPassword(user);
 														}}
 													>
-														Reset password
+														<LockResetIcon></LockResetIcon>
 													</Button>
 												</ButtonGroup>
 											</TableCell>
