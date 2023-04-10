@@ -200,7 +200,6 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("create")]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromBody] CreateRequest request)
         {
             try
@@ -374,7 +373,6 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPatch("edit")]
-        [AllowAnonymous]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
             var user = _userService.GetUserById(request.Id);
@@ -394,7 +392,6 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet("allWithRoles")]
-        [AllowAnonymous]
         public IActionResult GetAllUsersWithRoles()
         {
             var users = _userService.GetAllUsers();
@@ -423,21 +420,18 @@ namespace AdministrationAPI.Controllers
             }
         }
         [HttpGet("roles")]
-        [AllowAnonymous]
         public IEnumerable<IdentityRole> GetRoles()
         {
             return _userService.GetRoles();
         }
 
         [HttpGet("byId/{id}")]
-        [AllowAnonymous]
         public Task<GetUserResponse> GetUser([FromRoute] string id)
         {
             return _userService.GetUserWithRolesById(id);
         }
 
         [HttpPost("forgotPassword")]
-        [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             var user = _userService.GetUserById(request.Id);
