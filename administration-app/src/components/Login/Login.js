@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
-import { LinearProgress, Typography, Input, Alert, Box } from '@mui/material';
+import { LinearProgress, Typography, Input, Alert, Box, Button } from '@mui/material';
 import TwoFactorView from './TwoFactor';
-import { FacebookLoginButton } from "react-social-login-buttons";
+import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { GoogleLogin, useGoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
+
 import { env } from '../../config/env';
 import axios from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
@@ -33,26 +34,22 @@ const LoginForm = props => {
 		console.log("Login Facebook");
 	
 	}
+	
 
-	const handleGoogleLoginSuccess = async (response) => {
-		const accessToken = response.credential;
-		console.log("sadsafasfas " + JSON.stringify(response))
-		try {
-		  //const { model} = response;
-		  //const res = await axios.post(env.API_ENV.url + '/signin-google', { model});
-		  const res = await axios(env.API_ENV.url + '/api/User/login/google?token=' + accessToken, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		  localStorage.setItem('token', res.data.token)
+	const googleLogin = useGoogleLogin({
+		clientId: "296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com",
+		onSuccess: async (codeResponse) => {
+			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
+			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
+			const tokens = await axios.post(
+				env.API_ENV.url + '/api/User/login/google?token=' + codeResponse.access_token, {
+				});
+	
+			console.log("oken bude ovdje " + tokens.data);
+		},
+		onError: errorResponse => console.log("ERror"+ errorResponse),
+	});
 
-		} catch (error) {
-		console.log("dadafata je sadasf");
-		  console.error(error);
-		}
-	  };
 
 
 	const handleButtonClick = () => {
@@ -123,14 +120,10 @@ const LoginForm = props => {
 						}}
 					/>
 
-					
-					<GoogleLogin
-						clientId="296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com"
-						buttonText="Login with Google"
-						onSuccess={handleGoogleLoginSuccess}
-						cookiePolicy={'single_host_origin'}
-						className="google-login-button"
-					/>
+					<GoogleLoginButton 
+						onClick={googleLogin} 
+						style={{width: '80%'}} 
+					/>		
 					<FacebookLoginButton style={{width: '80%'}}/>
 					<Typography>
 						You are not registered? <a href='/'>Register</a>
