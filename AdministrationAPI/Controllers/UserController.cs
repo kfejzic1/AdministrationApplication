@@ -401,7 +401,6 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpGet("all")]
-        [AllowAnonymous]
         public IActionResult GetAllUsers()
         {
             try
