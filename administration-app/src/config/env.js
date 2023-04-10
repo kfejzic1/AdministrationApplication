@@ -3,7 +3,7 @@ export const env = {
 		url: 'https://processingserver.herokuapp.com',
 	},
 	API_ENV: {
-		url: 'http://localhost:5051',
+		url: 'http://siprojekat.duckdns.org:5051',
 	},
 	NOTIFICATION_API: {
 		key: 'Tm1RME5USm1aR1F0T0dRd05TMDBZV1ppTFdFMllXVXRaVFl6WVRka05UZGhaREU0',

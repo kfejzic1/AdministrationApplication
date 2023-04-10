@@ -25,6 +25,10 @@
     justify-content: space-evenly;
 }
 
+.google-login-button {
+    width: 80%;
+  }
+
 .user-data{
     background-color: white;
     height: 4em;
