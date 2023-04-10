@@ -54,15 +54,12 @@ export function google(data){
 	});
 } 
 
-export function loginFacebook(data) {
-	return axios(env.API_ENV.url + '/api/User/login/facebook', {
-		method: 'POST',
-		data: JSON.stringify(data),
-		headers: {
-			'Content-Type': 'application/json',
-		},
+export function facebook(data){
+	return axios.post(
+		env.API_ENV.url + '/api/User/login/facebook?token=' + data, {
 	});
-}
+} 
+
 
 export function twoFactorAuthentication(data) {
 	return axios(env.API_ENV.url + '/api/User/login2FA', {

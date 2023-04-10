@@ -3,10 +3,12 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
 import { google } from '../../services/userService';
+import { facebook } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box, Button } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
-import { GoogleLogin, useGoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
+import {LoginSocialFacebook } from 'reactjs-social-login'
 
 import { env } from '../../config/env';
 import axios from 'axios';
@@ -32,7 +34,7 @@ const LoginForm = props => {
 	};
 
 	const handleFacebookLogin = () => {
-		console.log("Login Facebook");
+		
 	
 	}
 	
@@ -121,9 +123,22 @@ const LoginForm = props => {
 
 					<GoogleLoginButton 
 						onClick={googleLogin} 
-						style={{width: '80%'}} 
-					/>		
+						style={{width: '40%', marginRight: '50px'}} 
+					/>
+					<LoginSocialFacebook
+						style={{width: '80%'}}
+						appId='959179271739907'
+						onResolve={(response) => {
+							console.log("Token facebook " +JSON.stringify(response.data));
+							const tokens = facebook(response.data.accessToken);
+							localStorage.setItem('token', tokens.data.token);
+						}}
+						onReject={(error) => {
+							console.log(error);
+						}}
+					>
 					<FacebookLoginButton style={{width: '80%'}}/>
+					</LoginSocialFacebook>	
 					<Typography>
 						You are not registered? <a href='/'>Register</a>
 					</Typography>
