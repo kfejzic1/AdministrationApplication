@@ -40,7 +40,6 @@ const LoginForm = props => {
 	
 
 	const googleLogin = useGoogleLogin({
-		clientId: "296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com",
 		onSuccess: async (codeResponse) => {
 			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
 			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
