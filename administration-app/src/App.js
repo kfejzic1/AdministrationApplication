@@ -82,8 +82,8 @@ function App() {
 						}
 					/>
 					<Route path='/login' element={<LoginForm setToken={setToken} />} />
-					<Route path='/user/setpassword' element={<SetUserPassword />} />
-					<Route path='/user/resetpassword' element={<ResetUserPassword />} />
+					<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
+					<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />
 				</Routes>
 			</Router>
 		</div>
