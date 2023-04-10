@@ -2,6 +2,7 @@ import axios from 'axios';
 import { env } from '../config/env';
 import jwtDecode from 'jwt-decode';
 
+
 export function getAllUsers() {
 	return axios(env.API_ENV.url + '/api/User/all', {
 		method: 'GET',
@@ -47,15 +48,11 @@ export function login(data) {
 	});
 }
 
-export function loginGoogle(data) {
-	return axios(env.API_ENV.url + '/api/User/login/google', {
-		method: 'POST',
-		data: JSON.stringify(data),
-		headers: {
-			'Content-Type': 'application/json',
-		},
+export function google(data){
+	return axios.post(
+		env.API_ENV.url + '/api/User/login/google?token=' + data, {
 	});
-}
+} 
 
 export function loginFacebook(data) {
 	return axios(env.API_ENV.url + '/api/User/login/facebook', {

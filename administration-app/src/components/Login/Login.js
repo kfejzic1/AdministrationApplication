@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
+import { google } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box, Button } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
@@ -41,11 +42,9 @@ const LoginForm = props => {
 		onSuccess: async (codeResponse) => {
 			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
 			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
-			const tokens = await axios.post(
-				env.API_ENV.url + '/api/User/login/google?token=' + codeResponse.access_token, {
-				});
-	
+			const tokens = await google(codeResponse.access_token_token);	
 			console.log("oken bude ovdje " + tokens.data);
+			localStorage.setItem('token', tokens.data.token);
 		},
 		onError: errorResponse => console.log("ERror"+ errorResponse),
 	});
