@@ -26,6 +26,7 @@ import {
 	Paper,
 	Tooltip,
 	Toolbar,
+	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
@@ -124,17 +125,18 @@ const useStyles = makeStyles({
 		},
 
 		'&.MuiButton-text': {
+			width: '250px',
 			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
-			alignItems: 'center',
 			borderRadius: '10px',
-			color: '#222222',
-			textTransform: 'none',
-			width: '40%',
-			padding: '1px 15px',
-			boxShadow: 'rgba(0, 0, 0, .3) 2px 8px 8px -5px',
+			color: 'black',
 			'&:hover': {
 				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
-				boxShadow: 'rgba(0, 0, 0, .2) 15px 28px 25px -18px',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
 			},
 		},
 	},
@@ -252,14 +254,30 @@ const UserManagement = () => {
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
 				<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
 					<ThemeProvider theme={tableTheme}>
-						<UsersTableHead onClick={handleCreateDialogOpen} />
 						<TableContainer>
+							<Toolbar sx={{ justifyContent: 'space-between' }}>
+								<div></div>
+								<Stack direction='row'>
+									<Tooltip title='Create User'>
+										<Button
+											className={classes.button}
+											size='small'
+											variant='text'
+											endIcon={<CreateIcon />}
+											onClick={handleCreateDialogOpen}
+										>
+											Create User
+										</Button>
+									</Tooltip>
+								</Stack>
+							</Toolbar>
 							<Table
 								className={classes.root}
 								sx={{ minWidth: '100%' }}
 								aria-labelledby='tableTitle'
 								size={dense ? 'small' : 'medium'}
 							>
+								<UsersTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{users.map(user => (
 										<TableRow
@@ -274,33 +292,38 @@ const UserManagement = () => {
 											sx={{ cursor: 'pointer' }}
 										>
 											<TableCell component='th' scope='row' padding='none'></TableCell>
+
 											<TableCell align='left'>{user.firstName}</TableCell>
 											<TableCell align='left'>{user.lastName}</TableCell>
 											<TableCell align='left'>{user.email}</TableCell>
 											<TableCell align='left'>{user.phoneNumber}</TableCell>
 											<TableCell align='left'>{user.address}</TableCell>
 											<TableCell align='left'>{user.role}</TableCell>
-											<TableCell align='right' padding='15px'>
-												<Button
-													title='Edit'
-													className={`${classes.button}`}
-													variant='text'
-													onClick={() => {
-														handleUpdateDialogOpen(user);
-													}}
-												>
-													Edit
-												</Button>
-												<Button
-													title='ResetPassword'
-													className={`${classes.button}`}
-													variant='text'
-													onClick={() => {
-														handleResetPassword(user);
-													}}
-												>
-													Reset password
-												</Button>
+											<TableCell align='center'>
+												<ButtonGroup variant='text' aria-label='text button group'>
+													<Button
+														title='Edit'
+														size='small'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleUpdateDialogOpen(user);
+														}}
+													>
+														Edit
+													</Button>
+													<Button
+														size='small'
+														title='ResetPassword'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleResetPassword(user);
+														}}
+													>
+														Reset password
+													</Button>
+												</ButtonGroup>
 											</TableCell>
 										</TableRow>
 									))}
@@ -375,7 +398,7 @@ const UserManagement = () => {
 							</Select>
 						</FormControl>
 						<DialogActions>
-							<Button onClick={handleUpdateDialogClose} className={`${classes.button}`} variant='outline'>
+							<Button onClick={handleUpdateDialogClose} className={`${classes.button}`} variant='outlinedo'>
 								Cancel
 							</Button>
 							<Button type='submit' className={`${classes.button}`} variant='contained'>

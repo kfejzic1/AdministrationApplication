@@ -78,14 +78,13 @@ function App() {
 						path='/user-management'
 						element={
 							<ProtectedRoute>
-								<UserManagement />
+								<UserManagementNovi />
 							</ProtectedRoute>
 						}
 					/>
 					<Route path='/login' element={<LoginForm setToken={setToken} />} />
 					<Route path='/user/setpassword' element={<SetUserPassword />} />
 					<Route path='/user/resetpassword' element={<ResetUserPassword />} />
-					<Route path='user-management-novi' element={<UserManagementNovi />} />
 				</Routes>
 			</Router>
 		</div>

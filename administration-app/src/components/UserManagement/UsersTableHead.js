@@ -130,26 +130,10 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function UsersTableHead(props) {
+export default function UsersTableHead() {
 	const classes = useStyles();
 	return (
 		<ThemeProvider theme={tableTheme}>
-			<Toolbar sx={{ justifyContent: 'space-between' }}>
-				<div></div>
-				<Stack direction='row'>
-					<Tooltip title='Create User'>
-						<Button
-							className={classes.button}
-							size='small'
-							variant='contained'
-							endIcon={<CreateIcon />}
-							onClick={props.onClick}
-						>
-							Create User
-						</Button>
-					</Tooltip>
-				</Stack>
-			</Toolbar>
 			<TableHead>
 				<TableRow>
 					{headCells.map(headCell => (
@@ -157,7 +141,7 @@ export default function UsersTableHead(props) {
 							key={headCell.id}
 							align={headCell.numeric ? 'right' : 'left'}
 							padding={headCell.disablePadding ? 'none' : 'normal'}
-							width={headCell.label === 'Id' ? '4%' : '16%'}
+							width={headCell.label === 'Id' ? '4%' : '15%'}
 						>
 							{headCell.label === 'Id' ? '' : headCell.label}
 						</TableCell>
