@@ -1,12 +1,15 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.DTOs;
 using AdministrationAPI.DTOs.Transaction;
+using AdministrationAPI.Contracts.Requests;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using AdministrationAPI.Models.Transaction;
+using AdministrationAPI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
-namespace AdministrationAPI.Services.Transaction
+
+namespace AdministrationAPI.Services
 {
     public class TransactionService : ITransactionService
     {
@@ -21,7 +24,7 @@ namespace AdministrationAPI.Services.Transaction
         }
 
 
-        public async Task<TransactionResponseDTO> GetTransactions(TransactionQueryOptions options)
+        public async Task<TransactionResponseDTO> GetTransactions(string userId, TransactionQueryOptions options)
         {
 
             // Throw error if pageNumber or pageSize is less than 1
@@ -32,6 +35,8 @@ namespace AdministrationAPI.Services.Transaction
 
             var transactions = _context.Transactions.AsQueryable();
 
+            if (userId != "")
+                transactions = transactions.Where(t => t.UserId == userId || t.Recipient == userId);
             // Filter transactions
             if (options.DateTimeStart == null && options.DateTimeEnd != null) options.DateTimeStart = options.DateTimeEnd;
             if (options.DateTimeEnd == null && options.DateTimeStart != null) options.DateTimeEnd = options.DateTimeStart;
@@ -91,13 +96,30 @@ namespace AdministrationAPI.Services.Transaction
             return response;
         }
 
-        public async Task<TransactionDetailsDTO> GetTransactionByID(int id)
+        public async Task<TransactionDetailsDTO> GetTransactionByID(int id, string userId)
         {
-            if (id < 1) throw new Exception("You have specified an invalid id.");
             var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
             if (dbTransaction is null) throw new Exception("No transaction corresponds to the given id.");
-
+            if (dbTransaction.UserId != userId && dbTransaction.Recipient != userId)
+            {
+                throw new Exception("You don't have Transaction with this ID");
+            }
             return _mapper.Map<TransactionDetailsDTO>(dbTransaction);
+        }
+
+        public async Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req)
+        {
+            var transaction = new Transaction();
+            transaction.Account = req.Account;
+            transaction.Amount = req.Amount;
+            transaction.DateTime = req.DateTime;
+            transaction.UserId = req.UserId;
+            transaction.Recipient = req.Recipient;
+            transaction.Status = req.Status;
+            transaction.Type = req.Type;
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<TransactionDetailsDTO>(transaction);
         }
     }
 }
