@@ -12,7 +12,6 @@ import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
-import { ResetUserPassword } from './components/UserManagement/ResetUserPassword';
 
 import './App.css';
 
