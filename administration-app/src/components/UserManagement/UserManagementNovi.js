@@ -338,8 +338,10 @@ const UserManagement = () => {
 							</Select>
 						</FormControl>
 						<DialogActions>
-							<Button onClick={handleCreateDialogClose}>Cancel</Button>
-							<Button type='submit' variant='contained' color='primary'>
+							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
+								Cancel
+							</Button>
+							<Button type='submit' className={`${classes.button}`} variant='contained'>
 								Create
 							</Button>
 						</DialogActions>
@@ -373,8 +375,10 @@ const UserManagement = () => {
 							</Select>
 						</FormControl>
 						<DialogActions>
-							<Button onClick={handleUpdateDialogClose}>Cancel</Button>
-							<Button type='submit' variant='contained' color='primary'>
+							<Button onClick={handleUpdateDialogClose} className={`${classes.button}`} variant='outline'>
+								Cancel
+							</Button>
+							<Button type='submit' className={`${classes.button}`} variant='contained'>
 								Save
 							</Button>
 						</DialogActions>
