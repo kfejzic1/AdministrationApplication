@@ -78,6 +78,11 @@ namespace AdministrationAPI.Controllers
         {
             User user = await _userService.Register(model);
 
+            if(user == null){
+                return BadRequest("User not created. Password must contain at least one uppercase letter, a digit and a non-alphanumeric character. Password must be at least six characters long.");
+                
+            }
+
             bool success = await _activationCodeService.GenerateCodeForUserAsync(user);
 
             if (success)
