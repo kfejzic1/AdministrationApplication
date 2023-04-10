@@ -20,10 +20,132 @@ import {
 	InputLabel,
 	Select,
 	MenuItem,
+	Box,
+	FormControlLabel,
+	Switch,
+	Paper,
+	Tooltip,
+	Toolbar,
+	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
+import UsersTableHead from './UsersTableHead';
+import { Stack } from '@mui/system';
+
+import CreateIcon from '@mui/icons-material/Add';
+import { makeStyles } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import LockResetIcon from '@mui/icons-material/LockReset';
+import EditIcon from '@mui/icons-material/Edit';
+
+const theme = createTheme({
+	components: {
+		MuiSwitch: {
+			styleOverrides: {
+				switchBase: {
+					// Controls default (unchecked) color for the thumb
+					color: '#ccc',
+				},
+				colorPrimary: {
+					'&.Mui-checked': {
+						// Controls checked color for the thumb
+						color: '#ffaf36',
+					},
+				},
+				track: {
+					// Controls default (unchecked) color for the track
+					opacity: 0.2,
+					backgroundColor: '#c1bfbf',
+					'.Mui-checked.Mui-checked + &': {
+						// Controls checked color for the track
+						opacity: 0.7,
+						backgroundColor: '#ffc976',
+					},
+				},
+			},
+		},
+	},
+});
+
+const tableTheme = createTheme({
+	palette: {
+		primary: {
+			main: '#E7EBF0',
+		},
+		secondary: {
+			main: '#ffe2b6',
+		},
+		secondary2: {
+			main: '#ffaf36',
+		},
+	},
+});
+
+const useStyles = makeStyles({
+	root: {
+		'& .MuiTableBody-root .Mui-selected, & .MuiTableBody-root .Mui-selected:hover': {
+			'& .MuiTableBody-root .Mui-selected:hover': {
+				backgroundColor: '#ffc976',
+			},
+			backgroundColor: '#ffe2b6',
+			'& .MuiChip-root': {
+				backgroundColor: '#ffaf36',
+			},
+		},
+
+		'& .MuiTableBody-root .Mui-selected:hover': {
+			backgroundColor: '#ffc976',
+		},
+		'& .css-177gid-MuiTableCell-root': {
+			padding: '10px',
+		},
+	},
+
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundColor: '#ffaf36',
+			color: 'black',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ffaf36',
+			border: '2px solid #ff9a00',
+
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000',
+			},
+		},
+
+		'&.MuiButton-text': {
+			width: '250px',
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			borderRadius: '10px',
+			color: 'black',
+			'&:hover': {
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+	},
+});
 
 const UserManagement = () => {
+	const classes = useStyles();
 	const [users, setUsers] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
@@ -31,6 +153,9 @@ const UserManagement = () => {
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
+
+	const [dense, setDense] = useState(false);
+
 	useEffect(() => {
 		getAllUsers().then(response => {
 			setUsers(
@@ -123,42 +248,101 @@ const UserManagement = () => {
 		setOpenSnackbarPassword(false);
 	};
 
+	const handleChangeDense = event => {
+		setDense(event.target.checked);
+	};
 	return (
 		<div>
-			<Button variant='contained' onClick={handleCreateDialogOpen} sx={{ margin: '10px' }}>
-				Create User
-			</Button>
-			<TableContainer>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>First name</TableCell>
-							<TableCell>Last name</TableCell>
-							<TableCell>Email</TableCell>
-							<TableCell>Phone</TableCell>
-							<TableCell>Address</TableCell>
-							<TableCell>Role</TableCell>
-							<TableCell>Actions</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{users.map(user => (
-							<TableRow key={user.id}>
-								<TableCell>{user.firstName}</TableCell>
-								<TableCell>{user.lastName}</TableCell>
-								<TableCell>{user.email}</TableCell>
-								<TableCell>{user.phoneNumber}</TableCell>
-								<TableCell>{user.address}</TableCell>
-								<TableCell>{user.role}</TableCell>
-								<TableCell>
-									<IconButton onClick={() => handleUpdateDialogOpen(user)}>Edit</IconButton>
-									<IconButton onClick={() => handleResetPassword(user)}>Reset password</IconButton>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
+				<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
+					<ThemeProvider theme={tableTheme}>
+						<TableContainer>
+							<Toolbar sx={{ justifyContent: 'space-between' }}>
+								<div></div>
+								<Stack direction='row'>
+									<Tooltip title='Create User'>
+										<Button
+											className={classes.button}
+											size='small'
+											variant='text'
+											endIcon={<CreateIcon />}
+											onClick={handleCreateDialogOpen}
+										>
+											Create User
+										</Button>
+									</Tooltip>
+								</Stack>
+							</Toolbar>
+							<Table
+								className={classes.root}
+								sx={{ minWidth: '100%' }}
+								aria-labelledby='tableTitle'
+								size={dense ? 'small' : 'medium'}
+							>
+								<UsersTableHead onClick={handleCreateDialogOpen} />
+								<TableBody>
+									{users.map(user => (
+										<TableRow
+											key={user.id}
+											classes={{
+												root: classes.tableRowRoot,
+												selected: classes.tableRowSelected,
+											}}
+											hover
+											role='checkbox'
+											tabIndex={-1}
+											sx={{ cursor: 'pointer' }}
+										>
+											<TableCell component='th' scope='row' padding='none'></TableCell>
+
+											<TableCell align='left'>{user.firstName}</TableCell>
+											<TableCell align='left'>{user.lastName}</TableCell>
+											<TableCell align='left'>{user.email}</TableCell>
+											<TableCell align='left'>{user.phoneNumber}</TableCell>
+											<TableCell align='left'>{user.address}</TableCell>
+											<TableCell align='left'>{user.role}</TableCell>
+											<TableCell align='center'>
+												<ButtonGroup variant='text' aria-label='text button group'>
+													<Button
+														title='Edit'
+														size='small'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleUpdateDialogOpen(user);
+														}}
+													>
+														<EditIcon></EditIcon>
+													</Button>
+													<Button
+														size='small'
+														title='Reset password'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleResetPassword(user);
+														}}
+													>
+														<LockResetIcon></LockResetIcon>
+													</Button>
+												</ButtonGroup>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</ThemeProvider>
+				</Paper>
+				<ThemeProvider theme={theme}>
+					<FormControlLabel
+						className={classes.FormControlLabel}
+						sx={{ color: 'black' }}
+						control={<Switch checked={dense} onChange={handleChangeDense} />}
+						label='Dense padding'
+					/>
+				</ThemeProvider>
+			</Box>
 
 			<Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
 				<DialogTitle>Create User</DialogTitle>
@@ -179,8 +363,10 @@ const UserManagement = () => {
 							</Select>
 						</FormControl>
 						<DialogActions>
-							<Button onClick={handleCreateDialogClose}>Cancel</Button>
-							<Button type='submit' variant='contained' color='primary'>
+							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
+								Cancel
+							</Button>
+							<Button type='submit' className={`${classes.button}`} variant='contained'>
 								Create
 							</Button>
 						</DialogActions>
@@ -210,12 +396,13 @@ const UserManagement = () => {
 								<MenuItem value='User'>User</MenuItem>
 								<MenuItem value='Admin'>Admin</MenuItem>
 								<MenuItem value='Restricted'>Restricted</MenuItem>
-								<MenuItem value=''>No role</MenuItem>
 							</Select>
 						</FormControl>
 						<DialogActions>
-							<Button onClick={handleUpdateDialogClose}>Cancel</Button>
-							<Button type='submit' variant='contained' color='primary'>
+							<Button onClick={handleUpdateDialogClose} className={`${classes.button}`} variant='outlinedo'>
+								Cancel
+							</Button>
+							<Button type='submit' className={`${classes.button}`} variant='contained'>
 								Save
 							</Button>
 						</DialogActions>

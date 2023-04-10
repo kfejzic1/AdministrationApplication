@@ -10,7 +10,6 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-import UserManagementNovi from './components/UserManagement/UserManagementNovi';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { ResetUserPassword } from './components/UserManagement/ResetUserPassword';
@@ -78,7 +77,7 @@ function App() {
 						path='/user-management'
 						element={
 							<ProtectedRoute>
-								<UserManagementNovi />
+								<UserManagement />
 							</ProtectedRoute>
 						}
 					/>
