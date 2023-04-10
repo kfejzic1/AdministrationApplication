@@ -418,7 +418,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendConfirmationEmailAsync(email, $"http://localhost:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
+            await emailSender.SendConfirmationEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
         public async Task<IdentityResult> SetPassword(SetPasswordRequest request)
@@ -454,7 +454,7 @@ namespace AdministrationAPI.Services
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             EmailSender emailSender = new EmailSender();
-            await emailSender.SendPasswordResetEmailAsync(email, $"http://localhost:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
+            await emailSender.SendPasswordResetEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
