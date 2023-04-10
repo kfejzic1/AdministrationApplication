@@ -130,7 +130,7 @@ const LoginForm = props => {
 						onResolve={(response) => {
 							console.log("Token facebook " +JSON.stringify(response.data));
 							const tokens = facebook(response.data.accessToken);
-							localStorage.setItem('token', tokens.data.token);
+						
 						}}
 						onReject={(error) => {
 							console.log(error);
