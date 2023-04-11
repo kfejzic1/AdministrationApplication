@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
-import { sendNotification } from '../../services/utilityService';
 
 import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box } from '@mui/material';
 
@@ -59,19 +58,21 @@ export const Payment = props => {
 				backgroundPosition: 'right',
 				backgroundSize: '70% 70%',
 				backgroundRepeat: 'no-repeat',
-			}}>
+			}}
+		>
 			<Button
 				onClick={goBackHandler}
+				variant='contained'
 				sx={{
 					color: '#fff',
-					backgroundColor: '#1976D2',
 					fontSize: 'var(--text-size2)',
 					border: '1px solid #000000a8',
 					alignSelf: 'center',
 					borderRadius: '5px',
 					padding: 'var(--inputPadding)',
 					marginLeft: '5px',
-				}}>
+				}}
+			>
 				<span>{'<'}</span>
 			</Button>
 			<Box
@@ -84,7 +85,8 @@ export const Payment = props => {
 					borderRadius: '50px',
 					boxShadow: '0 0.3rem 0.7rem 0 var(--highlights)',
 					height: '95%',
-				}}>
+				}}
+			>
 				<Typography
 					variant='h3'
 					sx={{
@@ -93,7 +95,8 @@ export const Payment = props => {
 						fontWeight: 800,
 						color: 'black',
 						margin: 0,
-					}}>
+					}}
+				>
 					New Transaction
 				</Typography>
 
@@ -105,7 +108,8 @@ export const Payment = props => {
 						alignItems: 'center',
 						lineHeight: 'var(--formGap)',
 					}}
-					onSubmit={handleSubmit}>
+					onSubmit={handleSubmit}
+				>
 					<br />
 					<br />
 					<TextField
@@ -129,18 +133,21 @@ export const Payment = props => {
 							justifyContent: 'space-around',
 							width: '70%',
 							display: 'flex',
-						}}>
+						}}
+					>
 						<Box
 							sx={{
 								display: 'flex',
 								justifyContent: 'center',
 								alignItems: 'center',
-							}}>
+							}}
+						>
 							<Box
 								sx={{
 									color: 'var(--babyblue)',
 									display: 'inline-block',
-								}}>
+								}}
+							>
 								Type:{' '}
 							</Box>
 						</Box>
@@ -155,7 +162,8 @@ export const Payment = props => {
 								lineHeight: 1,
 							}}
 							value={typeState}
-							onChange={event => setType(event.target.value)}>
+							onChange={event => setType(event.target.value)}
+						>
 							<MenuItem value='Credit'>Credit</MenuItem>
 							<MenuItem value='Payment'>Payment</MenuItem>
 							<MenuItem value='Recip'>Recip</MenuItem>
@@ -166,12 +174,14 @@ export const Payment = props => {
 								display: 'flex',
 								justifyContent: 'center',
 								alignItems: 'center',
-							}}>
+							}}
+						>
 							<Box
 								sx={{
 									color: 'var(--babyblue)',
 									display: 'inline-block',
-								}}>
+								}}
+							>
 								Currency:
 							</Box>
 						</Box>
@@ -186,7 +196,8 @@ export const Payment = props => {
 								lineHeight: 1,
 							}}
 							value={currencyState}
-							onChange={event => setCurrency(event.target.value)}>
+							onChange={event => setCurrency(event.target.value)}
+						>
 							<MenuItem value='EUR'>EUR</MenuItem>
 							<MenuItem value='USD'>USD</MenuItem>
 							<MenuItem value='BAM'>BAM</MenuItem>
@@ -255,11 +266,8 @@ export const Payment = props => {
 					<br />
 
 					<Button
-						color='secondary'
-						type='submit'
+						variant='contained'
 						sx={{
-							color: '#fff',
-							backgroundColor: '#1976D2', // Changed color for Submit button
 							fontSize: 'var(--text-size2)',
 							border: '1px solid #000000a8',
 							alignSelf: 'center',
@@ -276,7 +284,6 @@ export const Payment = props => {
 								recipientName: 'Test Recipient', //recipientAccountNumberState,
 							})
 								.then(() => {
-									sendNotification('New transaction has been created');
 									alert('Payment successfuly sent!');
 								})
 								.catch(() => {
@@ -291,7 +298,8 @@ export const Payment = props => {
 								typeState,
 								transactionAmountState
 							);
-						}}>
+						}}
+					>
 						Submit
 					</Button>
 				</FormControl>
