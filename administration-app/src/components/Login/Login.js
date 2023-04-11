@@ -9,7 +9,6 @@ import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { useGoogleLogin } from '@react-oauth/google';
 import {LoginSocialFacebook } from 'reactjs-social-login'
-
 import { env } from '../../config/env';
 import axios from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
@@ -41,11 +40,9 @@ const LoginForm = props => {
 
 	const googleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
-			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
-			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
-			const tokens = await google(codeResponse.access_token_token);	
-			console.log("oken bude ovdje " + tokens.data);
+			const tokens = await google(codeResponse.access_token);
 			localStorage.setItem('token', tokens.data.token);
+			navigate('/user');
 		},
 		onError: errorResponse => console.log("ERror"+ errorResponse),
 	});
@@ -119,7 +116,7 @@ const LoginForm = props => {
 							setPassword(e.target.value);
 						}}
 					/>
-
+					
 					<GoogleLoginButton 
 						onClick={googleLogin} 
 						style={{width: '40%', marginRight: '50px'}} 

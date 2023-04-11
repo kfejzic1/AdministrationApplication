@@ -19,7 +19,7 @@ import './App.css';
 function App() {
 	const [token, setToken] = useState(null);
 	return (
-			<GoogleOAuthProvider clientId="296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com">
+		<GoogleOAuthProvider clientId="296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com">
 				<div className='App'>
 					<Router>
 						<NavBar token={token} setToken={setToken} />
@@ -82,14 +82,15 @@ function App() {
 									</ProtectedRoute>
 								}
 							/>
+							
 							<Route path='/login' element={<LoginForm setToken={setToken} />} />
 							<Route path='/user/setpassword' element={<SetUserPassword />} />
 							<Route path='/user/resetpassword' element={<ResetUserPassword />} />
 						</Routes>
 					</Router>
 				</div>
-			</GoogleOAuthProvider>
 
+			</GoogleOAuthProvider>
 	);
 }
 export default App;
