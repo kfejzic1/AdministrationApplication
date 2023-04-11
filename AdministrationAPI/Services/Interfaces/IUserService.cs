@@ -1,12 +1,16 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdministrationAPI.Services.Interfaces
 {
     public interface IUserService
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
+        Task<AuthenticationResult> FacebookSocialLogin(string token);
+        Task<AuthenticationResult> GoogleSocialLogin(string token);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);
         public List<User> GetAssignedUsersForVendor(int vendorId);
         Task<UserDT> GetUser(string id);
@@ -17,5 +21,15 @@ namespace AdministrationAPI.Services.Interfaces
         Task<bool> Toggle2FA(string id);
         List<User> GetAllUsers();
         User GetUserByName(string name);
+        Task<bool> DeleteUserAsync(string username);
+        Task<IdentityResult> CreateUser(CreateRequest request);
+        void SendConfirmationEmail(string id);
+        User GetUserById(string id);
+        Task<IdentityResult> SetPassword(SetPasswordRequest request);
+        Task<IdentityResult> EditUser(EditRequest request);
+        void SendPasswordResetEmail(string email);
+        Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request);
+        Task<GetUserResponse> GetUserWithRolesById(string id);
+        IEnumerable<IdentityRole> GetRoles();
     }
 }

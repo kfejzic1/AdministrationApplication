@@ -20,7 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LocationTableToolbar from './LocationTableToolbar';
 import LocationTableHead from './LocationTableHead';
-import Skeleton from '@mui/material/Skeleton';
 
 const theme = createTheme({
 	components: {
@@ -143,7 +142,6 @@ export default function VendorDetails() {
 	const fetchData = async () => {
 		getVendor(params.id).then(res => {
 			setVendor(res.data);
-			dataArrived = true;
 		});
 		getAllVendorLocations(params.id).then(res => {
 			setLocations(res.data);

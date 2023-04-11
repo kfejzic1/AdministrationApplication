@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
-import cn from './css/NavBar.module.css';
 import LogoutButton from '../Login/Logout';
-import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
@@ -32,7 +30,10 @@ export const NavBar = props => {
 					<Button component={Link} to='/vendor-management' color='primary'>
 						Vendor management
 					</Button>
-					<LogoutButton />)
+					<Button component={Link} to='/user-management' color='primary'>
+						User management
+					</Button>
+					<LogoutButton />
 				</Toolbar>
 			) : (
 				<Toolbar>
@@ -45,7 +46,6 @@ export const NavBar = props => {
 					<Button component={Link} to='/login' color='primary'>
 						Login
 					</Button>
-					)
 				</Toolbar>
 			)}
 		</AppBar>

@@ -1,15 +1,23 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
+using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
+using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net;
 using System.Text;
+using static QRCoder.PayloadGenerator;
 
 namespace AdministrationAPI.Services
 {
@@ -19,18 +27,21 @@ namespace AdministrationAPI.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IConfiguration configuration,
-            IMapper mapper
+            IMapper mapper,
+            RoleManager<IdentityRole> roleManager
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -49,8 +60,17 @@ namespace AdministrationAPI.Services
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
-                AuthenticatorKey = user.AuthenticatorKey
+                AuthenticatorKey = user.AuthenticatorKey,
+                IsEmailValidated = user.EmailConfirmed,
+                IsPhoneValidated = user.PhoneNumberConfirmed
             };
+        }
+
+        public async Task<bool> DeleteUserAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
         }
 
         public List<User> GetAllUsers()
@@ -112,6 +132,113 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
+
+        public async Task<AuthenticationResult> FacebookSocialLogin(string token)
+        {
+            try
+            {
+                var facebookClient = new FacebookClient(token);
+
+                dynamic facebookAccessTokenData = await facebookClient.GetTaskAsync("me", new { fields = "name,email,last_name" });
+
+                User user = GetUserByEmail(facebookAccessTokenData.email);
+
+                if (user is null)
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "User not found!" }
+                    };
+                }
+                else
+                {
+                    if (!user.EmailConfirmed)
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User didn't verify email!" }
+                        };
+
+                    if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                        return new AuthenticationResult
+                        {
+                            TwoFactorEnabled = true,
+                            Mail = user.Email
+                        };
+
+                    var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                    var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                    return new AuthenticationResult
+                    {
+                        Success = true,
+                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                    };
+                }
+            }
+            catch
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Invalid token!" }
+                };
+            }
+        }
+
+
+        public async Task<AuthenticationResult> GoogleSocialLogin(string token)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    GoogleAccessTokenData googleAccessTokenData = await httpClient.GetFromJsonAsync<GoogleAccessTokenData>("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token);
+
+                    var user = GetUserByEmail(googleAccessTokenData.Email);
+
+                    if (user is null)
+                    {
+                        return new AuthenticationResult
+                        {
+                            Errors = new[] { "User not found!" }
+                        };
+                    }
+                    else
+                    {
+                        if (!user.EmailConfirmed)
+                            return new AuthenticationResult
+                            {
+                                Errors = new[] { "User didn't verify email!" }
+                            };
+
+                        if (user.TwoFactorEnabled && user.AuthenticatorKey != null)
+                            return new AuthenticationResult
+                            {
+                                TwoFactorEnabled = true,
+                                Mail = user.Email
+                            };
+
+                        var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+                        var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+
+                        return new AuthenticationResult
+                        {
+                            Success = true,
+                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                        };
+                    }
+                }
+                catch
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "Invalid token!" }
+                    };
+                }
+            }
+        }
+
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
@@ -208,6 +335,27 @@ namespace AdministrationAPI.Services
             return _userManager.Users.FirstOrDefault(u => u.Email == email);
         }
 
+        public User GetUserById(string id)
+        {
+            return _userManager.Users.FirstOrDefault(u => u.Id == id);
+        }
+
+        public async Task<GetUserResponse> GetUserWithRolesById(string id)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == id);
+            return new GetUserResponse()
+            {
+                user = user,
+                userRole = await _userManager.GetRolesAsync(user),
+               
+            };
+        }
+
+        public IEnumerable<IdentityRole> GetRoles()
+        {
+            return _roleManager.Roles;
+        }
+
         public User GetUserByFirstName(string firstName)
         {
             return _userManager.Users.FirstOrDefault(u => u.FirstName == firstName);
@@ -228,5 +376,93 @@ namespace AdministrationAPI.Services
 
             return result.Succeeded ? newUser : null;
         }
+
+        public async Task<IdentityResult> CreateUser(CreateRequest request)
+        {
+            var newUser = new User() 
+            {  
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address
+            };
+
+            var usernameTemplate = $"{request.FirstName.ToLower().First()}{request.LastName.ToLower()}";
+            int number = 1;
+            while(true)
+            {
+                string newUsername = $"{usernameTemplate}{number}";
+                if (_userManager.Users.FirstOrDefault(u => u.UserName == newUsername) == null)
+                {
+                    newUser.UserName= newUsername;
+                    break;
+                }
+                number++;
+            }
+
+            var result = await _userManager.CreateAsync(newUser);
+            if(result.Succeeded)
+            {
+               var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
+                if(!roleResult.Succeeded)
+                {
+                    return roleResult;
+                }
+            }
+            return result;
+        }
+
+        public async void SendConfirmationEmail(string email)
+        {
+            var user = GetUserByEmail(email);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendConfirmationEmailAsync(email, $"http://localhost:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
+        }
+
+        public async Task<IdentityResult> SetPassword(SetPasswordRequest request)
+        {
+            var user = GetUserById(request.Id);
+            var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+            if (result.Succeeded)
+            {
+               var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
+                return passwordSet;
+            }
+
+            return result;
+        }
+
+        public async Task<IdentityResult> EditUser(EditRequest request)
+        {
+            
+            var user = GetUserById(request.Id);
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
+            await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+            await _userManager.AddToRoleAsync(user, request.Role);
+
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async void SendPasswordResetEmail(string email)
+        {
+            var user = GetUserByEmail(email);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendPasswordResetEmailAsync(email, $"http://localhost:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
+        {
+            var user = GetUserById(request.Id);
+            var result = await _userManager.ResetPasswordAsync(user,request.Token,request.Password);
+            return result;
+        }
+
     }
 }

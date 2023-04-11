@@ -18,44 +18,29 @@ import MenuItem from '@mui/material/MenuItem';
 export default function TransactionsListHeader(arg) {
 	const [sortingColumn, setSortingColumn] = useState('');
 	const [sortingDirection, setSortingDirection] = useState('asc');
-	const [dateStartFilter, setDateStartFilter] = useState('');
-	const [dateEndFilter, setDateEndFilter] = useState('');
+	const [dateStartFilter, setDateStartFilter] = useState(null);
+	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
 	const [statusFilter, setStatusFilter] = useState('');
 
-	const [amountMax, setAmountMax] = useState(arg.max);
-	useEffect(() => {
-		setAmountMax(arg.max);
-		if (arg.max < value1[1] && arg.max < value1[0]) setValue1([0, arg.max]);
-		else if (arg.max < value1[1]) setValue1([value1[0], arg.max]);
-	}, [arg.max]);
+	const [amountMin, setAmountMin] = useState(null);
+	const [amountMax, setAmountMax] = useState(null);
+
 	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
 
 	const updateFilterOptions = () => {
-		if (amountMax == value1[1] && 0 == value1[0])
-			arg.setFilterOptions({
-				Recipient: recipientFilter,
-				Status: statusFilter,
-				DateTimeStart: dateStartFilter,
-				DateTimeEnd: dateEndFilter,
-				MinAmount: '',
-				MaxAmount: '',
-				SortingOptions: sortingColumn,
-				Ascending: sortingDirection == 'asc' ? true : false,
-			});
-		else
-			arg.setFilterOptions({
-				Recipient: recipientFilter,
-				Status: statusFilter,
-				DateTimeStart: dateStartFilter,
-				DateTimeEnd: dateEndFilter,
-				MinAmount: value1[0],
-				MaxAmount: value1[1],
-				SortingOptions: sortingColumn,
-				Ascending: sortingDirection == 'asc' ? true : false,
-			});
+		arg.setFilterOptions({
+			Recipient: recipientFilter,
+			Status: statusFilter,
+			DateTimeStart: dateStartFilter,
+			DateTimeEnd: dateEndFilter,
+			MinAmount: amountMin,
+			MaxAmount: amountMax,
+			SortingOptions: sortingColumn,
+			Ascending: sortingDirection == 'asc' ? true : false,
+		});
 	};
 
 	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
@@ -97,23 +82,6 @@ export default function TransactionsListHeader(arg) {
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Status');
 		updateFilterOptions();
-	};
-	//min max slider
-
-	const minDistance = 5;
-	const [value1, setValue1] = React.useState([0, amountMax]);
-
-	const handleChange1 = (event, newValue, activeThumb) => {
-		console.log('Setting');
-		if (!Array.isArray(newValue)) {
-			return;
-		}
-
-		if (activeThumb === 0) {
-			setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
-		} else {
-			setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
-		}
 	};
 
 	//end of min max slider
@@ -256,12 +224,14 @@ export default function TransactionsListHeader(arg) {
 								label='Start'
 								sx={{ width: 'auto' }}
 								maxDate={dateEndFilter}
+								value={dateStartFilter}
 								onChange={a => {
 									setDateStartFilter(a);
 								}}
 							></DesktopDatePicker>
 							<DesktopDatePicker
 								minDate={dateStartFilter}
+								value={dateEndFilter}
 								onChange={a => {
 									setDateEndFilter(a);
 								}}
@@ -271,7 +241,7 @@ export default function TransactionsListHeader(arg) {
 					</LocalizationProvider>
 				</TableCell>
 
-				<TableCell>
+				<TableCell align='center'>
 					<TextField
 						value={recipientFilter}
 						onChange={e => {
@@ -281,20 +251,24 @@ export default function TransactionsListHeader(arg) {
 				</TableCell>
 				<TableCell>
 					<Box>
-						<Box sx={{ flexDirection: 'row', display: 'flex', justifyContent: 'space-between' }}>
-							<Typography>Min: {value1[0]}</Typography>
-							<Typography>Max: {value1[1]}</Typography>
+						<Box sx={{ flexDirection: 'row', display: 'flex', gap: 2, justifyContent: 'space-between' }}>
+							<TextField
+								type='number'
+								value={amountMin}
+								onChange={e => {
+									setAmountMin(e.target.value);
+								}}
+								placeholder='Min'
+							></TextField>
+							<TextField
+								type='number'
+								value={amountMax}
+								onChange={e => {
+									setAmountMax(e.target.value);
+								}}
+								placeholder='Max'
+							></TextField>
 						</Box>
-						<Slider
-							getAriaLabel={() => 'Minimum distance'}
-							value={value1}
-							min={0}
-							max={amountMax}
-							onChange={handleChange1}
-							valueLabelDisplay='auto'
-							getAriaValueText={a => a}
-							disableSwap
-						/>
 					</Box>
 				</TableCell>
 				<TableCell>
@@ -322,7 +296,8 @@ export default function TransactionsListHeader(arg) {
 					<Box display={'flex'} gap={3} justifyContent={'center'}>
 						<Button
 							onClick={() => {
-								updateFilterOptions();
+								if (amountMax < 0 || amountMin < 0 || amountMax < amountMin) alert('Invalid amount filter value!');
+								else updateFilterOptions();
 							}}
 						>
 							Click to filter
@@ -331,9 +306,10 @@ export default function TransactionsListHeader(arg) {
 							onClick={() => {
 								setRecipientFilter('');
 								setStatusFilter('');
-								setDateStartFilter('');
-								setDateEndFilter('');
-								setValue1([0, amountMax]);
+								setDateStartFilter(null);
+								setDateEndFilter(null);
+								setAmountMin('');
+								setAmountMax('');
 								setSortingDirection('asc');
 								setSortingColumn('DateTime');
 								arg.setFilterOptions({

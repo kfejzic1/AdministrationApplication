@@ -5,4 +5,8 @@ export const env = {
 	API_ENV: {
 		url: 'http://localhost:5051',
 	},
+	NOTIFICATION_API: {
+		key: 'Tm1RME5USm1aR1F0T0dRd05TMDBZV1ppTFdFMllXVXRaVFl6WVRka05UZGhaREU0',
+		app: 'f5a0e436-9c1a-4f3f-81bd-2ce6a01ab8b7',
+	},
 };
