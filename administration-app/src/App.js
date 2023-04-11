@@ -19,11 +19,7 @@ import './App.css';
 function App() {
 	const [token, setToken] = useState(null);
 	return (
-<<<<<<< HEAD
 		<GoogleOAuthProvider clientId="296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com">
-=======
-			<GoogleOAuthProvider clientId="296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com">
->>>>>>> 7bf4feeb06068d64ca826624255d4067700f7aba
 				<div className='App'>
 					<Router>
 						<NavBar token={token} setToken={setToken} />
@@ -53,7 +49,6 @@ function App() {
 									</ProtectedRoute>
 								}
 							/>
-<<<<<<< HEAD
 
 							<Route
 								path='/user'
@@ -96,49 +91,6 @@ function App() {
 				</div>
 
 			</GoogleOAuthProvider>
-=======
-
-							<Route
-								path='/user'
-								element={
-									<ProtectedRoute>
-										<ProfilePage setToken={setToken} />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path='/vendor-management'
-								element={
-									<ProtectedRoute>
-										<VendorsTable />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path='/B2BLocation/:id'
-								element={
-									<ProtectedRoute>
-										<Location />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path='/user-management'
-								element={
-									<ProtectedRoute>
-										<UserManagement />
-									</ProtectedRoute>
-								}
-							/>
-							<Route path='/login' element={<LoginForm setToken={setToken} />} />
-							<Route path='/user/setpassword' element={<SetUserPassword />} />
-							<Route path='/user/resetpassword' element={<ResetUserPassword />} />
-						</Routes>
-					</Router>
-				</div>
-			</GoogleOAuthProvider>
-
->>>>>>> 7bf4feeb06068d64ca826624255d4067700f7aba
 	);
 }
 export default App;

@@ -9,10 +9,6 @@ import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { useGoogleLogin } from '@react-oauth/google';
 import {LoginSocialFacebook } from 'reactjs-social-login'
-<<<<<<< HEAD
-=======
-
->>>>>>> 7bf4feeb06068d64ca826624255d4067700f7aba
 import { env } from '../../config/env';
 import axios from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
@@ -44,17 +40,9 @@ const LoginForm = props => {
 
 	const googleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
-<<<<<<< HEAD
 			const tokens = await google(codeResponse.access_token);
 			localStorage.setItem('token', tokens.data.token);
 			navigate('/user');
-=======
-			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
-			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
-			const tokens = await google(codeResponse.access_token_token);	
-			console.log("oken bude ovdje " + tokens.data);
-			localStorage.setItem('token', tokens.data.token);
->>>>>>> 7bf4feeb06068d64ca826624255d4067700f7aba
 		},
 		onError: errorResponse => console.log("ERror"+ errorResponse),
 	});
@@ -128,11 +116,7 @@ const LoginForm = props => {
 							setPassword(e.target.value);
 						}}
 					/>
-<<<<<<< HEAD
 					
-=======
-
->>>>>>> 7bf4feeb06068d64ca826624255d4067700f7aba
 					<GoogleLoginButton 
 						onClick={googleLogin} 
 						style={{width: '40%', marginRight: '50px'}} 

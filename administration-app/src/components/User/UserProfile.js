@@ -57,8 +57,6 @@ const ProfilePage = (props) => {
 		OneSignal.init({ appId: 'f5a0e436-9c1a-4f3f-81bd-2ce6a01ab8b7' });
 	}, []);
 
-	console.log("Kod usera ispisuje : " + JSON.stringify(user));
-
 	const handle2FASetup = () => {
 		getTwoFactorQRCode().then(res => {
 			setQrCode(res.data);
