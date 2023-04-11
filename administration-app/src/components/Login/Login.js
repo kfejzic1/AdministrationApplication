@@ -44,7 +44,7 @@ const LoginForm = props => {
 			localStorage.setItem('token', tokens.data.token);
 			navigate('/user');
 		},
-		onError: errorResponse => console.log("ERror"+ errorResponse),
+		onError: errorResponse => setErrorMessage(errorResponse),
 	});
 
 
