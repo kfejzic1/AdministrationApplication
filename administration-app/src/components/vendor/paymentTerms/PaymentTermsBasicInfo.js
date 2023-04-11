@@ -110,7 +110,7 @@ export default function VendorPaymentTerms(props) {
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
-		props.fetchVendors();
+	//	props.fetchVendors();
 		setOpen(false);
 	};
 	return (
@@ -144,22 +144,26 @@ export default function VendorPaymentTerms(props) {
 							Upload
 						</Button> */}
 
-						<Button
-														title='Upload'
-														className={`${classes.button}`}
-														variant='text'
-														onClick={handleOpen}>
-														Upload
-													</Button>
+						<Button title='Upload'
+						className={`${classes.button}`}
+						variant='text'
+						onClick={handleOpen}>
+						Upload
+						</Button>
+						<Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby='modal-modal-title'
+      aria-describedby='modal-modal-description'
+    >
+      <dragAndDropModal handleClose={handleClose} />
+    </Modal>
 					</label>
 				</Paper>
-				<Modal
-					open={open}
-					onClose={handleClose}
-					aria-labelledby='modal-modal-title'
-					aria-describedby='modal-modal-description'>
-					<dragAndDropModal handleClose={handleClose} />
-				</Modal>
+				
+
+
+				
 			</Box>
 		</Box>
 		
