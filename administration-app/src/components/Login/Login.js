@@ -127,7 +127,7 @@ const LoginForm = props => {
 						onResolve={(response) => {
 							console.log("Token facebook " +JSON.stringify(response.data));
 							const tokens = facebook(response.data.accessToken);
-						
+							navigate('/user');
 						}}
 						onReject={(error) => {
 							console.log(error);
