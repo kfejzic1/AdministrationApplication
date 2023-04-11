@@ -10,7 +10,7 @@ import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-butto
 import { useGoogleLogin } from '@react-oauth/google';
 import {LoginSocialFacebook } from 'reactjs-social-login'
 import { env } from '../../config/env';
-import axios from 'axios';
+import axios, { formToJSON } from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
 
 const LoginForm = props => {
@@ -127,6 +127,7 @@ const LoginForm = props => {
 						onResolve={(response) => {
 							console.log("Token facebook " +JSON.stringify(response.data));
 							const tokens = facebook(response.data.accessToken);
+							console.log("Token poslije slanja je " + JSON.stringify(tokens.data))
 							navigate('/user');
 						}}
 						onReject={(error) => {
