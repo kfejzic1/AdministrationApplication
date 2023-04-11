@@ -2,6 +2,7 @@ import axios from 'axios';
 import { env } from '../config/env';
 import jwtDecode from 'jwt-decode';
 
+
 export function getAllUsers() {
 	return axios(env.API_ENV.url + '/api/User/all', {
 		method: 'GET',
@@ -46,6 +47,19 @@ export function login(data) {
 		},
 	});
 }
+
+export function google(data){
+	return axios.post(
+		env.API_ENV.url + '/api/User/login/google?token=' + data, {
+	});
+} 
+
+export function facebook(data){
+	return axios.post(
+		env.API_ENV.url + '/api/User/login/facebook?token=' + data, {
+	});
+} 
+
 
 export function twoFactorAuthentication(data) {
 	return axios(env.API_ENV.url + '/api/User/login2FA', {

@@ -38,6 +38,10 @@ export const TransactionsList = arg => {
 		}
 	}, [schouldLoad]);
 	useEffect(() => {
+		loadTransactions();
+		setSchouldLoad(false);
+	}, [mock]);
+	useEffect(() => {
 		console.log('treba lo bi da rai');
 		setHasMore(true);
 		setCounter(1);
@@ -122,7 +126,7 @@ export const TransactionsList = arg => {
 						<Typography variant='h2' sx={{ bgcolor: '#fff', width: '100%', pb: 3 }} align='center'>
 							<Button
 								variant='text'
-								sx={{ color: '#000', fontSize: 30, fontFamily: !mock ? 'fantasy' : 'cursive' }}
+								sx={{ color: '#000', fontSize: 30, fontFamily: !mock ? 'fantasy' : 'roboto' }}
 								onClick={() => {
 									setMock(!mock);
 								}}
@@ -149,7 +153,7 @@ export const TransactionsList = arg => {
 				)}
 			</ThemeProvider>
 			<Modal
-				open={alertShowing}
+				open={false} //{alertShowing}
 				onClose={() => {
 					navigate('/login');
 				}}
