@@ -16,11 +16,12 @@ import {
 	Typography,
 	Divider,
 	Button,
+	Modal
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
-
+import dragAndDropModal from '../dragAndDropModal/dragAndDropModal';
 const tableTheme = createTheme({
 	palette: {
 		primary: {
@@ -37,7 +38,49 @@ const tableTheme = createTheme({
 
 const useStyles = makeStyles({
 	root: {},
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundColor: '#ffaf36',
+			color: 'black',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ffaf36',
+			border: '2px solid #ff9a00',
+
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000',
+			},
+		},
+
+		'&.MuiButton-text': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			alignItems: 'center',
+			borderRadius: '10px',
+			color: '#222222',
+			textTransform: 'none',
+			width: '40%',
+			padding: '1px 15px',
+			boxShadow: 'rgba(0, 0, 0, .3) 2px 8px 8px -5px',
+			'&:hover': {
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
+				boxShadow: 'rgba(0, 0, 0, .2) 15px 28px 25px -18px',
+			},
+		},
+	}
 });
+
+
 
 export default function VendorPaymentTerms(props) {
 	const [contracts, setContracts] = useState([]);
@@ -63,7 +106,13 @@ export default function VendorPaymentTerms(props) {
 			setContracts([]);
 		});
 	};
-
+	const classes = useStyles();
+	const [open, setOpen] = useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => {
+		props.fetchVendors();
+		setOpen(false);
+	};
 	return (
 		<Box sx={{ mt: 2, mb: 2, minHeight: '100px' }}>
 			<Box sx={{ width: '97%', margin: 'auto', pt: '1%' }}>
@@ -91,12 +140,31 @@ export default function VendorPaymentTerms(props) {
 						onChange={handleChange}
 					/>
 					<label htmlFor='raised-button-file'>
-						<Button variant='raised' component='span'>
+						{/* <Button variant='raised' component='span'>
 							Upload
-						</Button>
+						</Button> */}
+
+						<Button
+														title='Upload'
+														className={`${classes.button}`}
+														variant='text'
+														onClick={handleOpen}>
+														Upload
+													</Button>
 					</label>
 				</Paper>
+				<Modal
+					open={open}
+					onClose={handleClose}
+					aria-labelledby='modal-modal-title'
+					aria-describedby='modal-modal-description'>
+					<dragAndDropModal handleClose={handleClose} />
+				</Modal>
 			</Box>
 		</Box>
+		
+
+		
+
 	);
 }
