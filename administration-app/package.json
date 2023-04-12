@@ -18,6 +18,7 @@
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.7",
     "jwt-decode": "^3.1.2",
+    "material-ui-dropzone": "^3.5.0",
     "mdb-react-ui-kit": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
