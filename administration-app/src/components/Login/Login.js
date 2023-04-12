@@ -4,14 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
 import { google } from '../../services/userService';
 import { facebook } from '../../services/userService';
-import { LinearProgress, Typography, Input, Alert, Box, Button } from '@mui/material';
+import { LinearProgress, Typography, Input, Alert, Box, Button, accordionSummaryClasses } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { useGoogleLogin } from '@react-oauth/google';
-import {LoginSocialFacebook } from 'reactjs-social-login'
+import FacebookLogin from 'react-facebook-login';
 import { env } from '../../config/env';
 import axios, { formToJSON } from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
+
+
 
 const LoginForm = props => {
 	const [phoneMail, setPhoneMail] = useState('');
@@ -32,20 +34,27 @@ const LoginForm = props => {
 		else return 'email';
 	};
 
-	const handleFacebookLogin = () => {
-		
-	
-	}
-	
-
 	const googleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
 			const tokens = await google(codeResponse.access_token);
 			localStorage.setItem('token', tokens.data.token);
 			navigate('/user');
 		},
-		onError: errorResponse => setErrorMessage(errorResponse),
+		onError: errorResponse => setErrorMessage("Nema usera takvog" + errorResponse),
 	});
+
+	
+	
+		const onSuccess = async (response) => {
+		  console.log('Login success:', response.accessToken);
+		  const tokens = await facebook(response.accessToken);
+		  console.log("TOken koji smo dobili je " +JSON.stringify(tokens));
+
+		};
+		const onFailure = (error) => {
+		  console.log('Login failed:', error);
+		};
+	
 
 
 
@@ -119,23 +128,17 @@ const LoginForm = props => {
 					
 					<GoogleLoginButton 
 						onClick={googleLogin} 
-						style={{width: '40%', marginRight: '50px'}} 
+						style={{width: '80%'}} 
 					/>
-					<LoginSocialFacebook
-						style={{width: '80%'}}
+					<FacebookLogin
 						appId='959179271739907'
-						onResolve={(response) => {
-							console.log("Token facebook " +JSON.stringify(response.data));
-							const tokens = facebook(response.data.accessToken);
-							console.log("Token poslije slanja je " + JSON.stringify(tokens.data))
-							navigate('/user');
-						}}
-						onReject={(error) => {
-							console.log(error);
-						}}
-					>
-					<FacebookLoginButton style={{width: '80%'}}/>
-					</LoginSocialFacebook>	
+						callback={onSuccess}
+						onFailure={onFailure}
+						render={(renderProps) => (
+							<button onClick={renderProps.onClick}>Login with Facebook</button>
+						)}
+					/>
+
 					<Typography>
 						You are not registered? <a href='/'>Register</a>
 					</Typography>
