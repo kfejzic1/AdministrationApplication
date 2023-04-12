@@ -36,23 +36,33 @@ const LoginForm = props => {
 
 	const googleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
-			const tokens = await google(codeResponse.access_token);
-			localStorage.setItem('token', tokens.data.token);
-			navigate('/user');
+			try{
+				const tokens = await google(codeResponse.access_token);
+				localStorage.setItem('token', tokens.data.token);
+				navigate('/user');
+			}catch(error){
+				setErrorMessage(error.response.data.errors[0]);
+			}
 		},
-		onError: errorResponse => setErrorMessage("Nema usera takvog" + errorResponse),
+		onError: errorResponse => setErrorMessage("Error on backend!" + errorResponse),
 	});
 
 	
 	
 		const onSuccess = async (response) => {
 		  console.log('Login success:', response.accessToken);
-		  const tokens = await facebook(response.accessToken);
-		  console.log("TOken koji smo dobili je " +JSON.stringify(tokens));
+		  try{
+		  	const tokens = await facebook(response.accessToken);
+		  	console.log("TOken koji smo dobili je " +JSON.stringify(tokens));
+			localStorage.setItem('token', tokens.data.token);
+			navigate('/user');
+		  }catch(err){
+			setErrorMessage(JSON.stringify(err.response.data.errors[0]));
+		  }
 
 		};
 		const onFailure = (error) => {
-		  console.log('Login failed:', error);
+			setErrorMessage("Error on backend!" + error)
 		};
 	
 
