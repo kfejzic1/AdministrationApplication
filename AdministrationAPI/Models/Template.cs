@@ -6,8 +6,6 @@ namespace AdministrationAPI.Models
 {
     public class Template
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key, Column(Order = 0)] 
         public int Id { get; set; }
 
         public string UserId { get; set; }
@@ -25,5 +23,10 @@ namespace AdministrationAPI.Models
         public string RecipientName { get; set; } = string.Empty;
 
         public string RecipientAccountNumber { get; set; } = string.Empty;
+
+        public string Category { get; set; } = string.Empty;
+
+        public string Received { get; set; } = string.Empty;
+
     }
 }
