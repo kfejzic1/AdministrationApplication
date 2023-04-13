@@ -73,7 +73,7 @@ public class ActivationCodeService : IActivationCodeService
         return true;
     }
 
-    public async Task<bool> GenerateCodeForUserAsync(User user)
+    public async Task<bool> GenerateCodeForUserAsync(User user, bool login)
     {
         Random random = new Random();
         String emailCode = random.Next(1000, 9999).ToString();
@@ -84,6 +84,8 @@ public class ActivationCodeService : IActivationCodeService
             Id = new Guid(),
             EmailCode = emailCode,
             SMSCode = smsCode,
+            LoginEmailCode = emailCode,
+            LoginSMSCode = smsCode,
             ActivatedEmail = false,
             ActivatedSMS = false,
             User = user

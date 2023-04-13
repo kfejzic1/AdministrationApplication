@@ -83,7 +83,7 @@ namespace AdministrationAPI.Controllers
                 
             }
 
-            bool success = await _activationCodeService.GenerateCodeForUserAsync(user);
+            bool success = await _activationCodeService.GenerateCodeForUserAsync(user, false);
 
             if (success)
             {
@@ -248,7 +248,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 var authenticationResult = await _userService.Login(loginRequest);
-
+    
                 if (authenticationResult.TwoFactorEnabled)
                     return Ok(authenticationResult);
 
@@ -264,6 +264,31 @@ namespace AdministrationAPI.Controllers
             catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("login-OTP")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginOneTimeCode([FromBody] LoginRequest loginRequest)
+        {  
+            try
+            {
+               User user = await _userService.getUserFromLoginRequest(loginRequest);
+               bool success = await _activationCodeService.GenerateCodeForUserAsync(user, true); //code sent to email
+             
+               //confirm email called from front
+               //button after code input should call login to get a token
+
+               
+            if (success)
+                return Ok(new { message = "Code is sent to email." });
+            else
+                return BadRequest("Error with sending code to email.");
+            
+            } catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.LoginOneTimeCode");
                 return StatusCode(500, ex.Message);
             }
         }
