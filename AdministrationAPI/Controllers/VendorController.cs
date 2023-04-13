@@ -334,5 +334,19 @@ namespace AdministrationAPI.Controllers
         {
             return Ok(_vendorService.GetPaymentTerm(id));
         }
+
+        [HttpPut("PaymentTerm")]
+        public IActionResult UpdatePaymentTerm([FromBody] PaymentTermRequest paymentTermRequest)
+        {
+            paymentTermRequest.ModifiedBy = ControlExtensions.GetId(HttpContext);
+
+            return Ok(_vendorService.UpdatePaymentTerm(paymentTermRequest));
+        }
+
+        [HttpDelete("PaymentTerm/{id}")]
+        public IActionResult DeletePaymentTerm([FromRoute] int id)
+        {
+            return Ok(_vendorService.DeletePaymentTerm(id));
+        }
     }
 }

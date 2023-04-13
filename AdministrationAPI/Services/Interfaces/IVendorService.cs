@@ -24,5 +24,7 @@ namespace AdministrationAPI.Services.Interfaces
         public int CreatePaymentTerm(PaymentTermRequest request);
         public List<VendorPaymentTerm> GetAllPaymentTerms();
         public VendorPaymentTerm GetPaymentTerm(int id);
+        public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest);
+        public bool DeletePaymentTerm(int id);
     }
 }

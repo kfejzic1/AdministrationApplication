@@ -12,10 +12,12 @@ namespace AdministrationAPI.Services
     public class VendorService : IVendorService
     {
         private readonly IConfiguration _configuration;
+        private readonly IDocumentService _documentService;
 
-        public VendorService(IConfiguration configuration)
+        public VendorService(IConfiguration configuration, IDocumentService documentService)
         {
             _configuration = configuration;
+            _documentService = documentService; 
         }
 
         #region VendorMain
@@ -408,6 +410,54 @@ namespace AdministrationAPI.Services
             }
         }
 
+        public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest)
+        {
+            using (var vendorDbContext = new VendorDbContext())
+            {
+                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(p => p.Id == paymentTermRequest.Id);
+
+                if (paymentTerm != null)
+                {
+                    paymentTerm.StartDate = paymentTermRequest.StartDate;
+                    paymentTerm.DueDate = paymentTermRequest.DueDate;
+                    paymentTerm.ExpiryDate = paymentTermRequest.ExpiryDate;
+                    paymentTerm.Modified = DateTime.UtcNow;
+                    paymentTerm.ModifiedBy = paymentTermRequest.ModifiedBy;
+                    paymentTerm.InvoiceFrequencyTypeId = paymentTermRequest.InvoiceFrequencyTypeId;
+
+                    vendorDbContext.VendorPaymentTerm.Update(paymentTerm);
+                    vendorDbContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+        public bool DeletePaymentTerm(int id)
+        {
+            using (var vendorDbContext = new VendorDbContext())
+            {
+                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(v => v.Id == id);
+                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(v => v.PaymentTermId == id);
+                var contracts = vendorDbContext.Documents.Where(d => documentIds.Select(x => x.ContractId).Contains(d.Id));
+
+                if (paymentTerm != null)
+                {
+                    foreach(var doc in documentIds)
+                    {
+                        vendorDbContext.VendorPaymentTermContract.Remove(doc);
+                        _documentService.DocumentDelete(doc.ContractId);
+                    }
+
+                    vendorDbContext.VendorPaymentTerm.Remove(paymentTerm);
+                    vendorDbContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
         #endregion
     }
 }
