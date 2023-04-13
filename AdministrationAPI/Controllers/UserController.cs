@@ -81,7 +81,7 @@ namespace AdministrationAPI.Controllers
             if (user == null)
             {
                 return BadRequest("User not created. Password must contain at least one uppercase letter, a digit and a non-alphanumeric character. Password must be at least six characters long.");
-                
+
             }
 
             bool success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
@@ -100,26 +100,23 @@ namespace AdministrationAPI.Controllers
         [HttpGet("send/sms")]
         public async Task<IActionResult> SendCodeToPhone([FromQuery] SMSInformationRequest smsInformationRequest)
         {
-            try
-            {
-                User user = _userService.GetUserByName(smsInformationRequest.Username);
+            User user = _userService.GetUserByName(smsInformationRequest.Username);
 
-                if (user == null)
-                {
-                    return NotFound(new { message = "User with specified username not found!" });
-                }
+            if (user == null)
+            {
+                return NotFound(new { message = "User with specified username not found!" });
+            }
 
             bool success = await _activationCodeService.GenerateSMSActivationCodeForUserAsync(user);
 
-                if (success)
-                {
-                    return Ok(new { message = "SMS delivered" });
-                }
-                else
-                {
+            if (success)
+            {
+                return Ok(new { message = "SMS delivered" });
+            }
+            else
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, "SMS not sent!");
             }
-            
         }
 
         [AllowAnonymous]
@@ -244,7 +241,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 var authenticationResult = await _userService.Login(loginRequest);
-    
+
                 if (authenticationResult.TwoFactorEnabled)
                     return Ok(authenticationResult);
 
@@ -264,25 +261,31 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPost("login-OTP")]
+        [HttpPost("otc/generate")]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginOneTimeCode([FromBody] LoginRequest loginRequest)
-        {  
+        public async Task<IActionResult> GenerateOneTimeCode([FromBody] MobileLoginRequest mobileLoginRequest)
+        {
             try
             {
-               User user = await _userService.getUserFromLoginRequest(loginRequest);
-               bool success = await _activationCodeService.GenerateCodeForUserAsync(user, true); //code sent to email
-             
-               //confirm email called from front
-               //button after code input should call login to get a token
+                User user = await _userService.GetUserFromLoginRequest(mobileLoginRequest);
+                bool success = false;
 
-               
-            if (success)
-                return Ok(new { message = "Code is sent to email." });
-            else
-                return BadRequest("Error with sending code to email.");
-            
-            } catch (Exception ex)
+                if (mobileLoginRequest.Method == "email")
+                {
+                    success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
+                }
+                else
+                {
+                    success = await _activationCodeService.GenerateSMSActivationCodeForUserAsync(user);
+                }
+
+                if (success)
+                    return Ok(new { message = "Code sent" });
+                else
+                    return BadRequest("Error with sending code");
+
+            }
+            catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.LoginOneTimeCode");
                 return StatusCode(500, ex.Message);
