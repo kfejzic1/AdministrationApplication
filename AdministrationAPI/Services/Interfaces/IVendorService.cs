@@ -22,5 +22,7 @@ namespace AdministrationAPI.Services.Interfaces
         bool DeleteLocation(VendorLocationDeleteRequest request);
         public bool UpdateLocation(VendorLocationUpdateRequest request);
         public int CreatePaymentTerm(PaymentTermRequest request);
+        public List<VendorPaymentTerm> GetAllPaymentTerms();
+        public VendorPaymentTerm GetPaymentTerm(int id);
     }
 }

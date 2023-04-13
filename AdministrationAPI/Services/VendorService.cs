@@ -377,6 +377,37 @@ namespace AdministrationAPI.Services
                 return paymentTerm.Id;
             }
         }
+
+        public List<VendorPaymentTerm> GetAllPaymentTerms()
+        {
+            using (var vendorDbContext = new VendorDbContext())
+            {
+                var paymentTerms = vendorDbContext.VendorPaymentTerm.ToList();
+                foreach (var pt in paymentTerms)
+                {
+                    var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
+                    var contracts = (List<Document>)vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id));
+
+                    pt.Contracts = contracts;
+                }
+
+                return paymentTerms;
+            }
+        }
+
+        public VendorPaymentTerm GetPaymentTerm(int id)
+        {
+            using (var vendorDbContext = new VendorDbContext())
+            {
+                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == id).Select(x => x.ContractId);
+                var paymentTerm = (VendorPaymentTerm)vendorDbContext.VendorPaymentTerm.Where(x => x.Id == id);
+
+                paymentTerm.Contracts = (List<Document>)vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id));
+
+                return paymentTerm;
+            }
+        }
+
         #endregion
     }
 }
