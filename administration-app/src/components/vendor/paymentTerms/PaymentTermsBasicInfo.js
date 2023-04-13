@@ -24,6 +24,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Loader from '../../loaderDialog/Loader';
+import UploadModal from '../dragAndDropModal/DragAndDropModal';
 
 const useStyles = makeStyles({
 	root: {},
@@ -124,14 +125,13 @@ export default function VendorPaymentTerms(props) {
 						Add File
 					</Button>
 
-					<DropzoneDialog
+					<Modal
 						open={open}
-						onSave={handleSave}
-						acceptedFiles={['application/pdf']}
-						showPreviews={true}
-						maxFileSize={5000000}
 						onClose={handleClose}
-					/>
+						aria-labelledby='modal-modal-title'
+						aria-describedby='modal-modal-description'>
+						<UploadModal handleClose={handleClose} />
+					</Modal>
 
 					<Loader open={loading} />
 				</Paper>
