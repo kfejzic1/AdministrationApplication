@@ -10,10 +10,10 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
+
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
-import { ResetUserPassword } from './components/UserManagement/ResetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import {LoginSocialFacebook } from 'reactjs-social-login'
+import { LoginSocialFacebook } from 'reactjs-social-login';
 import './App.css';
 
 function App() {
