@@ -353,6 +353,7 @@ namespace AdministrationAPI.Services
             {
                 var paymentTerm = new VendorPaymentTerm
                 {
+                    Name = request.Name,
                     StartDate = request.StartDate,
                     ExpiryDate = request.ExpiryDate,
                     InvoiceFrequencyTypeId = request.InvoiceFrequencyTypeId,
@@ -380,20 +381,39 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public List<VendorPaymentTerm> GetAllPaymentTerms()
+        public List<PaymentTermResponse> GetAllPaymentTerms()
         {
             using (var vendorDbContext = new VendorDbContext())
             {
                 var paymentTerms = vendorDbContext.VendorPaymentTerm.ToList();
+                var paymentTermResponse = new List<PaymentTermResponse>();
                 foreach (var pt in paymentTerms)
                 {
-                    var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
-                    var contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList<Document>();
+                    InvoiceFrequency invoiceFrequency = vendorDbContext.InvoiceFrequency.FirstOrDefault(x => x.Id == pt.InvoiceFrequencyTypeId);
+                    
 
-                    pt.Contracts = contracts;
+                    var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
+                    var contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
+
+                    var paymentTerm = new PaymentTermResponse()
+                    {
+                        Id = pt.Id,
+                        Name = pt.Name,
+                        StartDate = pt.StartDate,
+                        ExpiryDate = pt.ExpiryDate,
+                        DueDate = pt.DueDate,
+                        Created = pt.Created,
+                        CreatedBy = pt.CreatedBy,
+                        Modified = pt.Modified,
+                        ModifiedBy = pt.ModifiedBy,
+                        Contracts = contracts,
+                        InvoiceFrequencyType = invoiceFrequency
+                    };
+
+                    paymentTermResponse.Add(paymentTerm);
                 }
 
-                return paymentTerms;
+                return paymentTermResponse;
             }
         }
 
@@ -401,10 +421,10 @@ namespace AdministrationAPI.Services
         {
             using (var vendorDbContext = new VendorDbContext())
             {
-                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == id).Select(x => x.ContractId);
-                var paymentTerm = (VendorPaymentTerm)vendorDbContext.VendorPaymentTerm.Where(x => x.Id == id);
+                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == id).Select(x => x.ContractId).ToList();
+                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(x => x.Id == id);
 
-                paymentTerm.Contracts = (List<Document>)vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id));
+                paymentTerm.Contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
 
                 return paymentTerm;
             }
@@ -418,6 +438,7 @@ namespace AdministrationAPI.Services
 
                 if (paymentTerm != null)
                 {
+                    paymentTerm.Name = paymentTermRequest.Name;
                     paymentTerm.StartDate = paymentTermRequest.StartDate;
                     paymentTerm.DueDate = paymentTermRequest.DueDate;
                     paymentTerm.ExpiryDate = paymentTermRequest.ExpiryDate;
@@ -471,5 +492,3 @@ namespace AdministrationAPI.Services
         #endregion
     }
 }
-
-

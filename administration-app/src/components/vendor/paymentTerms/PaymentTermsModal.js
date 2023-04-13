@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		margin: '2rem 0',
+		marginTop: '2rem',
 	},
 	dropzoneAreaContainer: {
 		margin: '2rem 0',
@@ -96,17 +96,23 @@ const useStyles = makeStyles(theme => ({
 	},
 	invoiceFrequencyInput: {
 		width: '100%',
-		margin: '2rem 0',
+	},
+	dateInput: {
+		width: '45%',
 	},
 	footer: {
 		textAlign: 'right',
 	},
+	textField: {
+		width: '100%',
+	},
 }));
 
-export default function UploadModal(props) {
+export default function PaymentTermsModal(props) {
 	const classes = useStyles();
 	const [files, setFiles] = useState([]);
 
+	const [name, setName] = useState('');
 	const [dateStart, setDateStart] = useState(null);
 	const [dateEnd, setDateEnd] = useState(null);
 	const [dateDue, setDateDue] = useState(null);
@@ -159,9 +165,19 @@ export default function UploadModal(props) {
 				</Box>
 			)}
 			<h1 className={classes.title}>Payment Terms Form</h1>
+			<TextField
+				className={classes.textField}
+				id='standard-basic'
+				label='Name'
+				variant='outlined'
+				value={name}
+				required={true}
+				onChange={e => setName(e.target.value)}
+			/>
 			<LocalizationProvider dateAdapter={AdapterDayjs}>
 				<Box className={classes.datePickersContainer}>
 					<DesktopDatePicker
+						className={classes.dateInput}
 						label='Start Date'
 						inputFormat='DD/MM/YYYY'
 						value={dateStart}
@@ -169,6 +185,7 @@ export default function UploadModal(props) {
 						renderInput={params => <TextField {...params} />}
 					/>
 					<DesktopDatePicker
+						className={classes.dateInput}
 						label='Expiry Date'
 						inputFormat='DD/MM/YYYY'
 						value={dateEnd}
@@ -214,6 +231,7 @@ export default function UploadModal(props) {
 			<LocalizationProvider dateAdapter={AdapterDayjs}>
 				<Box className={classes.datePickersContainer}>
 					<DesktopDatePicker
+						className={classes.dateInput}
 						label='Payment Terms / Due Date'
 						inputFormat='DD/MM/YYYY'
 						value={dateDue}

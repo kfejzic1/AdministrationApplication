@@ -50,7 +50,7 @@ namespace AdministrationAPI.Services
         {
             using (VendorDbContext vendorDbContext = new VendorDbContext())
             {
-                return (Document)vendorDbContext.Documents.Where<Document>(d => d.Id == id);
+                return vendorDbContext.Documents.FirstOrDefault(d => d.Id == id);
             }
         }
         public List<Document> GetAllDocuments()

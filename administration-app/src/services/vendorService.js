@@ -130,3 +130,23 @@ export async function uploadFile(file, folder, vendorName) {
 		},
 	});
 }
+
+export function getAllPaymentTerms() {
+	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+export function deletePaymentType(id) {
+	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm/' + id, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

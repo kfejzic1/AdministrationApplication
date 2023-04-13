@@ -8,6 +8,7 @@ namespace AdministrationAPI.Models.Vendor
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
         public int Id { get; set; }
+        public string Name { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public int InvoiceFrequencyTypeId { get; set; }
@@ -20,6 +21,7 @@ namespace AdministrationAPI.Models.Vendor
 
         public VendorPaymentTerm()
         {
+            Name = string.Empty;
             InvoiceFrequencyTypeId = -1;
             Contracts= new List<Document>();
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import { createPaymentTerm, uploadFile } from '../../../services/vendorService';
+import { createPaymentTerm, getAllPaymentTerms, uploadFile } from '../../../services/vendorService';
 import {
 	Box,
 	Table,
@@ -24,7 +24,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Loader from '../../loaderDialog/Loader';
-import UploadModal from '../dragAndDropModal/UploadModal';
+import PaymentTermsModal from './PaymentTermsModal';
+import PaymentTermsTable from './paymentTermsTable/PaymentTermsTable';
 
 const useStyles = makeStyles({
 	root: {},
@@ -72,6 +73,7 @@ const useStyles = makeStyles({
 
 export default function VendorPaymentTerms(props) {
 	const [open, setOpen] = useState(false);
+	const [paymentTerms, setPaymentTerms] = useState([]);
 
 	const classes = useStyles();
 
@@ -83,34 +85,7 @@ export default function VendorPaymentTerms(props) {
 
 	return (
 		<Box sx={{ mt: 2, mb: 2, minHeight: '100px' }}>
-			<Box sx={{ width: '97%', margin: 'auto', pt: '1%' }}>
-				<Paper elevation={2} sx={{ width: '100%', mb: 2, border: 'none' }}>
-					<Typography
-						sx={{
-							pl: { sm: 2 },
-							mt: 2,
-							mb: 2,
-							flex: '1 1 100%',
-						}}
-						variant='h6'
-						id='tableTitle'
-						component='div'>
-						Payment Terms
-					</Typography>
-					<Divider />
-					<Button classes={{ root: classes.button }} onClick={handleOpen} variant='contained' color='primary'>
-						Add File
-					</Button>
-
-					<Modal
-						open={open}
-						onClose={handleClose}
-						aria-labelledby='modal-modal-title'
-						aria-describedby='modal-modal-description'>
-						<UploadModal handleClose={handleClose} vendorName={props.vendorName} />
-					</Modal>
-				</Paper>
-			</Box>
+			<PaymentTermsTable vendorName={props.vendorName} />
 		</Box>
 	);
 }
