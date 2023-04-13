@@ -118,33 +118,11 @@ namespace AdministrationAPI.Data
             List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
 
 
-            userRoles.Add(new IdentityUserRole<string>
+            users.ForEach(u => userRoles.Add(new IdentityUserRole<string>
             {
-                UserId = users[0].Id,
-                RoleId =
-            roles.First(q => q.Name == "User").Id
-            });
-
-
-            userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[0].Id,
-                RoleId =
-            roles.First(q => q.Name == "Admin").Id
-            });
-
-            userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[1].Id,
-                RoleId =
-            roles.First(q => q.Name == "User").Id
-            });
-             userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[1].Id,
-                RoleId =
-            roles.First(q => q.Name == "Restricted").Id
-            });
+                UserId = u.Id,
+                RoleId = roles.First(q => q.Name == "User").Id
+            }));
 
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);

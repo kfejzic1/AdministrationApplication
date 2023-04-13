@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { LinearProgress, Alert, TextField, Button } from '@mui/material';
-import { setUserPassword } from '../../services/userManagementService';
+import { setUserPassword, resetUserPassword } from '../../services/userManagementService';
 import { useLocation } from 'react-router-dom';
-export const SetUserPassword = () => {
+export const SetUserPassword = props => {
 	const setPasswordRequest = {
 		id: '',
 		token: '',
@@ -56,17 +56,29 @@ export const SetUserPassword = () => {
 			setPasswordRequest.token = token;
 			setPasswordRequest.password = password;
 			setOpen(true);
-
-			setUserPassword(setPasswordRequest)
-				.then(() => {
-					setOpen(false);
-					setSuccessMessage('Your new password has been set.');
-				})
-				.catch(error => {
-					setOpen(false);
-					setErrorMessage('Failed to set your new password');
-					console.error(error);
-				});
+			if (props.reset) {
+				resetUserPassword(setPasswordRequest)
+					.then(() => {
+						setOpen(false);
+						setSuccessMessage('Your new password has been set.');
+					})
+					.catch(error => {
+						setOpen(false);
+						setErrorMessage('Failed to set your new password');
+						console.error(error.da);
+					});
+			} else {
+				setUserPassword(setPasswordRequest)
+					.then(() => {
+						setOpen(false);
+						setSuccessMessage('Your new password has been set.');
+					})
+					.catch(error => {
+						setOpen(false);
+						setErrorMessage('Failed to set your new password');
+						console.error(error);
+					});
+			}
 		}
 	};
 
