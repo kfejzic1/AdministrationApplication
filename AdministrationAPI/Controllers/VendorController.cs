@@ -322,17 +322,5 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-        [HttpGet("PaymentTerm")]
-        public IActionResult GetAllPaymentTerms()
-        {
-            return Ok(_vendorService.GetAllPaymentTerms());
-        }
-        
-        [HttpGet("PaymentTerm/{id}")]
-        public IActionResult GetPaymentTerm([FromRoute] int id)
-        {
-            return Ok(_vendorService.GetPaymentTerm(id));
-        }
     }
 }
