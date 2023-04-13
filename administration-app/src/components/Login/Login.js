@@ -40,7 +40,7 @@ const LoginForm = props => {
 				const tokens = await google(codeResponse.access_token);
 				localStorage.setItem('token', tokens.data.token);
 				navigate('/user');
-			}catch(error){
+			}catch(error) {
 				setErrorMessage(error.response.data.errors[0]);
 			}
 		},
