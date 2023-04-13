@@ -348,5 +348,11 @@ namespace AdministrationAPI.Controllers
         {
             return Ok(_vendorService.DeletePaymentTerm(id));
         }
+
+        [HttpGet("InvoiceFrequency")]
+        public IActionResult GetInvoiceFrequency([FromRoute] int id)
+        {
+            return Ok(_vendorService.GetInvoiceFrequencies());
+        }
     }
 }

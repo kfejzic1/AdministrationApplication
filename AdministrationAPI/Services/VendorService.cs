@@ -388,7 +388,7 @@ namespace AdministrationAPI.Services
                 foreach (var pt in paymentTerms)
                 {
                     var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
-                    var contracts = (List<Document>)vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id));
+                    var contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList<Document>();
 
                     pt.Contracts = contracts;
                 }
@@ -456,6 +456,16 @@ namespace AdministrationAPI.Services
                 }
 
                 return false;
+            }
+        }
+        #endregion
+
+        #region InvoiceFrequency
+        public List<InvoiceFrequency> GetInvoiceFrequencies()
+        {
+            using (var vendorDbContext = new VendorDbContext())
+            {
+                return vendorDbContext.InvoiceFrequency.ToList();
             }
         }
         #endregion

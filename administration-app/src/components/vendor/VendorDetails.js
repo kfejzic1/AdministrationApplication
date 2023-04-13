@@ -18,11 +18,10 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import VendorLocationPanel from './Location/VendorLocationPanel';
+import VendorLocationPanel from './location/VendorLocationPanel';
 import PaymentTermsBasicInfo from './paymentTerms/PaymentTermsBasicInfo';
 
 export default function VendorDetails() {
-	const dataArrived = false;
 	const [vendor, setVendor] = useState([]);
 	const [locations, setLocations] = useState([]);
 	const params = useParams();
@@ -30,7 +29,6 @@ export default function VendorDetails() {
 	const fetchData = async () => {
 		getVendor(params.id).then(res => {
 			setVendor(res.data);
-			dataArrived = true;
 		});
 		getAllVendorLocations(params.id).then(res => {
 			setLocations(res.data);

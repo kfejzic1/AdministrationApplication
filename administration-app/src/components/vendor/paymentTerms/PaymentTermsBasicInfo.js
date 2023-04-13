@@ -24,7 +24,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Loader from '../../loaderDialog/Loader';
-import UploadModal from '../dragAndDropModal/DragAndDropModal';
+import UploadModal from '../dragAndDropModal/UploadModal';
 
 const useStyles = makeStyles({
 	root: {},
@@ -72,33 +72,10 @@ const useStyles = makeStyles({
 
 export default function VendorPaymentTerms(props) {
 	const [open, setOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
 
 	const classes = useStyles();
 
 	const handleOpen = () => setOpen(true);
-
-	const handleSave = files => {
-		console.log('files', files);
-		const [file] = files;
-
-		const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'vendor/contracts', props.vendorName))));
-
-		Promise.allSettled(calls).then(res => {
-			var documentIds = res.map(x => x.value.data);
-			var request = {
-				startDate: new Date(),
-				expiryDate: new Date(),
-				invoiceFrequencyTypeId: 1,
-				documentIds,
-				dueDate: new Date(),
-			};
-			createPaymentTerm(request)
-				.then(res => console.log('res', res))
-				.catch(err => console.log('err', err));
-		});
-		setOpen(false);
-	};
 
 	const handleClose = () => {
 		setOpen(false);
@@ -130,10 +107,8 @@ export default function VendorPaymentTerms(props) {
 						onClose={handleClose}
 						aria-labelledby='modal-modal-title'
 						aria-describedby='modal-modal-description'>
-						<UploadModal handleClose={handleClose} />
+						<UploadModal handleClose={handleClose} vendorName={props.vendorName} />
 					</Modal>
-
-					<Loader open={loading} />
 				</Paper>
 			</Box>
 		</Box>

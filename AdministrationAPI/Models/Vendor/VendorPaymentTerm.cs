@@ -20,7 +20,6 @@ namespace AdministrationAPI.Models.Vendor
 
         public VendorPaymentTerm()
         {
-            Id = -1;
             InvoiceFrequencyTypeId = -1;
             Contracts= new List<Document>();
         }

@@ -52,6 +52,16 @@ export function getAllVendorLocations(vendorID) {
 	});
 }
 
+export function getInvoiceFrequencies() {
+	return axios(env.API_ENV.url + '/api/Vendor/InvoiceFrequency', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
 export function deleteVendorLocation(request) {
 	return axios(env.API_ENV.url + '/api/Vendor/Location/Delete', {
 		method: 'DELETE',

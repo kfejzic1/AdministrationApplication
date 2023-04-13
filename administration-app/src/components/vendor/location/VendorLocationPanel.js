@@ -127,8 +127,7 @@ function descendingComparator(a, b, orderBy) {
 	return 0;
 }
 
-export default function VendorDetails() {
-	const dataArrived = false;
+export default function VendorLocationPanel() {
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [selected, setSelected] = useState([]);

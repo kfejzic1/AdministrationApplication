@@ -26,5 +26,6 @@ namespace AdministrationAPI.Services.Interfaces
         public VendorPaymentTerm GetPaymentTerm(int id);
         public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest);
         public bool DeletePaymentTerm(int id);
+        public List<InvoiceFrequency> GetInvoiceFrequencies();
     }
 }

@@ -16,6 +16,25 @@ namespace AdministrationAPI.Data
         public DbSet<Document> Documents { get; set; }
         public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
         public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
+        public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            Seed(builder);
+        }
+        public static void Seed(ModelBuilder builder)
+        {
+            List<InvoiceFrequency> invoiceFrequencies = new List<InvoiceFrequency>()
+            {
+                new InvoiceFrequency() { Id = 1, Name = "Monthly", FrequencyDays = 30 },
+                new InvoiceFrequency() { Id = 2, Name = "Weekly", FrequencyDays = 7 },
+                new InvoiceFrequency() { Id = 3, Name = "Biweekly", FrequencyDays = 14 },
+            };
+
+            builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
