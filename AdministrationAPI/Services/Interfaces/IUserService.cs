@@ -9,7 +9,7 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IUserService
     {
         Task<AuthenticationResult> Login(LoginRequest loginRequest);
-        Task<User> getUserFromLoginRequest(LoginRequest loginRequest);
+        Task<User> GetUserFromLoginRequest(MobileLoginRequest loginRequest);
         Task<AuthenticationResult> FacebookSocialLogin(string token);
         Task<AuthenticationResult> GoogleSocialLogin(string token);
         Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest);

@@ -132,23 +132,24 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
-        public async Task<User> getUserFromLoginRequest(LoginRequest loginRequest){
+        public async Task<User> GetUserFromLoginRequest(MobileLoginRequest mobileLoginRequest){
             User user = new User();
 
-            if (loginRequest.Email != null)
-                user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            if (mobileLoginRequest.Email != null)
+                user = await _userManager.FindByEmailAsync(mobileLoginRequest.Email);
             else
-                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == loginRequest.Phone);
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == mobileLoginRequest.Phone);
 
             if (user == null)
                 throw new Exception("User not found");
 
-            if (!await _userManager.CheckPasswordAsync(user, loginRequest.Password))
+            if (!await _userManager.CheckPasswordAsync(user, mobileLoginRequest.Password))
                  throw new Exception("Email/Phone/Password combination mismatch!");
 
 
-            if ((loginRequest.Email != null && !user.EmailConfirmed) || (loginRequest.Phone != null && !user.PhoneNumberConfirmed))
+            if ((mobileLoginRequest.Email != null && !user.EmailConfirmed) || (mobileLoginRequest.Phone != null && !user.PhoneNumberConfirmed))
                 throw new Exception("Provided email/phone is not confirmed!");
+
             return user;
         }
 

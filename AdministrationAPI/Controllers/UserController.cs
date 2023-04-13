@@ -78,16 +78,17 @@ namespace AdministrationAPI.Controllers
         {
             User user = await _userService.Register(model);
 
-            if(user == null){
+            if (user == null)
+            {
                 return BadRequest("User not created. Password must contain at least one uppercase letter, a digit and a non-alphanumeric character. Password must be at least six characters long.");
                 
             }
 
-            bool success = await _activationCodeService.GenerateCodeForUserAsync(user, false);
+            bool success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
 
             if (success)
             {
-                return Ok(new { message = "Registration successful" });
+                return Ok(new { message = "Registration email sent" });
             }
             else
             {
@@ -108,7 +109,7 @@ namespace AdministrationAPI.Controllers
                     return NotFound(new { message = "User with specified username not found!" });
                 }
 
-                bool success = await _activationCodeService.SendSMSToUser(user);
+            bool success = await _activationCodeService.GenerateSMSActivationCodeForUserAsync(user);
 
                 if (success)
                 {
@@ -116,12 +117,7 @@ namespace AdministrationAPI.Controllers
                 }
                 else
                 {
-                    return NotFound(new { message = "SMS activation code for user not found!" });
-                }
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "SMS not delivered!");
+                return StatusCode(StatusCodes.Status500InternalServerError, "SMS not sent!");
             }
             
         }
