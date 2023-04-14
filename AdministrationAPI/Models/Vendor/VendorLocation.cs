@@ -9,6 +9,9 @@ namespace AdministrationAPI.Models.Vendor
         [Key, Column(Order = 0)]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Name field is required.")]
+        public string Name { get; set; }
+
         [Required(ErrorMessage = "Address field is required.")]
         public string Address { get; set; }
 
@@ -25,6 +28,7 @@ namespace AdministrationAPI.Models.Vendor
 
         public VendorLocation()
         {
+            Name = string.Empty;
             Address = string.Empty;
             CreatedBy = string.Empty;
         }
