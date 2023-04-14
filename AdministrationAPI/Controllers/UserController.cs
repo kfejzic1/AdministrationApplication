@@ -292,7 +292,7 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPost("otc/verify")]
+        [HttpPost("otc/activate")]
         [AllowAnonymous]
         public async Task<IActionResult> LoginOTC([FromBody] OTCActivationRequest otcActivationRequest)
         {
