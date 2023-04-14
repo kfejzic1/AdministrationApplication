@@ -101,6 +101,7 @@ export default function LocationTableToolbar(props) {
 					setOpen(false);
 				});
 		});
+		props.refreshSelected([]);
 	}
 
 	const createAddressTooltip = (
@@ -170,7 +171,7 @@ export default function LocationTableToolbar(props) {
 					</Typography>
 				) : (
 					<Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-						Addresses
+						Locations
 					</Typography>
 				)}
 
@@ -229,4 +230,5 @@ LocationTableToolbar.propTypes = {
 	fetchLocations: PropTypes.func.isRequired,
 	selectedIds: PropTypes.array.isRequired,
 	vendorId: PropTypes.number.isRequired,
+	refreshSelected: PropTypes.func.isRequired,
 };

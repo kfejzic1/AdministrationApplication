@@ -209,6 +209,7 @@ export default function VendorLocationPanel() {
 						numSelected={selected.length}
 						selectedIds={selected}
 						vendorId={vendor.id}
+						refreshSelected = {setSelected}
 					/>
 					<ThemeProvider theme={tableTheme}>
 						<TableContainer>
@@ -255,9 +256,8 @@ export default function VendorLocationPanel() {
 															}}
 														/>
 													</TableCell>
-													<TableCell component='th' id={labelId} scope='row' padding='none'>
-														{row.id}
-													</TableCell>
+													<TableCell component='th' id={labelId} scope='row' padding='none'></TableCell>
+													<TableCell align='left'>{row.name}</TableCell>
 													<TableCell align='left'>{row.address}</TableCell>
 												</TableRow>
 											);
