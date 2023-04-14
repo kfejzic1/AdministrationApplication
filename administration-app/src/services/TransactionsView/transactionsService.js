@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { env } from '../../config/env';
-import { useNavigate } from 'react-router-dom';
 import { transactions } from './mock';
 export function getBasicTransactions(number = 10) {
 	return number < transactions.length
@@ -83,9 +82,20 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 								else return -1;
 							}
 						});
-					if (sortingOptions.SortingOptions == 'Status') {
+					if (sortingOptions.SortingOptions == 'Type') {
 						temp = temp.sort((a, b) => {
-							if (a.transaction_purpose.localeCompare(b.transaction_purpose) > 0) {
+							if (a.transaction_type.localeCompare(b.transaction_type) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+					}
+					if (sortingOptions.SortingOptions == 'Currency') {
+						temp = temp.sort((a, b) => {
+							if (a.currency.localeCompare(b.currency) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
