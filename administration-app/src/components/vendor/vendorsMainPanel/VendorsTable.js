@@ -229,7 +229,7 @@ export default function VendorsTable() {
 	return (
 		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<VendorsTableToolBar fetchVendors={fetchData} numSelected={selected.length} selectedIds={selected} />
+				<VendorsTableToolBar refreshSelected={setSelected} fetchVendors={fetchData} numSelected={selected.length} selectedIds={selected} />
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
 						<Table
