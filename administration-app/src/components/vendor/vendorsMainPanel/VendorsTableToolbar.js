@@ -83,6 +83,7 @@ export default function VendorsTableToolBar(props) {
 					setOpenLoader(false);
 				});
 		});
+		props.refreshSelected([]);
 	};
 
 	const createVendorsTooltip = (
@@ -151,4 +152,5 @@ export default function VendorsTableToolBar(props) {
 
 VendorsTableToolBar.propTypes = {
 	numSelected: PropTypes.number.isRequired,
+	refreshSelected: PropTypes.func.isRequired,
 };

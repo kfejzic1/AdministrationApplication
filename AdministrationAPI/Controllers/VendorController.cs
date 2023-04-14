@@ -149,7 +149,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorService.Get(locationId));
+                return Ok(_vendorService.GetLocation(locationId));
             }
             catch (DataException ex)
             {
@@ -167,7 +167,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorService.GetAll());
+                return Ok(_vendorService.GetAllLocations());
             }
             catch (DataException ex)
             {
@@ -260,7 +260,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok(_vendorService.Delete(request.Id));
+                return Ok(_vendorService.DeletePOS(request.Id));
             }
             catch (DataException ex)
             {

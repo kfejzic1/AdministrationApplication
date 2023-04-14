@@ -10,6 +10,13 @@ const headCells = [
 		disablePadding: true,
 		label:'Id'
 	},
+	{
+		id: 'name',
+		visible: true,
+		numeric: false,
+		disablePadding: false,
+		label:'Name'
+	},
     {
         id: 'address',
         visible: true,
@@ -60,7 +67,7 @@ export default function LocationTableHead(props) {
 						align={headCell.numeric ? 'right' : 'left'}
 						padding={headCell.disablePadding ? 'none' : 'normal'}
 						sortDirection={orderBy === headCell.id ? order : false}
-						width={headCell.label==='Id' ? '0%' : '100%'}>
+						width={headCell.label==='Id' ? '0%' : '50%'}>
 						<TableSortLabel
 							active={orderBy === headCell.id}
 							direction={orderBy === headCell.id ? order : 'asc'}

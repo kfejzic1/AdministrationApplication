@@ -245,6 +245,7 @@ namespace AdministrationAPI.Services
             {
                 var vendorLocation = new VendorLocation
                 {
+                    Name = request.Name,
                     Address = request.Address,
                     Created = DateTime.UtcNow,
                     CreatedBy = request.CreatedBy,
@@ -288,6 +289,7 @@ namespace AdministrationAPI.Services
                     VendorLocationResponse vendorLocationResponse = new()
                     {
                         Id = loc.Id,
+                        Name = loc.Name,
                         Address = loc.Address,
                         Created = loc.Created,
                         CreatedBy = loc.CreatedBy,
@@ -314,6 +316,7 @@ namespace AdministrationAPI.Services
                     VendorLocationResponse vendorLocationResponse = new()
                     {
                         Id = loc.Id,
+                        Name = loc.Name,
                         Address = loc.Address,
                         Created = loc.Created,
                         CreatedBy = loc.CreatedBy,
@@ -334,6 +337,7 @@ namespace AdministrationAPI.Services
 
                 if (vendorLocation != null)
                 {
+                    vendorLocation.Name = request.Name;
                     vendorLocation.Address = request.Address;
                     vendorLocation.Modified = DateTime.UtcNow;
                     vendorLocation.ModifiedBy = request.ModifiedBy;

@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function LocationCreateModal(props) {
 	const location = {
+		name: '',
 		address: '',
 		createdBy: -1,
 		vendorId: -1,
@@ -72,8 +73,9 @@ export default function LocationCreateModal(props) {
 
 	const classes = useStyles();
 	const [address, setAddress] = useState('');
+	const [name, setName] = useState('');
 
-	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
+	const [errors, setErrors] = useState({ address: false, name: false });
 
 	const [open, setOpen] = useState(false);
 	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
@@ -82,14 +84,21 @@ export default function LocationCreateModal(props) {
 		setAddress(event.target.value);
 	};
 
+	const handleNameChange = event => {
+		setName(event.target.value);
+	};
+
 	const validate = () => {
 		var addressError = false;
+		var nameError = false;
 
 		if (address === '') addressError = true;
+		if (name === '') nameError = true;
 
-		setErrors({ address: addressError });
+		setErrors({ address: addressError, name: nameError });
 
 		if (addressError) return false;
+		if (nameError) return false;
 		return true;
 	};
 
@@ -100,6 +109,7 @@ export default function LocationCreateModal(props) {
 
 		if (validData) {
 			setOpen(true);
+			location.name = name;
 			location.address = address;
 
 			location.createdBy = getUserId();
@@ -119,35 +129,47 @@ export default function LocationCreateModal(props) {
 
 	return (
 		<div>
-			<form className={classes.root} onSubmit={handleSubmit}>
-				<Card className={classes.card}>
-					<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
-					<CardContent>
-						<Stack direction='row' spacing={2}>
-							<Grid container spacing={2}>
-								<Grid item xs={12}>
-									<TextField
-										className={classes.textField}
-										id='standard-basic'
-										label='Address'
-										variant='standard'
-										value={address}
-										required={true}
-										error={errors.address}
-										onChange={handleAddressChange}
-									/>
+			<div className='container'>
+				<form className={classes.root} onSubmit={handleSubmit}>
+					<Card className={classes.card}>
+						<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
+						<CardContent>
+							<Stack direction='row' spacing={2}>
+								<Grid container spacing={2}>
+									<Grid item xs={12}>
+										<TextField
+											className={classes.textField}
+											id='standard-basic'
+											label='Name'
+											variant='standard'
+											value={name}
+											required={true}
+											error={errors.Name}
+											onChange={handleNameChange}
+										/>
+										<TextField
+											className={classes.textField}
+											id='standard-basic'
+											label='Address'
+											variant='standard'
+											value={address}
+											required={true}
+											error={errors.address}
+											onChange={handleAddressChange}
+										/>
+									</Grid>
 								</Grid>
-							</Grid>
-						</Stack>
-					</CardContent>
-					<CardActions className={classes.cardActions}>
-						<Button className={classes.button} variant='standard' type='submit' value='Submit' onClick={handleSubmit}>
-							Create
-						</Button>
-					</CardActions>
-				</Card>
-			</form>
-			<Loader open={open} loaderState={loaderState} />
+							</Stack>
+						</CardContent>
+						<CardActions className={classes.cardActions}>
+							<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
+								Create
+							</Button>
+						</CardActions>
+					</Card>
+				</form>
+				<Loader open={open} loaderState={loaderState} />
+			</div>
 		</div>
 	);
 }
