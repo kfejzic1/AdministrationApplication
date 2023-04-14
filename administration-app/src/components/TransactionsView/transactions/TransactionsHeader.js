@@ -23,8 +23,8 @@ export default function TransactionsListHeader(arg) {
 	const [recipientFilter, setRecipientFilter] = useState('');
 	const [statusFilter, setStatusFilter] = useState('');
 
-	const [amountMin, setAmountMin] = useState(null);
-	const [amountMax, setAmountMax] = useState(null);
+	const [amountMin, setAmountMin] = useState('');
+	const [amountMax, setAmountMax] = useState('');
 
 	useEffect(() => {
 		updateFilterOptions();
@@ -296,7 +296,18 @@ export default function TransactionsListHeader(arg) {
 					<Box display={'flex'} gap={3} justifyContent={'center'}>
 						<Button
 							onClick={() => {
-								if (amountMax < 0 || amountMin < 0 || amountMax < amountMin) alert('Invalid amount filter value!');
+								const regex = /^\d*\.?\d+$/;
+								if (
+									amountMax.includes('e') ||
+									amountMin.includes('e') ||
+									amountMax.includes('+') ||
+									amountMin.includes('+') ||
+									parseInt(amountMax) < 0 ||
+									parseInt(amountMin) < 0 ||
+									parseInt(amountMax) < parseInt(amountMin) ||
+									(parseInt(amountMin) == '' && parseInt(amountMax) !== '')
+								)
+									alert('Invalid amount filter value!');
 								else updateFilterOptions();
 							}}
 						>
