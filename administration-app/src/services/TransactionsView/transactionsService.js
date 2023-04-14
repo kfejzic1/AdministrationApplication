@@ -50,12 +50,12 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 			var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 			if (sortingOptions != null) {
 				if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
-					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+					temp = temp.filter(transaction7 => transaction7.recipient.name?.includes(sortingOptions.Recipient));
 				}
 				console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
 
 				if (sortingOptions.Status && sortingOptions.Status != '') {
-					temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+					temp = temp.filter(transaction => transaction.transaction_type == sortingOptions.Status);
 				}
 
 				if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
@@ -66,16 +66,16 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 				}
 
 				if (sortingOptions.DateTimeStart && sortingOptions.DateTimeStart.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
+					temp = temp.filter(transaction => new Date(transaction.date) > new Date(sortingOptions.DateTimeStart));
 				}
 				if (sortingOptions.DateTimeEnd && sortingOptions.DateTimeEnd.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
+					temp = temp.filter(transaction => new Date(transaction.date) < new Date(sortingOptions.DateTimeEnd));
 				}
 
 				if (sortingOptions.SortingOptions && sortingOptions.SortingOptions != '') {
 					if (sortingOptions.SortingOptions == 'DateTime')
 						temp = temp.sort((a, b) => {
-							if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+							if (new Date(a.date) - new Date(b.date) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
@@ -85,7 +85,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 						});
 					if (sortingOptions.SortingOptions == 'Status') {
 						temp = temp.sort((a, b) => {
-							if (a.status.localeCompare(b.status) > 0) {
+							if (a.transaction_purpose.localeCompare(b.transaction_purpose) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
@@ -107,7 +107,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					}
 					if (sortingOptions.SortingOptions == 'Recipient') {
 						temp = temp.sort((a, b) => {
-							if (a.recipient.localeCompare(b.recipient) > 0) {
+							if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
