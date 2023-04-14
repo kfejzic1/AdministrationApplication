@@ -21,8 +21,8 @@ export default function TransactionsListHeader(arg) {
 	const [dateStartFilter, setDateStartFilter] = useState(null);
 	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
-	const [statusFilter, setStatusFilter] = useState('');
-
+	const [currencyFilter, setCurrencyFilter] = useState('');
+	const [categoryFilter, setCategoryFilter] = useState('');
 	const [amountMin, setAmountMin] = useState('');
 	const [amountMax, setAmountMax] = useState('');
 
@@ -33,7 +33,7 @@ export default function TransactionsListHeader(arg) {
 	const updateFilterOptions = () => {
 		arg.setFilterOptions({
 			Recipient: recipientFilter,
-			Status: statusFilter,
+			Status: currencyFilter,
 			DateTimeStart: dateStartFilter,
 			DateTimeEnd: dateEndFilter,
 			MinAmount: amountMin,
@@ -310,12 +310,15 @@ export default function TransactionsListHeader(arg) {
 						<Select
 							labelId='filter-status-label'
 							id='filter-status'
-							value={statusFilter}
+							value={currencyFilter}
 							displayEmpty
 							onChange={e => {
-								setStatusFilter(e.target.value);
+								setCurrencyFilter(e.target.value);
 							}}
 						>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
 							<MenuItem value='EUR'>EUR</MenuItem>
 							<MenuItem value='USD'>USD</MenuItem>
 							<MenuItem value='BAM'>BAM</MenuItem>
@@ -328,39 +331,23 @@ export default function TransactionsListHeader(arg) {
 							<MenuItem value='NZD'>NZD</MenuItem>
 							<MenuItem value='MXN'>MXN</MenuItem>
 							<MenuItem value='BRL'>BRL</MenuItem>
-							<MenuItem value=''>
-								<em>None</em>
-							</MenuItem>
 						</Select>
 					</FormControl>
 				</TableCell>
 				<TableCell>
-					<FormControl fullWidth>
-						<Select
-							labelId='filter-status-label'
-							id='filter-status'
-							value={statusFilter}
-							displayEmpty
-							onChange={e => {
-								setStatusFilter(e.target.value);
-							}}
-						>
-							<MenuItem value='Processing'>Processing</MenuItem>
-							<MenuItem value='Pending'>Pending</MenuItem>
-							<MenuItem value='Success'>Success</MenuItem>
-							<MenuItem value='Failure'> Failure</MenuItem>
-							<MenuItem value=''>
-								<em>None</em>
-							</MenuItem>
-						</Select>
-					</FormControl>
+					<TextField
+						value={categoryFilter}
+						fullWidth={true}
+						onChange={e => {
+							setCategoryFilter(e.target.value);
+						}}
+					></TextField>
 				</TableCell>
 
 				<TableCell>
 					<Box display={'flex'} gap={1} flexDirection={'column'} justifyContent={'center'}>
 						<Button
 							onClick={() => {
-								const regex = /^\d*\.?\d+$/;
 								if (
 									amountMax.includes('e') ||
 									amountMin.includes('e') ||
@@ -380,11 +367,12 @@ export default function TransactionsListHeader(arg) {
 						<Button
 							onClick={() => {
 								setRecipientFilter('');
-								setStatusFilter('');
 								setDateStartFilter(null);
 								setDateEndFilter(null);
 								setAmountMin('');
 								setAmountMax('');
+								setCategoryFilter('');
+								setCategoryFilter('');
 								setSortingDirection('asc');
 								setSortingColumn('DateTime');
 								arg.setFilterOptions({
