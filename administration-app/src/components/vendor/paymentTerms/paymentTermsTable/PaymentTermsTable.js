@@ -163,6 +163,8 @@ export default function PaymentTermsTable(props) {
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [selected, setSelected] = useState([]);
+	const [selectedRows, setSelectedRows] = useState([]);
+
 	const [page, setPage] = useState(0);
 	const [dense, setDense] = useState(false);
 	const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -192,7 +194,8 @@ export default function PaymentTermsTable(props) {
 		setSelected([]);
 	};
 
-	const handleClick = (event, id) => {
+	const handleClick = (event, row) => {
+		const id = row.id;
 		const selectedIndex = selected.indexOf(id);
 		let newSelected = [];
 
@@ -205,7 +208,7 @@ export default function PaymentTermsTable(props) {
 		} else if (selectedIndex > 0) {
 			newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
 		}
-
+		setSelectedRows(paymentTerms.find(x => newSelected.includes(x.id)));
 		setSelected(newSelected);
 	};
 
@@ -222,6 +225,14 @@ export default function PaymentTermsTable(props) {
 		setDense(event.target.checked);
 	};
 
+	const formatDate = date => {
+		return new Date(date).toLocaleDateString('en-GB', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric',
+		});
+	};
+
 	const isSelected = id => selected.indexOf(id) !== -1;
 	const classes = useStyles();
 	// Avoid a layout jump when reaching the last page with empty rows.
@@ -235,6 +246,7 @@ export default function PaymentTermsTable(props) {
 					vendorName={props.vendorName}
 					numSelected={selected.length}
 					selectedIds={selected}
+					selectedRows={selectedRows}
 				/>
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
@@ -265,7 +277,7 @@ export default function PaymentTermsTable(props) {
 													selected: classes.tableRowSelected,
 												}}
 												hover
-												onClick={event => handleClick(event, row.id)}
+												onClick={event => handleClick(event, row)}
 												role='checkbox'
 												aria-checked={isItemSelected}
 												tabIndex={-1}
@@ -284,9 +296,9 @@ export default function PaymentTermsTable(props) {
 												<TableCell component='th' id={labelId} scope='row' padding='none'></TableCell>
 												<TableCell align='left'>{row.name}</TableCell>
 												<TableCell align='left'>{row.invoiceFrequencyType.name}</TableCell>
-												<TableCell align='left'>{row.startDate}</TableCell>
-												<TableCell align='left'>{row.expiryDate}</TableCell>
-												<TableCell align='left'>{row.dueDate}</TableCell>
+												<TableCell align='left'>{formatDate(row.startDate)}</TableCell>
+												<TableCell align='left'>{formatDate(row.expiryDate)}</TableCell>
+												<TableCell align='left'>{formatDate(row.dueDate)}</TableCell>
 											</TableRow>
 										);
 									})}

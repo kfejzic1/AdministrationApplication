@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Typography, Box, TextField, LinearProgress } from '@mui/material';
+import moment from 'moment';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -53,14 +54,12 @@ const useStyles = makeStyles(theme => ({
 	dropzoneAreaContainer: {
 		margin: '2rem 0',
 	},
-	dropzoneAreaIcon: {
-		fontSize: '6rem',
-		color: theme.palette.grey[300],
-	},
-	dropzoneAreaText: {
-		fontSize: '1.2rem',
-		fontWeight: 'bold',
-		margin: '1rem 0',
+	dropZone: {
+		padding: 10,
+		minHeight: '160px',
+		'.MuiDropzoneArea-text': {
+			marginTop: 0,
+		},
 	},
 	saveButton: {
 		'&.MuiButton-contained': {
@@ -121,10 +120,21 @@ export default function PaymentTermsModal(props) {
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		console.log('props', props);
 		getInvoiceFrequencies().then(res => {
+			setSelectedInvoiceFrequency(res.data[0].id);
 			setInvoiceFrequency(res.data.map(x => <option value={x.id}>{x.name}</option>));
 		});
+
+		if (props.isEdit) {
+			setName(props.paymentTerm.name);
+			setDateStart(dayjs(props.paymentTerm.startDate));
+			setDateEnd(dayjs(props.paymentTerm.expiryDate));
+			setDateDue(dayjs(props.paymentTerm.dueDate));
+			setSelectedInvoiceFrequency(props.paymentTerm.invoiceFrequencyType.id);
+		}
 	}, []);
+
 	const handleFileChange = newFiles => {
 		setFiles([...files, ...newFiles]);
 	};
@@ -139,6 +149,7 @@ export default function PaymentTermsModal(props) {
 		Promise.allSettled(calls).then(res => {
 			var documentIds = res.map(x => x.value.data);
 			var request = {
+				name: name,
 				startDate: dateStart,
 				expiryDate: dateEnd,
 				invoiceFrequencyTypeId: selectedInvoiceFrequency,
@@ -156,6 +167,8 @@ export default function PaymentTermsModal(props) {
 				});
 		});
 	};
+
+	const handleEdit = () => {};
 
 	return (
 		<Box className={classes.paper}>
@@ -179,7 +192,6 @@ export default function PaymentTermsModal(props) {
 					<DesktopDatePicker
 						className={classes.dateInput}
 						label='Start Date'
-						inputFormat='DD/MM/YYYY'
 						value={dateStart}
 						onChange={setDateStart}
 						renderInput={params => <TextField {...params} />}
@@ -187,30 +199,13 @@ export default function PaymentTermsModal(props) {
 					<DesktopDatePicker
 						className={classes.dateInput}
 						label='Expiry Date'
-						inputFormat='DD/MM/YYYY'
 						value={dateEnd}
 						onChange={setDateEnd}
 						renderInput={params => <TextField {...params} />}
 					/>
 				</Box>
 			</LocalizationProvider>
-			<Box className={classes.dropzoneAreaContainer}>
-				<DropzoneArea
-					acceptedFiles={['application/pdf']}
-					filesLimit={10}
-					showFileNamesInPreview={true}
-					showFileNames={true}
-					useChipsForPreview={true}
-					onChange={handleFileChange}
-					dropzoneText={
-						<Box>
-							<Typography className={classes.dropzoneAreaText}>
-								Drag and drop files here or click to select files
-							</Typography>
-						</Box>
-					}
-				/>
-			</Box>
+
 			<Box className={classes.datePickersContainer}>
 				<TextField
 					select
@@ -240,13 +235,32 @@ export default function PaymentTermsModal(props) {
 					/>
 				</Box>
 			</LocalizationProvider>
+
+			<Box className={classes.dropzoneAreaContainer}>
+				<DropzoneArea
+					dropzoneClass={classes.dropZone}
+					acceptedFiles={['application/pdf']}
+					filesLimit={10}
+					showFileNamesInPreview={true}
+					showFileNames={true}
+					useChipsForPreview={true}
+					onChange={handleFileChange}
+					dropzoneText={<Typography sx={{ margin: '0' }}>Drag and drop files here or click to select files</Typography>}
+				/>
+			</Box>
 			<Box className={classes.footer}>
 				<Button className={classes.closeButton} variant='outlined' onClick={props.handleClose}>
 					Cancel
 				</Button>
-				<Button className={classes.saveButton} variant='contained' onClick={handleSave}>
-					Save
-				</Button>
+				{props.isEdit ? (
+					<Button className={classes.saveButton} variant='contained' onClick={handleEdit}>
+						Edit
+					</Button>
+				) : (
+					<Button className={classes.saveButton} variant='contained' onClick={handleSave}>
+						Create
+					</Button>
+				)}
 			</Box>
 		</Box>
 	);

@@ -3,6 +3,7 @@ import { Toolbar, Tooltip, Typography, Button, Modal } from '@mui/material';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { alpha } from '@mui/material/styles';
 import { Stack } from '@mui/system';
@@ -59,12 +60,19 @@ export default function PaymentTermsTableToolBar(props) {
 	const classes = useStyles();
 	const { numSelected } = props;
 	const [open, setOpen] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
 		props.fetchPaymentTerms();
+		setIsEdit(false);
 		setOpen(false);
 	};
+	const handleOpenEdit = () => {
+		handleOpen();
+		setIsEdit(true);
+	};
+
 	let handleDelete = async () => {
 		const delVend = await props.selectedIds.forEach(id => {
 			deletePaymentType(id)
@@ -86,6 +94,19 @@ export default function PaymentTermsTableToolBar(props) {
 			</Button>
 		</Tooltip>
 	);
+	const editPaymentTermTooltip = (
+		<Tooltip title='Edit Payment Term'>
+			<Button
+				className={classes.button}
+				size='small'
+				variant='outlined'
+				endIcon={<EditIcon />}
+				onClick={handleOpenEdit}>
+				Edit Selected Payment Term
+			</Button>
+		</Tooltip>
+	);
+
 	const deletePaymentTermTooltip = (
 		<Tooltip title='Delete Selected Payment Terms'>
 			<Button
@@ -119,7 +140,13 @@ export default function PaymentTermsTableToolBar(props) {
 					</Typography>
 				)}
 
-				{numSelected > 0 ? (
+				{numSelected === 1 ? (
+					<Stack direction='row' spacing={1}>
+						{editPaymentTermTooltip}
+						{deletePaymentTermTooltip}
+						{createPaymentTermTooltip}
+					</Stack>
+				) : numSelected > 1 ? (
 					<Stack direction='row' spacing={1}>
 						{deletePaymentTermTooltip}
 						{createPaymentTermTooltip}
@@ -135,7 +162,12 @@ export default function PaymentTermsTableToolBar(props) {
 					onClose={handleClose}
 					aria-labelledby='modal-modal-title'
 					aria-describedby='modal-modal-description'>
-					<PaymentTermsModal handleClose={handleClose} vendorName={props.vendorName} />
+					<PaymentTermsModal
+						isEdit={isEdit}
+						paymentTerm={props.selectedRows}
+						handleClose={handleClose}
+						vendorName={props.vendorName}
+					/>
 				</Modal>
 			</Toolbar>
 		</ThemeProvider>

@@ -2,10 +2,6 @@
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Utilities;
-using System;
 
 namespace AdministrationAPI.Services
 {
@@ -68,6 +64,9 @@ namespace AdministrationAPI.Services
 
                 if (doc != null)
                 {
+                    if (File.Exists(doc.UNC))
+                        File.Delete(doc.UNC);
+
                     vendorDbContext.Documents.Remove(doc);
                     vendorDbContext.SaveChanges();
                     return true;
