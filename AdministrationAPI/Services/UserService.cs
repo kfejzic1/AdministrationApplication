@@ -84,6 +84,27 @@ namespace AdministrationAPI.Services
             return _userManager.Users.FirstOrDefault(x => x.UserName == name);
         }
 
+        public async Task<AuthenticationResult> GetTokenForUser(string username)
+        {
+            User user = _userManager.Users.FirstOrDefault(x => x.UserName == username);
+            if (user == null)
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User not found!" }
+                };
+
+            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+            var token = TokenUtilities.CreateToken(authClaims, _configuration);
+
+            return new AuthenticationResult
+            {
+                Success = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+
+        }
+
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
             User user = new User();
@@ -132,7 +153,8 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
-        public async Task<User> GetUserFromLoginRequest(MobileLoginRequest mobileLoginRequest){
+        public async Task<User> GetUserFromLoginRequest(MobileLoginRequest mobileLoginRequest)
+        {
             User user = new User();
 
             if (mobileLoginRequest.Email != null)
@@ -144,7 +166,7 @@ namespace AdministrationAPI.Services
                 throw new Exception("User not found");
 
             if (!await _userManager.CheckPasswordAsync(user, mobileLoginRequest.Password))
-                 throw new Exception("Email/Phone/Password combination mismatch!");
+                throw new Exception("Email/Phone/Password combination mismatch!");
 
 
             if ((mobileLoginRequest.Email != null && !user.EmailConfirmed) || (mobileLoginRequest.Phone != null && !user.PhoneNumberConfirmed))
@@ -153,7 +175,7 @@ namespace AdministrationAPI.Services
             return user;
         }
 
-       
+
 
         public async Task<AuthenticationResult> FacebookSocialLogin(string token)
         {
@@ -369,7 +391,7 @@ namespace AdministrationAPI.Services
             {
                 user = user,
                 userRole = await _userManager.GetRolesAsync(user),
-               
+
             };
         }
 
@@ -401,8 +423,8 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> CreateUser(CreateRequest request)
         {
-            var newUser = new User() 
-            {  
+            var newUser = new User()
+            {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
@@ -412,22 +434,22 @@ namespace AdministrationAPI.Services
 
             var usernameTemplate = $"{request.FirstName.ToLower().First()}{request.LastName.ToLower()}";
             int number = 1;
-            while(true)
+            while (true)
             {
                 string newUsername = $"{usernameTemplate}{number}";
                 if (_userManager.Users.FirstOrDefault(u => u.UserName == newUsername) == null)
                 {
-                    newUser.UserName= newUsername;
+                    newUser.UserName = newUsername;
                     break;
                 }
                 number++;
             }
 
             var result = await _userManager.CreateAsync(newUser);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-               var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
-                if(!roleResult.Succeeded)
+                var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
+                if (!roleResult.Succeeded)
                 {
                     return roleResult;
                 }
@@ -449,7 +471,7 @@ namespace AdministrationAPI.Services
             var result = await _userManager.ConfirmEmailAsync(user, request.Token);
             if (result.Succeeded)
             {
-               var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
+                var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
                 return passwordSet;
             }
 
@@ -458,7 +480,7 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> EditUser(EditRequest request)
         {
-            
+
             var user = GetUserById(request.Id);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
@@ -482,7 +504,7 @@ namespace AdministrationAPI.Services
         public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
         {
             var user = GetUserById(request.Id);
-            var result = await _userManager.ResetPasswordAsync(user,request.Token,request.Password);
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             return result;
         }
 

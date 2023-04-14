@@ -287,9 +287,42 @@ namespace AdministrationAPI.Controllers
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "UserController.LoginOneTimeCode");
+                LoggerUtility.Logger.LogException(ex, "UserController.GenerateOneTimeCode");
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("otc/verify")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginOTC([FromBody] OTCActivationRequest otcActivationRequest)
+        {
+            try
+            {
+                bool activationResult = false;
+                if (otcActivationRequest.Method == "email")
+                    activationResult = await _activationCodeService.ActivateEmailCodeAsync(otcActivationRequest.Code, otcActivationRequest.Username);
+                else
+                    activationResult = await _activationCodeService.ActivateSMSCodeAsync(otcActivationRequest.Code, otcActivationRequest.Username);
+
+                if (activationResult)
+                {
+                    var authenticationResult = await _userService.GetTokenForUser(otcActivationRequest.Username);
+                    if (authenticationResult.Success)
+                        return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
+                    else
+                        return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
+                }
+                else
+                {
+                    return BadRequest(new { message = "Username or code incorrect!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.LoginOTC");
+                return StatusCode(500, ex.Message);
+            }
+
         }
 
         [HttpPost("login/facebook")]
