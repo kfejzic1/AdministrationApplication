@@ -46,7 +46,8 @@ export default function TransactionsListHeader(arg) {
 	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
 	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
 	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
-	const [sortDirectionStatus, setSortDirectionStatus] = useState('asc');
+	const [sortDirectionCategory, setSortDirectionCategory] = useState('asc');
+	const [sortDirectionCurrency, setSortDirectionCurrency] = useState('asc');
 
 	const handleSortDirectionDateChange = () => {
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
@@ -76,9 +77,17 @@ export default function TransactionsListHeader(arg) {
 		updateFilterOptions();
 	};
 
-	const handleSortDirectionStatusChange = () => {
-		const newSortDirection = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
-		setSortDirectionStatus(newSortDirection);
+	const handleSortDirectionCurrencyChange = () => {
+		const newSortDirection = sortDirectionCurrency === 'asc' ? 'desc' : 'asc';
+		setSortDirectionCurrency(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('Status');
+		updateFilterOptions();
+	};
+
+	const handleSortDirectionCategoryChange = () => {
+		const newSortDirection = sortDirectionCategory === 'asc' ? 'desc' : 'asc';
+		setSortDirectionCategory(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Status');
 		updateFilterOptions();
@@ -88,10 +97,7 @@ export default function TransactionsListHeader(arg) {
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell>
-					<Typography variant='h6'>ID</Typography>
-				</TableCell>
-				<TableCell align='center'>
+				<TableCell align='center' sx={{ width: '23%' }}>
 					{sortingColumn != 'DateTime' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
@@ -119,7 +125,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
+				<TableCell align='center' sx={{ width: '25%' }}>
 					{sortingColumn != 'Recipient' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Recipient</Typography>
@@ -148,7 +154,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
+				<TableCell align='center' sx={{ width: '20%' }}>
 					{sortingColumn != 'Amount' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Amount </Typography>
@@ -177,22 +183,22 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
-					{sortingColumn != 'Status' ? (
+				<TableCell align='center' sx={{ width: '10%' }}>
+					{sortingColumn != 'Currency' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
-							<Typography variant='h6'>Status </Typography>
+							<Typography variant='h6'>Currency</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
-									setSortingColumn('Status');
+									setSortingColumn('Currency');
 									setSortingDirection('asc');
 								}}
 							/>
 						</Box>
 					) : (
 						<TableSortLabel
-							direction={sortDirectionStatus}
-							onClick={handleSortDirectionStatusChange}
+							direction={sortDirectionCurrency}
+							onClick={handleSortDirectionCurrencyChange}
 							sx={{
 								'& .MuiTableSortLabel-icon': {
 									color: 'black !important',
@@ -201,15 +207,42 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6'>Status</Typography>
+							<Typography variant='h6'>Currency</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell></TableCell>
+				<TableCell align='center' sx={{ width: '15%' }}>
+					{sortingColumn != 'Category' ? (
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
+							<Typography variant='h6'>Category</Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingColumn('Category');
+									setSortingDirection('asc');
+								}}
+							/>
+						</Box>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionCategory}
+							onClick={handleSortDirectionCategoryChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6'>Category</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell sx={{ width: '7%' }}></TableCell>
 			</TableRow>
 
 			<TableRow>
-				<TableCell></TableCell>
 				<TableCell>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						<Box
@@ -244,6 +277,7 @@ export default function TransactionsListHeader(arg) {
 				<TableCell align='center'>
 					<TextField
 						value={recipientFilter}
+						fullWidth={true}
 						onChange={e => {
 							setRecipientFilter(e.target.value);
 						}}
@@ -282,6 +316,35 @@ export default function TransactionsListHeader(arg) {
 								setStatusFilter(e.target.value);
 							}}
 						>
+							<MenuItem value='EUR'>EUR</MenuItem>
+							<MenuItem value='USD'>USD</MenuItem>
+							<MenuItem value='BAM'>BAM</MenuItem>
+							<MenuItem value='JPY'>JPY</MenuItem>
+							<MenuItem value='GBP'>GBP</MenuItem>
+							<MenuItem value='CAD'>CAD</MenuItem>
+							<MenuItem value='AUD'>AUD</MenuItem>
+							<MenuItem value='CHF'>CHF</MenuItem>
+							<MenuItem value='CNY'>CNY</MenuItem>
+							<MenuItem value='NZD'>NZD</MenuItem>
+							<MenuItem value='MXN'>MXN</MenuItem>
+							<MenuItem value='BRL'>BRL</MenuItem>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+						</Select>
+					</FormControl>
+				</TableCell>
+				<TableCell>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							value={statusFilter}
+							displayEmpty
+							onChange={e => {
+								setStatusFilter(e.target.value);
+							}}
+						>
 							<MenuItem value='Processing'>Processing</MenuItem>
 							<MenuItem value='Pending'>Pending</MenuItem>
 							<MenuItem value='Success'>Success</MenuItem>
@@ -292,8 +355,9 @@ export default function TransactionsListHeader(arg) {
 						</Select>
 					</FormControl>
 				</TableCell>
+
 				<TableCell>
-					<Box display={'flex'} gap={3} justifyContent={'center'}>
+					<Box display={'flex'} gap={1} flexDirection={'column'} justifyContent={'center'}>
 						<Button
 							onClick={() => {
 								const regex = /^\d*\.?\d+$/;
@@ -311,7 +375,7 @@ export default function TransactionsListHeader(arg) {
 								else updateFilterOptions();
 							}}
 						>
-							Click to filter
+							Filter
 						</Button>
 						<Button
 							onClick={() => {
@@ -335,7 +399,7 @@ export default function TransactionsListHeader(arg) {
 								});
 							}}
 						>
-							Restart filter
+							Restart
 						</Button>
 					</Box>
 				</TableCell>
