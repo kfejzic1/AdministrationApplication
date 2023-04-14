@@ -61,5 +61,23 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDocument([FromRoute] int id)
+        {
+            try
+            {
+                return Ok(_documentService.DocumentDelete(id));
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "VendorController.PaymentTerms");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

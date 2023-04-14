@@ -141,6 +141,17 @@ export function getAllPaymentTerms() {
 	});
 }
 
+export function updatePaymentTerm(request) {
+	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm/Update', {
+		method: 'PUT',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
 export function deletePaymentType(id) {
 	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm/' + id, {
 		method: 'DELETE',

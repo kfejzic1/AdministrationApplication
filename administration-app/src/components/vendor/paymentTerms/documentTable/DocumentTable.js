@@ -14,8 +14,8 @@ import {
 	Button,
 } from '@mui/material';
 import { Chip } from '@material-ui/core';
-import PaymentTermsTableHead from './PaymentTermsTableHead';
-import PaymentTermsTableToolBar from './PaymentTermsTableToolbar';
+import DocumentsTableHead from './DocumentTableHead';
+import DocumentsTableToolBar from './DocumentTableToolbar';
 import { getAllPaymentTerms, uploadFile } from '../../../../services/vendorService';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -154,27 +154,20 @@ function descendingComparator(a, b, orderBy) {
 	return 0;
 }
 
-export default function PaymentTermsTable(props) {
-	const [paymentTerms, setPaymentTerms] = useState([]);
+export default function DocumentTable(props) {
+	const [documents, setDocuments] = useState([]);
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [selected, setSelected] = useState([]);
-	const [selectedRows, setSelectedRows] = useState([]);
 
+	const [documentsAdd, setDocumentsAdd] = useState([]);
 	const [page, setPage] = useState(0);
 	const [dense, setDense] = useState(false);
 	const [rowsPerPage, setRowsPerPage] = useState(25);
 
-	const fetchData = async () => {
-		setSelected([]);
-		getAllPaymentTerms().then(res => {
-			setPaymentTerms(res.data);
-		});
-	};
-
 	useEffect(() => {
-		fetchData();
-	}, []);
+		setDocuments(props.documents);
+	}, [props.documents]);
 
 	const handleRequestSort = (event, property) => {
 		const isAsc = orderBy === property && order === 'asc';
@@ -184,7 +177,7 @@ export default function PaymentTermsTable(props) {
 
 	const handleSelectAllClick = event => {
 		if (event.target.checked) {
-			const newSelected = paymentTerms.map(n => n.id);
+			const newSelected = documents.map(n => n.id);
 			setSelected(newSelected);
 			return;
 		}
@@ -205,7 +198,6 @@ export default function PaymentTermsTable(props) {
 		} else if (selectedIndex > 0) {
 			newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
 		}
-		setSelectedRows(paymentTerms.find(x => newSelected.includes(x.id)));
 		setSelected(newSelected);
 	};
 
@@ -222,29 +214,20 @@ export default function PaymentTermsTable(props) {
 		setDense(event.target.checked);
 	};
 
-	const formatDate = date => {
-		return new Date(date).toLocaleDateString('en-GB', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric',
-		});
-	};
-
 	const isSelected = id => selected.indexOf(id) !== -1;
 	const classes = useStyles();
 	// Avoid a layout jump when reaching the last page with empty rows.
-	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - paymentTerms.length) : 0;
+	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - documents.length) : 0;
+
+	const handleDelete = () => {
+		setSelected([]);
+		props.handleDelete(selected);
+	};
 
 	return (
-		<Box sx={{ width: '97%', margin: 'auto', pt: '15px', mt: '15px' }}>
+		<Box sx={{ margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<PaymentTermsTableToolBar
-					fetchPaymentTerms={fetchData}
-					vendorName={props.vendorName}
-					numSelected={selected.length}
-					selectedIds={selected}
-					selectedRows={selectedRows}
-				/>
+				<DocumentsTableToolBar handleDelete={handleDelete} numSelected={selected.length} selectedIds={selected} />
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
 						<Table
@@ -252,16 +235,16 @@ export default function PaymentTermsTable(props) {
 							sx={{ minWidth: '100%' }}
 							aria-labelledby='tableTitle'
 							size={dense ? 'small' : 'medium'}>
-							<PaymentTermsTableHead
+							<DocumentsTableHead
 								numSelected={selected.length}
 								order={order}
 								orderBy={orderBy}
 								onSelectAllClick={handleSelectAllClick}
 								onRequestSort={handleRequestSort}
-								rowCount={paymentTerms.length}
+								rowCount={documents.length}
 							/>
 							<TableBody>
-								{stableSort(paymentTerms, getComparator(order, orderBy))
+								{stableSort(documents, getComparator(order, orderBy))
 									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 									.map((row, index) => {
 										const isItemSelected = isSelected(row.id);
@@ -281,7 +264,7 @@ export default function PaymentTermsTable(props) {
 												key={row.id}
 												selected={isItemSelected}
 												sx={{ cursor: 'pointer' }}>
-												<TableCell padding='checkbox'>
+												<TableCell padding='checkbox' sx={{ width: '20px' }}>
 													<Checkbox
 														color='secondary2'
 														checked={isItemSelected}
@@ -290,12 +273,8 @@ export default function PaymentTermsTable(props) {
 														}}
 													/>
 												</TableCell>
-												<TableCell component='th' id={labelId} scope='row' padding='none'></TableCell>
-												<TableCell align='left'>{row.name}</TableCell>
-												<TableCell align='left'>{row.invoiceFrequencyType.name}</TableCell>
-												<TableCell align='left'>{formatDate(row.startDate)}</TableCell>
-												<TableCell align='left'>{formatDate(row.expiryDate)}</TableCell>
-												<TableCell align='left'>{formatDate(row.dueDate)}</TableCell>
+												<TableCell align='left'>{row.fileName}</TableCell>
+												<TableCell align='left'>{row.extension}</TableCell>
 											</TableRow>
 										);
 									})}
@@ -318,7 +297,7 @@ export default function PaymentTermsTable(props) {
 				<TablePagination
 					rowsPerPageOptions={[10, 25, 50, 100]}
 					component='div'
-					count={paymentTerms.length}
+					count={documents.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onPageChange={handleChangePage}

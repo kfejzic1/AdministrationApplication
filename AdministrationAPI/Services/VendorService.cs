@@ -439,9 +439,27 @@ namespace AdministrationAPI.Services
             using (var vendorDbContext = new VendorDbContext())
             {
                 var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(p => p.Id == paymentTermRequest.Id);
+                var paymentTermContract = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == paymentTermRequest.Id);
+
+                
 
                 if (paymentTerm != null)
                 {
+                    foreach (var payCon in paymentTermContract)
+                    {
+                        vendorDbContext.VendorPaymentTermContract.Remove(payCon);
+                    }
+                    foreach (var docId in paymentTermRequest.DocumentIds)
+                    {
+                        var paymentContract = new VendorPaymentTermContract()
+                        {
+                            ContractId = docId,
+                            PaymentTermId = paymentTermRequest.Id,
+                        };
+
+                        vendorDbContext.VendorPaymentTermContract.Add(paymentContract);
+                    }
+
                     paymentTerm.Name = paymentTermRequest.Name;
                     paymentTerm.StartDate = paymentTermRequest.StartDate;
                     paymentTerm.DueDate = paymentTermRequest.DueDate;

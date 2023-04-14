@@ -39,12 +39,6 @@ const useStyles = makeStyles(theme => ({
 			},
 		},
 	},
-	modal: {
-		position: 'absolute',
-		overflow: 'scroll',
-		height: '100%',
-		display: 'block',
-	},
 }));
 
 const tableTheme = createTheme({
@@ -60,7 +54,7 @@ const tableTheme = createTheme({
 		},
 	},
 });
-export default function PaymentTermsTableToolBar(props) {
+export default function DocumentsTableToolBar(props) {
 	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
 
 	const classes = useStyles();
@@ -68,60 +62,19 @@ export default function PaymentTermsTableToolBar(props) {
 	const [open, setOpen] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
 
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => {
-		props.fetchPaymentTerms();
-		setIsEdit(false);
-		setOpen(false);
-	};
-	const handleOpenEdit = () => {
-		handleOpen();
-		setIsEdit(true);
+	const handleDelete = () => {
+		props.handleDelete();
 	};
 
-	let handleDelete = async () => {
-		const delVend = await props.selectedIds.forEach(id => {
-			deletePaymentType(id)
-				.then(res => {
-					setLoaderState({ ...loaderState, loading: false, success: true });
-					props.fetchPaymentTerms();
-				})
-				.catch(() => {
-					setLoaderState({ ...loaderState, loading: false, success: false });
-					setOpen(false);
-				});
-		});
-	};
-
-	const createPaymentTermTooltip = (
-		<Tooltip title='Create Payment Term'>
-			<Button className={classes.button} size='small' variant='contained' endIcon={<CreateIcon />} onClick={handleOpen}>
-				Create Payment Term
-			</Button>
-		</Tooltip>
-	);
-	const editPaymentTermTooltip = (
-		<Tooltip title='Edit Payment Term'>
-			<Button
-				className={classes.button}
-				size='small'
-				variant='outlined'
-				endIcon={<EditIcon />}
-				onClick={handleOpenEdit}>
-				Edit Selected Payment Term
-			</Button>
-		</Tooltip>
-	);
-
-	const deletePaymentTermTooltip = (
-		<Tooltip title='Delete Selected Payment Terms'>
+	const deleteContractsTooltip = (
+		<Tooltip title='Delete Selected Contracts'>
 			<Button
 				className={classes.button}
 				size='small'
 				variant='outlined'
 				endIcon={<DeleteIcon />}
 				onClick={handleDelete}>
-				Delete Payment Term
+				Delete Contracts
 			</Button>
 		</Tooltip>
 	);
@@ -142,45 +95,20 @@ export default function PaymentTermsTableToolBar(props) {
 					</Typography>
 				) : (
 					<Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-						Payment Terms
+						Contracts
 					</Typography>
 				)}
 
-				{numSelected === 1 ? (
+				{numSelected > 0 && (
 					<Stack direction='row' spacing={1}>
-						{editPaymentTermTooltip}
-						{deletePaymentTermTooltip}
-						{createPaymentTermTooltip}
-					</Stack>
-				) : numSelected > 1 ? (
-					<Stack direction='row' spacing={1}>
-						{deletePaymentTermTooltip}
-						{createPaymentTermTooltip}
-					</Stack>
-				) : (
-					<Stack direction='row' spacing={0}>
-						{createPaymentTermTooltip}
+						{deleteContractsTooltip}
 					</Stack>
 				)}
-
-				<Modal
-					className={classes.modal}
-					open={open}
-					onClose={handleClose}
-					aria-labelledby='modal-modal-title'
-					aria-describedby='modal-modal-description'>
-					<PaymentTermsModal
-						isEdit={isEdit}
-						paymentTerm={props.selectedRows}
-						handleClose={handleClose}
-						vendorName={props.vendorName}
-					/>
-				</Modal>
 			</Toolbar>
 		</ThemeProvider>
 	);
 }
 
-PaymentTermsTableToolBar.propTypes = {
+DocumentsTableToolBar.propTypes = {
 	numSelected: PropTypes.number.isRequired,
 };

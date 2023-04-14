@@ -335,7 +335,7 @@ namespace AdministrationAPI.Controllers
             return Ok(_vendorService.GetPaymentTerm(id));
         }
 
-        [HttpPut("PaymentTerm")]
+        [HttpPut("PaymentTerm/Update")]
         public IActionResult UpdatePaymentTerm([FromBody] PaymentTermRequest paymentTermRequest)
         {
             paymentTermRequest.ModifiedBy = ControlExtensions.GetId(HttpContext);

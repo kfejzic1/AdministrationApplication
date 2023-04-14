@@ -7,15 +7,20 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import { createPaymentTerm, getInvoiceFrequencies, uploadFile } from '../../../services/vendorService';
+import {
+	createPaymentTerm,
+	getInvoiceFrequencies,
+	uploadFile,
+	updatePaymentTerm,
+} from '../../../services/vendorService';
+import { deleteDocument } from '../../../services/documentService';
 import dayjs from 'dayjs';
+import DocumentTable from './documentTable/DocumentTable';
 
 const useStyles = makeStyles(theme => ({
 	paper: {
-		position: 'absolute',
-		top: '50%',
-		left: '50%',
-		transform: 'translate(-50%, -50%)',
+		marginTop: '2em',
+		margin: 'auto',
 		backgroundColor: 'white',
 		boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.1)',
 		padding: '2rem',
@@ -23,7 +28,6 @@ const useStyles = makeStyles(theme => ({
 		outline: 'none',
 		display: 'block',
 		width: '60%',
-		textAlign: 'center',
 	},
 	closeButton: {
 		'&.MuiButton-outlined': {
@@ -117,23 +121,24 @@ export default function PaymentTermsModal(props) {
 	const [dateDue, setDateDue] = useState(null);
 	const [invoiceFrequency, setInvoiceFrequency] = useState([]);
 	const [selectedInvoiceFrequency, setSelectedInvoiceFrequency] = useState(null);
+	const [documentsDelete, setDocumentsDelete] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [documents, setDocuments] = useState([]);
 
 	useEffect(() => {
-		console.log('props', props);
 		getInvoiceFrequencies().then(res => {
-			setSelectedInvoiceFrequency(res.data[0].id);
+			if (props.isEdit) {
+				setName(props.paymentTerm.name);
+				setDateStart(dayjs(props.paymentTerm.startDate));
+				setDateEnd(dayjs(props.paymentTerm.expiryDate));
+				setDateDue(dayjs(props.paymentTerm.dueDate));
+				setSelectedInvoiceFrequency(props.paymentTerm.invoiceFrequencyType.id);
+				setDocuments(props.paymentTerm.contracts);
+			} else setSelectedInvoiceFrequency(res.data[0].id);
+
 			setInvoiceFrequency(res.data.map(x => <option value={x.id}>{x.name}</option>));
 		});
-
-		if (props.isEdit) {
-			setName(props.paymentTerm.name);
-			setDateStart(dayjs(props.paymentTerm.startDate));
-			setDateEnd(dayjs(props.paymentTerm.expiryDate));
-			setDateDue(dayjs(props.paymentTerm.dueDate));
-			setSelectedInvoiceFrequency(props.paymentTerm.invoiceFrequencyType.id);
-		}
-	}, []);
+	}, [props]);
 
 	const handleFileChange = newFiles => {
 		setFiles([...files, ...newFiles]);
@@ -141,8 +146,6 @@ export default function PaymentTermsModal(props) {
 
 	const handleSave = () => {
 		setIsLoading(true);
-		console.log('files', files);
-		const [file] = files;
 
 		const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'vendor/contracts', props.vendorName))));
 
@@ -168,7 +171,41 @@ export default function PaymentTermsModal(props) {
 		});
 	};
 
-	const handleEdit = () => {};
+	const handleEdit = () => {
+		setIsLoading(true);
+
+		documentsDelete.forEach(id => deleteDocument(id));
+
+		const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'vendor/contracts', props.vendorName))));
+
+		Promise.allSettled(calls).then(res => {
+			var documentIds = res.map(x => x.value.data);
+			documentIds = [...documentIds, ...props.paymentTerm.contracts.map(x => x.id)];
+			var request = {
+				id: props.paymentTerm.id,
+				name: name,
+				startDate: dateStart,
+				expiryDate: dateEnd,
+				invoiceFrequencyTypeId: selectedInvoiceFrequency,
+				documentIds,
+				dueDate: dateDue,
+			};
+			updatePaymentTerm(request)
+				.then(res => {
+					setIsLoading(false);
+					props.handleClose();
+				})
+				.catch(err => {
+					setIsLoading(false);
+					console.log('err', err);
+				});
+		});
+	};
+
+	const handleDocumentsDelete = documentIds => {
+		setDocuments(documents.filter(x => !documentIds.includes(x.id)));
+		setDocumentsDelete(documentIds);
+	};
 
 	return (
 		<Box className={classes.paper}>
@@ -211,7 +248,6 @@ export default function PaymentTermsModal(props) {
 					select
 					label='Invoice Frequency'
 					value={selectedInvoiceFrequency}
-					defaultValue={invoiceFrequency[0]}
 					onChange={e => setSelectedInvoiceFrequency(e.target.value)}
 					className={classes.invoiceFrequencyInput}
 					SelectProps={{
@@ -236,6 +272,11 @@ export default function PaymentTermsModal(props) {
 				</Box>
 			</LocalizationProvider>
 
+			{props.isEdit && (
+				<Box>
+					<DocumentTable handleDelete={handleDocumentsDelete} documents={documents} />
+				</Box>
+			)}
 			<Box className={classes.dropzoneAreaContainer}>
 				<DropzoneArea
 					dropzoneClass={classes.dropZone}
