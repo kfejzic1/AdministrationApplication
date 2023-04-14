@@ -19,6 +19,7 @@ import {
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import TransactionsListHeader from './TransactionsHeader';
 import Modal from '@material-ui/core/Modal';
+import Group from './Group';
 export const TransactionsList = arg => {
 	const [alertShowing, setAlertShowing] = useState(false);
 	const [mock, setMock] = useState(false);
@@ -30,6 +31,7 @@ export const TransactionsList = arg => {
 	const [hasMore, setHasMore] = useState(true);
 	const [schouldLoad, setSchouldLoad] = useState(false);
 	const [counter, setCounter] = useState(1);
+	const [groupBy, setGroupBy] = useState('');
 	const navigate = useNavigate();
 	useEffect(() => {
 		if (hasMore) {
@@ -46,7 +48,7 @@ export const TransactionsList = arg => {
 		setHasMore(true);
 		setCounter(1);
 		loadTransactions('clear-load');
-	}, [filterOptions]);
+	}, [filterOptions, groupBy]);
 	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
 	}, []);
@@ -74,6 +76,9 @@ export const TransactionsList = arg => {
 					var transactionsdata = temp1.map((item, index) => (
 						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 					));
+					if (groupBy != '') {
+						var transactionsdata = temp1.map((item, index) => <Group setDetails={setDetails} temp1={temp1}></Group>);
+					}
 					setTransactions(transactionsdata);
 					setHasMore(true);
 					setCounter(counter + 1);
@@ -138,7 +143,10 @@ export const TransactionsList = arg => {
 							<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
 								<TableContainer>
 									<Table>
-										<TransactionsListHeader setFilterOptions={setFilterOptions}></TransactionsListHeader>
+										<TransactionsListHeader
+											setGroupBy={setGroupBy}
+											setFilterOptions={setFilterOptions}
+										></TransactionsListHeader>
 										<TableBody>{transactions}</TableBody>
 									</Table>
 								</TableContainer>

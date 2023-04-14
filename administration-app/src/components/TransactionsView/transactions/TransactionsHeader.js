@@ -22,7 +22,7 @@ export default function TransactionsListHeader(arg) {
 	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
 	const [currencyFilter, setCurrencyFilter] = useState('');
-	const [categoryFilter, setCategoryFilter] = useState('');
+	const [typeFilter, setTypeFilter] = useState('');
 	const [amountMin, setAmountMin] = useState('');
 	const [amountMax, setAmountMax] = useState('');
 
@@ -46,7 +46,7 @@ export default function TransactionsListHeader(arg) {
 	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
 	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
 	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
-	const [sortDirectionCategory, setSortDirectionCategory] = useState('asc');
+	const [sortDirectionType, setSortDirectionType] = useState('asc');
 	const [sortDirectionCurrency, setSortDirectionCurrency] = useState('asc');
 
 	const handleSortDirectionDateChange = () => {
@@ -81,15 +81,15 @@ export default function TransactionsListHeader(arg) {
 		const newSortDirection = sortDirectionCurrency === 'asc' ? 'desc' : 'asc';
 		setSortDirectionCurrency(newSortDirection);
 		setSortingDirection(newSortDirection);
-		setSortingColumn('Status');
+		setSortingColumn('Currency');
 		updateFilterOptions();
 	};
 
-	const handleSortDirectionCategoryChange = () => {
-		const newSortDirection = sortDirectionCategory === 'asc' ? 'desc' : 'asc';
-		setSortDirectionCategory(newSortDirection);
+	const handleSortDirectionTypeChange = () => {
+		const newSortDirection = sortDirectionType === 'asc' ? 'desc' : 'asc';
+		setSortDirectionType(newSortDirection);
 		setSortingDirection(newSortDirection);
-		setSortingColumn('Status');
+		setSortingColumn('Type');
 		updateFilterOptions();
 	};
 
@@ -97,7 +97,10 @@ export default function TransactionsListHeader(arg) {
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell align='center' sx={{ width: '23%' }}>
+				<TableCell align='center' sx={{ width: '11%' }}>
+					<Typography variant='h6'>Group by</Typography>
+				</TableCell>
+				<TableCell align='center' sx={{ width: '20%' }}>
 					{sortingColumn != 'DateTime' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
@@ -125,7 +128,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center' sx={{ width: '25%' }}>
+				<TableCell align='center' sx={{ width: '20%' }}>
 					{sortingColumn != 'Recipient' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Recipient</Typography>
@@ -211,22 +214,22 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center' sx={{ width: '15%' }}>
-					{sortingColumn != 'Category' ? (
+				<TableCell align='center' sx={{ width: '13%' }}>
+					{sortingColumn != 'Type' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
-							<Typography variant='h6'>Category</Typography>
+							<Typography variant='h6'>Type</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
-									setSortingColumn('Category');
+									setSortingColumn('Type');
 									setSortingDirection('asc');
 								}}
 							/>
 						</Box>
 					) : (
 						<TableSortLabel
-							direction={sortDirectionCategory}
-							onClick={handleSortDirectionCategoryChange}
+							direction={sortDirectionType}
+							onClick={handleSortDirectionTypeChange}
 							sx={{
 								'& .MuiTableSortLabel-icon': {
 									color: 'black !important',
@@ -235,7 +238,7 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6'>Category</Typography>
+							<Typography variant='h6'>Type</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
@@ -243,6 +246,24 @@ export default function TransactionsListHeader(arg) {
 			</TableRow>
 
 			<TableRow>
+				<TableCell>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							displayEmpty
+							onChange={e => {
+								arg.setGroupBy(e.target.value);
+							}}
+						>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+							<MenuItem value='EUR'>Recipient</MenuItem>
+							<MenuItem value='USD'>Date</MenuItem>
+						</Select>
+					</FormControl>
+				</TableCell>
 				<TableCell>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						<Box
@@ -335,13 +356,24 @@ export default function TransactionsListHeader(arg) {
 					</FormControl>
 				</TableCell>
 				<TableCell>
-					<TextField
-						value={categoryFilter}
-						fullWidth={true}
-						onChange={e => {
-							setCategoryFilter(e.target.value);
-						}}
-					></TextField>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							value={typeFilter}
+							displayEmpty
+							onChange={e => {
+								setTypeFilter(e.target.value);
+							}}
+						>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+							<MenuItem value='B2B'>B2B</MenuItem>
+							<MenuItem value='C2B'>C2B</MenuItem>
+							<MenuItem value='C2C'>C2C</MenuItem>
+						</Select>
+					</FormControl>
 				</TableCell>
 
 				<TableCell>
@@ -371,8 +403,8 @@ export default function TransactionsListHeader(arg) {
 								setDateEndFilter(null);
 								setAmountMin('');
 								setAmountMax('');
-								setCategoryFilter('');
-								setCategoryFilter('');
+								setTypeFilter('');
+								setCurrencyFilter('');
 								setSortingDirection('asc');
 								setSortingColumn('DateTime');
 								arg.setFilterOptions({
