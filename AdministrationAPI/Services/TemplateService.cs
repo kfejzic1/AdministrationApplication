@@ -52,6 +52,9 @@ namespace AdministrationAPI.Services
             template.Currency=request.Currency;
             template.RecipientName=request.RecipientName;
             template.RecipientAccountNumber=request.RecipientAccountNumber;
+            template.PhoneNumber=request.PhoneNumber;
+            template.Category=request.Category;
+            template.Received=request.Received;
 
             await _context.SaveChangesAsync();
             return await _context.Templates.ToListAsync();
