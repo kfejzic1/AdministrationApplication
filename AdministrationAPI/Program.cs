@@ -16,9 +16,8 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
-builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
-builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
+builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
@@ -74,7 +73,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
 builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
