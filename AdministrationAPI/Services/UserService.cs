@@ -10,14 +10,10 @@ using AutoMapper;
 using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Text;
-using static QRCoder.PayloadGenerator;
 
 namespace AdministrationAPI.Services
 {
@@ -28,13 +24,15 @@ namespace AdministrationAPI.Services
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _context;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IConfiguration configuration,
             IMapper mapper,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            AppDbContext context
         )
         {
             _userManager = userManager;
@@ -42,6 +40,7 @@ namespace AdministrationAPI.Services
             _configuration = configuration;
             _mapper = mapper;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -347,7 +346,7 @@ namespace AdministrationAPI.Services
             {
                 user = user,
                 userRole = await _userManager.GetRolesAsync(user),
-               
+
             };
         }
 
@@ -379,8 +378,8 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> CreateUser(CreateRequest request)
         {
-            var newUser = new User() 
-            {  
+            var newUser = new User()
+            {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
@@ -390,22 +389,22 @@ namespace AdministrationAPI.Services
 
             var usernameTemplate = $"{request.FirstName.ToLower().First()}{request.LastName.ToLower()}";
             int number = 1;
-            while(true)
+            while (true)
             {
                 string newUsername = $"{usernameTemplate}{number}";
                 if (_userManager.Users.FirstOrDefault(u => u.UserName == newUsername) == null)
                 {
-                    newUser.UserName= newUsername;
+                    newUser.UserName = newUsername;
                     break;
                 }
                 number++;
             }
 
             var result = await _userManager.CreateAsync(newUser);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-               var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
-                if(!roleResult.Succeeded)
+                var roleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
+                if (!roleResult.Succeeded)
                 {
                     return roleResult;
                 }
@@ -427,7 +426,7 @@ namespace AdministrationAPI.Services
             var result = await _userManager.ConfirmEmailAsync(user, request.Token);
             if (result.Succeeded)
             {
-               var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
+                var passwordSet = await _userManager.AddPasswordAsync(user, request.Password);
                 return passwordSet;
             }
 
@@ -436,7 +435,7 @@ namespace AdministrationAPI.Services
 
         public async Task<IdentityResult> EditUser(EditRequest request)
         {
-            
+
             var user = GetUserById(request.Id);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
@@ -460,9 +459,34 @@ namespace AdministrationAPI.Services
         public async Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request)
         {
             var user = GetUserById(request.Id);
-            var result = await _userManager.ResetPasswordAsync(user,request.Token,request.Password);
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             return result;
         }
 
+        public bool IsTokenValid(string jwt)
+        {
+            var validity = _context.TokenValidities.FirstOrDefault(x => x.Token.Equals(jwt));
+
+            if (validity != null && validity.IsValid == false)
+                throw new Exception("Token has been invalidated! Please login again.");
+
+            return true;
+        }
+
+        public async Task InvalidateToken(string jwt)
+        {
+            var token = _context.TokenValidities.FirstOrDefault(x => x.Token.Equals(jwt));
+            if (token != null)
+                token.IsValid = false;
+
+            else
+                _context.TokenValidities.Add(new TokenValidity
+                {
+                    Token = jwt,
+                    IsValid = false
+                });
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
