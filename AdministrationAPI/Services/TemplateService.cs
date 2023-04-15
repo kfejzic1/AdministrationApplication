@@ -52,6 +52,7 @@ namespace AdministrationAPI.Services
             template.Currency=request.Currency;
             template.RecipientName=request.RecipientName;
             template.RecipientAccountNumber=request.RecipientAccountNumber;
+            template.PhoneNumber=request.PhoneNumber;
             template.Category=request.Category;
             template.Received=request.Received;
 

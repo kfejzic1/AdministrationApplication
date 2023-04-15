@@ -24,6 +24,8 @@ namespace AdministrationAPI.Models
 
         public string RecipientAccountNumber { get; set; } = string.Empty;
 
+        public string PhoneNumber { get; set; } = string.Empty;
+        
         public string Category { get; set; } = string.Empty;
 
         public string Received { get; set; } = string.Empty;
