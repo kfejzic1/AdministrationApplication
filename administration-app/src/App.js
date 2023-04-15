@@ -42,6 +42,14 @@ function App() {
 							}
 						/>
 						<Route
+							path='/payment/:currency/:type/:transactionAmount/:phoneNumber'
+							element={
+								<ProtectedRoute>
+									<Payment />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
 							path='/payment'
 							element={
 								<ProtectedRoute>

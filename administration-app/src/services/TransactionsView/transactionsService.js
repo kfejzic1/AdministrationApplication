@@ -7,7 +7,7 @@ export function getBasicTransactions(number = 10) {
 		: { data: transactions, hasMore: false };
 }
 export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
-	console.log('Sorting optins=', JSON.stringify(sortingOptions));
+	//console.log('Sorting optins=', JSON.stringify(sortingOptions));
 	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
 		if (sortingOptions.MinAmount === '') {
@@ -51,7 +51,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 				if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
 					temp = temp.filter(transaction7 => transaction7.recipient.name?.includes(sortingOptions.Recipient));
 				}
-				console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
+				//console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
 
 				if (sortingOptions.Status && sortingOptions.Status != '') {
 					temp = temp.filter(transaction => transaction.transaction_type == sortingOptions.Status);

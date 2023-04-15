@@ -44,7 +44,7 @@ export const TransactionsList = arg => {
 		setSchouldLoad(false);
 	}, [mock]);
 	useEffect(() => {
-		console.log('treba lo bi da rai');
+		//console.log('treba lo bi da rai');
 		setHasMore(true);
 		setCounter(1);
 		loadTransactions('clear-load');
@@ -65,13 +65,13 @@ export const TransactionsList = arg => {
 					setHasMore(false);
 					setIsLoading(false);
 				} else {
-					console.log('No tran2sactions');
+					//console.log('No tran2sactions');
 					var temp1 = [...transactionsRaw, ...transactions1.data];
 					if (transactions1.data.length == 0) temp1 = transactions1.data;
 					if ('clear-load' == a) {
 						temp1 = transactions1.data;
 					}
-					console.log(transactions1.data, 'tempkj');
+					//console.log(transactions1.data, 'tempkj');
 					setTransactionsRaw(temp1);
 					var transactionsdata = temp1.map((item, index) => (
 						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>

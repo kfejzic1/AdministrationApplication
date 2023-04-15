@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
+import { useLocation } from 'react-router-dom';
 
 import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box, InputLabel } from '@mui/material';
 
@@ -27,6 +28,17 @@ export const Payment = props => {
 	const [phoneNumberState, setPhoneNumber] = useState(phoneNumber != undefined && phoneNumber != -1 ? phoneNumber : '');
 
 
+	const location = useLocation();
+    const isPopUp = location.state?.isPopUp || false;
+	const isRecipient = location.state?.isRecipient;
+	const isPhoneNumber = location.state?.isPhoneNumber;
+
+	console.log("Da li ugasiti modal:", isPopUp);
+	console.log("Da li je recipient ovo:", isRecipient);
+	console.log("Da li je ovo broj telefona: ", isPhoneNumber)
+
+
+
 	const navigate = useNavigate();
 
 	function handleSubmit(event) {
@@ -38,7 +50,7 @@ export const Payment = props => {
 		navigate(-1);
 	};
 
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(!isPopUp);
 	const [clickedButton, setClickedButton] = useState('');
   
 	const handleButtonClick = (button) => {
@@ -63,7 +75,7 @@ export const Payment = props => {
 			</Box>
 		  </Box>
 		</Modal>
-		{clickedButton=='recipientName' && 
+		{(clickedButton=='recipientName' || isRecipient) && 
 			<Box
 				sx={{
 					'--primary': '#e7ebf0',
@@ -443,7 +455,7 @@ export const Payment = props => {
 
 
 
-		{clickedButton=='phoneNumber' &&
+		{(clickedButton=='phoneNumber' || isPhoneNumber) &&
 			<Box
 				sx={{
 					'--primary': '#e7ebf0',

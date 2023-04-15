@@ -66,14 +66,22 @@ export default function TransactionDetails(arg) {
 						</Button>
 						<Button
 							onClick={() => {
+								arg.props.recipient.name ? 
 								navigate(
-									'/payment/USD/Payment/' +
+									'/payment/'  + arg.props.currency + '/Payment/' + 
 										arg.props.recipient.name +
 										'/' +
 										arg.props.amount +
 										'/' +
-										arg.props.recipient.account_number
-								);
+										arg.props.recipient.account_number,
+										{ state: { isPopUp: true, isRecipient: true } }
+								) : navigate(
+									'/payment/'  + arg.props.currency + '/Payment/' + 
+									arg.props.amount +
+									'/' +
+									arg.props.recipient.phone_number,
+									{ state: { isPopUp: true, isPhoneNumber: true } } 
+								)
 							}}>
 							Reuse
 						</Button>
