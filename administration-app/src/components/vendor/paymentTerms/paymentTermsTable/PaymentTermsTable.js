@@ -11,11 +11,13 @@ import {
 	Switch,
 	Checkbox,
 	Paper,
+	Button,
 } from '@mui/material';
 import { Chip } from '@material-ui/core';
-import POSTableHead from './POSTableHead';
-import POSTableToolBar from './POSTableToolbar';
-import { getAllById } from '../../../../services/posService';
+import PaymentTermsTableHead from './PaymentTermsTableHead';
+import PaymentTermsTableToolBar from './PaymentTermsTableToolbar';
+import { getAllPaymentTerms, uploadFile } from '../../../../services/vendorService';
+
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -77,6 +79,50 @@ const useStyles = makeStyles({
 		'& .MuiTableBody-root .Mui-selected:hover': {
 			backgroundColor: '#ffc976',
 		},
+		'& .css-177gid-MuiTableCell-root': {
+			padding: '10px',
+		},
+	},
+
+	button: {
+		marginRight: '20px',
+		'&.MuiButton-contained': {
+			backgroundColor: '#ffaf36',
+			color: 'black',
+			'&:hover': {
+				backgroundColor: '#ea8c00',
+				boxShadow: 'none',
+			},
+			'&:disabled': {
+				backgroundColor: '#ffffff',
+				boxShadow: 'none',
+				color: '#d3d3d3',
+			},
+		},
+		'&.MuiButton-outlined': {
+			color: '#ffaf36',
+			border: '2px solid #ff9a00',
+
+			'&:hover': {
+				border: '2px solid #000000',
+				color: '#000000',
+			},
+		},
+
+		'&.MuiButton-text': {
+			backgroundImage: 'linear-gradient(144deg, #ffb649 35%,#ffee00)',
+			alignItems: 'center',
+			borderRadius: '10px',
+			color: '#222222',
+			textTransform: 'none',
+			width: '40%',
+			padding: '1px 15px',
+			boxShadow: 'rgba(0, 0, 0, .3) 2px 8px 8px -5px',
+			'&:hover': {
+				backgroundImage: 'linear-gradient(144deg, #e9a642 65%,#e9de00)',
+				boxShadow: 'rgba(0, 0, 0, .2) 15px 28px 25px -18px',
+			},
+		},
 	},
 });
 
@@ -108,20 +154,21 @@ function descendingComparator(a, b, orderBy) {
 	return 0;
 }
 
-export default function POSTable(props) {
-	const { locationID } = props;
-	console.log(locationID);
-	const [pos, setPos] = useState([]);
+export default function PaymentTermsTable(props) {
+	const [paymentTerms, setPaymentTerms] = useState([]);
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [selected, setSelected] = useState([]);
+	const [selectedRows, setSelectedRows] = useState([]);
+
 	const [page, setPage] = useState(0);
 	const [dense, setDense] = useState(false);
 	const [rowsPerPage, setRowsPerPage] = useState(25);
 
 	const fetchData = async () => {
-		getAllById(locationID).then(res => {
-			setPos(res.data);
+		setSelected([]);
+		getAllPaymentTerms().then(res => {
+			setPaymentTerms(res.data);
 		});
 	};
 
@@ -137,14 +184,15 @@ export default function POSTable(props) {
 
 	const handleSelectAllClick = event => {
 		if (event.target.checked) {
-			const newSelected = pos.map(n => n.id);
+			const newSelected = paymentTerms.map(n => n.id);
 			setSelected(newSelected);
 			return;
 		}
 		setSelected([]);
 	};
 
-	const handleClick = (event, id) => {
+	const handleClick = (event, row) => {
+		const id = row.id;
 		const selectedIndex = selected.indexOf(id);
 		let newSelected = [];
 
@@ -157,7 +205,7 @@ export default function POSTable(props) {
 		} else if (selectedIndex > 0) {
 			newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
 		}
-
+		setSelectedRows(paymentTerms.find(x => newSelected.includes(x.id)));
 		setSelected(newSelected);
 	};
 
@@ -174,19 +222,28 @@ export default function POSTable(props) {
 		setDense(event.target.checked);
 	};
 
+	const formatDate = date => {
+		return new Date(date).toLocaleDateString('en-GB', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric',
+		});
+	};
+
 	const isSelected = id => selected.indexOf(id) !== -1;
 	const classes = useStyles();
 	// Avoid a layout jump when reaching the last page with empty rows.
-	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - pos.length) : 0;
+	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - paymentTerms.length) : 0;
 
 	return (
-		<Box sx={{ width: '90%', margin: 'auto', pt: '15px' }}>
+		<Box sx={{ width: '97%', margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<POSTableToolBar
-					locationID={locationID}
-					fetchPOS={fetchData}
+				<PaymentTermsTableToolBar
+					fetchPaymentTerms={fetchData}
+					vendorName={props.vendorName}
 					numSelected={selected.length}
 					selectedIds={selected}
+					selectedRows={selectedRows}
 				/>
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
@@ -195,16 +252,16 @@ export default function POSTable(props) {
 							sx={{ minWidth: '100%' }}
 							aria-labelledby='tableTitle'
 							size={dense ? 'small' : 'medium'}>
-							<POSTableHead
+							<PaymentTermsTableHead
 								numSelected={selected.length}
 								order={order}
 								orderBy={orderBy}
 								onSelectAllClick={handleSelectAllClick}
 								onRequestSort={handleRequestSort}
-								rowCount={pos.length}
+								rowCount={paymentTerms.length}
 							/>
 							<TableBody>
-								{stableSort(pos, getComparator(order, orderBy))
+								{stableSort(paymentTerms, getComparator(order, orderBy))
 									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 									.map((row, index) => {
 										const isItemSelected = isSelected(row.id);
@@ -217,7 +274,7 @@ export default function POSTable(props) {
 													selected: classes.tableRowSelected,
 												}}
 												hover
-												onClick={event => handleClick(event, row.id)}
+												onClick={event => handleClick(event, row)}
 												role='checkbox'
 												aria-checked={isItemSelected}
 												tabIndex={-1}
@@ -233,10 +290,12 @@ export default function POSTable(props) {
 														}}
 													/>
 												</TableCell>
-												<TableCell component='th' id={labelId} scope='row' padding='none'>
-													{row.id}
-												</TableCell>
+												<TableCell component='th' id={labelId} scope='row' padding='none'></TableCell>
 												<TableCell align='left'>{row.name}</TableCell>
+												<TableCell align='left'>{row.invoiceFrequencyType.name}</TableCell>
+												<TableCell align='left'>{formatDate(row.startDate)}</TableCell>
+												<TableCell align='left'>{formatDate(row.expiryDate)}</TableCell>
+												<TableCell align='left'>{formatDate(row.dueDate)}</TableCell>
 											</TableRow>
 										);
 									})}
@@ -259,7 +318,7 @@ export default function POSTable(props) {
 				<TablePagination
 					rowsPerPageOptions={[10, 25, 50, 100]}
 					component='div'
-					count={pos.length}
+					count={paymentTerms.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onPageChange={handleChangePage}

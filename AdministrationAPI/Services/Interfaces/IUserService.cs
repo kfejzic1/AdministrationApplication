@@ -33,5 +33,8 @@ namespace AdministrationAPI.Services.Interfaces
         Task<GetUserResponse> GetUserWithRolesById(string id);
         IEnumerable<IdentityRole> GetRoles();
         Task<AuthenticationResult> GetTokenForUser(string username);
+        Task InvalidateToken(string jwt);
+        bool IsTokenValid(string jwt);
+
     }
 }

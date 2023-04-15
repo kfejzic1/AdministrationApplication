@@ -14,6 +14,7 @@ namespace AdministrationAPI.Data
 
         public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
         public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
+        public DbSet<TokenValidity> TokenValidities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,6 +29,8 @@ namespace AdministrationAPI.Data
             builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("usr_role_claims"); });
             builder.Entity<EmailActivationCode>(entity => { entity.ToTable("usr_email_activation_codes"); });
             builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
+            builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
+
 
             ApplySnakeCaseNames(builder);
 
@@ -125,33 +128,11 @@ namespace AdministrationAPI.Data
             List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
 
 
-            userRoles.Add(new IdentityUserRole<string>
+            users.ForEach(u => userRoles.Add(new IdentityUserRole<string>
             {
-                UserId = users[0].Id,
-                RoleId =
-            roles.First(q => q.Name == "User").Id
-            });
-
-
-            userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[0].Id,
-                RoleId =
-            roles.First(q => q.Name == "Admin").Id
-            });
-
-            userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[1].Id,
-                RoleId =
-            roles.First(q => q.Name == "User").Id
-            });
-             userRoles.Add(new IdentityUserRole<string>
-            {
-                UserId = users[1].Id,
-                RoleId =
-            roles.First(q => q.Name == "Restricted").Id
-            });
+                UserId = u.Id,
+                RoleId = roles.First(q => q.Name == "User").Id
+            }));
 
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);

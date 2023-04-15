@@ -2,6 +2,7 @@ using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
+using AdministrationAPI.Utilities;
 using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -15,13 +16,13 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
-builder.Services.AddSingleton<IVendorLocationService, VendorLocationService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
-builder.Services.AddSingleton<IVendorPOSService, VendorPOSService>();
+builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
+builder.Services.AddScoped<TokenUtilities>();
 
 
 builder.Services.AddControllers();
@@ -72,9 +73,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
-builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()

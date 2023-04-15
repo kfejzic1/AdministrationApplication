@@ -4,18 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/userService';
 import { google } from '../../services/userService';
 import { facebook } from '../../services/userService';
-import { LinearProgress, Typography, Input, Alert, Box, Button } from '@mui/material';
+import { LinearProgress, Typography, Input, Alert, Box, Button, accordionSummaryClasses } from '@mui/material';
 import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { useGoogleLogin } from '@react-oauth/google';
-import {LoginSocialFacebook } from 'reactjs-social-login'
-
+import FacebookLogin from 'react-facebook-login';
 import { env } from '../../config/env';
-import axios from 'axios';
+import axios, { formToJSON } from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
 
+
+
 const LoginForm = props => {
-	const [phoneMail, setPhoneMail] = useState('');
+    const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
@@ -33,22 +34,37 @@ const LoginForm = props => {
 		else return 'email';
 	};
 
-	const handleFacebookLogin = () => {
-		
-	
-	}
-	
-
 	const googleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
-			console.log("sadsafsaw je "+ JSON.stringify(codeResponse));
-			console.log("sadsafsaw je 123 "+ codeResponse.access_token);
-			const tokens = await google(codeResponse.access_token_token);	
-			console.log("oken bude ovdje " + tokens.data);
-			localStorage.setItem('token', tokens.data.token);
+			try{
+				const tokens = await google(codeResponse.access_token);
+				localStorage.setItem('token', tokens.data.token);
+				navigate('/user');
+			}catch(error) {
+				setErrorMessage(error.response.data.errors[0]);
+			}
 		},
-		onError: errorResponse => console.log("ERror"+ errorResponse),
+		onError: errorResponse => setErrorMessage("Error on backend!" + errorResponse),
 	});
+
+	
+	
+		const onSuccess = async (response) => {
+		  console.log('Login success:', response.accessToken);
+		  try{
+		  	const tokens = await facebook(response.accessToken);
+		  	console.log("TOken koji smo dobili je " +JSON.stringify(tokens));
+			localStorage.setItem('token', tokens.data.token);
+			navigate('/user');
+		  }catch(err){
+			setErrorMessage(JSON.stringify(err.response.data.errors[0]));
+		  }
+
+		};
+		const onFailure = (error) => {
+			setErrorMessage("Error on backend!" + error)
+		};
+	
 
 
 
@@ -119,25 +135,20 @@ const LoginForm = props => {
 							setPassword(e.target.value);
 						}}
 					/>
-
+					
 					<GoogleLoginButton 
 						onClick={googleLogin} 
-						style={{width: '40%', marginRight: '50px'}} 
+						style={{width: '80%'}} 
 					/>
-					<LoginSocialFacebook
-						style={{width: '80%'}}
+					<FacebookLogin
 						appId='959179271739907'
-						onResolve={(response) => {
-							console.log("Token facebook " +JSON.stringify(response.data));
-							const tokens = facebook(response.data.accessToken);
-						
-						}}
-						onReject={(error) => {
-							console.log(error);
-						}}
-					>
-					<FacebookLoginButton style={{width: '80%'}}/>
-					</LoginSocialFacebook>	
+						callback={onSuccess}
+						onFailure={onFailure}
+						render={(renderProps) => (
+							<button onClick={renderProps.onClick}>Login with Facebook</button>
+						)}
+					/>
+
 					<Typography>
 						You are not registered? <a href='/'>Register</a>
 					</Typography>

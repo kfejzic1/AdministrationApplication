@@ -10,14 +10,10 @@ using AutoMapper;
 using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Text;
-using static QRCoder.PayloadGenerator;
 
 namespace AdministrationAPI.Services
 {
@@ -28,13 +24,15 @@ namespace AdministrationAPI.Services
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _context;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IConfiguration configuration,
             IMapper mapper,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            AppDbContext context
         )
         {
             _userManager = userManager;
@@ -42,6 +40,7 @@ namespace AdministrationAPI.Services
             _configuration = configuration;
             _mapper = mapper;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -508,5 +507,30 @@ namespace AdministrationAPI.Services
             return result;
         }
 
+        public bool IsTokenValid(string jwt)
+        {
+            var validity = _context.TokenValidities.FirstOrDefault(x => x.Token.Equals(jwt));
+
+            if (validity != null && validity.IsValid == false)
+                throw new Exception("Token has been invalidated! Please login again.");
+
+            return true;
+        }
+
+        public async Task InvalidateToken(string jwt)
+        {
+            var token = _context.TokenValidities.FirstOrDefault(x => x.Token.Equals(jwt));
+            if (token != null)
+                token.IsValid = false;
+
+            else
+                _context.TokenValidities.Add(new TokenValidity
+                {
+                    Token = jwt,
+                    IsValid = false
+                });
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
