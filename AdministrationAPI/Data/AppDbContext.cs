@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
+using System.Reflection.Emit;
 
 namespace AdministrationAPI.Data
 {
@@ -13,6 +14,8 @@ namespace AdministrationAPI.Data
         }
 
         public DbSet<ActivationCode> ActivationCodes { get; set; }
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -37,6 +40,16 @@ namespace AdministrationAPI.Data
                 .HasOne(rc => rc.User)
                 .WithOne(u => u.ActivationCode)
                 .HasForeignKey<ActivationCode>(rc => rc.UserId);
+
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.InputCurrency)
+                .WithMany(c => c.ExchangeRates)
+                .HasForeignKey(er => er.InputCurrencyId);
+
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.OutputCurrency)
+                .WithMany(c => c.ExchangeRates)
+                .HasForeignKey(er => er.OutputCurrencyId);
         }
 
         private static void SeedRoles(ModelBuilder builder)
@@ -139,11 +152,11 @@ namespace AdministrationAPI.Data
                 RoleId =
             roles.First(q => q.Name == "User").Id
             });
-             userRoles.Add(new IdentityUserRole<string>
+            userRoles.Add(new IdentityUserRole<string>
             {
                 UserId = users[1].Id,
                 RoleId =
-            roles.First(q => q.Name == "Restricted").Id
+           roles.First(q => q.Name == "Restricted").Id
             });
 
 

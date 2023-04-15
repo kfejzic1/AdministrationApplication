@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.ExchangeRates;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AutoMapper;
