@@ -10,5 +10,20 @@ namespace AdministrationAPI.Extensions
 
             return identity.Value;
         }
+
+        public static string GetToken(HttpContext httpContext)
+        {
+
+            var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+            if (authHeader == null || !authHeader.StartsWith("Bearer "))
+            {
+                throw new Exception("Invalid or missing Authorization header");
+            }
+
+            var tokenValue = authHeader.Substring("Bearer ".Length).Trim();
+
+            return tokenValue;
+        }
+
     }
 }

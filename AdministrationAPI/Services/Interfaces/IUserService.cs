@@ -31,5 +31,8 @@ namespace AdministrationAPI.Services.Interfaces
         Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request);
         Task<GetUserResponse> GetUserWithRolesById(string id);
         IEnumerable<IdentityRole> GetRoles();
+        Task InvalidateToken(string jwt);
+        bool IsTokenValid(string jwt);
+
     }
 }
