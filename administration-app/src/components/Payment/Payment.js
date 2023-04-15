@@ -33,9 +33,9 @@ export const Payment = props => {
 	const isRecipient = location.state?.isRecipient;
 	const isPhoneNumber = location.state?.isPhoneNumber;
 
-	console.log("Da li ugasiti modal:", isPopUp);
+	/*console.log("Da li ugasiti modal:", isPopUp);
 	console.log("Da li je recipient ovo:", isRecipient);
-	console.log("Da li je ovo broj telefona: ", isPhoneNumber)
+	console.log("Da li je ovo broj telefona: ", isPhoneNumber)*/
 
 
 	useEffect(() => {
@@ -68,6 +68,16 @@ export const Payment = props => {
 	  setOpen(false);
 	}
   
+	const isValidAccountNumber = /^\d+$/.test(recipientAccountNumberState); // ne znamo kolika je duzina broja racuna, backend nam nista ne govori, po pravilo je to niz od 16 brojeva
+	// console.log(isValidAccountNumber)
+	
+	const isValidRecipientName = /^[a-z]{2,}\s[a-z]{3,}(-[a-z]{3,})?(?:\s[a-z]{3,})?$/i.test(recipientNameState)
+	// console.log("Da li je validno ime: ", isValidAccountNumber)
+	// RecipientName has following forms: FirstName LastName, FirstName LastName-LastName, FirstName LastName LastName
+
+	const isValidPhoneNumber = /^[+]?(\d+-)*(\d+-\d+|\d+)$/.test(phoneNumberState) // opet nije definisano koliko moze biti dug broj, zatim koji je oblik broja, da li smije sadrzavati crtice ili u mockupi sadrzi crtice, a u Kenanovom primjeru ne sadrzi
+
+
 	return (
 	  <Box>
 		<Modal open={open}>
@@ -361,6 +371,9 @@ export const Payment = props => {
 							placeholder='Write recipient name here'
 							value={recipientNameState}
 							onChange={event => setRecipientName(event.target.value)}
+							error={!isValidRecipientName}
+							helperText={!isValidRecipientName && "Name needs to be in form: 'F L, F L-L, F L L'"}
+							required
 						/>
 
 						<TextField
@@ -376,8 +389,10 @@ export const Payment = props => {
 							placeholder='Write recipient account number here'
 							value={recipientAccountNumberState}
 							onChange={event => setRecipientAccountNumber(event.target.value)}
+							error={!isValidAccountNumber}
+							helperText={!isValidAccountNumber && "Account number must contain only numbers"}
+							required
 						/>
-
 
 						<TextField
 							label='Category'
@@ -421,34 +436,46 @@ export const Payment = props => {
 								padding: 'var(--inputPadding)',
 							}}
 							onClick={() => {
-								const [first, last] = recipientNameState.split(' ');
+								//const [first, last] = recipientNameState.split(' ');
+								if(isValidAccountNumber && isValidRecipientName) {
+									const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
+									const regexForSpace = /\s/g
+									const numberOfSpaces = recipientNameState.match(regexForSpace).length
+									let last = '';
+									if(recipientNameState.includes('-')) 
+										last = lastPrimary + '-' + lastSecondary
+									else if(numberOfSpaces == 2)
+										last = lastPrimary + ' ' + lastSecondary
+									else
+										last = lastPrimary
 
-								sendPaymentInfo({
-									amount: parseFloat(transactionAmountState),
-									currency: currencyState,
-									paymentType: typeState,
-									description: descriptionState,
-									category: categoryState,
-									recipientAccountNumber: recipientAccountNumberState,
-									recipientFirstName: first,
-									recipientLastName: last
-								}).then(() => {
-										alert('Payment successfuly sent!');
-									}).catch(() => {
-										alert('Failed!');
-									});
-
-									console.log(
-										'Sta se salje backendu: ',
-										transactionAmountState,
-										currencyState,
-										typeState,
-										descriptionState,
-										categoryState,
-										recipientAccountNumberState,
-										recipientNameState
-									);
-								}}
+									sendPaymentInfo({
+										amount: parseFloat(transactionAmountState),
+										currency: currencyState,
+										paymentType: typeState,
+										description: descriptionState,
+										category: categoryState,
+										recipientAccountNumber: recipientAccountNumberState,
+										recipientFirstName: first,
+										recipientLastName: last
+									}).then(() => {
+											alert('Payment successfuly sent!');
+										}).catch(() => {
+											alert('Failed!');
+										});
+	
+										console.log(
+											'Sta se salje backendu (MOBILNO): ',
+											transactionAmountState,
+											currencyState,
+											typeState,
+											descriptionState,
+											categoryState,
+											recipientAccountNumberState,
+											recipientNameState
+										);
+								} 
+							}}
 						>
 							Submit
 						</Button>
@@ -745,6 +772,9 @@ export const Payment = props => {
 							placeholder='Write recipient name here'
 							value={phoneNumberState}
 							onChange={event => setPhoneNumber(event.target.value)}
+							error={!isValidPhoneNumber}
+							helperText={!isValidPhoneNumber && "Phone number must contains only numbers (optionally '+' on start)"}
+							required
 						/>
 
 						<TextField
@@ -789,29 +819,31 @@ export const Payment = props => {
 								padding: 'var(--inputPadding)',
 							}}
 							onClick={() => {
-
-								sendPaymentInfo({
-									amount: parseFloat(transactionAmountState),
-									currency: currencyState,
-									paymentType: typeState,
-									description: descriptionState,
-									category: categoryState,
-									phoneNumber: phoneNumberState
-								}).then(() => {
-										alert('Payment successfuly sent!');
-									}).catch(() => {
-										alert('Failed!');
-									});
 								
-								console.log(
-										'Sta se salje backendu: ',
-										transactionAmountState,
-										currencyState,
-										typeState,
-										descriptionState,
-										categoryState,
-										phoneNumberState
-								);
+								if(isValidPhoneNumber) {
+									sendPaymentInfo({
+										amount: parseFloat(transactionAmountState),
+										currency: currencyState,
+										paymentType: typeState,
+										description: descriptionState,
+										category: categoryState,
+										phoneNumber: phoneNumberState
+									}).then(() => {
+											alert('Payment successfuly sent!');
+										}).catch(() => {
+											alert('Failed!');
+										});
+									
+									console.log(
+											'Sta se salje backendu (NA RACUN): ',
+											transactionAmountState,
+											currencyState,
+											typeState,
+											descriptionState,
+											categoryState,
+											phoneNumberState
+									);
+								}
 							}}
 						>
 							Submit
