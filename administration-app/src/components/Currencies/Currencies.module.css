@@ -44,6 +44,10 @@
     width: 80%;
     margin: 0.25rem;
 }
+.rate_input{
+    width: 30%;
+    margin: 0.25rem;
+}
 .modal_add_button{
     padding: 0.5rem;
     width: 25%;

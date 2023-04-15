@@ -10,6 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Currencies() {
 
@@ -336,6 +338,16 @@ export default function Currencies() {
 
         ]
     }
+    var dummyExchangeRates = [{
+        
+            id: 1,
+            country: 'BIH - USA',
+            name: 'Dollar - BAM',
+            rate: '0.57',
+            startDate: new Date("2022-03-25"),
+            endDate: new Date("2022-06-25")
+        
+    }]
     function getStartDate(params) {
         console.log('params ', params)
         for (let item of currentCurrency.exchangeRates) {
@@ -361,26 +373,26 @@ export default function Currencies() {
         { field: 'rate', headerName: 'Rate', width: 300, headerAlign: 'center', align: 'center' },
         {
             field: 'startDate', headerName: 'Start Date', width: 300, headerAlign: 'center', align: 'center',
-            valueGetter: getStartDate
+      
         },
-        { field: 'exchangeRates.endDate', headerName: 'End Date', width: 300, headerAlign: 'center', align: 'center' }
+        { field: 'endDate', headerName: 'End Date', width: 300, headerAlign: 'center', align: 'center' }
     ]
 
     const [currencies, setCurrencies] = useState(dummyCurrencies);
-    const [exchanges, setExchanges] = useState(defaultCurrency.exchangeRates)
+    const [exchanges, setExchanges] = useState(dummyExchangeRates);
     const [open, setOpen] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [currentCurrency, setCurrentCurrency] = useState(defaultCurrency)
-    const [inputCurrency, setInputCurrency] = useState({
-        id: '0',
-        country: '',
-        name: ''
-    });
-    const [outputCurrency, setOutputCurrency] = useState({
-        id: '0',
-        country: '',
-        name: ''
-    });
+    const [inputCurrency, setInputCurrency] = useState(
+        currencies[0].id
+    );
+    const [outputCurrency, setOutputCurrency] = useState(
+        currencies[1].id
+    );
+    const [rate, setRate] = useState();
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -405,6 +417,11 @@ export default function Currencies() {
                 endDate: new Date()
             }
         )
+    }
+    const [openCurrencyList, setOpenCurrencyList] = useState(false);
+    const handleOpenCurrencyList = () => setOpenCurrencyList(true);
+    const handleCloseCurrencyList = () => {
+        setOpenCurrencyList(false);
     }
 
     const [newCurrency, setNewCurrency] = useState({
@@ -467,25 +484,61 @@ export default function Currencies() {
             setIsValid(false);
         }
     }
-    const onCreateExchange = () => {
-        newExchange.id = '14'
-        // if (newC.country.trim() != '' && newCurrency.name.trim() != '') {
-        //     setCurrencies((prevState) => {
-        //         return [...prevState, newCurrency];
-        //     });
-        //     handleClose();
+    const onCreateExchange = (event) => {
+        event.preventDefault();
+        if(error === ''){
+        // Find the currency objects that match the selected input and output currencies
+        const inputCurrencyObj = dummyCurrencies.find((currency) => currency.id === inputCurrency);
+        const outputCurrencyObj = dummyCurrencies.find((currency) => currency.id === outputCurrency);
 
-        // }
-        // else {
-        //     setIsValid(false);
-        // }
-        setExchanges((prevState) => {
-            return [...prevState, newExchange]
-        })
+        // Find the exchange rate object that matches the input and output currencies
+        const exchangeRate = inputCurrencyObj.exchangeRates.find((rate) => rate.outputCurrencyId === outputCurrencyObj.id);
+        
+        // Display the exchange rate in the table
+        if (exchangeRate) {
+            const newExchange = {
+                id: exchanges.length + 1,
+                country: `${inputCurrencyObj.country} - ${outputCurrencyObj.country}`,
+                name: `${inputCurrencyObj.name} - ${outputCurrencyObj.name}`,
+                rate: rate,
+                startDate: startDate,
+                endDate: endDate
+            };
+            setExchanges((prevState) => {
+                return [...prevState, newExchange];
+            });
+            handleCloseExchange();
+
+        }
     }
-    const handleChange = (event) => {
+    }
+    const handleInputCurrencyChange = (event) => {
         setInputCurrency(event.target.value);
+
+    };
+    const handleOutputCurrencyChange = (event) => {
+        setOutputCurrency(event.target.value);
+    };
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
       };
+    
+      const handleEndDateChange = (date) => {
+        setEndDate(date);
+      };
+      // Validation of Rate input
+      const [error, setError] = useState('');
+      const validateRate = (value) => {
+        if (value === '') {
+          setError('Rate cannot be empty.');
+        } else if (!/^\d*\.?\d*$/.test(value)) {
+          setError('Rate must be a number.');
+        } else {
+          setError('');
+        }
+      };
+
+
     return (
         <>
             <Modal
@@ -536,12 +589,12 @@ export default function Currencies() {
                                         id="demo-simple-select"
                                         value={inputCurrency}
                                         label="First currency"
-                                        onChange={handleChange}
+                                        onChange={handleInputCurrencyChange}
                                     >
                                         {currencies.map((currency) => (
                                             <MenuItem value={currency.id}>{currency.name}({currency.country})</MenuItem>
                                         ))}
-                                        
+
                                     </Select>
                                 </FormControl>
                             </Box>
@@ -551,18 +604,33 @@ export default function Currencies() {
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={inputCurrency}
-                                        label="First currency"
-                                        onChange={handleChange}
+                                        value={outputCurrency}
+                                        label="Second currency"
+                                        onChange={handleOutputCurrencyChange}
                                     >
                                         {currencies.map((currency) => (
                                             <MenuItem value={currency.id}>{currency.name}({currency.country})</MenuItem>
                                         ))}
-                                        
+
                                     </Select>
                                 </FormControl>
                             </Box>
-                            <Button sx={{
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                            <TextField className={styles.rate_input} id="outlined-basic" label="Rate" variant="outlined" onChange={(event) => {
+                setRate(event.target.value);
+                validateRate(event.target.value);
+              }}
+              error={error !== ''}
+              helperText={error}/>
+                            </Box>
+                            <div>
+                                <label>Start Date:</label>
+                                <DatePicker selected={startDate} onChange={handleStartDateChange} />
+                                <br />
+                                <label>End Date:</label>
+                                <DatePicker selected={endDate} onChange={handleEndDateChange} isClearable={true} placeholderText="Select end date"/>
+                            </div>
+                            <Button onClick={onCreateExchange} sx={{
                                 bgcolor: '#ffaf36',
                                 color: 'white',
                                 p: 1, mt: 1,
@@ -576,6 +644,42 @@ export default function Currencies() {
                     </Typography>
                 </Box>
             </Modal>
+            <Modal
+                open={openCurrencyList}
+                onClose={handleCloseCurrencyList}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ p: 1 }}>
+                      All Currencies
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <div className={styles.flex_column}>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Country</th>
+                                        <th>Currency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {currencies.map((currency) => (
+                                        <tr key={currency.id}>
+                                            <td>{currency.id}</td>
+                                            <td>{currency.country}</td>
+                                            <td>{currency.name}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </Typography>
+                </Box>
+            </Modal>
             <div className={styles.flex_row_between}>
                 <div className={styles.flex_row}>
                     <Button onClick={handleOpen} className="p-3 m-5" sx={{
@@ -584,24 +688,36 @@ export default function Currencies() {
                             backgroundColor: '#ea8c00'
                         }
                     }}>Add New Currency</Button>
-                    <Button onClick={handleOpenExchange} className="p-3 m-5" sx={{
+                   <Button onClick={handleOpenCurrencyList} className="p-3 m-5" sx={{
+                        color: 'black',
+                        bgcolor: '#edeceb', "&:hover": {
+                           backgroundColor: '#ea8c00'
+                        },
+                        borderWidth:2,
+                        borderColor:'black'
+
+                    }}>Show All Currencies</Button>
+                   
+                </div>
+                <Button onClick={handleOpenExchange} className="p-3 m-5" sx={{
                         color: 'white',
                         bgcolor: '#ffaf36', "&:hover": {
                             backgroundColor: '#ea8c00'
                         }
-                    }}>Add New Exhange Rate</Button>
-                </div>
-                <div className={styles.flex_row}>
+                    }}>Add New Exchange Rate</Button>
+                
+               {/* <div className={styles.flex_row}>
                     <h2 className="p-3 mt-5">Selected currency: {currentCurrency.country} - {currentCurrency.name}</h2>
 
                 </div>
+                */}
             </div>
             <div className={styles.flex_center}>
-                <h1>List of all available currencies</h1>
+                <h1>List of all exchange rates</h1>
                 <div style={{ height: 1000, width: 1602 }}>
                     <DataGrid
                         autoHeight
-                        rows={currencies}
+                        rows={exchanges}
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}
