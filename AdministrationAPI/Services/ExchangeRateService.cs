@@ -8,13 +8,11 @@ namespace AdministrationAPI.Services
 {
     public class ExchangeRateService : IExchangeRateService
     {
-        private AppDbContext _context;
-        private IExchangeRateService _exchangeRateService;
+        private readonly AppDbContext _context;
 
-        public ExchangeRateService(AppDbContext context, IExchangeRateService exchangeRateService)
+        public ExchangeRateService(AppDbContext context)
         {
             _context = context;
-            _exchangeRateService = exchangeRateService;
         }
 
         public async Task AddCurrency(CurrencyRequest currencyRequest)
@@ -23,7 +21,7 @@ namespace AdministrationAPI.Services
             {
                 Currency currency = new Currency
                 {
-                    Id = new Guid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     Country = currencyRequest.Country,
                     Name = currencyRequest.Name
                 };
@@ -45,7 +43,7 @@ namespace AdministrationAPI.Services
 
                 ExchangeRate exchangeRate = new ExchangeRate
                 {
-                    Id = new Guid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     InputCurrency = inputCurrency,
                     OutputCurrency = outputCurrency,
                     StartDate = exchangeRateRequest.StartDate,
