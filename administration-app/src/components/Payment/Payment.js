@@ -9,7 +9,7 @@ import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box
 import Modal from '@mui/material/Modal';
 
 export const Payment = props => {
-	const { currency, recipientAccountNumber, recipientName, transactionAmount, type, description, category, transactionType, interestingGroup, phoneNumber } = useParams();
+	const { currency, recipientAccountNumber, recipientName, transactionAmount, type, description, category, transactionPurpose, interestingGroup, phoneNumber } = useParams();
 	const [transactionAmountState, setTransactionAmount] = useState(
 		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
 	);
@@ -24,7 +24,7 @@ export const Payment = props => {
 	const [descriptionState, setDescription] = useState(description != undefined && description != -1 ? description : '');
 	const [categoryState, setCategory] = useState(category != undefined && category != -1 ? category : '')
 	const [interestingGroupState, setInterestingGroup] = useState(interestingGroup != undefined && interestingGroup != -1 ? interestingGroup : 'Person');
-	const [transactionTypeState, setTransactionType] = useState(transactionType != undefined && transactionType != -1 ? transactionType : 'B2C');
+	const [transactionPurposeState, settransactionPurpose] = useState(transactionPurpose != undefined && transactionPurpose != -1 ? transactionPurpose : 'B2C');
 	const [phoneNumberState, setPhoneNumber] = useState(phoneNumber != undefined && phoneNumber != -1 ? phoneNumber : '');
 
 
@@ -37,6 +37,16 @@ export const Payment = props => {
 	console.log("Da li je recipient ovo:", isRecipient);
 	console.log("Da li je ovo broj telefona: ", isPhoneNumber)
 
+
+	useEffect(() => {
+		if (transactionPurposeState != undefined && transactionPurposeState === 'B2B') {
+		  setInterestingGroup('Company');
+		} else if (transactionPurposeState != undefined && (transactionPurposeState === 'B2C' || transactionPurposeState === 'C2C')) {
+		  setInterestingGroup('Person');
+		} else if (transactionPurposeState != undefined && transactionPurposeState === 'C2B') {
+		  setInterestingGroup('Company');
+		}
+	  }, [transactionPurpose]);
 
 
 	const navigate = useNavigate();
@@ -254,6 +264,7 @@ export const Payment = props => {
 								<MenuItem value='NZD'>NZD</MenuItem>
 								<MenuItem value='MXN'>MXN</MenuItem>
 								<MenuItem value='BRL'>BRL</MenuItem>
+								<MenuItem value='ZAR'>ZAR</MenuItem>
 							</Select>
 						</Box>
 						<br />
@@ -279,41 +290,7 @@ export const Payment = props => {
 										display: 'inline-block',
 									}}
 								>
-									Transaction type:
-								</Box>
-							</Box>
-							<Select
-								sx={{
-									color: '#fff',
-									backgroundColor: '#1976D2', // change color Type
-									alignSelf: 'flex-end',
-									borderRadius: '5px',
-									padding: 0,
-									//fontSize: 'var(--text-size)',
-									lineHeight: 1,
-								}}
-								value={transactionTypeState}
-								onChange={event => setTransactionType(event.target.value)}
-							>
-								<MenuItem value='B2B'>B2B</MenuItem>
-								<MenuItem value='B2C'>B2C</MenuItem>
-								<MenuItem value='C2B'>C2B</MenuItem>
-								<MenuItem value='C2C'>C2C</MenuItem>
-							</Select>
-							<Box
-								sx={{
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-								}}
-							>
-								<Box
-									sx={{
-										color: 'var(--babyblue)',
-										display: 'inline-block',
-									}}
-								>
-									Interesting group:
+									Party:
 								</Box>
 							</Box>
 
@@ -332,6 +309,40 @@ export const Payment = props => {
 							>
 								<MenuItem value='Person'>Person</MenuItem>
 								<MenuItem value='Company'>Company</MenuItem>
+							</Select>
+							<Box
+								sx={{
+									display: 'flex',
+									justifyContent: 'center',
+									alignItems: 'center',
+								}}
+							>
+								<Box
+									sx={{
+										color: 'var(--babyblue)',
+										display: 'inline-block',
+									}}
+								>
+									Transaction:
+								</Box>
+							</Box>
+							<Select
+								sx={{
+									color: '#fff',
+									backgroundColor: '#1976D2', // change color Type
+									alignSelf: 'flex-end',
+									borderRadius: '5px',
+									padding: 0,
+									//fontSize: 'var(--text-size)',
+									lineHeight: 1,
+								}}
+								value={transactionPurposeState}
+								onChange={event => settransactionPurpose(event.target.value)}
+							>
+								<MenuItem value='B2B'>B2B</MenuItem>
+								<MenuItem value='B2C'>B2C</MenuItem>
+								<MenuItem value='C2B'>C2B</MenuItem>
+								<MenuItem value='C2C'>C2C</MenuItem>
 							</Select>
 						</Box>
 
@@ -634,6 +645,7 @@ export const Payment = props => {
 								<MenuItem value='NZD'>NZD</MenuItem>
 								<MenuItem value='MXN'>MXN</MenuItem>
 								<MenuItem value='BRL'>BRL</MenuItem>
+								<MenuItem value='ZAR'>ZAR</MenuItem>
 							</Select>
 						</Box>
 						<br />
@@ -659,43 +671,10 @@ export const Payment = props => {
 										display: 'inline-block',
 									}}
 								>
-									Transaction type:
+									Party:
 								</Box>
 							</Box>
-							<Select
-								sx={{
-									color: '#fff',
-									backgroundColor: '#1976D2', // change color Type
-									alignSelf: 'flex-end',
-									borderRadius: '5px',
-									padding: 0,
-									//fontSize: 'var(--text-size)',
-									lineHeight: 1,
-								}}
-								value={transactionTypeState}
-								onChange={event => setTransactionType(event.target.value)}
-							>
-								<MenuItem value='B2B'>B2B</MenuItem>
-								<MenuItem value='B2C'>B2C</MenuItem>
-								<MenuItem value='C2B'>C2B</MenuItem>
-								<MenuItem value='C2C'>C2C</MenuItem>
-							</Select>
-							<Box
-								sx={{
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-								}}
-							>
-								<Box
-									sx={{
-										color: 'var(--babyblue)',
-										display: 'inline-block',
-									}}
-								>
-									Interesting group:
-								</Box>
-							</Box>
+							
 
 							<Select
 								sx={{
@@ -712,6 +691,42 @@ export const Payment = props => {
 							>
 								<MenuItem value='Person'>Person</MenuItem>
 								<MenuItem value='Company'>Company</MenuItem>
+							</Select>
+							
+							<Box
+								sx={{
+									display: 'flex',
+									justifyContent: 'center',
+									alignItems: 'center',
+								}}
+							>
+								<Box
+									sx={{
+										color: 'var(--babyblue)',
+										display: 'inline-block',
+									}}
+								>
+									Transaction:
+								</Box>
+							</Box>
+							
+							<Select
+								sx={{
+									color: '#fff',
+									backgroundColor: '#1976D2', // change color Type
+									alignSelf: 'flex-end',
+									borderRadius: '5px',
+									padding: 0,
+									//fontSize: 'var(--text-size)',
+									lineHeight: 1,
+								}}
+								value={transactionPurposeState}
+								onChange={event => settransactionPurpose(event.target.value)}
+							>
+								<MenuItem value='B2B'>B2B</MenuItem>
+								<MenuItem value='B2C'>B2C</MenuItem>
+								<MenuItem value='C2B'>C2B</MenuItem>
+								<MenuItem value='C2C'>C2C</MenuItem>
 							</Select>
 						</Box>
 
@@ -807,5 +822,4 @@ export const Payment = props => {
 		}
 	  </Box>
 	);
-
 };

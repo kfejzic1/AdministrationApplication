@@ -71,12 +71,16 @@ export default function TransactionDetails(arg) {
 									'/payment/'  + arg.props.currency + '/Payment/' + 
 										arg.props.recipient.name +
 										'/' +
+										arg.props.transaction_purpose +
+										'/' +
 										arg.props.amount +
 										'/' +
 										arg.props.recipient.account_number,
 										{ state: { isPopUp: true, isRecipient: true } }
 								) : navigate(
 									'/payment/'  + arg.props.currency + '/Payment/' + 
+									arg.props.transaction_purpose +
+									'/' +
 									arg.props.amount +
 									'/' +
 									arg.props.recipient.phone_number,
