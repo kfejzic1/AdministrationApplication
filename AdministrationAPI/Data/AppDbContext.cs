@@ -43,12 +43,12 @@ namespace AdministrationAPI.Data
 
             builder.Entity<ExchangeRate>()
                 .HasOne<Currency>(er => er.InputCurrency)
-                .WithMany(c => c.ExchangeRates)
+                .WithMany(c => c.ExchangeRatesAsInput)
                 .HasForeignKey(er => er.InputCurrencyId);
 
             builder.Entity<ExchangeRate>()
                 .HasOne<Currency>(er => er.OutputCurrency)
-                .WithMany(c => c.ExchangeRates)
+                .WithMany(c => c.ExchangeRatesAsOutput)
                 .HasForeignKey(er => er.OutputCurrencyId);
         }
 
