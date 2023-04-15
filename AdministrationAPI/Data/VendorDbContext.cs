@@ -43,12 +43,12 @@ namespace AdministrationAPI.Data
             .AddJsonFile("appsettings.json")
             .Build();
 
-            var connectionString = configuration.GetConnectionString("SqliteMain");
+            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
             Console.WriteLine("Default connection string: " + connectionString);
 
-            optionsBuilder.UseSqlite(connectionString);
-            //optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            // optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }
