@@ -1,20 +1,16 @@
 using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
-using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Extensions;
+using AdministrationAPI.Models;
+using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using Facebook;
-using AdministrationAPI.Helpers;
-using AdministrationAPI.Models;
-using AdministrationAPI.Services;
-using Microsoft.AspNetCore.Identity;
-using System.Net;
-using AdministrationAPI.Contracts.Requests.Users;
 
 namespace AdministrationAPI.Controllers
 {
@@ -78,9 +74,10 @@ namespace AdministrationAPI.Controllers
         {
             User user = await _userService.Register(model);
 
-            if(user == null){
+            if (user == null)
+            {
                 return BadRequest("User not created. Password must contain at least one uppercase letter, a digit and a non-alphanumeric character. Password must be at least six characters long.");
-                
+
             }
 
             bool success = await _activationCodeService.GenerateCodeForUserAsync(user);
@@ -123,7 +120,7 @@ namespace AdministrationAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "SMS not delivered!");
             }
-            
+
         }
 
         [AllowAnonymous]
@@ -405,6 +402,8 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
                 var users = _userService.GetAllUsers();
                 return Ok(users);
             }
@@ -495,7 +494,21 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                var roles = TokenUtilities.VerifyToken(token);
+                TokenVerificationResult roles = new TokenVerificationResult();
+
+                bool? validity = null;
+                try
+                {
+                    validity = _userService.IsTokenValid(token);
+                }
+                catch (Exception)
+                {
+                    roles.Errors = new List<string> { "Token is invalidated!" }.ToArray();
+                    return Ok(roles);
+                };
+
+                if (validity == true)
+                    roles = TokenUtilities.VerifyToken(token);
 
                 return Ok(roles);
             }
@@ -506,6 +519,26 @@ namespace AdministrationAPI.Controllers
             catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.TwoFactorQrCode");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPatch("logout")]
+        public IActionResult Logout([FromQuery] string token)
+        {
+            try
+            {
+                _userService.InvalidateToken(token);
+
+                return Ok();
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Logout");
                 return StatusCode(500, ex.Message);
             }
         }

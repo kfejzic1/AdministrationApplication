@@ -10,6 +10,7 @@ namespace AdministrationAPI.Utilities
 {
     public class TokenUtilities
     {
+
         public static JwtSecurityToken CreateToken(List<Claim> authClaims, IConfiguration configuration)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]));
@@ -29,7 +30,7 @@ namespace AdministrationAPI.Utilities
         {
             var authClaims = new List<Claim>
             {
-                    
+
                     new Claim("UserId", user.Id),
                     new Claim("UserName", user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
