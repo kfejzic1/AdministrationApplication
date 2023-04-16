@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from '../Currencies/Currencies.module.css'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { createCurrency, createExchangeRate, getAllCurrencies, getAllExchangeRates } from "../../services/currencyService";
 
 export default function Currencies() {
 
@@ -339,14 +340,14 @@ export default function Currencies() {
         ]
     }
     var dummyExchangeRates = [{
-        
-            id: 1,
-            country: 'BIH - USA',
-            name: 'Dollar - BAM',
-            rate: '0.57',
-            startDate: new Date("2022-03-25"),
-            endDate: new Date("2022-06-25")
-        
+
+        id: 1,
+        country: 'BIH - USA',
+        name: 'Dollar - BAM',
+        rate: '0.57',
+        startDate: new Date("2022-03-25"),
+        endDate: new Date("2022-06-25")
+
     }]
     function getStartDate(params) {
         console.log('params ', params)
@@ -368,16 +369,19 @@ export default function Currencies() {
     }
     const columns = [
         { field: 'id', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
-        { field: 'country', headerName: 'Country', width: 300, headerAlign: 'center', align: 'center' },
-        { field: 'name', headerName: 'Currency', width: 300, headerAlign: 'center', align: 'center' },
+        { field: 'inputCurrency', headerName: 'Input Currency', width: 300, headerAlign: 'center', align: 'center' },
+        { field: 'outputCurrency', headerName: 'Output Currency', width: 300, headerAlign: 'center', align: 'center' },
         { field: 'rate', headerName: 'Rate', width: 300, headerAlign: 'center', align: 'center' },
         {
             field: 'startDate', headerName: 'Start Date', width: 300, headerAlign: 'center', align: 'center',
-      
+
         },
         { field: 'endDate', headerName: 'End Date', width: 300, headerAlign: 'center', align: 'center' }
     ]
-
+    useEffect(() => {
+        fetchExchangeRates();
+        fetchCurrencies();
+    }, []);
     const [currencies, setCurrencies] = useState(dummyCurrencies);
     const [exchanges, setExchanges] = useState(dummyExchangeRates);
     const [open, setOpen] = useState(false);
@@ -386,8 +390,8 @@ export default function Currencies() {
     const [inputCurrency, setInputCurrency] = useState(
         currencies[0].id
     );
-    const [outputCurrency, setOutputCurrency] = useState(
-        currencies[1].id
+    const [outputCurrency, setOutputCurrency] = useState(        
+        currencies.length == 1 ? currencies[0].id : currencies[1].id
     );
     const [rate, setRate] = useState();
     const [startDate, setStartDate] = useState(new Date());
@@ -418,8 +422,27 @@ export default function Currencies() {
             }
         )
     }
+    const fetchCurrencies = async () => {
+        getAllCurrencies().then(res => {
+            console.log(res);
+            if(res.data.length != 0)
+            setCurrencies(res.data);
+        });
+    };
+    const fetchExchangeRates = async () => {
+        getAllExchangeRates().then(res => {
+            console.log('exxx ', res)
+            if(res.data.length != 0)
+            setExchanges(res.data);
+        });
+    };
+   
     const [openCurrencyList, setOpenCurrencyList] = useState(false);
-    const handleOpenCurrencyList = () => setOpenCurrencyList(true);
+    const handleOpenCurrencyList = () => {
+        fetchCurrencies();
+        setOpenCurrencyList(true);
+
+    }
     const handleCloseCurrencyList = () => {
         setOpenCurrencyList(false);
     }
@@ -474,9 +497,18 @@ export default function Currencies() {
     const onCreateCurrency = () => {
         newCurrency.id = currencies.length + 1;
         if (newCurrency.country.trim() != '' && newCurrency.name.trim() != '') {
-            setCurrencies((prevState) => {
-                return [...prevState, newCurrency];
-            });
+            createCurrency({ country: newCurrency.country, name: newCurrency.name })
+                .then(res => {
+                    fetchCurrencies();
+
+                })
+                .catch(error => {
+                    console.log('error', error);
+                });
+
+            // setCurrencies((prevState) => {
+            //     return [...prevState, newCurrency];
+            // });
             handleClose();
 
         }
@@ -486,31 +518,53 @@ export default function Currencies() {
     }
     const onCreateExchange = (event) => {
         event.preventDefault();
-        if(error === ''){
-        // Find the currency objects that match the selected input and output currencies
-        const inputCurrencyObj = dummyCurrencies.find((currency) => currency.id === inputCurrency);
-        const outputCurrencyObj = dummyCurrencies.find((currency) => currency.id === outputCurrency);
+        if (error === '') {
+            // Find the currency objects that match the selected input and output currencies
+            const inputCurrencyObj = currencies.find((currency) => currency.id === inputCurrency);
+            const outputCurrencyObj = currencies.find((currency) => currency.id === outputCurrency);
 
-        // Find the exchange rate object that matches the input and output currencies
-        const exchangeRate = inputCurrencyObj.exchangeRates.find((rate) => rate.outputCurrencyId === outputCurrencyObj.id);
-        
-        // Display the exchange rate in the table
-        if (exchangeRate) {
-            const newExchange = {
-                id: exchanges.length + 1,
-                country: `${inputCurrencyObj.country} - ${outputCurrencyObj.country}`,
-                name: `${inputCurrencyObj.name} - ${outputCurrencyObj.name}`,
-                rate: rate,
-                startDate: startDate,
-                endDate: endDate
-            };
-            setExchanges((prevState) => {
-                return [...prevState, newExchange];
-            });
-            handleCloseExchange();
+            console.log(inputCurrencyObj);
 
+            // Find the exchange rate object that matches the input and output currencies
+            // const exchangeRate = inputCurrencyObj.exchangeRates.find((rate) => rate.outputCurrencyId === outputCurrencyObj.id);
+
+            // Display the exchange rate in the table
+            // if (exchangeRate) {
+                const newExchange = {
+                    id: exchanges.length + 1,
+                    country: `${inputCurrencyObj.country} - ${outputCurrencyObj.country}`,
+                    name: `${inputCurrencyObj.name} - ${outputCurrencyObj.name}`,
+                    rate: rate,
+                    startDate: startDate,
+                    endDate: endDate
+                };
+                console.log(startDate.getFullYear());
+                console.log(startDate.getMonth() + 1);
+                console.log(startDate.getDate());
+                console.log(startDate.getDay() + 1);
+                console.log(startDate.toISOString().slice(0, 10))
+                createExchangeRate({
+                    inputCurreny: `${inputCurrencyObj.country} (${inputCurrencyObj.name})`,
+                    outputCurrency: `${outputCurrencyObj.country} (${outputCurrencyObj.name})`,
+                    rate: +rate,
+                    startDate: startDate.toISOString().slice(0, 10),
+                    endDate: endDate.toISOString().slice(0, 10)
+                })
+                    .then(res => {
+                        console.log(res);
+                        fetchExchangeRates();
+
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+                // setExchanges((prevState) => {
+                //     return [...prevState, newExchange];
+                // });
+                handleCloseExchange();
+
+            // }
         }
-    }
     }
     const handleInputCurrencyChange = (event) => {
         setInputCurrency(event.target.value);
@@ -521,22 +575,22 @@ export default function Currencies() {
     };
     const handleStartDateChange = (date) => {
         setStartDate(date);
-      };
-    
-      const handleEndDateChange = (date) => {
+    };
+
+    const handleEndDateChange = (date) => {
         setEndDate(date);
-      };
-      // Validation of Rate input
-      const [error, setError] = useState('');
-      const validateRate = (value) => {
+    };
+    // Validation of Rate input
+    const [error, setError] = useState('');
+    const validateRate = (value) => {
         if (value === '') {
-          setError('Rate cannot be empty.');
+            setError('Rate cannot be empty.');
         } else if (!/^\d*\.?\d*$/.test(value)) {
-          setError('Rate must be a number.');
+            setError('Rate must be a number.');
         } else {
-          setError('');
+            setError('');
         }
-      };
+    };
 
 
     return (
@@ -616,19 +670,19 @@ export default function Currencies() {
                                 </FormControl>
                             </Box>
                             <Box sx={{ minWidth: 120, marginTop: 2 }}>
-                            <TextField className={styles.rate_input} id="outlined-basic" label="Rate" variant="outlined" onChange={(event) => {
-                setRate(event.target.value);
-                validateRate(event.target.value);
-              }}
-              error={error !== ''}
-              helperText={error}/>
+                                <TextField className={styles.rate_input} id="outlined-basic" label="Rate" variant="outlined" onChange={(event) => {
+                                    setRate(event.target.value);
+                                    validateRate(event.target.value);
+                                }}
+                                    error={error !== ''}
+                                    helperText={error} />
                             </Box>
                             <div>
                                 <label>Start Date:</label>
                                 <DatePicker selected={startDate} onChange={handleStartDateChange} />
                                 <br />
                                 <label>End Date:</label>
-                                <DatePicker selected={endDate} onChange={handleEndDateChange} isClearable={true} placeholderText="Select end date"/>
+                                <DatePicker selected={endDate} onChange={handleEndDateChange} isClearable={true} placeholderText="Select end date" />
                             </div>
                             <Button onClick={onCreateExchange} sx={{
                                 bgcolor: '#ffaf36',
@@ -652,7 +706,7 @@ export default function Currencies() {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ p: 1 }}>
-                      All Currencies
+                        All Currencies
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         <div className={styles.flex_column}>
@@ -688,25 +742,25 @@ export default function Currencies() {
                             backgroundColor: '#ea8c00'
                         }
                     }}>Add New Currency</Button>
-                   <Button onClick={handleOpenCurrencyList} className="p-3 m-5" sx={{
+                    <Button onClick={handleOpenCurrencyList} className="p-3 m-5" sx={{
                         color: 'black',
                         bgcolor: '#edeceb', "&:hover": {
-                           backgroundColor: '#ea8c00'
+                            backgroundColor: '#ea8c00'
                         },
-                        borderWidth:2,
-                        borderColor:'black'
+                        borderWidth: 2,
+                        borderColor: 'black'
 
                     }}>Show All Currencies</Button>
-                   
+
                 </div>
                 <Button onClick={handleOpenExchange} className="p-3 m-5" sx={{
-                        color: 'white',
-                        bgcolor: '#ffaf36', "&:hover": {
-                            backgroundColor: '#ea8c00'
-                        }
-                    }}>Add New Exchange Rate</Button>
-                
-               {/* <div className={styles.flex_row}>
+                    color: 'white',
+                    bgcolor: '#ffaf36', "&:hover": {
+                        backgroundColor: '#ea8c00'
+                    }
+                }}>Add New Exchange Rate</Button>
+
+                {/* <div className={styles.flex_row}>
                     <h2 className="p-3 mt-5">Selected currency: {currentCurrency.country} - {currentCurrency.name}</h2>
 
                 </div>
