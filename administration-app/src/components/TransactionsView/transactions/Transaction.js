@@ -24,8 +24,7 @@ export default function Transaction(arg) {
 					<Button
 						onClick={() => {
 							arg.setDetails(arg.prop);
-						}}
-					>
+						}}>
 						Details
 					</Button>
 				</TableCell>
@@ -46,8 +45,7 @@ export default function Transaction(arg) {
 					<Button
 						onClick={() => {
 							arg.setDetails(arg.prop);
-						}}
-					>
+						}}>
 						Details
 					</Button>
 				</TableCell>

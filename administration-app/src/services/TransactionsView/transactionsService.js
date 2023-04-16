@@ -158,7 +158,44 @@ export function getGroupTransactions(group, mock) {
 					//if (err.response.status === 401) navigate('/login');
 					reject(401);
 				});
-		else resolve({ data: transactions.filter(a => a.id == 1)[0] });
+		else {
+			if (group === 'Currency') {
+				var currs = ['CAD', 'CNY', 'EUR', 'GBP', 'JPY', 'USD', 'ZAR', 'BAM'];
+				var result = [];
+				currs.forEach(curr => {
+					var sum = 0;
+					var trans = transactions.filter(a => a.currency == curr);
+					trans.forEach(t => {
+						sum += t.amount;
+					});
+					result.push({
+						keyValue: curr,
+						transactions: trans,
+						totalAmount: sum,
+						numberOfTransactions: trans.length,
+					});
+				});
+				resolve(result);
+			}
+			if (group == 'Type') {
+				var types = ['C2C', 'B2B', 'B2C'];
+				var result = [];
+				types.forEach(ty => {
+					var sum = 0;
+					var trans = transactions.filter(a => a.transaction_purpose == ty);
+					trans.forEach(t => {
+						sum += t.amount;
+					});
+					result.push({
+						keyValue: ty,
+						transactions: trans,
+						totalAmount: sum,
+						numberOfTransactions: trans.length,
+					});
+				});
+				resolve(result);
+			}
+		}
 	});
 }
 
