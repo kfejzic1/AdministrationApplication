@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button, TextField, Grid, Card, CardHeader, CardContent, CardActions } from '@material-ui/core';
 import { Stack } from '@mui/material';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { createVendorLocation } from '../../../../services/vendorService';
+import { editVendorLocation } from '../../../../services/vendorService';
 import { getUserId } from '../../../../services/userService';
+import { getVendorLocation } from '../../../../services/vendorService';
 import Loader from '../../../loaderDialog/Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -16,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 		margin: 'auto',
 		border: 'none',
 	},
-	card: { 
+	card: {
 		border: 'none',
 		padding: '5px',
 	},
@@ -63,33 +64,51 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function LocationCreateModal(props) {
+export default function LocationEditModal(props) {
 	const location = {
+		name: '',
 		address: '',
-		createdBy: -1,
+		modifiedBy: -1,
 		vendorId: -1,
 	};
 
 	const classes = useStyles();
+	const [name, setName] = useState('');
 	const [address, setAddress] = useState('');
 
-	const [errors, setErrors] = useState({ username: false, address: false, phone: false });
+	const fetchData = async () => {
+		getVendorLocation(props.locationId[0]).then(res => {
+			setAddress(res.data.address);
+			setName(res.data.name);
+		});
+	};
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	const [errors, setErrors] = useState({ name: false, address: false});
 
 	const [open, setOpen] = useState(false);
 	const [loaderState, setLoaderState] = useState({ success: false, loading: true });
 
+	const handleNameChange = event => {
+		setName(event.target.value);
+	};
 	const handleAddressChange = event => {
 		setAddress(event.target.value);
 	};
 
 	const validate = () => {
 		var addressError = false;
+		var nameError = false;
 
 		if (address === '') addressError = true;
+		if (name === '') nameError = true;
 
-		setErrors({ address: addressError });
+		setErrors({ address: addressError, name: nameError });
 
 		if (addressError) return false;
+		if (nameError) return false;
 		return true;
 	};
 
@@ -100,11 +119,13 @@ export default function LocationCreateModal(props) {
 
 		if (validData) {
 			setOpen(true);
+			location.name = name;
 			location.address = address;
 
-			location.createdBy = getUserId();
+			location.id = props.locationId[0];
+			location.modifiedBy = getUserId();
 			location.vendorId = props.vendorId;
-			createVendorLocation(location)
+			editVendorLocation(location)
 				.then(res => {
 					setLoaderState({ ...loaderState, loading: false, success: true });
 					setOpen(false);
@@ -120,13 +141,23 @@ export default function LocationCreateModal(props) {
 	return (
 		<div>
 			<div className='container'>
-				<form className={classes.root} onSubmit={handleSubmit}>
+				<form className={classes.root} onSubmit={handleSubmit} >
 					<Card className={classes.card}>
-						<CardHeader align='left' title={'Create B2B Location'}></CardHeader>
+						<CardHeader align='left' title={'Edit B2B Location'}></CardHeader>
 						<CardContent>
 							<Stack direction='row' spacing={2}>
 								<Grid container spacing={2}>
 									<Grid item xs={12}>
+										<TextField
+											className={classes.textField}
+											id='standard-basic'
+											label='Name'
+											variant='standard'
+											value={name}
+											required={true}
+											error={errors.name}
+											onChange={handleNameChange}
+										/>
 										<TextField
 											className={classes.textField}
 											id='standard-basic'
@@ -143,7 +174,7 @@ export default function LocationCreateModal(props) {
 						</CardContent>
 						<CardActions className={classes.cardActions}>
 							<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
-								Create
+								Confirm
 							</Button>
 						</CardActions>
 					</Card>

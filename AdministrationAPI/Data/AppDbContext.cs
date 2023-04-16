@@ -13,6 +13,7 @@ namespace AdministrationAPI.Data
         }
 
         public DbSet<ActivationCode> ActivationCodes { get; set; }
+        public DbSet<TokenValidity> TokenValidities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,6 +27,8 @@ namespace AdministrationAPI.Data
             builder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable("usr_user_tokens"); });
             builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("usr_role_claims"); });
             builder.Entity<ActivationCode>(entity => { entity.ToTable("usr_activation_codes"); });
+            builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
+
 
             ApplySnakeCaseNames(builder);
 
