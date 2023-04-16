@@ -61,7 +61,8 @@ export default function TransactionDetails(arg) {
 						<Button
 							onClick={() => {
 								arg.setDetails(null);
-							}}>
+							}}
+						>
 							Close
 						</Button>
 						<Button
@@ -73,25 +74,26 @@ export default function TransactionDetails(arg) {
 												'/Payment/' +
 												arg.props.recipient.name +
 												'/' +
-												arg.props.transactionPurpose +
+												arg.props.transactionType +
 												'/' +
 												arg.props.amount +
 												'/' +
-												arg.props.recipient.account_number,
+												arg.props.recipient.accountNumber,
 											{ state: { isPopUp: true, isRecipient: true } }
 									  )
 									: navigate(
 											'/payment/' +
 												arg.props.currency +
 												'/Payment/' +
-												arg.props.transaction_purpose +
+												arg.props.transactionType +
 												'/' +
 												arg.props.amount +
 												'/' +
 												arg.props.recipient.phoneNumber,
 											{ state: { isPopUp: true, isPhoneNumber: true } }
 									  );
-							}}>
+							}}
+						>
 							Reuse
 						</Button>
 					</TableCell>
