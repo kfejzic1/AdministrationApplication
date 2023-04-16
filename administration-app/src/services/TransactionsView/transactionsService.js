@@ -57,88 +57,122 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					if (err.response.status == 401) reject(401);
 				});
 		else {
-			sortingOptions = mockSortingOptons;
+			console.log('dada ', JSON.stringify(sortingOptions));
+			/*if (
+						sortingOptions.sortingOrder.slice(sortingOptions.sortingOrder.length - 3, sortingOptions.sortingOrder.length) ==
+						'asc'
+					) {
+						sortingOptions.setAttribute('Ascending', 'true');
+						sortingOptions.setAttribute(
+							'SortingColumn',
+							sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 3)
+						);
+					} else {
+						sortingOptions.setAttribute('Ascending', 'false');
+						sortingOptions.setAttribute(
+							'SortingColumn',
+							sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 4)
+						);
+					}*/
+
 			var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 			if (sortingOptions != null) {
-				if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
-					temp = temp.filter(transaction7 => transaction7.recipient.name?.includes(sortingOptions.Recipient));
+				if (sortingOptions.RecipientNameFilter && sortingOptions.RecipientNameFilter != '') {
+					temp = temp.filter(transaction7 => transaction7.recipient.name?.includes(sortingOptions.RecipientNameFilter));
 				}
-				//console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
+				//console.log('temp=', sortingOptions.RecipientNameFilter, pageNumber, pageSize, JSON.stringify(temp));
 
 				if (sortingOptions.Status && sortingOptions.Status != '') {
-					temp = temp.filter(transaction => transaction.transactionType == sortingOptions.Status);
+					var temp2 = transactions.filter(tr => tr.currency === sortingOptions.Status);
+					temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 				}
 
-				if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
-					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
-				}
-				if (sortingOptions.MaxAmount && sortingOptions.MaxAmount != '') {
-					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+				if (sortingOptions.TransactionTypeFilter && sortingOptions.TransactionTypeFilter != '') {
+					temp = temp.filter(transaction => transaction.TransactionTypeFilter == sortingOptions.TransactionTypeFilter);
 				}
 
-				if (sortingOptions.DateTimeStart && sortingOptions.DateTimeStart.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.date) > new Date(sortingOptions.DateTimeStart));
+				/*if (sortingOptions.Currency && sortingOptions.Currency != '') {
+							temp = temp.filter(transaction => transaction.currency == sortingOptions.Currency);
+						}*/
+
+				if (sortingOptions.AmountStartFilter && sortingOptions.AmountStartFilter != '') {
+					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.AmountStartFilter));
 				}
-				if (sortingOptions.DateTimeEnd && sortingOptions.DateTimeEnd.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.date) < new Date(sortingOptions.DateTimeEnd));
+				if (sortingOptions.AmountEndFilter && sortingOptions.AmountEndFilter != '') {
+					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.AmountEndFilter));
 				}
 
-				if (sortingOptions.SortingOptions && sortingOptions.SortingOptions != '') {
-					if (sortingOptions.SortingOptions == 'DateTime')
-						temp = temp.sort((a, b) => {
-							if (new Date(a.date) - new Date(b.date) > 0) {
-								if (sortingOptions.Ascending) return 1;
-								else return -1;
-							} else {
-								if (!sortingOptions.Ascending) return 1;
-								else return -1;
-							}
-						});
-					if (sortingOptions.SortingOptions == 'Type') {
-						temp = temp.sort((a, b) => {
-							if (a.transaction_type.localeCompare(b.transaction_type) > 0) {
-								if (sortingOptions.Ascending) return 1;
-								else return -1;
-							} else {
-								if (!sortingOptions.Ascending) return 1;
-								else return -1;
-							}
-						});
-					}
-					if (sortingOptions.SortingOptions == 'Currency') {
-						temp = temp.sort((a, b) => {
-							if (a.currency.localeCompare(b.currency) > 0) {
-								if (sortingOptions.Ascending) return 1;
-								else return -1;
-							} else {
-								if (!sortingOptions.Ascending) return 1;
-								else return -1;
-							}
-						});
-					}
-					if (sortingOptions.SortingOptions == 'Amount') {
-						temp = temp.sort((a, b) => {
-							if (a.amount - b.amount > 0) {
-								if (sortingOptions.Ascending) return 1;
-								else return -1;
-							} else {
-								if (!sortingOptions.Ascending) return 1;
-								else return -1;
-							}
-						});
-					}
-					if (sortingOptions.SortingOptions == 'Recipient') {
-						temp = temp.sort((a, b) => {
-							if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
-								if (sortingOptions.Ascending) return 1;
-								else return -1;
-							} else {
-								if (!sortingOptions.Ascending) return 1;
-								else return -1;
-							}
-						});
-					}
+				if (sortingOptions.CreatedAtStartFilter && sortingOptions.CreatedAtStartFilter.length > 14) {
+					temp = temp.filter(
+						transaction => new Date(transaction.createdAt) > new Date(sortingOptions.CreatedAtStartFilter)
+					);
 				}
+				if (sortingOptions.CreatedAtEndFilter && sortingOptions.CreatedAtEndFilter.length > 14) {
+					temp = temp.filter(
+						transaction => new Date(transaction.createdAt) < new Date(sortingOptions.CreatedAtEndFilter)
+					);
+				}
+				/*
+						if (sortingOptions.SortingOrder && sortingOptions.SortingOrder != '') {
+							if (sortingOptions.SortingColumn == 'createdat')
+								temp = temp.sort((a, b) => {
+									if (new Date(a.createdAt) - new Date(b.createdAt) > 0) {
+										if (sortingOptions.Ascending) return 1;
+										else return -1;
+									} else {
+										if (!sortingOptions.Ascending) return 1;
+										else return -1;
+									}
+								});
+							if (sortingOptions.SortingColumn == 'Type') {
+								var temp2 = transactions.sort((a, b) => {
+									if (a.transactionType.localeCompare(b.transactionType) > 0) {
+										if (sortingOptions.Ascending) return 1;
+										else return -1;
+									} else {
+										if (!sortingOptions.Ascending) return 1;
+										else return -1;
+									}
+								});
+								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+							}
+							if (sortingOptions.SortingColumn == 'Currency') {
+								var temp2 = transactions.sort((a, b) => {
+									if (a.currency.localeCompare(b.currency) >= 0) {
+										if (sortingOptions.Ascending) return 1;
+										else return -1;
+									} else {
+										if (!sortingOptions.Ascending) return 1;
+										else return -1;
+									}
+								});
+								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+							}
+							if (sortingOptions.SortingColumn == 'Amount') {
+								var temp2 = transactions.sort((a, b) => {
+									if (a.amount - b.amount > 0) {
+										if (sortingOptions.Ascending) return 1;
+										else return -1;
+									} else {
+										if (!sortingOptions.Ascending) return 1;
+										else return -1;
+									}
+								});
+								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+							}
+							if (sortingOptions.SortingColumn == 'Recipient') {
+								var temp2 = transactions.sort((a, b) => {
+									if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
+										if (sortingOptions.Ascending) return 1;
+										else return -1;
+									} else {
+										if (!sortingOptions.Ascending) return 1;
+										else return -1;
+									}
+								});
+								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+							}
+						}*/
 			}
 			resolveO({ data: temp });
 		}
