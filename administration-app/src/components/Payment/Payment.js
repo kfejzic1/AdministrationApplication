@@ -441,7 +441,7 @@ export const Payment = props => {
 										category: categoryState,
 										recipient: {
 											name: recipientNameState,
-											accountNumber: recipientAccountNumber
+											accountNumber: recipientAccountNumberState
 										}
 									}).then(() => {
 											alert('Payment successfuly sent!');
