@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { sendPaymentInfo } from '../../services/Payment/PaymentServices';
+import { sendPaymentInfoAccount, sendPaymentInfoPhone } from '../../services/Payment/PaymentServices';
 import { useLocation } from 'react-router-dom';
 
-import { TextField, Button, FormControl, Select, MenuItem, Menu, Typography, Box, InputLabel } from '@mui/material';
+import { TextField, Button, FormGroup, Select, MenuItem, Menu, Typography, Box, InputLabel } from '@mui/material';
 
 import Modal from '@mui/material/Modal';
 
@@ -164,7 +164,7 @@ export const Payment = props => {
 						New Transaction
 					</Typography>
 
-					<FormControl
+					<FormGroup
 						sx={{
 							display: 'flex',
 							flexDirection: 'column',
@@ -333,7 +333,7 @@ export const Payment = props => {
 										display: 'inline-block',
 									}}
 								>
-									Transaction:
+									Purpose:
 								</Box>
 							</Box>
 							<Select
@@ -408,21 +408,6 @@ export const Payment = props => {
 							value={categoryState}
 							onChange={event => setCategory(event.target.value)}
 						/>
-					
-						<TextField
-							label='Description'
-							sx={{
-								padding: 'var(--inputPadding)',
-								borderRadius: '5px',
-								border: '0px',
-								width: '70%',
-								fontSize: 'var(--text-size)',
-							}}
-							type='text'
-							placeholder='Write description here'
-							value={descriptionState}
-							onChange={event => setDescription(event.target.value)}
-						/>
 
 						<br />
 
@@ -436,9 +421,8 @@ export const Payment = props => {
 								padding: 'var(--inputPadding)',
 							}}
 							onClick={() => {
-								//const [first, last] = recipientNameState.split(' ');
 								if(isValidAccountNumber && isValidRecipientName) {
-									const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
+									/* const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
 									const regexForSpace = /\s/g
 									const numberOfSpaces = recipientNameState.match(regexForSpace).length
 									let last = '';
@@ -447,49 +431,33 @@ export const Payment = props => {
 									else if(numberOfSpaces == 2)
 										last = lastPrimary + ' ' + lastSecondary
 									else
-										last = lastPrimary
+										last = lastPrimary */ // SAD JE BACKEND ODLUCIO DA SE SALJE FULLNAME, AKO PROMIJENE MISLJENJE SAMO SE ODKOMENTARISE OVAJ KOD JER RADI
 
-									sendPaymentInfo({
+									sendPaymentInfoAccount({
 										amount: parseFloat(transactionAmountState),
 										currency: currencyState,
-										paymentType: typeState,
-										description: descriptionState,
+										transactionType: typeState,
+										transactionPurpose: transactionPurposeState,
 										category: categoryState,
-										recipientAccountNumber: recipientAccountNumberState,
-										recipientFirstName: first,
-										recipientLastName: last
+										recipient: {
+											name: recipientNameState,
+											accountNumber: recipientAccountNumber
+										}
 									}).then(() => {
 											alert('Payment successfuly sent!');
 										}).catch(() => {
 											alert('Failed!');
 										});
 	
-										console.log(
-											'Sta se salje backendu (MOBILNO): ',
-											transactionAmountState,
-											currencyState,
-											typeState,
-											descriptionState,
-											categoryState,
-											recipientAccountNumberState,
-											recipientNameState
-										);
 								} 
 							}}
 						>
 							Submit
 						</Button>
-					</FormControl>
+					</FormGroup>
 				</Box>
 			</Box>
 		}
-
-
-
-
-
-
-
 
 
 
@@ -562,7 +530,7 @@ export const Payment = props => {
 						New Transaction
 					</Typography>
 
-					<FormControl
+					<FormGroup
 						sx={{
 							display: 'flex',
 							flexDirection: 'column',
@@ -733,7 +701,7 @@ export const Payment = props => {
 										display: 'inline-block',
 									}}
 								>
-									Transaction:
+									Purpose:
 								</Box>
 							</Box>
 							
@@ -791,21 +759,6 @@ export const Payment = props => {
 							value={categoryState}
 							onChange={event => setCategory(event.target.value)}
 						/>
-					
-						<TextField
-							label='Description'
-							sx={{
-								padding: 'var(--inputPadding)',
-								borderRadius: '5px',
-								border: '0px',
-								width: '70%',
-								fontSize: 'var(--text-size)',
-							}}
-							type='text'
-							placeholder='Write description here'
-							value={descriptionState}
-							onChange={event => setDescription(event.target.value)}
-						/>
 
 						<br />
 
@@ -821,34 +774,26 @@ export const Payment = props => {
 							onClick={() => {
 								
 								if(isValidPhoneNumber) {
-									sendPaymentInfo({
+									sendPaymentInfoPhone({
 										amount: parseFloat(transactionAmountState),
 										currency: currencyState,
-										paymentType: typeState,
-										description: descriptionState,
+										transactionType: typeState,
+										transactionPurpose: transactionPurposeState,
 										category: categoryState,
-										phoneNumber: phoneNumberState
+										recipientByPhone: {
+											phoneNumber: phoneNumberState
+										}
 									}).then(() => {
 											alert('Payment successfuly sent!');
 										}).catch(() => {
 											alert('Failed!');
 										});
-									
-									console.log(
-											'Sta se salje backendu (NA RACUN): ',
-											transactionAmountState,
-											currencyState,
-											typeState,
-											descriptionState,
-											categoryState,
-											phoneNumberState
-									);
 								}
 							}}
 						>
 							Submit
 						</Button>
-					</FormControl>
+					</FormGroup>
 				</Box>
 			</Box>
 		}
