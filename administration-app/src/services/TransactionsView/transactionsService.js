@@ -133,6 +133,35 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 	});
 }
 
+export function getGroupTransactions(group, mock) {
+	return new Promise((resolve, reject) => {
+		if (!mock)
+			axios(
+				env.ANDROID_API_ENV.url +
+					'/api/Transaction/GroupTransactionsBy' +
+					group +
+					'?token=' +
+					localStorage.getItem('token'),
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Acess-Control-Allow-Origin': '*',
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					},
+				}
+			)
+				.then(function (response) {
+					resolve(response);
+				})
+				.catch(function (response) {
+					//if (err.response.status === 401) navigate('/login');
+					reject(401);
+				});
+		else resolve({ data: transactions.filter(a => a.id == 1)[0] });
+	});
+}
+
 export function getTransactionDetails(id, mock) {
 	return new Promise((resolve, reject) => {
 		if (!mock)
@@ -161,6 +190,7 @@ export function getTransactionDetails(id, mock) {
 	});
 	*/
 }
+
 export function parseDate(date) {
 	const inputDate = new Date(date);
 

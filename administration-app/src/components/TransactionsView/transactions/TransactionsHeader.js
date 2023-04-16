@@ -285,8 +285,8 @@ export default function TransactionsListHeader(arg) {
 							<MenuItem value=''>
 								<em>None</em>
 							</MenuItem>
-							<MenuItem value='Recipient'>Recipient</MenuItem>
-							<MenuItem value='Date'>Date</MenuItem>
+							<MenuItem value='Currency'>Currency</MenuItem>
+							<MenuItem value='Type'>Type</MenuItem>
 						</Select>
 					</FormControl>
 				</TableCell>

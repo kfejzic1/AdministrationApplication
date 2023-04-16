@@ -1,4 +1,4 @@
-import { getTransactions } from '../../../services/TransactionsView/transactionsService';
+import { getGroupTransactions, getTransactions } from '../../../services/TransactionsView/transactionsService';
 import Transaction from './Transaction';
 import { useState, useEffect } from 'react';
 import TransactionDetails from './TransactionDetails';
@@ -59,42 +59,47 @@ export const TransactionsList = arg => {
 			setCounter(1);
 			tempCounter = 1;
 		}
-		getTransactions(tempCounter, 15, filterOptions, mock)
-			.then(transactions1 => {
-				if (transactions1.data.length == 0 && tempCounter != 1) {
-					setHasMore(false);
-					setIsLoading(false);
-				} else {
-					//console.log('No tran2sactions');
-					var temp1 = [...transactionsRaw, ...transactions1.data];
-					if (transactions1.data.length == 0) temp1 = transactions1.data;
-					if ('clear-load' == a) {
-						temp1 = transactions1.data;
-					}
-					//console.log(transactions1.data, 'tempkj');
-					setTransactionsRaw(temp1);
-					var transactionsdata = temp1.map((item, index) => (
-						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
-					));
-					if (groupBy != '') {
-						var transactionsdata = temp1.map((item, index) => (
-							<Group key={item.id} setDetails={setDetails} temp1={temp1}></Group>
-						));
-					}
-					setTransactions(transactionsdata);
-					setHasMore(true);
-					setCounter(counter + 1);
-					setIsLoading(false);
-				}
-			})
-			.catch(e => {
-				if (e == 401 && !alertShowing) {
-					setAlertShowing(true);
-				} else {
-					setHasMore(false);
-					setIsLoading(false);
-				}
+		if (groupBy != '') {
+			getGroupTransactions(groupBy, mock).then(groups => {
+				console.log('groupe=', JSON.stringify(groups));
 			});
+		} else
+			getTransactions(tempCounter, 15, filterOptions, mock)
+				.then(transactions1 => {
+					if (transactions1.data.length == 0 && tempCounter != 1) {
+						setHasMore(false);
+						setIsLoading(false);
+					} else {
+						//console.log('No tran2sactions');
+						var temp1 = [...transactionsRaw, ...transactions1.data];
+						if (transactions1.data.length == 0) temp1 = transactions1.data;
+						if ('clear-load' == a) {
+							temp1 = transactions1.data;
+						}
+						//console.log(transactions1.data, 'tempkj');
+						setTransactionsRaw(temp1);
+						var transactionsdata = temp1.map((item, index) => (
+							<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
+						));
+						if (groupBy != '') {
+							var transactionsdata = temp1.map((item, index) => (
+								<Group key={item.id} setDetails={setDetails} temp1={temp1}></Group>
+							));
+						}
+						setTransactions(transactionsdata);
+						setHasMore(true);
+						setCounter(counter + 1);
+						setIsLoading(false);
+					}
+				})
+				.catch(e => {
+					if (e == 401 && !alertShowing) {
+						setAlertShowing(true);
+					} else {
+						setHasMore(false);
+						setIsLoading(false);
+					}
+				});
 	}
 
 	function handleScroll(e) {
