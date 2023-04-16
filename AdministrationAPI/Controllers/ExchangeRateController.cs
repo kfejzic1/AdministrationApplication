@@ -1,15 +1,18 @@
 ﻿using AdministrationAPI.Contracts.Requests.ExchangeRates;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public class ExchangeRateController : ControllerBase
     {
 
@@ -23,7 +26,23 @@ namespace AdministrationAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllExchangeRates()
         {
-            return Ok(await _exchangeRateService.GetExchangeRates());
+            var exchangeRates = await _exchangeRateService.GetExchangeRates();
+
+            ICollection<ExchangeRateRepsonse> exchangeRateRepsonse = new List<ExchangeRateRepsonse>();
+
+            foreach (var er in exchangeRates)
+            {
+                exchangeRateRepsonse.Add(new ExchangeRateRepsonse
+                {
+                    InputCurrency = er.InputCurrency.Country + " (" + er.InputCurrency.Name + ")",
+                    OutputCurrency = er.OutputCurrency.Country + " (" + er.OutputCurrency.Name + ")",
+                    Rate = er.Rate,
+                    StartDate = er.StartDate,
+                    EndDate = er.EndDate
+                });
+            }
+
+            return Ok(exchangeRateRepsonse);
         }
 
         [HttpGet("currency")]

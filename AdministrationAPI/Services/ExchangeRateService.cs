@@ -58,7 +58,7 @@ namespace AdministrationAPI.Services
 
         public async Task<ICollection<ExchangeRate>> GetExchangeRates()
         {
-            return await _context.ExchangeRates.ToListAsync();
+            return await _context.ExchangeRates.Include(er => er.InputCurrency).Include(er => er.OutputCurrency).ToListAsync();
         }
 
         public async Task<ICollection<Currency>> GetCurrencies()
