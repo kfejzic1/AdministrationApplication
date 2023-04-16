@@ -77,7 +77,9 @@ export const TransactionsList = arg => {
 						<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 					));
 					if (groupBy != '') {
-						var transactionsdata = temp1.map((item, index) => <Group setDetails={setDetails} temp1={temp1}></Group>);
+						var transactionsdata = temp1.map((item, index) => (
+							<Group key={item.id} setDetails={setDetails} temp1={temp1}></Group>
+						));
 					}
 					setTransactions(transactionsdata);
 					setHasMore(true);
@@ -111,7 +113,7 @@ export const TransactionsList = arg => {
 			},
 		},
 	});
-
+	console.log('transactionLise ', groupBy);
 	return (
 		<Box>
 			<ThemeProvider theme={theme}>
@@ -145,6 +147,7 @@ export const TransactionsList = arg => {
 									<Table>
 										<TransactionsListHeader
 											setGroupBy={setGroupBy}
+											groupBy={groupBy}
 											setFilterOptions={setFilterOptions}
 										></TransactionsListHeader>
 										<TableBody>{transactions}</TableBody>

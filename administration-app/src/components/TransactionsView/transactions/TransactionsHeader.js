@@ -25,11 +25,15 @@ export default function TransactionsListHeader(arg) {
 	const [typeFilter, setTypeFilter] = useState('');
 	const [amountMin, setAmountMin] = useState('');
 	const [amountMax, setAmountMax] = useState('');
-
+	const [groupByValue, setGroupByValue] = useState(arg.groupBy);
+	console.log('header ', arg.groupBy);
 	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
-
+	useEffect(() => {
+		setGroupByValue(arg.groupBy);
+		console.log('group by effect', arg.groupBy);
+	}, [arg.groupBy]);
 	const updateFilterOptions = () => {
 		arg.setFilterOptions({
 			Recipient: recipientFilter,
@@ -252,15 +256,37 @@ export default function TransactionsListHeader(arg) {
 							labelId='filter-status-label'
 							id='filter-status'
 							displayEmpty
+							value={arg.groupBy}
 							onChange={e => {
 								arg.setGroupBy(e.target.value);
+								setGroupByValue(e.target.value);
+								//restart filter
+								setRecipientFilter('');
+								setDateStartFilter(null);
+								setDateEndFilter(null);
+								setAmountMin('');
+								setAmountMax('');
+								setTypeFilter('');
+								setCurrencyFilter('');
+								setSortingDirection('asc');
+								setSortingColumn('DateTime');
+								arg.setFilterOptions({
+									Recipient: '',
+									Status: '',
+									DateTimeStart: '',
+									DateTimeEnd: '',
+									MinAmount: '',
+									MaxAmount: '',
+									SortingOptions: 'DateTime',
+									Ascending: 'asc',
+								});
 							}}
 						>
 							<MenuItem value=''>
 								<em>None</em>
 							</MenuItem>
-							<MenuItem value='EUR'>Recipient</MenuItem>
-							<MenuItem value='USD'>Date</MenuItem>
+							<MenuItem value='Recipient'>Recipient</MenuItem>
+							<MenuItem value='Date'>Date</MenuItem>
 						</Select>
 					</FormControl>
 				</TableCell>
@@ -391,13 +417,18 @@ export default function TransactionsListHeader(arg) {
 									(parseInt(amountMin) == '' && parseInt(amountMax) !== '')
 								)
 									alert('Invalid amount filter value!');
-								else updateFilterOptions();
+								else {
+									updateFilterOptions();
+									setGroupByValue('');
+									arg.setGroupBy('');
+								}
 							}}
 						>
 							Filter
 						</Button>
 						<Button
 							onClick={() => {
+								//restart filter
 								setRecipientFilter('');
 								setDateStartFilter(null);
 								setDateEndFilter(null);
@@ -417,6 +448,8 @@ export default function TransactionsListHeader(arg) {
 									SortingOptions: 'DateTime',
 									Ascending: 'asc',
 								});
+								arg.setGroupBy('');
+								setGroupByValue('');
 							}}
 						>
 							Restart
