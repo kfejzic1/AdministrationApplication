@@ -18,14 +18,16 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 		}
 
 		if (sortingOptions.RecipientNameFilter === '') delete sortingOptions.RecipientNameFilter;
-		if (sortingOptions.CreatedAtEndFilter === '') delete sortingOptions.CreatedAtEndFilter;
+		if (sortingOptions.CreatedAtEndFilter === '' || sortingOptions.CreatedAtEndFilter === null)
+			delete sortingOptions.CreatedAtEndFilter;
 		else if (sortingOptions.CreatedAtEndFilter)
 			sortingOptions.CreatedAtEndFilter = JSON.stringify(sortingOptions.CreatedAtEndFilter).replaceAll('"', '');
-		if (sortingOptions.CreatedAtStartFilter === '') delete sortingOptions.CreatedAtStartFilter;
+		if (sortingOptions.CreatedAtStartFilter === '' || sortingOptions.CreatedAtStartFilter === null)
+			delete sortingOptions.CreatedAtStartFilter;
 		else if (sortingOptions.CreatedAtStartFilter)
 			sortingOptions.CreatedAtStartFilter = JSON.stringify(sortingOptions.CreatedAtStartFilter).replaceAll('"', '');
 		if (sortingOptions.TransactionTypeFilter === '') delete sortingOptions.TransactionTypeFilter;
-		if (sortingOptions.AmountEndFiltert === '') delete sortingOptions.AmountEndFiltert;
+		if (sortingOptions.AmountEndFilter === '') delete sortingOptions.AmountEndFilter;
 		if (sortingOptions.CurrencyFilter === '') delete sortingOptions.CurrencyFilter;
 	}
 	return new Promise(function (resolveO, reject) {
@@ -58,23 +60,17 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 				});
 		else {
 			console.log('dada ', JSON.stringify(sortingOptions));
-			/*if (
-						sortingOptions.sortingOrder.slice(sortingOptions.sortingOrder.length - 3, sortingOptions.sortingOrder.length) ==
-						'asc'
-					) {
-						sortingOptions.setAttribute('Ascending', 'true');
-						sortingOptions.setAttribute(
-							'SortingColumn',
-							sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 3)
-						);
-					} else {
-						sortingOptions.setAttribute('Ascending', 'false');
-						sortingOptions.setAttribute(
-							'SortingColumn',
-							sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 4)
-						);
-					}*/
-
+			if (
+				sortingOptions.sortingOrder.slice(sortingOptions.sortingOrder.length - 3, sortingOptions.sortingOrder.length) ==
+				'asc'
+			) {
+				sortingOptions.Ascending = true;
+				sortingOptions.SortingColumn = sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 3);
+			} else {
+				sortingOptions.Ascending = false;
+				sortingOptions.SortingColumn = sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 4);
+			}
+			console.log(sortingOptions.SortingColumn, 'dafdafdfdasf');
 			var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 			if (sortingOptions != null) {
 				if (sortingOptions.RecipientNameFilter && sortingOptions.RecipientNameFilter != '') {
@@ -112,67 +108,67 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 						transaction => new Date(transaction.createdAt) < new Date(sortingOptions.CreatedAtEndFilter)
 					);
 				}
-				/*
-						if (sortingOptions.SortingOrder && sortingOptions.SortingOrder != '') {
-							if (sortingOptions.SortingColumn == 'createdat')
-								temp = temp.sort((a, b) => {
-									if (new Date(a.createdAt) - new Date(b.createdAt) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-							if (sortingOptions.SortingColumn == 'Type') {
-								var temp2 = transactions.sort((a, b) => {
-									if (a.transactionType.localeCompare(b.transactionType) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+
+				if (sortingOptions.SortingOrder && sortingOptions.SortingOrder != '') {
+					if (sortingOptions.SortingColumn == 'createdat')
+						temp = temp.sort((a, b) => {
+							if (new Date(a.createdAt) - new Date(b.createdAt) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
 							}
-							if (sortingOptions.SortingColumn == 'Currency') {
-								var temp2 = transactions.sort((a, b) => {
-									if (a.currency.localeCompare(b.currency) >= 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+						});
+					if (sortingOptions.SortingColumn == 'Type') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.transactionType.localeCompare(b.transactionType) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
 							}
-							if (sortingOptions.SortingColumn == 'Amount') {
-								var temp2 = transactions.sort((a, b) => {
-									if (a.amount - b.amount > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					}
+					if (sortingOptions.SortingColumn == 'Currency') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.currency.localeCompare(b.currency) >= 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
 							}
-							if (sortingOptions.SortingColumn == 'Recipient') {
-								var temp2 = transactions.sort((a, b) => {
-									if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
-										if (sortingOptions.Ascending) return 1;
-										else return -1;
-									} else {
-										if (!sortingOptions.Ascending) return 1;
-										else return -1;
-									}
-								});
-								temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					}
+					if (sortingOptions.SortingColumn == 'Amount') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.amount - b.amount > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
 							}
-						}*/
+						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					}
+					if (sortingOptions.SortingColumn == 'Recipient') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					}
+				}
 			}
 			resolveO({ data: temp });
 		}
@@ -224,11 +220,11 @@ export function getGroupTransactions(group, mock) {
 				resolve(result);
 			}
 			if (group == 'Type') {
-				var types = ['C2C', 'B2B', 'B2C'];
+				var types = ['C2C', 'B2B', 'C2B'];
 				var result = [];
 				types.forEach(ty => {
 					var sum = 0;
-					var trans = transactions.filter(a => a.transaction_purpose == ty);
+					var trans = transactions.filter(a => a.transactionType == ty);
 					trans.forEach(t => {
 						sum += t.amount;
 					});

@@ -19,7 +19,7 @@ export const transactions = [
 			phoneNumber: '987-654-3210',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 2,
@@ -85,7 +85,7 @@ export const transactions = [
 			phoneNumber: '876-543-2109',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 5,
@@ -151,7 +151,7 @@ export const transactions = [
 			phoneNumber: '987-654-3210',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 8,
@@ -173,7 +173,7 @@ export const transactions = [
 			phoneNumber: '210-987-6543',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 9,
@@ -217,7 +217,7 @@ export const transactions = [
 			phoneNumber: '432-109-8765',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 11,
@@ -239,7 +239,7 @@ export const transactions = [
 			phoneNumber: '432-109-8765',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 12,
@@ -261,7 +261,7 @@ export const transactions = [
 			phoneNumber: '654-321-0987',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 13,
@@ -283,7 +283,7 @@ export const transactions = [
 			phoneNumber: '876-543-2109',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 14,
@@ -305,7 +305,7 @@ export const transactions = [
 			phoneNumber: '210-987-6543',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 15,
@@ -327,7 +327,7 @@ export const transactions = [
 			phoneNumber: '654-321-0987',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 16,
@@ -349,7 +349,7 @@ export const transactions = [
 			phoneNumber: '432-109-8765',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 
 	{
@@ -372,7 +372,7 @@ export const transactions = [
 			phoneNumber: '876-543-2109',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 18,
@@ -416,7 +416,7 @@ export const transactions = [
 			phoneNumber: '567-890-1234',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 20,
@@ -438,7 +438,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 21,
@@ -460,7 +460,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 22,
@@ -482,7 +482,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 23,
@@ -504,7 +504,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 24,
@@ -526,7 +526,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 25,
@@ -548,7 +548,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 26,
@@ -570,7 +570,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 27,
@@ -592,7 +592,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 28,
@@ -614,7 +614,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 29,
@@ -658,7 +658,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 31,
@@ -680,7 +680,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 32,
@@ -702,7 +702,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 33,
@@ -724,7 +724,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 34,
@@ -746,7 +746,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 35,
@@ -768,7 +768,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 36,
@@ -790,7 +790,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 37,
@@ -812,7 +812,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 38,
@@ -834,7 +834,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 39,
@@ -856,7 +856,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 40,
@@ -878,7 +878,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 41,
@@ -900,7 +900,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 42,
@@ -922,7 +922,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 43,
@@ -944,7 +944,7 @@ export const transactions = [
 			phoneNumber: '123-456-7890',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 44,
@@ -966,7 +966,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 45,
@@ -988,7 +988,7 @@ export const transactions = [
 			phoneNumber: '345-678-9012',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 46,
@@ -1010,7 +1010,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 47,
@@ -1032,7 +1032,7 @@ export const transactions = [
 			phoneNumber: '567-890-1234',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 48,
@@ -1054,7 +1054,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 49,
@@ -1076,7 +1076,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 50,
@@ -1098,7 +1098,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 51,
@@ -1120,7 +1120,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 52,
@@ -1142,7 +1142,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 53,
@@ -1164,7 +1164,7 @@ export const transactions = [
 			phoneNumber: '123-456-7890',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 54,
@@ -1208,7 +1208,7 @@ export const transactions = [
 			phoneNumber: '345-678-9012',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 56,
@@ -1230,7 +1230,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 57,
@@ -1252,7 +1252,7 @@ export const transactions = [
 			phoneNumber: '567-890-1234',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 58,
@@ -1274,7 +1274,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 59,
@@ -1296,7 +1296,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 60,
@@ -1318,7 +1318,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 61,
@@ -1340,7 +1340,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 62,
@@ -1362,7 +1362,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 63,
@@ -1384,7 +1384,7 @@ export const transactions = [
 			phoneNumber: '123-456-7890',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 64,
@@ -1406,7 +1406,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 65,
@@ -1428,7 +1428,7 @@ export const transactions = [
 			phoneNumber: '345-678-9012',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 66,
@@ -1450,7 +1450,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 67,
@@ -1472,7 +1472,7 @@ export const transactions = [
 			phoneNumber: '567-890-1234',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 68,
@@ -1494,7 +1494,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 69,
@@ -1516,7 +1516,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 70,
@@ -1538,7 +1538,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 71,
@@ -1560,7 +1560,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 72,
@@ -1582,7 +1582,7 @@ export const transactions = [
 			phoneNumber: '012-345-6789',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 73,
@@ -1604,7 +1604,7 @@ export const transactions = [
 			phoneNumber: '123-456-7890',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 74,
@@ -1626,7 +1626,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 75,
@@ -1648,7 +1648,7 @@ export const transactions = [
 			phoneNumber: '345-678-9012',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 76,
@@ -1670,7 +1670,7 @@ export const transactions = [
 			phoneNumber: '456-789-0123',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 77,
@@ -1692,7 +1692,7 @@ export const transactions = [
 			phoneNumber: '567-890-1234',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 78,
@@ -1714,7 +1714,7 @@ export const transactions = [
 			phoneNumber: '678-901-2345',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 79,
@@ -1736,7 +1736,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 80,
@@ -1758,7 +1758,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 81,
@@ -1780,7 +1780,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 82,
@@ -1802,7 +1802,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 83,
@@ -1824,7 +1824,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 84,
@@ -1846,7 +1846,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 85,
@@ -1868,7 +1868,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 86,
@@ -1890,7 +1890,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 87,
@@ -1912,7 +1912,7 @@ export const transactions = [
 			phoneNumber: '789-012-3456',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 88,
@@ -1934,7 +1934,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 89,
@@ -1956,7 +1956,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 90,
@@ -1978,7 +1978,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 91,
@@ -2000,7 +2000,7 @@ export const transactions = [
 			phoneNumber: '901-234-5678',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 92,
@@ -2022,7 +2022,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 93,
@@ -2044,7 +2044,7 @@ export const transactions = [
 			phoneNumber: '234-567-8901',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 94,
@@ -2066,7 +2066,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 95,
@@ -2088,7 +2088,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 96,
@@ -2110,7 +2110,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 97,
@@ -2132,7 +2132,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 98,
@@ -2154,7 +2154,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 99,
@@ -2176,7 +2176,7 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 	{
 		transactionId: 100,
@@ -2198,6 +2198,6 @@ export const transactions = [
 			phoneNumber: '890-123-4567',
 			type: 'company',
 		},
-		transactionType: 'B2C',
+		transactionType: 'C2B',
 	},
 ];
