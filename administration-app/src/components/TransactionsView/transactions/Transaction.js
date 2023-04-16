@@ -9,7 +9,7 @@ export default function Transaction(arg) {
 					{parseDate(arg.prop.createdAt)}
 				</TableCell>
 				<TableCell sx={{ width: '20%' }} align='center'>
-					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phone_number}
+					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phoneNumber}
 				</TableCell>
 				<TableCell sx={{ width: '20%' }} align='center'>
 					{arg.prop.amount}
@@ -36,7 +36,7 @@ export default function Transaction(arg) {
 				<TableCell></TableCell>
 				<TableCell align='center'>{parseDate(arg.prop.createdAt)}</TableCell>
 				<TableCell align='center'>
-					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phone_number}
+					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phoneNumber}
 				</TableCell>
 				<TableCell align='center'>{arg.prop.amount}</TableCell>
 				<TableCell align='center'>{arg.prop.currency}</TableCell>

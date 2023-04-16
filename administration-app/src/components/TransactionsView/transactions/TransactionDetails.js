@@ -48,12 +48,12 @@ export default function TransactionDetails(arg) {
 					<TableCell align='center'>{arg.props.transactionId}</TableCell>
 					<TableCell align='center'>{parseDate(arg.props.createdAt)}</TableCell>
 					<TableCell align='center'>
-						{arg.props.recipient.name ? arg.props.recipient.name : arg.props.recipient.phone_number}
+						{arg.props.recipient.name ? arg.props.recipient.name : arg.props.recipient.phoneNumber}
 					</TableCell>
 					<TableCell align='center'>{arg.props.amount}</TableCell>
 					<TableCell align='center'>{arg.props.currency}</TableCell>
 					<TableCell align='center'>
-						{arg.props.sender.name ? arg.props.sender.name : arg.props.sender.phone_number}
+						{arg.props.sender.name ? arg.props.sender.name : arg.props.sender.phoneNumber}
 					</TableCell>
 					<TableCell align='center'>{arg.props.transactionType}</TableCell>
 					<TableCell align='center'>{arg.props.transactionPurpose}</TableCell>
@@ -61,8 +61,7 @@ export default function TransactionDetails(arg) {
 						<Button
 							onClick={() => {
 								arg.setDetails(null);
-							}}
-						>
+							}}>
 							Close
 						</Button>
 						<Button
@@ -89,11 +88,10 @@ export default function TransactionDetails(arg) {
 												'/' +
 												arg.props.amount +
 												'/' +
-												arg.props.recipient.phone_number,
+												arg.props.recipient.phoneNumber,
 											{ state: { isPopUp: true, isPhoneNumber: true } }
 									  );
-							}}
-						>
+							}}>
 							Reuse
 						</Button>
 					</TableCell>
