@@ -3,7 +3,7 @@ import { env } from '../../config/env';
 
 export function sendPaymentInfoAccount(info) {
 	console.log('Pristupilo se servisu slanja za RACUN:', JSON.stringify(info));
-	return axios(env.ANDROID_API_ENV.url + '/Transaction/CreateTransaction?token=' + localStorage.getItem('token'), {
+	return axios(env.ANDROID_API_ENV.url + '/api/Transaction/CreateTransaction?token=' + localStorage.getItem('token'), {
 		method: 'POST',
 		data: info,
 		headers: {
@@ -15,7 +15,7 @@ export function sendPaymentInfoAccount(info) {
 
 export function sendPaymentInfoPhone(info) {
 	console.log('Pristupilo se servisu slanja za TELEFON:', JSON.stringify(info));
-	return axios(env.ANDROID_API_ENV.url + '/Transaction/CreateTransactionRecipientPhone?token=' + localStorage.getItem('token'), {
+	return axios(env.ANDROID_API_ENV.url + '/api/Transaction/CreateTransactionRecipientPhone?token=' + localStorage.getItem('token'), {
 		method: 'POST',
 		data: info,
 		headers: {
