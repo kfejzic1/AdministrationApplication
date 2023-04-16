@@ -178,11 +178,11 @@ export function getGroupTransactions(group, mock) {
 				resolve(result);
 			}
 			if (group == 'Type') {
-				var types = ['c2c', 'b2b', 'b2c'];
+				var types = ['C2C', 'B2B', 'B2C'];
 				var result = [];
 				types.forEach(ty => {
 					var sum = 0;
-					var trans = transactions.filter(a => a.type.toLowerCase() == ty);
+					var trans = transactions.filter(a => a.transaction_purpose == ty);
 					trans.forEach(t => {
 						sum += t.amount;
 					});
