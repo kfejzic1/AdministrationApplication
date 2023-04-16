@@ -24,8 +24,7 @@ export default function Transaction(arg) {
 					<Button
 						onClick={() => {
 							arg.setDetails(arg.prop);
-						}}
-					>
+						}}>
 						Details
 					</Button>
 				</TableCell>
@@ -35,7 +34,7 @@ export default function Transaction(arg) {
 		return (
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell></TableCell>
-				<TableCell align='center'>{parseDate(arg.prop.date)}</TableCell>
+				<TableCell align='center'>{parseDate(arg.prop.createdAt)}</TableCell>
 				<TableCell align='center'>
 					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phone_number}
 				</TableCell>
@@ -46,8 +45,7 @@ export default function Transaction(arg) {
 					<Button
 						onClick={() => {
 							arg.setDetails(arg.prop);
-						}}
-					>
+						}}>
 						Details
 					</Button>
 				</TableCell>
