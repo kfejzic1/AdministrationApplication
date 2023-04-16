@@ -109,7 +109,8 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 					);
 				}
 
-				if (sortingOptions.SortingOrder && sortingOptions.SortingOrder != '') {
+				if (sortingOptions.SortingColumn && sortingOptions.SortingColumn != '') {
+					console.log('radiiiiiiiiiiiiiii');
 					if (sortingOptions.SortingColumn == 'createdat')
 						temp = temp.sort((a, b) => {
 							if (new Date(a.createdAt) - new Date(b.createdAt) > 0) {
@@ -144,7 +145,9 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 						});
 						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 					}
+
 					if (sortingOptions.SortingColumn == 'Amount') {
+						console.log('u amonu tsam 1111111111111111111111	');
 						var temp2 = transactions.sort((a, b) => {
 							if (a.amount - b.amount > 0) {
 								if (sortingOptions.Ascending) return 1;
@@ -155,7 +158,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 							}
 						});
 						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-					}
+					} else console.log('u 2amonu tsam 1111111111111111111111	');
 					if (sortingOptions.SortingColumn == 'Recipient') {
 						var temp2 = transactions.sort((a, b) => {
 							if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
@@ -168,7 +171,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 						});
 						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 					}
-				}
+				} else console.log('ne radiiiiiiiiiii');
 			}
 			resolveO({ data: temp });
 		}
