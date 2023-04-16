@@ -152,7 +152,7 @@ export function getGroupTransactions(group, mock) {
 				}
 			)
 				.then(function (response) {
-					resolve(response);
+					resolve(response.data);
 				})
 				.catch(function (response) {
 					//if (err.response.status === 401) navigate('/login');

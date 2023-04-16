@@ -6,7 +6,7 @@ export default function Transaction(arg) {
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell sx={{ width: '11%' }}></TableCell>
 				<TableCell sx={{ width: '20%' }} align='center'>
-					{parseDate(arg.prop.date)}
+					{parseDate(arg.prop.createdAt)}
 				</TableCell>
 				<TableCell sx={{ width: '20%' }} align='center'>
 					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phone_number}
@@ -18,7 +18,7 @@ export default function Transaction(arg) {
 					{arg.prop.currency}
 				</TableCell>
 				<TableCell sx={{ width: '13%' }} align='center'>
-					{arg.prop.transaction_type}
+					{arg.prop.transactionType}
 				</TableCell>
 				<TableCell sx={{ width: '7%' }} align='center'>
 					<Button

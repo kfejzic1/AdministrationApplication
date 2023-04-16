@@ -15,11 +15,11 @@ export default function Group(arg) {
 		<React.Fragment>
 			<TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 				<TableCell align='left' colSpan={5}>
-					<Typography variant='subtitle2'>Currency: USD</Typography>
+					<Typography variant='subtitle2'>Currency: {arg.data.keyValue}</Typography>
 				</TableCell>
 				<TableCell align='right' sx={{ border: 0 }}>
-					<Typography variant='subtitle2'>Amount: 300</Typography>
-					<Typography variant='subtitle2'> Count: 2</Typography>
+					<Typography variant='subtitle2'>Amount: {arg.data.totalAmount}</Typography>
+					<Typography variant='subtitle2'> Count: {arg.data.numberOfTransactions}</Typography>
 				</TableCell>
 				<TableCell align='center'>
 					<IconButton aria-label='expand row' size='small' onClick={() => setOpen(!open)}>
@@ -32,7 +32,7 @@ export default function Group(arg) {
 					<Collapse in={open} timeout='auto' unmountOnExit>
 						<Table size='small' aria-label='purchases'>
 							<TableBody>
-								{arg.temp1.map((item, index) => (
+								{arg.data.transactions.map((item, index) => (
 									<Transaction
 										variant='group'
 										key={item.id}

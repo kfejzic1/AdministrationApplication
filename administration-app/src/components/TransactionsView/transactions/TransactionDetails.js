@@ -46,7 +46,7 @@ export default function TransactionDetails(arg) {
 				</TableHead>
 				<TableRow>
 					<TableCell align='center'>{arg.props.id}</TableCell>
-					<TableCell align='center'>{parseDate(props.date)}</TableCell>
+					<TableCell align='center'>{parseDate(arg.props.createdAt)}</TableCell>
 					<TableCell align='center'>
 						{arg.props.recipient.name ? arg.props.recipient.name : arg.props.recipient.phone_number}
 					</TableCell>
@@ -55,38 +55,45 @@ export default function TransactionDetails(arg) {
 					<TableCell align='center'>
 						{arg.props.sender.name ? arg.props.sender.name : arg.props.sender.phone_number}
 					</TableCell>
-					<TableCell align='center'>{arg.props.transaction_type}</TableCell>
-					<TableCell align='center'>{arg.props.transaction_purpose}</TableCell>
+					<TableCell align='center'>{arg.props.transactionType}</TableCell>
+					<TableCell align='center'>{arg.props.transactionPurpose}</TableCell>
 					<TableCell sx={{ justifyContent: 'space-around', display: 'flex', flexDirection: 'row' }}>
 						<Button
 							onClick={() => {
 								arg.setDetails(null);
-							}}>
+							}}
+						>
 							Close
 						</Button>
 						<Button
 							onClick={() => {
-								arg.props.recipient.name ? 
-								navigate(
-									'/payment/'  + arg.props.currency + '/Payment/' + 
-										arg.props.recipient.name +
-										'/' +
-										arg.props.transaction_purpose +
-										'/' +
-										arg.props.amount +
-										'/' +
-										arg.props.recipient.account_number,
-										{ state: { isPopUp: true, isRecipient: true } }
-								) : navigate(
-									'/payment/'  + arg.props.currency + '/Payment/' + 
-									arg.props.transaction_purpose +
-									'/' +
-									arg.props.amount +
-									'/' +
-									arg.props.recipient.phone_number,
-									{ state: { isPopUp: true, isPhoneNumber: true } } 
-								)
-							}}>
+								arg.props.recipient.name
+									? navigate(
+											'/payment/' +
+												arg.props.currency +
+												'/Payment/' +
+												arg.props.recipient.name +
+												'/' +
+												arg.props.transactionPurpose +
+												'/' +
+												arg.props.amount +
+												'/' +
+												arg.props.recipient.account_number,
+											{ state: { isPopUp: true, isRecipient: true } }
+									  )
+									: navigate(
+											'/payment/' +
+												arg.props.currency +
+												'/Payment/' +
+												arg.props.transaction_purpose +
+												'/' +
+												arg.props.amount +
+												'/' +
+												arg.props.recipient.phone_number,
+											{ state: { isPopUp: true, isPhoneNumber: true } }
+									  );
+							}}
+						>
 							Reuse
 						</Button>
 					</TableCell>

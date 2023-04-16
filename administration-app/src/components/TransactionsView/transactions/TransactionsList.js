@@ -62,6 +62,13 @@ export const TransactionsList = arg => {
 		if (groupBy != '') {
 			getGroupTransactions(groupBy, mock).then(groups => {
 				console.log('groupe=', JSON.stringify(groups));
+				var transactionsdata = groups.map((item, index) => (
+					<Group key={item.keyValue} setDetails={setDetails} data={item}></Group>
+				));
+				setTransactions(transactionsdata);
+				setHasMore(true);
+				setCounter(counter + 1);
+				setIsLoading(false);
 			});
 		} else
 			getTransactions(tempCounter, 15, filterOptions, mock)
@@ -81,11 +88,7 @@ export const TransactionsList = arg => {
 						var transactionsdata = temp1.map((item, index) => (
 							<Transaction key={item.id} setDetails={setDetails} index={index} prop={item}></Transaction>
 						));
-						if (groupBy != '') {
-							var transactionsdata = temp1.map((item, index) => (
-								<Group key={item.id} setDetails={setDetails} temp1={temp1}></Group>
-							));
-						}
+
 						setTransactions(transactionsdata);
 						setHasMore(true);
 						setCounter(counter + 1);
