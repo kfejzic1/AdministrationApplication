@@ -33,6 +33,7 @@ namespace AdministrationAPI.Controllers
             {
                 exchangeRateRepsonse.Add(new ExchangeRateRepsonse
                 {
+                    Id = er.Id,
                     InputCurrency = er.InputCurrency.Country + " (" + er.InputCurrency.Name + ")",
                     OutputCurrency = er.OutputCurrency.Country + " (" + er.OutputCurrency.Name + ")",
                     Rate = er.Rate,
