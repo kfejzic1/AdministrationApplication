@@ -35,13 +35,13 @@ export default function Transaction(arg) {
 		return (
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell></TableCell>
-				<TableCell align='center'>{parseDate(arg.prop.date)}</TableCell>
+				<TableCell align='center'>{parseDate(arg.prop.createdAt)}</TableCell>
 				<TableCell align='center'>
 					{arg.prop.recipient.name ? arg.prop.recipient.name : arg.prop.recipient.phone_number}
 				</TableCell>
 				<TableCell align='center'>{arg.prop.amount}</TableCell>
 				<TableCell align='center'>{arg.prop.currency}</TableCell>
-				<TableCell align='center'>{arg.prop.transaction_type}</TableCell>
+				<TableCell align='center'>{arg.prop.transactionType}</TableCell>
 				<TableCell align='center'>
 					<Button
 						onClick={() => {

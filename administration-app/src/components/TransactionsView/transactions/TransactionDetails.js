@@ -45,7 +45,7 @@ export default function TransactionDetails(arg) {
 					</TableRow>
 				</TableHead>
 				<TableRow>
-					<TableCell align='center'>{arg.props.id}</TableCell>
+					<TableCell align='center'>{arg.props.transactionId}</TableCell>
 					<TableCell align='center'>{parseDate(arg.props.createdAt)}</TableCell>
 					<TableCell align='center'>
 						{arg.props.recipient.name ? arg.props.recipient.name : arg.props.recipient.phone_number}

@@ -16,7 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MenuItem from '@mui/material/MenuItem';
 
 export default function TransactionsListHeader(arg) {
-	const [sortingColumn, setSortingColumn] = useState('');
+	const [sortingColumn, setSortingColumn] = useState('createdat');
 	const [sortingDirection, setSortingDirection] = useState('asc');
 	const [dateStartFilter, setDateStartFilter] = useState(null);
 	const [dateEndFilter, setDateEndFilter] = useState(null);
@@ -36,14 +36,14 @@ export default function TransactionsListHeader(arg) {
 	}, [arg.groupBy]);
 	const updateFilterOptions = () => {
 		arg.setFilterOptions({
-			Recipient: recipientFilter,
-			Status: currencyFilter,
-			DateTimeStart: dateStartFilter,
-			DateTimeEnd: dateEndFilter,
-			MinAmount: amountMin,
-			MaxAmount: amountMax,
-			SortingOptions: sortingColumn,
-			Ascending: sortingDirection == 'asc' ? true : false,
+			CreatedAtStartFilter: dateStartFilter,
+			CreatedAtEndFilter: dateEndFilter,
+			AmountStartFilter: amountMin,
+			AmountEndFilter: amountMax,
+			CurrencyFilter: currencyFilter,
+			TransactionTypeFilter: typeFilter,
+			RecipientNameFilter: recipientFilter,
+			sortingOrder: sortingColumn + sortingDirection,
 		});
 	};
 
@@ -57,7 +57,7 @@ export default function TransactionsListHeader(arg) {
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
 		setSortDirectionDate(newSortDirection);
 		setSortingDirection(newSortDirection);
-		setSortingColumn('DateTime');
+		setSortingColumn('createdat');
 		updateFilterOptions();
 	};
 
@@ -105,13 +105,13 @@ export default function TransactionsListHeader(arg) {
 					<Typography variant='h6'>Group by</Typography>
 				</TableCell>
 				<TableCell align='center' sx={{ width: '20%' }}>
-					{sortingColumn != 'DateTime' ? (
+					{sortingColumn != 'createdat' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
-									setSortingColumn('DateTime');
+									setSortingColumn('createdat');
 									setSortingDirection('asc');
 								}}
 							/>
@@ -269,16 +269,16 @@ export default function TransactionsListHeader(arg) {
 								setTypeFilter('');
 								setCurrencyFilter('');
 								setSortingDirection('asc');
-								setSortingColumn('DateTime');
+								setSortingColumn('createdat');
 								arg.setFilterOptions({
-									Recipient: '',
-									Status: '',
-									DateTimeStart: '',
-									DateTimeEnd: '',
-									MinAmount: '',
-									MaxAmount: '',
-									SortingOptions: 'DateTime',
-									Ascending: 'asc',
+									CreatedAtStartFilter: '',
+									CreatedAtEndFilter: '',
+									AmountStartFilter: '',
+									AmountEndFilter: '',
+									CurrencyFilter: '',
+									TransactionTypeFilter: '',
+									RecipientNameFilter: '',
+									sortingOrder: 'createdatasc',
 								});
 							}}
 						>
@@ -437,16 +437,16 @@ export default function TransactionsListHeader(arg) {
 								setTypeFilter('');
 								setCurrencyFilter('');
 								setSortingDirection('asc');
-								setSortingColumn('DateTime');
+								setSortingColumn('createdat');
 								arg.setFilterOptions({
-									Recipient: '',
-									Status: '',
-									DateTimeStart: '',
-									DateTimeEnd: '',
-									MinAmount: '',
-									MaxAmount: '',
-									SortingOptions: 'DateTime',
-									Ascending: 'asc',
+									CreatedAtStartFilter: '',
+									CreatedAtEndFilter: '',
+									AmountStartFilter: '',
+									AmountEndFilter: '',
+									CurrencyFilter: '',
+									TransactionTypeFilter: '',
+									RecipientNameFilter: '',
+									sortingOrder: 'createdatasc',
 								});
 								arg.setGroupBy('');
 								setGroupByValue('');
