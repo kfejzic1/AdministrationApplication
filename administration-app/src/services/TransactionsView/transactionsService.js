@@ -10,38 +10,50 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 	//console.log('Sorting optins=', JSON.stringify(sortingOptions));
 	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
-		if (sortingOptions.MinAmount === '') {
-			delete sortingOptions.MinAmount;
+		if (sortingOptions.AmountStartFilter === '') {
+			delete sortingOptions.AmountStartFilter;
 		}
-		if (sortingOptions.SortingOptions === '') {
-			delete sortingOptions.SortingOptions;
+		if (sortingOptions.sortingOrder === '') {
+			delete sortingOptions.sortingOrder;
 		}
 
-		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
-		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
-		else if (sortingOptions.DateTimeEnd)
-			sortingOptions.DateTimeEnd = JSON.stringify(sortingOptions.DateTimeEnd).replaceAll('"', '');
-		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
-		else if (sortingOptions.DateTimeStart)
-			sortingOptions.DateTime = JSON.stringify(sortingOptions.DateTimeStart).replaceAll('"', '');
-		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
-		if (sortingOptions.Status === '') delete sortingOptions.Status;
-		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
+		if (sortingOptions.RecipientNameFilter === '') delete sortingOptions.RecipientNameFilter;
+		if (sortingOptions.CreatedAtEndFilter === '') delete sortingOptions.CreatedAtEndFilter;
+		else if (sortingOptions.CreatedAtEndFilter)
+			sortingOptions.CreatedAtEndFilter = JSON.stringify(sortingOptions.CreatedAtEndFilter).replaceAll('"', '');
+		if (sortingOptions.CreatedAtStartFilter === '') delete sortingOptions.CreatedAtStartFilter;
+		else if (sortingOptions.CreatedAtStartFilter)
+			sortingOptions.CreatedAtStartFilter = JSON.stringify(sortingOptions.CreatedAtStartFilter).replaceAll('"', '');
+		if (sortingOptions.TransactionTypeFilter === '') delete sortingOptions.TransactionTypeFilter;
+		if (sortingOptions.AmountEndFiltert === '') delete sortingOptions.AmountEndFiltert;
+		if (sortingOptions.CurrencyFilter === '') delete sortingOptions.CurrencyFilter;
 	}
 	return new Promise(function (resolveO, reject) {
+		console.log('treba da zoem');
 		if (!mock)
-			axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
-				method: 'GET',
-				params: sortingOptions,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
+			axios(
+				env.ANDROID_API_ENV.url +
+					'/api/Transaction/GetTransactionsForUser?token=' +
+					localStorage.getItem('token') +
+					'&pageNumber=' +
+					pageNumber +
+					'&pageSize=' +
+					pageSize,
+				{
+					method: 'GET',
+					params: sortingOptions,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					},
+				}
+			)
 				.then(function (response) {
+					console.log('ne vraca nista');
 					resolveO(response);
 				})
 				.catch(function (err) {
+					console.log('erorrrrrrrr');
 					if (err.response.status == 401) reject(401);
 				});
 		else {
@@ -54,7 +66,7 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 				//console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
 
 				if (sortingOptions.Status && sortingOptions.Status != '') {
-					temp = temp.filter(transaction => transaction.transaction_type == sortingOptions.Status);
+					temp = temp.filter(transaction => transaction.transactionType == sortingOptions.Status);
 				}
 
 				if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
