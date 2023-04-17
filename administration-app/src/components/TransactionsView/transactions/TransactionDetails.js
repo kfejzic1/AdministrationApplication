@@ -71,7 +71,9 @@ export default function TransactionDetails(arg) {
 									? navigate(
 											'/payment/' +
 												arg.props.currency +
-												'/Payment/' +
+												'/' +
+												arg.props.transactionPurpose +
+												'/' +
 												arg.props.recipient.name +
 												'/' +
 												arg.props.transactionType +
@@ -84,7 +86,9 @@ export default function TransactionDetails(arg) {
 									: navigate(
 											'/payment/' +
 												arg.props.currency +
-												'/Payment/' +
+												'/' +
+												arg.props.transactionPurpose +
+												'/' +
 												arg.props.transactionType +
 												'/' +
 												arg.props.amount +

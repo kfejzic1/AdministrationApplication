@@ -34,7 +34,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:type/:recipientName/:transactionPurpose/:transactionAmount/:recipientAccountNumber'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -42,7 +42,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:type/:transactionPurpose/:transactionAmount/:phoneNumber'
+							path='/payment/:currency/:transactionPurpose/:transactionType/:transactionAmount/:phoneNumber'
 							element={
 								<ProtectedRoute>
 									<Payment />

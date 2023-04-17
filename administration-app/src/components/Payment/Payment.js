@@ -13,12 +13,9 @@ export const Payment = props => {
 		currency,
 		recipientAccountNumber,
 		recipientName,
+		transactionType,
 		transactionAmount,
-		type,
-		description,
-		category,
 		transactionPurpose,
-		interestingGroup,
 		phoneNumber,
 	} = useParams();
 	const [transactionAmountState, setTransactionAmount] = useState(
@@ -31,14 +28,12 @@ export const Payment = props => {
 		recipientAccountNumber != undefined && recipientAccountNumber != -1 ? recipientAccountNumber : ''
 	);
 	const [currencyState, setCurrency] = useState(currency != undefined && currency != -1 ? currency : 'USD');
-	const [typeState, setType] = useState(type != undefined && type != -1 ? type : 'Payment');
-	const [descriptionState, setDescription] = useState(description != undefined && description != -1 ? description : '');
-	const [categoryState, setCategory] = useState(category != undefined && category != -1 ? category : '');
-	const [interestingGroupState, setInterestingGroup] = useState(
-		interestingGroup != undefined && interestingGroup != -1 ? interestingGroup : 'Person'
-	);
-	const [transactionPurposeState, settransactionPurpose] = useState(
-		transactionPurpose != undefined && transactionPurpose != -1 ? transactionPurpose : 'B2C'
+	const [transactionTypeState, setTransactionType] = useState(transactionType != undefined && transactionType != -1 ? transactionType : 'B2C');
+	// const [descriptionState, setDescription] = useState(description != undefined && description != -1 ? description : '');
+	const [categoryState, setCategory] = useState('');
+	const [interestingGroupState, setInterestingGroup] = useState('Person');
+	const [transactionPurposeState, setTransactionPurpose] = useState(
+		transactionPurpose != undefined && transactionPurpose != -1 ? transactionPurpose : 'Payment'
 	);
 	const [phoneNumberState, setPhoneNumber] = useState(phoneNumber != undefined && phoneNumber != -1 ? phoneNumber : '');
 
@@ -52,14 +47,11 @@ export const Payment = props => {
 	console.log("Da li je ovo broj telefona: ", isPhoneNumber)*/
 
 	useEffect(() => {
-		if (transactionPurposeState != undefined && transactionPurposeState === 'B2B') {
+		if (transactionTypeState != undefined && transactionTypeState === 'B2B') {
 			setInterestingGroup('Company');
-		} else if (
-			transactionPurposeState != undefined &&
-			(transactionPurposeState === 'B2C' || transactionPurposeState === 'C2C')
-		) {
+		} else if (transactionTypeState != undefined && (transactionTypeState === 'B2C' || transactionTypeState === 'C2C')) {
 			setInterestingGroup('Person');
-		} else if (transactionPurposeState != undefined && transactionPurposeState === 'C2B') {
+		} else if (transactionTypeState != undefined && transactionTypeState === 'C2B') {
 			setInterestingGroup('Company');
 		}
 	}, [transactionPurpose]);
@@ -232,21 +224,20 @@ export const Payment = props => {
 											display: 'inline-block',
 										}}
 									>
-										Type:{' '}
+										Purpose:
 									</Box>
 								</Box>
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Type
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										//fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
-									value={typeState}
-									onChange={event => setType(event.target.value)}
+									value={transactionPurposeState}
+									onChange={event => setTransactionPurpose(event.target.value)}
 								>
 									<MenuItem value='Credit'>Credit</MenuItem>
 									<MenuItem value='Payment'>Payment</MenuItem>
@@ -272,11 +263,10 @@ export const Payment = props => {
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Currency
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										// fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
 									value={currencyState}
@@ -327,11 +317,10 @@ export const Payment = props => {
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Currency
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										// fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
 									value={interestingGroupState}
@@ -353,21 +342,20 @@ export const Payment = props => {
 											display: 'inline-block',
 										}}
 									>
-										Purpose:
+										Type:
 									</Box>
 								</Box>
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Type
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										//fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
-									value={transactionPurposeState}
-									onChange={event => settransactionPurpose(event.target.value)}
+									value={transactionTypeState}
+									onChange={event => setTransactionType(event.target.value)}
 								>
 									<MenuItem value='B2B'>B2B</MenuItem>
 									<MenuItem value='B2C'>B2C</MenuItem>
@@ -456,8 +444,8 @@ export const Payment = props => {
 										sendPaymentInfoAccount({
 											amount: parseFloat(transactionAmountState),
 											currency: currencyState,
-											transactionType: transactionPurposeState,
-											transactionPurpose: typeState,
+											transactionType: transactionTypeState,
+											transactionPurpose: transactionPurposeState,
 											category: categoryState,
 											recipient: {
 												name: recipientNameState,
@@ -597,21 +585,20 @@ export const Payment = props => {
 											display: 'inline-block',
 										}}
 									>
-										Type:{' '}
+										Purpose:
 									</Box>
 								</Box>
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Type
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										//fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
-									value={typeState}
-									onChange={event => setType(event.target.value)}
+									value={transactionPurposeState}
+									onChange={event => setTransactionPurpose(event.target.value)}
 								>
 									<MenuItem value='Credit'>Credit</MenuItem>
 									<MenuItem value='Payment'>Payment</MenuItem>
@@ -637,11 +624,10 @@ export const Payment = props => {
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Currency
+										backgroundColor: '#1976D2', 
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										// fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
 									value={currencyState}
@@ -692,11 +678,10 @@ export const Payment = props => {
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Currency
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										// fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
 									value={interestingGroupState}
@@ -719,22 +704,21 @@ export const Payment = props => {
 											display: 'inline-block',
 										}}
 									>
-										Purpose:
+										Type:
 									</Box>
 								</Box>
 
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', // change color Type
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
-										//fontSize: 'var(--text-size)',
 										lineHeight: 1,
 									}}
-									value={transactionPurposeState}
-									onChange={event => settransactionPurpose(event.target.value)}
+									value={transactionTypeState}
+									onChange={event => setTransactionType(event.target.value)}
 								>
 									<MenuItem value='B2B'>B2B</MenuItem>
 									<MenuItem value='B2C'>B2C</MenuItem>
@@ -794,8 +778,8 @@ export const Payment = props => {
 										sendPaymentInfoPhone({
 											amount: parseFloat(transactionAmountState),
 											currency: currencyState,
-											transactionType: transactionPurposeState,
-											transactionPurpose: typeState,
+											transactionType: transactionTypeState,
+											transactionPurpose: transactionPurposeState,
 											category: categoryState,
 											recipientByPhone: {
 												phoneNumber: phoneNumberState,

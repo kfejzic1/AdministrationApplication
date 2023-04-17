@@ -4,7 +4,7 @@ export const transactions = [
 		createdAt: '2022-04-29T14:51:31',
 		amount: 55.29,
 		currency: 'CNY',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'John Doe',
 			accountNumber: '1234567890',
@@ -26,7 +26,7 @@ export const transactions = [
 		createdAt: '2022-07-30T00:19:11',
 		amount: 6.44,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Jane Smith',
 			accountNumber: '2345678901',
@@ -48,7 +48,7 @@ export const transactions = [
 		createdAt: '2022-05-07T06:11:51',
 		amount: 43.41,
 		currency: 'ZAR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Mark Johnson',
 			accountNumber: '3456789012',
@@ -70,7 +70,7 @@ export const transactions = [
 		createdAt: '2022-05-07T06:12:51',
 		amount: 43.51,
 		currency: 'ZAR',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Mark Johnson',
 			accountNumber: '3456789012',
@@ -92,7 +92,7 @@ export const transactions = [
 		createdAt: '2022-07-25T18:30:22',
 		amount: 120.87,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'XYZ Company',
 			accountNumber: '0987654321',
@@ -114,7 +114,7 @@ export const transactions = [
 		createdAt: '2022-08-25T18:30:22',
 		amount: 120.87,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Michael Brown',
 			accountNumber: '5678901234',
@@ -136,7 +136,7 @@ export const transactions = [
 		createdAt: '2022-06-14T11:55:47',
 		amount: 75.25,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'David Lee',
 			accountNumber: '6789012345',
@@ -158,7 +158,7 @@ export const transactions = [
 		createdAt: '2022-09-03T08:12:15',
 		amount: 25.99,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Davis',
 			accountNumber: '7890123456',
@@ -180,7 +180,7 @@ export const transactions = [
 		createdAt: '2022-10-10T15:20:30',
 		amount: 50.0,
 		currency: 'CAD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Johnson',
 			accountNumber: '8901234567',
@@ -202,7 +202,7 @@ export const transactions = [
 		createdAt: '2022-09-05T14:10:55',
 		amount: 200.5,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: null,
 			accountNumber: null,
@@ -224,7 +224,7 @@ export const transactions = [
 		createdAt: '2022-12-05T14:10:55',
 		amount: 200.5,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Emma Wilson',
 			accountNumber: '9012345678',
@@ -246,7 +246,7 @@ export const transactions = [
 		createdAt: '2022-11-28T18:22:10',
 		amount: 150.75,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Ava Smith',
 			accountNumber: '0123456789',
@@ -268,7 +268,7 @@ export const transactions = [
 		createdAt: '2022-10-15T09:30:40',
 		amount: 75.99,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'William Brown',
 			accountNumber: '3456789012',
@@ -290,7 +290,7 @@ export const transactions = [
 		createdAt: '2022-09-25T16:45:20',
 		amount: 500.25,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Olivia Johnson',
 			accountNumber: '4567890123',
@@ -312,7 +312,7 @@ export const transactions = [
 		createdAt: '2022-08-18T10:15:30',
 		amount: 1000.5,
 		currency: 'JPY',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '5678901234',
@@ -334,7 +334,7 @@ export const transactions = [
 		createdAt: '2022-07-12T14:30:10',
 		amount: 75.0,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Lucas Smith',
 			accountNumber: '6789012345',
@@ -357,7 +357,7 @@ export const transactions = [
 		createdAt: '2022-06-05T09:30:45',
 		amount: 2500.0,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Michael Chen',
 			accountNumber: '7890123456',
@@ -379,7 +379,7 @@ export const transactions = [
 		createdAt: '2022-05-15T14:20:30',
 		amount: 800.75,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'XYZ Company',
 			accountNumber: '6543210987',
@@ -401,7 +401,7 @@ export const transactions = [
 		createdAt: '2022-04-10T11:45:15',
 		amount: 120.5,
 		currency: 'GBP',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Jacob Thompson',
 			accountNumber: '9012345678',
@@ -423,7 +423,7 @@ export const transactions = [
 		createdAt: '2022-03-18T16:10:25',
 		amount: 3500.0,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '4567456745674567',
@@ -445,7 +445,7 @@ export const transactions = [
 		createdAt: '2022-02-24T13:15:40',
 		amount: 1500.25,
 		currency: 'JPY',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Kim',
 			accountNumber: '5678567856785678',
@@ -467,7 +467,7 @@ export const transactions = [
 		createdAt: '2022-01-12T10:30:55',
 		amount: 50.99,
 		currency: 'BAM',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Ava Martinez',
 			accountNumber: '6789678967896789',
@@ -489,7 +489,7 @@ export const transactions = [
 		createdAt: '2022-06-05T14:20:30',
 		amount: 750.5,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Liam Johnson',
 			accountNumber: '5678567856785678',
@@ -511,7 +511,7 @@ export const transactions = [
 		createdAt: '2022-07-15T12:05:55',
 		amount: 250.75,
 		currency: 'EUR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Emma Smith',
 			accountNumber: '6789678967896789',
@@ -533,7 +533,7 @@ export const transactions = [
 		createdAt: '2022-08-25T09:40:10',
 		amount: 3500.0,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Noah Brown',
 			accountNumber: '7890789078907890',
@@ -555,7 +555,7 @@ export const transactions = [
 		createdAt: '2022-09-12T18:30:15',
 		amount: 120.99,
 		currency: 'GBP',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Olivia Davis',
 			accountNumber: '8901890189018901',
@@ -577,7 +577,7 @@ export const transactions = [
 		createdAt: '2022-10-08T14:55:40',
 		amount: 75.5,
 		currency: 'USD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Sophia Wilson',
 			accountNumber: '9012901290129012',
@@ -599,7 +599,7 @@ export const transactions = [
 		createdAt: '2022-11-21T10:10:10',
 		amount: 5000.0,
 		currency: 'CAD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Jackson Lee',
 			accountNumber: '0123012301230123',
@@ -621,7 +621,7 @@ export const transactions = [
 		createdAt: '2022-12-15T16:20:30',
 		amount: 250.75,
 		currency: 'EUR',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Ella Brown',
 			accountNumber: '1234123412341234',
@@ -643,7 +643,7 @@ export const transactions = [
 		createdAt: '2023-01-05T09:45:00',
 		amount: 1000.5,
 		currency: 'USD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'William Johnson',
 			accountNumber: '2345234523452345',
@@ -665,7 +665,7 @@ export const transactions = [
 		createdAt: '2023-02-18T14:30:45',
 		amount: 500.25,
 		currency: 'GBP',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'James Smith',
 			accountNumber: '3456345634563456',
@@ -687,7 +687,7 @@ export const transactions = [
 		createdAt: '2023-03-10T11:15:30',
 		amount: 150.35,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Williams',
 			accountNumber: '4567456745674567',
@@ -709,7 +709,7 @@ export const transactions = [
 		createdAt: '2023-04-05T14:45:00',
 		amount: 750.25,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Johnson',
 			accountNumber: '5678567856785678',
@@ -731,7 +731,7 @@ export const transactions = [
 		createdAt: '2023-05-20T17:30:45',
 		amount: 350.5,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Liam Davis',
 			accountNumber: '6789678967896789',
@@ -753,7 +753,7 @@ export const transactions = [
 		createdAt: '2023-06-10T09:30:15',
 		amount: 450.75,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Harper Smith',
 			accountNumber: '7890789078907890',
@@ -775,7 +775,7 @@ export const transactions = [
 		createdAt: '2023-07-15T16:00:30',
 		amount: 250.9,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Evelyn Wilson',
 			accountNumber: '8900989008900890',
@@ -797,7 +797,7 @@ export const transactions = [
 		createdAt: '2023-08-22T13:45:00',
 		amount: 150.2,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Avery Brown',
 			accountNumber: '9012090120909012',
@@ -819,7 +819,7 @@ export const transactions = [
 		createdAt: '2023-09-05T11:15:20',
 		amount: 75.5,
 		currency: 'CAD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Thompson',
 			accountNumber: '2345678923456789',
@@ -841,7 +841,7 @@ export const transactions = [
 		createdAt: '2023-10-12T14:30:10',
 		amount: 200.25,
 		currency: 'JPY',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '3456789034567890',
@@ -863,7 +863,7 @@ export const transactions = [
 		createdAt: '2023-11-20T17:45:05',
 		amount: 350.75,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Lucas Clark',
 			accountNumber: '4567890145678901',
@@ -885,7 +885,7 @@ export const transactions = [
 		createdAt: '2023-12-28T09:20:15',
 		amount: 150.6,
 		currency: 'USD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Emily Martinez',
 			accountNumber: '5678901256789012',
@@ -907,7 +907,7 @@ export const transactions = [
 		createdAt: '2024-01-15T12:10:08',
 		amount: 80.25,
 		currency: 'EUR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Benjamin Lee',
 			accountNumber: '6789012367890123',
@@ -929,7 +929,7 @@ export const transactions = [
 		createdAt: '2024-02-22T15:55:30',
 		amount: 250.5,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Daniel Wilson',
 			accountNumber: '7890123478901234',
@@ -951,7 +951,7 @@ export const transactions = [
 		createdAt: '2024-03-18T18:40:12',
 		amount: 120.75,
 		currency: 'CAD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Liam Anderson',
 			accountNumber: '8901234589012345',
@@ -973,7 +973,7 @@ export const transactions = [
 		createdAt: '2024-04-10T21:15:40',
 		amount: 175.8,
 		currency: 'JPY',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Sophia Thompson',
 			accountNumber: '9012345690123456',
@@ -995,7 +995,7 @@ export const transactions = [
 		createdAt: '2024-05-05T14:30:20',
 		amount: 65.9,
 		currency: 'BAM',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Oliver Taylor',
 			accountNumber: '0123456701234567',
@@ -1017,7 +1017,7 @@ export const transactions = [
 		createdAt: '2024-06-20T10:55:18',
 		amount: 300.25,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'William Brown',
 			accountNumber: '1234567812345678',
@@ -1039,7 +1039,7 @@ export const transactions = [
 		createdAt: '2024-07-15T16:25:05',
 		amount: 95.5,
 		currency: 'BAM',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Amelia Harris',
 			accountNumber: '2345678923456789',
@@ -1061,7 +1061,7 @@ export const transactions = [
 		createdAt: '2024-08-10T09:40:30',
 		amount: 50.75,
 		currency: 'EUR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'James Jackson',
 			accountNumber: '3456789034567890',
@@ -1083,7 +1083,7 @@ export const transactions = [
 		createdAt: '2024-09-05T18:15:22',
 		amount: 120.4,
 		currency: 'GBP',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Charlotte Smith',
 			accountNumber: '4567890145678901',
@@ -1105,7 +1105,7 @@ export const transactions = [
 		createdAt: '2024-10-20T11:30:10',
 		amount: 220.9,
 		currency: 'CAD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Henry Johnson',
 			accountNumber: '5678901256789012',
@@ -1127,7 +1127,7 @@ export const transactions = [
 		createdAt: '2024-11-15T14:20:05',
 		amount: 75.2,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Olivia Lee',
 			accountNumber: '6789012367890123',
@@ -1149,7 +1149,7 @@ export const transactions = [
 		createdAt: '2024-12-25T20:45:15',
 		amount: 1500.5,
 		currency: 'JPY',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'William Smith',
 			accountNumber: '7890123478901234',
@@ -1171,7 +1171,7 @@ export const transactions = [
 		createdAt: '2025-01-10T09:10:25',
 		amount: 85.75,
 		currency: 'EUR',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'PQR Corporation',
 			accountNumber: '8901234509012345',
@@ -1193,7 +1193,7 @@ export const transactions = [
 		createdAt: '2025-02-18T12:30:45',
 		amount: 350.25,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'James Anderson',
 			accountNumber: '9012345610123456',
@@ -1215,7 +1215,7 @@ export const transactions = [
 		createdAt: '2025-03-05T17:15:30',
 		amount: 4500.0,
 		currency: 'GBP',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Sophia Brown',
 			accountNumber: '0123456781234567',
@@ -1237,7 +1237,7 @@ export const transactions = [
 		createdAt: '2025-04-22T09:40:55',
 		amount: 120.8,
 		currency: 'CAD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Oliver Davis',
 			accountNumber: '1234567892345678',
@@ -1259,7 +1259,7 @@ export const transactions = [
 		createdAt: '2025-05-10T14:20:15',
 		amount: 2500.0,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Emma Wilson',
 			accountNumber: '2345678903456789',
@@ -1281,7 +1281,7 @@ export const transactions = [
 		createdAt: '2025-06-18T11:45:30',
 		amount: 180.5,
 		currency: 'USD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'William Lee',
 			accountNumber: '3456789014567890',
@@ -1303,7 +1303,7 @@ export const transactions = [
 		createdAt: '2025-07-25T18:55:00',
 		amount: 550.75,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Sophia Thompson',
 			accountNumber: '4567890125678901',
@@ -1325,7 +1325,7 @@ export const transactions = [
 		createdAt: '2025-08-30T09:10:45',
 		amount: 1250.0,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Turner',
 			accountNumber: '5678901236789012',
@@ -1347,7 +1347,7 @@ export const transactions = [
 		createdAt: '2025-09-12T15:30:20',
 		amount: 350.25,
 		currency: 'USD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Harper Clark',
 			accountNumber: '6789012347890123',
@@ -1369,7 +1369,7 @@ export const transactions = [
 		createdAt: '2025-10-25T12:55:10',
 		amount: 670.8,
 		currency: 'EUR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Charlie Adams',
 			accountNumber: '7890123458901234',
@@ -1391,7 +1391,7 @@ export const transactions = [
 		createdAt: '2025-11-08T18:45:30',
 		amount: 980.5,
 		currency: 'CAD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Ella Turner',
 			accountNumber: '8901234569012345',
@@ -1413,7 +1413,7 @@ export const transactions = [
 		createdAt: '2025-12-15T14:20:55',
 		amount: 2250.75,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Henry Clark',
 			accountNumber: '9012345670123456',
@@ -1435,7 +1435,7 @@ export const transactions = [
 		createdAt: '2026-01-20T11:05:40',
 		amount: 1500.3,
 		currency: 'JPY',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Grace Adams',
 			accountNumber: '0123456781234567',
@@ -1457,7 +1457,7 @@ export const transactions = [
 		createdAt: '2026-02-25T09:35:20',
 		amount: 750.2,
 		currency: 'EUR',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Oliver Mitchell',
 			accountNumber: '1234567892345678',
@@ -1479,7 +1479,7 @@ export const transactions = [
 		createdAt: '2026-03-12T16:50:15',
 		amount: 3200.8,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Anderson',
 			accountNumber: '2345678903456789',
@@ -1501,7 +1501,7 @@ export const transactions = [
 		createdAt: '2026-04-18T13:15:50',
 		amount: 1200.4,
 		currency: 'GBP',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Liam Wilson',
 			accountNumber: '3456789014567890',
@@ -1523,7 +1523,7 @@ export const transactions = [
 		createdAt: '2026-05-23T11:55:40',
 		amount: 900.1,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Emma Turner',
 			accountNumber: '4567890125678901',
@@ -1545,7 +1545,7 @@ export const transactions = [
 		createdAt: '2026-06-17T14:25:55',
 		amount: 1500.6,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Olivia Martin',
 			accountNumber: '5678901236789012',
@@ -1567,7 +1567,7 @@ export const transactions = [
 		createdAt: '2026-07-30T09:10:30',
 		amount: 2000.7,
 		currency: 'JPY',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Noah Harris',
 			accountNumber: '6789012347890123',
@@ -1589,7 +1589,7 @@ export const transactions = [
 		createdAt: '2026-08-15T16:40:20',
 		amount: 750.45,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '7890123458901234',
@@ -1611,7 +1611,7 @@ export const transactions = [
 		createdAt: '2026-09-22T10:15:55',
 		amount: 1200.3,
 		currency: 'EUR',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Ethan Johnson',
 			accountNumber: '8901234569012345',
@@ -1633,7 +1633,7 @@ export const transactions = [
 		createdAt: '2026-10-10T13:50:40',
 		amount: 1800.2,
 		currency: 'GBP',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Ava Hernandez',
 			accountNumber: '9012345670123456',
@@ -1655,7 +1655,7 @@ export const transactions = [
 		createdAt: '2026-11-18T09:30:25',
 		amount: 450.75,
 		currency: 'CAD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Olivia Thompson',
 			accountNumber: '0123456781234567',
@@ -1677,7 +1677,7 @@ export const transactions = [
 		createdAt: '2026-12-05T14:20:15',
 		amount: 800.4,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Liam Walker',
 			accountNumber: '1234567892345678',
@@ -1699,7 +1699,7 @@ export const transactions = [
 		createdAt: '2027-01-12T18:55:50',
 		amount: 1500.6,
 		currency: 'JPY',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Charlotte Martin',
 			accountNumber: '2345678903456789',
@@ -1721,7 +1721,7 @@ export const transactions = [
 		createdAt: '2027-02-28T11:45:30',
 		amount: 250.85,
 		currency: 'EUR',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Oliver Smith',
 			accountNumber: '3456789014567890',
@@ -1743,7 +1743,7 @@ export const transactions = [
 		createdAt: '2027-03-15T16:10:20',
 		amount: 1200.95,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Emily Johnson',
 			accountNumber: '4567890125678901',
@@ -1765,7 +1765,7 @@ export const transactions = [
 		createdAt: '2027-04-22T20:35:40',
 		amount: 950.75,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'James Anderson',
 			accountNumber: '5678901236789012',
@@ -1787,7 +1787,7 @@ export const transactions = [
 		createdAt: '2027-05-18T14:25:15',
 		amount: 550.2,
 		currency: 'USD',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Emily Johnson',
 			accountNumber: '4567890125678901',
@@ -1809,7 +1809,7 @@ export const transactions = [
 		createdAt: '2027-06-05T09:40:30',
 		amount: 1750.65,
 		currency: 'EUR',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'James Anderson',
 			accountNumber: '5678901236789012',
@@ -1831,7 +1831,7 @@ export const transactions = [
 		createdAt: '2027-07-12T18:15:40',
 		amount: 650.5,
 		currency: 'GBP',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Oliver Smith',
 			accountNumber: '3456789014567890',
@@ -1853,7 +1853,7 @@ export const transactions = [
 		createdAt: '2027-08-25T11:30:20',
 		amount: 350.75,
 		currency: 'CAD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Sophia Thompson',
 			accountNumber: '5678901236789012',
@@ -1875,7 +1875,7 @@ export const transactions = [
 		createdAt: '2027-09-10T15:45:35',
 		amount: 1250.2,
 		currency: 'JPY',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'William Lee',
 			accountNumber: '5678901236789012',
@@ -1897,7 +1897,7 @@ export const transactions = [
 		createdAt: '2027-10-18T09:15:50',
 		amount: 950.3,
 		currency: 'BAM',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Grace Harris',
 			accountNumber: '3456789014567890',
@@ -1919,7 +1919,7 @@ export const transactions = [
 		createdAt: '2027-11-07T14:20:15',
 		amount: 520.8,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Oliver Martinez',
 			accountNumber: '4567890125678901',
@@ -1941,7 +1941,7 @@ export const transactions = [
 		createdAt: '2027-12-15T18:55:40',
 		amount: 760.4,
 		currency: 'EUR',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Emma Brown',
 			accountNumber: '5678901236789012',
@@ -1963,7 +1963,7 @@ export const transactions = [
 		createdAt: '2028-01-22T09:30:25',
 		amount: 340.25,
 		currency: 'GBP',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Noah Anderson',
 			accountNumber: '5678901236789012',
@@ -1985,7 +1985,7 @@ export const transactions = [
 		createdAt: '2028-02-18T12:45:30',
 		amount: 450.6,
 		currency: 'CAD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '5678901236789012',
@@ -2007,7 +2007,7 @@ export const transactions = [
 		createdAt: '2028-03-05T15:20:10',
 		amount: 1500.9,
 		currency: 'USD',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Michael Johnson',
 			accountNumber: '5678901236789012',
@@ -2029,7 +2029,7 @@ export const transactions = [
 		createdAt: '2028-04-12T09:10:55',
 		amount: 780.75,
 		currency: 'EUR',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Isabella Davis',
 			accountNumber: '5678901236789012',
@@ -2051,7 +2051,7 @@ export const transactions = [
 		createdAt: '2028-05-20T14:30:25',
 		amount: 350.2,
 		currency: 'GBP',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Daniel Thompson',
 			accountNumber: '9876543210987654',
@@ -2073,7 +2073,7 @@ export const transactions = [
 		createdAt: '2028-06-08T16:55:40',
 		amount: 2000.45,
 		currency: 'JPY',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Olivia Wilson',
 			accountNumber: '9876543210987654',
@@ -2095,7 +2095,7 @@ export const transactions = [
 		createdAt: '2028-07-15T11:25:15',
 		amount: 1200.75,
 		currency: 'BAM',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Lucas Turner',
 			accountNumber: '9876543210987654',
@@ -2117,7 +2117,7 @@ export const transactions = [
 		createdAt: '2028-08-20T09:40:12',
 		amount: 500.99,
 		currency: 'USD',
-		transactionPurpose: 'Success',
+		transactionPurpose: 'Payment',
 		sender: {
 			name: 'Sophia Lee',
 			accountNumber: '9876543210987654',
@@ -2139,7 +2139,7 @@ export const transactions = [
 		createdAt: '2028-09-05T14:15:35',
 		amount: 1500.25,
 		currency: 'EUR',
-		transactionPurpose: 'Pending',
+		transactionPurpose: 'Gift',
 		sender: {
 			name: 'Benjamin Harris',
 			accountNumber: '9876543210987654',
@@ -2161,7 +2161,7 @@ export const transactions = [
 		createdAt: '2028-10-10T17:30:50',
 		amount: 800.5,
 		currency: 'CAD',
-		transactionPurpose: 'Failure',
+		transactionPurpose: 'Credit',
 		sender: {
 			name: 'Emily Davis',
 			accountNumber: '9876543210987654',
@@ -2183,7 +2183,7 @@ export const transactions = [
 		createdAt: '2028-11-15T11:55:22',
 		amount: 250.75,
 		currency: 'GBP',
-		transactionPurpose: 'Processing',
+		transactionPurpose: 'Recip',
 		sender: {
 			name: 'Oliver Johnson',
 			accountNumber: '9876543210987654',
