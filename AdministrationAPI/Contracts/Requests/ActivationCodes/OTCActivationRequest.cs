@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 public class OTCActivationRequest
 {
-    [Required]
-    public string Username { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
 
     [Required]
     public string Code { get; set; }

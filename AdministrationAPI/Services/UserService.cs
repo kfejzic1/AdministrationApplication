@@ -82,10 +82,20 @@ namespace AdministrationAPI.Services
         {
             return _userManager.Users.FirstOrDefault(x => x.UserName == name);
         }
-
-        public async Task<AuthenticationResult> GetTokenForUser(string username)
+        public async Task<User> GetUserByEmailPhone(string email, string phone)
         {
-            User user = _userManager.Users.FirstOrDefault(x => x.UserName == username);
+            User user = new User();
+
+            if (email != null)
+                user = await _userManager.FindByEmailAsync(email);
+            else
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == phone);
+
+            return user;
+        }
+
+        public async Task<AuthenticationResult> GetTokenForUser(User user)
+        {
             if (user == null)
                 return new AuthenticationResult
                 {

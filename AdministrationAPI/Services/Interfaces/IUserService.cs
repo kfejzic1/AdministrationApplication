@@ -32,7 +32,9 @@ namespace AdministrationAPI.Services.Interfaces
         Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request);
         Task<GetUserResponse> GetUserWithRolesById(string id);
         IEnumerable<IdentityRole> GetRoles();
-        Task<AuthenticationResult> GetTokenForUser(string username);
+        Task<AuthenticationResult> GetTokenForUser(User user);
+        Task<User> GetUserByEmailPhone(string email, string phone);
+
         Task InvalidateToken(string jwt);
         bool IsTokenValid(string jwt);
 

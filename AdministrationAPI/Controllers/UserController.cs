@@ -294,15 +294,19 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                User user = await _userService.GetUserByEmailPhone(otcActivationRequest.Email, otcActivationRequest.Phone);
+                if (user == null)
+                    return BadRequest(new { message = "User not found!" });
+
                 bool activationResult = false;
                 if (otcActivationRequest.Method == "email")
-                    activationResult = await _activationCodeService.ActivateEmailCodeAsync(otcActivationRequest.Code, otcActivationRequest.Username);
+                    activationResult = await _activationCodeService.ActivateEmailCodeAsync(otcActivationRequest.Code, user.UserName);
                 else
-                    activationResult = await _activationCodeService.ActivateSMSCodeAsync(otcActivationRequest.Code, otcActivationRequest.Username);
+                    activationResult = await _activationCodeService.ActivateSMSCodeAsync(otcActivationRequest.Code, user.UserName);
 
                 if (activationResult)
                 {
-                    var authenticationResult = await _userService.GetTokenForUser(otcActivationRequest.Username);
+                    var authenticationResult = await _userService.GetTokenForUser(user);
                     if (authenticationResult.Success)
                         return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
                     else
