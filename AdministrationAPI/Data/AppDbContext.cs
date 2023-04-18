@@ -13,9 +13,11 @@ namespace AdministrationAPI.Data
         {
         }
 
-        public DbSet<ActivationCode> ActivationCodes { get; set; }
+
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+        public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
+        public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
         public DbSet<TokenValidity> TokenValidities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -29,7 +31,8 @@ namespace AdministrationAPI.Data
             builder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable("usr_user_logins"); });
             builder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable("usr_user_tokens"); });
             builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("usr_role_claims"); });
-            builder.Entity<ActivationCode>(entity => { entity.ToTable("usr_activation_codes"); });
+            builder.Entity<EmailActivationCode>(entity => { entity.ToTable("usr_email_activation_codes"); });
+            builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
 
 
@@ -39,11 +42,16 @@ namespace AdministrationAPI.Data
             //SeedUsers(builder);
             Seed(builder);
 
-            builder.Entity<ActivationCode>()
+            builder.Entity<EmailActivationCode>()
                 .HasOne(rc => rc.User)
-                .WithOne(u => u.ActivationCode)
-                .HasForeignKey<ActivationCode>(rc => rc.UserId);
+                .WithOne(u => u.EmailActivationCode)
+                .HasForeignKey<EmailActivationCode>(rc => rc.UserId);
 
+            builder.Entity<SMSActivationCode>()
+                .HasOne(rc => rc.User)
+                .WithOne(u => u.SMSActivationCode)
+                .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
+                
             builder.Entity<ExchangeRate>()
                 .HasOne<Currency>(er => er.InputCurrency)
                 .WithMany(c => c.ExchangeRatesAsInput)

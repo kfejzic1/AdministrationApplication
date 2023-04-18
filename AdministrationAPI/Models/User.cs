@@ -10,7 +10,8 @@ namespace AdministrationAPI.Models
         public string Address { get; set; }
         public string? AccountNumber { get; set; }
 
-        public ActivationCode ActivationCode { get; set; }
+        public EmailActivationCode? EmailActivationCode { get; set; }
+        public SMSActivationCode? SMSActivationCode { get; set; }
 
     }
 }

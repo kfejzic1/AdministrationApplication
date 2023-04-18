@@ -80,11 +80,11 @@ namespace AdministrationAPI.Controllers
 
             }
 
-            bool success = await _activationCodeService.GenerateCodeForUserAsync(user);
+            bool success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
 
             if (success)
             {
-                return Ok(new { message = "Registration successful" });
+                return Ok(new { message = "Registration email sent" });
             }
             else
             {
@@ -96,31 +96,23 @@ namespace AdministrationAPI.Controllers
         [HttpGet("send/sms")]
         public async Task<IActionResult> SendCodeToPhone([FromQuery] SMSInformationRequest smsInformationRequest)
         {
-            try
+            User user = _userService.GetUserByName(smsInformationRequest.Username);
+
+            if (user == null)
             {
-                User user = _userService.GetUserByName(smsInformationRequest.Username);
-
-                if (user == null)
-                {
-                    return NotFound(new { message = "User with specified username not found!" });
-                }
-
-                bool success = await _activationCodeService.SendSMSToUser(user);
-
-                if (success)
-                {
-                    return Ok(new { message = "SMS delivered" });
-                }
-                else
-                {
-                    return NotFound(new { message = "SMS activation code for user not found!" });
-                }
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "SMS not delivered!");
+                return NotFound(new { message = "User with specified username not found!" });
             }
 
+            bool success = await _activationCodeService.GenerateSMSActivationCodeForUserAsync(user);
+
+            if (success)
+            {
+                return Ok(new { message = "SMS delivered" });
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "SMS not sent!");
+            }
         }
 
         [AllowAnonymous]
@@ -263,6 +255,74 @@ namespace AdministrationAPI.Controllers
                 LoggerUtility.Logger.LogException(ex, "UserController.Login");
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("otc/generate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GenerateOneTimeCode([FromBody] MobileLoginRequest mobileLoginRequest)
+        {
+            try
+            {
+                User user = await _userService.GetUserFromLoginRequest(mobileLoginRequest);
+                bool success = false;
+
+                if (mobileLoginRequest.Method == "email")
+                {
+                    success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
+                }
+                else
+                {
+                    success = await _activationCodeService.GenerateSMSActivationCodeForUserAsync(user);
+                }
+
+                if (success)
+                    return Ok(new { message = "Code sent" });
+                else
+                    return BadRequest("Error with sending code");
+
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.GenerateOneTimeCode");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("otc/activate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginOTC([FromBody] OTCActivationRequest otcActivationRequest)
+        {
+            try
+            {
+                User user = await _userService.GetUserByEmailPhone(otcActivationRequest.Email, otcActivationRequest.Phone);
+                if (user == null)
+                    return BadRequest(new { message = "User not found!" });
+
+                bool activationResult = false;
+                if (otcActivationRequest.Method == "email")
+                    activationResult = await _activationCodeService.ActivateEmailCodeAsync(otcActivationRequest.Code, user.UserName);
+                else
+                    activationResult = await _activationCodeService.ActivateSMSCodeAsync(otcActivationRequest.Code, user.UserName);
+
+                if (activationResult)
+                {
+                    var authenticationResult = await _userService.GetTokenForUser(user);
+                    if (authenticationResult.Success)
+                        return Ok(_mapper.Map<AuthenticationResult, AuthSuccessResponse>(authenticationResult));
+                    else
+                        return BadRequest(_mapper.Map<AuthenticationResult, AuthFailResponse>(authenticationResult));
+                }
+                else
+                {
+                    return BadRequest(new { message = "Username or code incorrect!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.LoginOTC");
+                return StatusCode(500, ex.Message);
+            }
+
         }
 
         [HttpPost("login/facebook")]

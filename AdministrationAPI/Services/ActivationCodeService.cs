@@ -37,19 +37,27 @@ public class ActivationCodeService : IActivationCodeService
 
     public async Task<bool> ActivateEmailCodeAsync(string code, string username)
     {
-        var activationCode = await _context.ActivationCodes.Include(rc => rc.User).FirstOrDefaultAsync(rc => rc.EmailCode == code && rc.User.UserName == username && rc.ActivatedEmail == false);
+        var activationCode = await _context.EmailActivationCodes.Include(rc => rc.User).FirstOrDefaultAsync(rc => rc.Code == code && rc.User.UserName == username);
         if (activationCode is null)
         {
             return false;
         }
 
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == username);
-        user.EmailConfirmed = true;
-        await _userManager.UpdateAsync(user);
-        // await _userManager.SaveChangesAsync();
+        var user = activationCode.User;
 
-        activationCode.ActivatedEmail = true;
-        _context.ActivationCodes.Update(activationCode);
+        if (user is null)
+        {
+            return false;
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            user.EmailConfirmed = true;
+            await _userManager.UpdateAsync(user);
+            // await _userManager.SaveChangesAsync();
+        }
+
+        _context.EmailActivationCodes.Remove(activationCode);
         await _context.SaveChangesAsync();
 
         return true;
@@ -57,80 +65,99 @@ public class ActivationCodeService : IActivationCodeService
 
     public async Task<bool> ActivateSMSCodeAsync(string code, string username)
     {
-        var activationCode = await _context.ActivationCodes.Include(rc => rc.User).FirstOrDefaultAsync(rc => rc.SMSCode == code && rc.User.UserName == username && rc.ActivatedSMS == false);
+        var activationCode = await _context.SMSActivationCodes.Include(rc => rc.User).FirstOrDefaultAsync(rc => rc.Code == code && rc.User.UserName == username);
         if (activationCode is null)
         {
             return false;
         }
-        activationCode.ActivatedSMS = true;
-        _context.ActivationCodes.Update(activationCode);
-        await _context.SaveChangesAsync();
 
-        var user = _userService.GetUserByName(username);
-        user.PhoneNumberConfirmed = true;
-        await _userManager.UpdateAsync(user);
+        var user = activationCode.User;
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        if (!user.PhoneNumberConfirmed)
+        {
+            user.PhoneNumberConfirmed = true;
+            await _userManager.UpdateAsync(user);
+            // await _userManager.SaveChangesAsync();
+        }
+
+        _context.SMSActivationCodes.Remove(activationCode);
+        await _context.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<bool> GenerateCodeForUserAsync(User user)
+    public async Task<bool> GenerateEmailActivationCodeForUserAsync(User user)
     {
-        Random random = new Random();
-        String emailCode = random.Next(1000, 9999).ToString();
-        String smsCode = random.Next(1000, 9999).ToString();
-
-        ActivationCode activationCode = new ActivationCode
+        var existingActivationCode = await _context.EmailActivationCodes.Include(eac => eac.User).FirstOrDefaultAsync(eac => eac.User == user);
+        if (existingActivationCode is not null)
         {
-            Id = new Guid(),
-            EmailCode = emailCode,
-            SMSCode = smsCode,
-            ActivatedEmail = false,
-            ActivatedSMS = false,
+            _context.EmailActivationCodes.Remove(existingActivationCode);
+            await _context.SaveChangesAsync();
+        }
+
+        Random random = new Random();
+        String code = random.Next(1000, 9999).ToString();
+
+        EmailActivationCode activationCode = new EmailActivationCode
+        {
+            Id = new Guid().ToString(),
+            Code = code,
             User = user
         };
 
-        _context.ActivationCodes.Add(activationCode);
+        _context.EmailActivationCodes.Add(activationCode);
         await _context.SaveChangesAsync();
 
         EmailSender emailSender = new EmailSender();
         try
         {
-            await emailSender.SendEmailAsync(user.Email, emailCode);
+            await emailSender.SendEmailAsync(user.Email, code);
             return true;
         }
         catch (Exception ex)
         {
-            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateCodeForUserAsync");
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateEmailActivationCodeForUserAsync");
             return false;
         }
     }
 
-    public async Task<ActivationCode> GetCodeForUser(string id)
+    public async Task<bool> GenerateSMSActivationCodeForUserAsync(User user)
     {
-        ActivationCode activationCode = await _context.ActivationCodes.Where(ac => ac.UserId.Equals(id)).FirstOrDefaultAsync();
-
-        return activationCode;
-    }
-
-    public async Task<bool> SendSMSToUser(User user)
-    {
-        ActivationCode activationCodeForUser = await GetCodeForUser(user.Id);
-
-        if (activationCodeForUser == null)
+        var existingActivationCode = await _context.SMSActivationCodes.Include(eac => eac.User).FirstOrDefaultAsync(eac => eac.User == user);
+        if (existingActivationCode is not null)
         {
-            return false;
+            _context.SMSActivationCodes.Remove(existingActivationCode);
+            await _context.SaveChangesAsync();
         }
+
+        Random random = new Random();
+        String code = random.Next(1000, 9999).ToString();
+
+        SMSActivationCode activationCode = new SMSActivationCode
+        {
+            Id = new Guid().ToString(),
+            Code = code,
+            User = user
+        };
+
+        _context.SMSActivationCodes.Add(activationCode);
+        await _context.SaveChangesAsync();
 
         try
         {
             SMSSender SMSsender = new SMSSender(_config);
-            SMSsender.SendSMS(user.PhoneNumber, activationCodeForUser.SMSCode);
+            SMSsender.SendSMS(user.PhoneNumber, code);
 
             return true;
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
-            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.SendSMSToUser");
+            LoggerUtility.Logger.LogException(ex, "ActivationCodeService.GenerateSMSActivationCodeForUserAsync");
             return false;
         }
     }
