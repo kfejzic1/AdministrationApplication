@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using AdministrationAPI.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
-
+using AdministrationAPI.Models;
 
 namespace AdministrationAPI.Controllers.Transaction
 {
@@ -28,7 +28,7 @@ namespace AdministrationAPI.Controllers.Transaction
     [HttpGet]
     public async Task<ActionResult<List<TransactionDTO>>> GetTransactions([FromQuery] TransactionQueryOptions options)
     {
-      TransactionResponseDTO response;
+      List<TransactionDTO> response;
 
       try
       {
@@ -40,26 +40,7 @@ namespace AdministrationAPI.Controllers.Transaction
         return NotFound("Error: " + e.Message);
       }
 
-      return Ok(response.Transactions);
-    }
-
-    [HttpGet("test")]
-    public async Task<ActionResult<List<TransactionDTO>>> GetTransactionsTest([FromQuery] TransactionQueryOptions options)
-    {
-
-      TransactionResponseDTO response;
-
-      try
-      {
-        response = await _transactionService.GetTransactions("", options);
-
-      }
-      catch (Exception e)
-      {
-        return NotFound("Error: " + e.Message);
-      }
-
-      return Ok(response.Transactions);
+      return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -96,7 +77,7 @@ namespace AdministrationAPI.Controllers.Transaction
       return res;
     }
 
-    [HttpGet()]
+    [HttpGet("group/type")]
     public async Task<ActionResult<List<TransactionTransfer>>> GetGroupedTransactionsByType()
     {
       List<TransactionTransfer> response;
@@ -114,7 +95,7 @@ namespace AdministrationAPI.Controllers.Transaction
       return Ok(response);
     }
 
-    [HttpGet()]
+    [HttpGet("group/currency")]
     public async Task<ActionResult<List<TransactionTransfer>>> GetGroupedTransactionsByCurrency()
     {
       List<TransactionTransfer> response;

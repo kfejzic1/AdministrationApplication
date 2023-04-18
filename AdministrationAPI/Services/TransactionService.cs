@@ -1,14 +1,13 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.DTOs;
-using AdministrationAPI.DTOs.Transaction;
 using AdministrationAPI.Contracts.Requests;
 using AutoMapper;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Authentication;
-
-
+using AdministrationAPI.Models;
+using AdministrationAPI.DTOs.Transaction;
 
 namespace AdministrationAPI.Services
 {
@@ -16,6 +15,7 @@ namespace AdministrationAPI.Services
   {
     private readonly IMapper _mapper;
     private readonly DBContext _context;
+    static HttpClient client = new HttpClient();
 
     public TransactionService(IMapper mapper, DBContext context)
     {
@@ -25,77 +25,41 @@ namespace AdministrationAPI.Services
     }
 
 
-    public async Task<TransactionResponseDTO> GetTransactions(string userId, TransactionQueryOptions options)
+    public async Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options)
     {
-
-      // Throw error if pageNumber or pageSize is less than 1
-      if (options.PageNumber < 1 || options.PageSize < 1)
+      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiI5MGQxN2ZkYS00NzQ2LTQ2M2MtOTdiYy00ZWFlN2ExY2M0NmYiLCJleHAiOjE2ODE4NTQyMTQsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.uOWMfBPe_WqIv0B4NnII8o9bLfXZ1-r3KUIPr4k45zk";
+      string query = "?token=" + token;
+      query += (options.PageNumber != null) ? "&PageNumber=" + options.PageNumber.ToString() : "";
+      query += (options.PageSize != null) ? "&PageSize=" + options.PageSize.ToString() : "";
+      query += (options.AmountStartFilter != null) ? "&AmountStartFilter=" + options.AmountStartFilter : "";
+      query += (options.AmountEndFilter != null) ? "&AmountEndFilter=" + options.AmountEndFilter : "";
+      query += (options.CurrencyFilter != null) ? "&CurrencyFilter=" + options.CurrencyFilter : "";
+      query += (options.TransactionTypeFilter != null) ? "&TransactionTypeFilter=" + options.TransactionTypeFilter : "";
+      query += (options.RecipientNameFilter != null) ? "&RecipientNameFilter=" + options.RecipientNameFilter : "";
+      query += (options.RecipientAccountNumberFilter != null) ? "&recipientAccountNumberFilter=" + options.RecipientAccountNumberFilter : "";
+      query += (options.SenderNameFilter != null) ? "&SenderNameFilter=" + options.SenderNameFilter : "";
+      if (options.DateTimeStart != null)
       {
-        throw new Exception("PageNumber and PageSize must be greater than or equal to 1.");
+        DateTime start = options.DateTimeStart ?? DateTime.Now;
+        query += "&CreatedAtStartFilter=" + start.ToString("s");
       }
-
-      var transactions = _context.Transactions.AsQueryable();
-
-      if (userId != "")
-        transactions = transactions.Where(t => t.UserId == userId || t.Recipient == userId);
-      // Filter transactions
-      if (options.DateTimeStart == null && options.DateTimeEnd != null) options.DateTimeStart = options.DateTimeEnd;
-      if (options.DateTimeEnd == null && options.DateTimeStart != null) options.DateTimeEnd = options.DateTimeStart;
-
-      if (options.DateTimeStart != null && options.DateTimeEnd != null)
+      if (options.DateTimeEnd != null)
       {
-        transactions = transactions.Where(t => t.DateTime >= options.DateTimeStart && t.DateTime <= options.DateTimeEnd);
+        DateTime end = options.DateTimeEnd ?? DateTime.Now;
+        query += "&CreatedAtStartFilter=" + end.ToString("s");
       }
+      query += (options.sortOrder != null) ? "&sortingOrder=" + options.sortOrder : "";
 
-      if (!string.IsNullOrEmpty(options.Recipient))
-      {
-        transactions = transactions.Where(t => t.Recipient.ToLower() == options.Recipient.ToLower());
-      }
 
-      if (options.MinAmount == null && options.MaxAmount != null) options.MinAmount = options.MaxAmount;
-      if (options.MaxAmount == null && options.MinAmount != null) options.MaxAmount = options.MinAmount;
 
-      if (options.MinAmount != null && options.MaxAmount != null)
-      {
-        transactions = transactions.Where(t => t.Amount >= options.MinAmount && t.Amount <= options.MaxAmount);
-      }
+      Console.WriteLine("Generated Query is: " + query);
 
-      if (options.Status != null)
-      {
-        transactions = transactions.Where(t => t.Status == options.Status);
-      }
-
-      // Sort transactions
-      if (options.SortingOptions != null)
-      {
-        if (options.SortingOptions == SortingOptions.Amount)
-          transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Amount) : transactions.OrderByDescending(t => t.Amount);
-        else if (options.SortingOptions == SortingOptions.Recipient)
-          transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Recipient) : transactions.OrderByDescending(t => t.Recipient);
-        else if (options.SortingOptions == SortingOptions.Status)
-          transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.Status) : transactions.OrderByDescending(t => t.Status);
-        else
-          transactions = (options.Ascending == true) ? transactions.OrderBy(t => t.DateTime) : transactions.OrderByDescending(t => t.DateTime);
-      }
-
-      var response = new TransactionResponseDTO();
-
-      // Set default values for pageNumber and pageSize
-      int pageNumber = options.PageNumber ?? 1;
-      int pageSize = options.PageSize ?? await transactions.CountAsync();
-
-      // Calculate skip count based on pageNumber and pageSize
-      int skipCount = (pageNumber - 1) * pageSize;
-
-      // Apply pagination
-      transactions = transactions.Skip(skipCount).Take(pageSize);
-
-      response.Transactions = await transactions.Select(transaction => _mapper.Map<TransactionDTO>(transaction)).ToListAsync();
-      response.Pages = (int)Math.Ceiling((double)await transactions.CountAsync() / pageSize);
-      response.CurrentPage = pageNumber;
-
-      return response;
+      var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GetTransactionsForUser" + query);
+      var trans = await response.Content.ReadAsAsync<List<TransactionDTO>>();
+      return trans;
     }
+
+
 
     public async Task<TransactionDetailsDTO> GetTransactionByID(int id, string userId)
     {
@@ -125,6 +89,7 @@ namespace AdministrationAPI.Services
 
     public async Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token)
     {
+      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiJkMjdiMzZjYS04MWYxLTQ2NjAtYWY0Yi02ZmEyZWNmZmQwZWEiLCJleHAiOjE2ODE4NTMyMTMsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.9wJnEBKRPVdxiUEzmCYH7vvPNYVeTWJ_l02SOV32R_8";
       HttpClient client = new HttpClient();
       var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GroupTransactionsByType?token=" + token);
       if (response.IsSuccessStatusCode)
@@ -141,6 +106,8 @@ namespace AdministrationAPI.Services
 
     public async Task<List<TransactionTransfer>> GetGroupedTransactionsByCurrency(string token)
     {
+      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiJkMjdiMzZjYS04MWYxLTQ2NjAtYWY0Yi02ZmEyZWNmZmQwZWEiLCJleHAiOjE2ODE4NTMyMTMsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.9wJnEBKRPVdxiUEzmCYH7vvPNYVeTWJ_l02SOV32R_8";
+
       HttpClient client = new HttpClient();
       var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GroupTransactionsByCurrency?token=" + token);
       if (response.IsSuccessStatusCode)
