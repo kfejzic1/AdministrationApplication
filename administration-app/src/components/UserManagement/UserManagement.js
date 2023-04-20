@@ -27,6 +27,9 @@ import {
 	Tooltip,
 	Toolbar,
 	ButtonGroup,
+	List,
+	ListItem,
+	ListItemText
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
@@ -149,6 +152,7 @@ const UserManagement = () => {
 	const [users, setUsers] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+	const [openAccessListDialog, setOpenAccessListDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
@@ -210,6 +214,16 @@ const UserManagement = () => {
 		setSelectedUser({});
 		setOpenUpdateDialog(false);
 	};
+
+	const handleAccessListDialogOpen = user => {
+		setSelectedUser(user);
+		setOpenAccessListDialog(true);
+	}
+
+	const handleAccessListDialogClose = user => {
+		setSelectedUser(user);
+		setOpenAccessListDialog(false);
+	}
 
 	const handleUpdateUser = event => {
 		event.preventDefault();
@@ -325,6 +339,17 @@ const UserManagement = () => {
 													>
 														<LockResetIcon></LockResetIcon>
 													</Button>
+													<Button
+														title='Access List'
+														size='small'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleAccessListDialogOpen(user);
+														}}
+													>
+														<EditIcon></EditIcon>
+													</Button>
 												</ButtonGroup>
 											</TableCell>
 										</TableRow>
@@ -409,6 +434,42 @@ const UserManagement = () => {
 					</form>
 				</DialogContent>
 			</Dialog>
+
+			<Dialog open={openAccessListDialog} onClose={handleAccessListDialogClose}>
+				<DialogTitle>{selectedUser.name} {selectedUser.surname} Access List</DialogTitle>
+				<DialogContent>
+					<List dense disablePadding>
+						<ListItem dense>
+							<ListItemText primary="View account balance" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="View transaction history" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Send payments" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Receive payments" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Edit profile information" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Add or remove payment methods" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Set up recurring payments" />
+						</ListItem>
+						<ListItem dense>
+							<ListItemText primary="Cancel pending payments" />
+						</ListItem>
+					</List>
+					<DialogActions>
+						<Button onClick={handleAccessListDialogClose}>Cancel</Button>
+					</DialogActions>
+				</DialogContent>
+			</Dialog>
+
 			<Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleSnackbarClose}>
 				<Alert onClose={handleSnackbarClose} severity='success'>
 					User saved successfully!

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@mui/x-date-pickers": "^6.2.1",
+    "@react-oauth/google": "^0.10.0",
+    "dayjs": "^1.11.7",
+    "material-ui-dropzone": "^3.5.0",
+    "moment": "^2.29.4",
+    "react-facebook-login": "^4.1.1",
+    "react-onesignal": "^2.0.4",
+    "reactjs-social-login": "^2.6.2"
+  }
+}
