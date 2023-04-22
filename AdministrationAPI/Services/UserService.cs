@@ -295,13 +295,9 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
-            using (var context = new VendorDbContext())
-            {
-                var userIds = context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
+                var userIds = _context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
                 var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
                 return users;
-            }
-
         }
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)

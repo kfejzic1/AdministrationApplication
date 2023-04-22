@@ -6,8 +6,7 @@ using AutoMapper;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
-
+using AdministrationAPI.Contracts.Requests.Transactions;
 
 namespace AdministrationAPI.Services
 {
@@ -15,12 +14,13 @@ namespace AdministrationAPI.Services
     {
         private readonly IMapper _mapper;
         private readonly DBContext _context;
+        private readonly AppDbContext _appContext;
 
-        public TransactionService(IMapper mapper, DBContext context)
+        public TransactionService(IMapper mapper, DBContext context, AppDbContext appContext)
         {
             _mapper = mapper;
             _context = context;
-
+            _appContext = appContext;
         }
 
 
@@ -121,5 +121,36 @@ namespace AdministrationAPI.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<TransactionDetailsDTO>(transaction);
         }
+
+        #region TransactionClaim
+        public int CreateTransactionClaim(ClaimCreateRequest request, string userId)
+        {
+            var transactionClaim = new TransactionClaim
+            {
+                TransactionId = request.TransactionId,
+                Subject = request.Subject,
+                Description = request.Description,
+                Created = DateTime.UtcNow,
+                CreatedBy = userId
+            };
+
+            _appContext.TransactionClaims.Add(transactionClaim);
+            _appContext.SaveChanges();
+
+            //Create bond between contracts and payment terms
+            foreach (var documentId in request.DocumentIds)
+            {
+                var transactionClaimDocument = new TransactionClaimDocument
+                {
+                    ClaimId = transactionClaim.Id,
+                    DocumentId = documentId,
+                };
+                _appContext.TransactionClaimDocuments.Add(transactionClaimDocument);
+            }
+            _appContext.SaveChanges();
+
+            return transactionClaim.Id;
+        }
+        #endregion
     }
 }

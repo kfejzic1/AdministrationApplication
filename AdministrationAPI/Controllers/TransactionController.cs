@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using AdministrationAPI.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
-
+using AdministrationAPI.Contracts.Requests.Transactions;
 
 namespace AdministrationAPI.Controllers.Transaction
 {
@@ -94,6 +94,21 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
             return res;
+        }
+
+        [HttpPost("claim")]
+        public IActionResult CreateTransactionClaim([FromBody] ClaimCreateRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.CreateTransactionClaim(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
         }
 
     }
