@@ -29,7 +29,9 @@ import {
 	ButtonGroup,
 	List,
 	ListItem,
-	ListItemText
+	ListItemText,
+	Checkbox,
+	FormGroup
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
@@ -40,6 +42,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import EditIcon from '@mui/icons-material/Edit';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const theme = createTheme({
 	components: {
@@ -159,6 +162,7 @@ const UserManagement = () => {
 	const [change, setChange] = useState(false);
 
 	const [dense, setDense] = useState(false);
+	const [checkedItems, setCheckedItems] = useState([]);
 
 	useEffect(() => {
 		getAllUsers().then(response => {
@@ -265,6 +269,18 @@ const UserManagement = () => {
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	const handleCheckboxChange = (event) => {
+		const itemId = event.target.value;
+		const isChecked = event.target.checked;
+	
+		if (isChecked) {
+		  setCheckedItems([...checkedItems, itemId]);
+		} else {
+		  setCheckedItems(checkedItems.filter((id) => id !== itemId));
+		}
+	};
+
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -348,7 +364,7 @@ const UserManagement = () => {
 															handleAccessListDialogOpen(user);
 														}}
 													>
-														<EditIcon></EditIcon>
+														<FormatListBulletedIcon></FormatListBulletedIcon>
 													</Button>
 												</ButtonGroup>
 											</TableCell>
@@ -438,34 +454,60 @@ const UserManagement = () => {
 			<Dialog open={openAccessListDialog} onClose={handleAccessListDialogClose}>
 				<DialogTitle>{selectedUser.name} {selectedUser.surname} Access List</DialogTitle>
 				<DialogContent>
-					<List dense disablePadding>
-						<ListItem dense>
+				<List>
+					<FormGroup>
+						<ListItem>
 							<ListItemText primary="View account balance" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('viewBalance')} onChange={handleCheckboxChange} value="viewBalance" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="View transaction history" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('viewHistory')} onChange={handleCheckboxChange} value="viewHistory" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Send payments" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('sendPayments')} onChange={handleCheckboxChange} value="sendPayments" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Receive payments" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('receivePayments')} onChange={handleCheckboxChange} value="receivePayments" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Edit profile information" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('editProfile')} onChange={handleCheckboxChange} value="editProfile" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Add or remove payment methods" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('addRemovePayment')} onChange={handleCheckboxChange} value="addRemovePayment" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Set up recurring payments" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('recurringPayments')} onChange={handleCheckboxChange} value="recurringPayments" />}
+							/>
 						</ListItem>
-						<ListItem dense>
+						<ListItem>
 							<ListItemText primary="Cancel pending payments" />
+							<FormControlLabel
+							control={<Checkbox checked={checkedItems.includes('cancelPending')} onChange={handleCheckboxChange} value="cancelPending" />}
+							/>
 						</ListItem>
-					</List>
+					</FormGroup>
+				</List>
 					<DialogActions>
-						<Button onClick={handleAccessListDialogClose}>Cancel</Button>
+						<Button onClick={handleAccessListDialogClose}>Ok</Button>
 					</DialogActions>
 				</DialogContent>
 			</Dialog>
