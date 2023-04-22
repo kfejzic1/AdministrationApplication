@@ -35,20 +35,18 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
         }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
-
+            var connectionString = "server=localhost\\sqlexpress;Database=vendordb;trusted_connection=true;TrustServerCertificate=True";
             Console.WriteLine("Default connection string: " + connectionString);
 
-            // optionsBuilder.UseSqlite(connectionString);
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseSqlServer(connectionString, options =>
+                options.EnableRetryOnFailure());
         }
     }
 }
