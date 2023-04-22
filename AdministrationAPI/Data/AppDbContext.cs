@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models.Vendor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,14 @@ namespace AdministrationAPI.Data
         public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
         public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
         public DbSet<TokenValidity> TokenValidities { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorUser> VendorUsers { get; set; }
+        public DbSet<VendorLocation> VendorLocations { get; set; }
+        public DbSet<VendorPOS> VendorPOS { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
+        public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
+        public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -30,6 +39,15 @@ namespace AdministrationAPI.Data
             builder.Entity<EmailActivationCode>(entity => { entity.ToTable("usr_email_activation_codes"); });
             builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
+            builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
+            builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
+            builder.Entity<VendorLocation>(entity => { entity.ToTable("ven_vendor_location"); });
+            builder.Entity<VendorPOS>(entity => { entity.ToTable("ven_vendor_pos"); });
+            builder.Entity<Document>(entity => { entity.ToTable("dm_documents"); });
+            builder.Entity<VendorPaymentTermContract>(entity => { entity.ToTable("ven_payment_term_contract"); });
+            builder.Entity<VendorPaymentTerm>(entity => { entity.ToTable("ven_payment_term"); });
+            builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
+
 
 
             ApplySnakeCaseNames(builder);
@@ -137,6 +155,16 @@ namespace AdministrationAPI.Data
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
 
+
+            //Seed InvoiceFrequency
+            List<InvoiceFrequency> invoiceFrequencies = new List<InvoiceFrequency>()
+            {
+                new InvoiceFrequency() { Id = 1, Name = "Monthly", FrequencyDays = 30 },
+                new InvoiceFrequency() { Id = 2, Name = "Weekly", FrequencyDays = 7 },
+                new InvoiceFrequency() { Id = 3, Name = "Biweekly", FrequencyDays = 14 },
+            };
+
+            builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
         }
 
     }

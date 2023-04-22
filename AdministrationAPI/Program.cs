@@ -13,11 +13,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
-builder.Services.AddSingleton<IVendorService, VendorService>();
-builder.Services.AddSingleton<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();

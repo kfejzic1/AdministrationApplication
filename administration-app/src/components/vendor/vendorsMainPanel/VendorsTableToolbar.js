@@ -39,6 +39,12 @@ const useStyles = makeStyles(theme => ({
 			},
 		},
 	},
+	modal: {
+		position: 'absolute',
+		overflow: 'scroll',
+		height: '100%',
+		display: 'block',
+	},
 }));
 
 const tableTheme = createTheme({
@@ -138,6 +144,7 @@ export default function VendorsTableToolBar(props) {
 				)}
 
 				<Modal
+					className={classes.modal}
 					open={open}
 					onClose={handleClose}
 					aria-labelledby='modal-modal-title'
