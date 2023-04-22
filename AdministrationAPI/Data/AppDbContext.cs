@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -24,6 +25,9 @@ namespace AdministrationAPI.Data
         public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
         public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
         public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
+        public DbSet<TransactionClaim> TransactionClaims { get; set; }
+        public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,8 +51,8 @@ namespace AdministrationAPI.Data
             builder.Entity<VendorPaymentTermContract>(entity => { entity.ToTable("ven_payment_term_contract"); });
             builder.Entity<VendorPaymentTerm>(entity => { entity.ToTable("ven_payment_term"); });
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
-
-
+            builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
+            builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
 
             ApplySnakeCaseNames(builder);
 

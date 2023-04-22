@@ -438,7 +438,6 @@ namespace AdministrationAPI.Services
                 return false;
         }
         #endregion
-
         #region InvoiceFrequency
         public List<InvoiceFrequency> GetInvoiceFrequencies()
         {
