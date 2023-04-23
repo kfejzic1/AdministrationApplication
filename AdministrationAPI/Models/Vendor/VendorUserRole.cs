@@ -3,17 +3,10 @@
 namespace AdministrationAPI.Models.Vendor
 {
 
-    public class VendorUserRole : IdentityRole<Guid>
+    public class VendorUserRole 
     {
-
-        public VendorUserRole() : base()
-        {
-        }
-
-        public VendorUserRole(string roleName) : base(roleName)
-        {
-        }
-
+        public int Id { get; set; }
+        public int VendorUserId { get; set; }
+        public int RoleId { get; set; }
     }
-
 }

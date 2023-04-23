@@ -4,13 +4,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
+using System.Data;
+using System.Reflection.Emit;
 
 namespace AdministrationAPI.Data
 {
     public class VendorDbContext : DbContext
     {
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorRoles> VendorRoles { get; set; }
         public DbSet<VendorUser> VendorUsers { get; set; }
+        public DbSet<VendorUserRole> VendorUserRoles { get; set; }
+   
         public DbSet<VendorLocation> VendorLocations { get; set; }
         public DbSet<VendorPOS> VendorPOS { get; set; }
         public DbSet<Document> Documents { get; set; }
@@ -23,13 +28,10 @@ namespace AdministrationAPI.Data
             base.OnModelCreating(builder);
 
 
-            builder.Entity<VendorUser>()
-          .HasKey(vu => new { vu.UserId, vu.VendorId });
-
-            builder.Entity<VendorUser>()
-                .HasOne(vu => vu.Role)
-                .WithMany()
-                .HasForeignKey(vu => vu.RoleId);
+            //builder.Entity<VendorUser>()
+            //   .HasMany(vu => vu.Roles)
+            //   .WithMany()
+            //   .UsingEntity(j => j.ToTable("VendorUserRoles"));
 
             Seed(builder);
           
@@ -49,14 +51,18 @@ namespace AdministrationAPI.Data
 
         private static void SeedRoles(ModelBuilder builder)
         {
-            List<VendorUserRole> roles = new List<VendorUserRole>()
-            {
-                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorAdmin", ConcurrencyStamp = "1", NormalizedName = "VENDORADMIN" },
-                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorUser", ConcurrencyStamp = "2", NormalizedName = "VENDORUSER" },
-                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorRestricted", ConcurrencyStamp = "3", NormalizedName = "VENDORRESTRICTED" }
-            };
+            //    List<VendorUserRole> roles = new List<VendorUserRole>()
+            //    {
+            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorAdmin", ConcurrencyStamp = "1", NormalizedName = "VENDORADMIN" },
+            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorUser", ConcurrencyStamp = "2", NormalizedName = "VENDORUSER" },
+            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorRestricted", ConcurrencyStamp = "3", NormalizedName = "VENDORRESTRICTED" }
+            //    };
 
-            builder.Entity<VendorUserRole>().HasData(roles);
+            builder.Entity<VendorRoles>().HasData(
+                new VendorRoles { Id = Guid.NewGuid(), Name = "VendorAdmin" , NormalizedName="VENDORADMIN" , ConcurrencyStamp = "1"},
+                new VendorRoles { Id = Guid.NewGuid(), Name = "VendorUser", NormalizedName = "VENDORUSER", ConcurrencyStamp = "2" },
+                new VendorRoles { Id = Guid.NewGuid(), Name = "VendorRestricted", NormalizedName = "VENDORRESTRICTED", ConcurrencyStamp = "3" }
+            );
         }
 
 
@@ -67,7 +73,7 @@ namespace AdministrationAPI.Data
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = "server=localhost\\sqlexpress;Database=vendordb;trusted_connection=true;TrustServerCertificate=True";
+            var connectionString = "server=localhost\\sqlexpress;Database=si_app;trusted_connection=true;TrustServerCertificate=True";
             Console.WriteLine("Default connection string: " + connectionString);
 
             optionsBuilder.UseSqlServer(connectionString, options =>

@@ -14,12 +14,10 @@ namespace AdministrationAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IDocumentService _documentService;
-        private readonly RoleManager<VendorUserRole> _roleManager;
-        public VendorService(IConfiguration configuration, IDocumentService documentService, RoleManager<VendorUserRole> roleManager)
+        public VendorService(IConfiguration configuration, IDocumentService documentService)
         {
             _configuration = configuration;
-            _documentService = documentService; 
-            _roleManager = roleManager;
+            _documentService = documentService;
         }
 
         #region VendorMain
@@ -514,20 +512,22 @@ namespace AdministrationAPI.Services
             }
         }
 
+        public IEnumerable<VendorUserRole> GetVendorUserRoles()
+        {
+            throw new NotImplementedException();
+        }
+
+        public VendorUserRole GetRoleById(Guid roleId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
         #region VendorUserRoles
 
-        public IEnumerable<VendorUserRole> GetVendorUserRoles()
-        {
-            return _roleManager.Roles.OfType<VendorUserRole>().ToList();
-        }
 
-        public VendorUserRole GetRoleById(Guid roleId)
-        {
-            return _roleManager.Roles.OfType<VendorUserRole>().FirstOrDefault(vu => vu.Id == roleId);
-        }
 
         #endregion
     }
