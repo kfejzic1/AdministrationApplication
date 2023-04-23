@@ -373,6 +373,7 @@ namespace AdministrationAPI.Controllers
             return Ok(_vendorService.GetRolesForVendorUser(vendorUserId));
         }
 
+
         [HttpGet("VendorUsers/all/{adminId}")]
 
         public IActionResult GetAllVendorUsers (int adminId)
@@ -380,7 +381,7 @@ namespace AdministrationAPI.Controllers
             var result = _vendorService.GetAllVendorUsers(adminId);
             if(result == null)
             {
-                return new ObjectResult(new { statusCode = 505, message = "VendorUser not admin!" });
+                return new ObjectResult(new { statusCode = 505, message = "VendorUser is not admin!" });
             }
             return Ok(result);
         }
