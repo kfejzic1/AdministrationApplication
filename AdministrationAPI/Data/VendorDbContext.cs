@@ -61,15 +61,15 @@ namespace AdministrationAPI.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-            var connectionString = "server=localhost\\sqlexpress;Database=si_app;trusted_connection=true;TrustServerCertificate=True";
+            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+
             Console.WriteLine("Default connection string: " + connectionString);
 
-            optionsBuilder.UseSqlServer(connectionString, options =>
-                options.EnableRetryOnFailure());
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }
