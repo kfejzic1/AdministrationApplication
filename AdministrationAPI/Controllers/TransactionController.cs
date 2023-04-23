@@ -17,11 +17,12 @@ namespace AdministrationAPI.Controllers.Transaction
     public class TransactionController : ControllerBase
     {
 
-
+        private readonly IUserService _userService;
         private readonly ITransactionService _transactionService;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(IUserService userService, ITransactionService transactionService)
         {
+            _userService = userService;
             _transactionService = transactionService;
         }
 
@@ -32,6 +33,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 response = await _transactionService.GetTransactions(userId, options);
             }
@@ -51,6 +53,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 response = await _transactionService.GetTransactions("", options);
 
             }
@@ -69,6 +72,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 response = await _transactionService.GetTransactionByID(id, userId);
             }
@@ -86,6 +90,7 @@ namespace AdministrationAPI.Controllers.Transaction
             TransactionDetailsDTO res;
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 res = await _transactionService.CreateTransaction(req);
             }
             catch (Exception ex)
