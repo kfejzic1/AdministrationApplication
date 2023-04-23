@@ -354,17 +354,36 @@ namespace AdministrationAPI.Controllers
         }
 
 
-        [HttpGet("UserRoles")]
+        [HttpGet("Roles")]
 
         public IActionResult GetVendorUserRoles()
         {
             return Ok(_vendorService.GetVendorUserRoles());
         }
 
-        [HttpGet("UserRole/{id}")]
+        [HttpGet("Role/{id}")]
         public IActionResult GetRoleById([FromRoute] Guid id)
         {
             return Ok (_vendorService.GetRoleById(id));
         }
+
+        [HttpGet("RoleVendorUser/{vendorUserId}")]
+        public IActionResult GetRoleForVendorUser([FromRoute] int vendorUserId)
+        {
+            return Ok(_vendorService.GetRolesForVendorUser(vendorUserId));
+        }
+
+        [HttpGet("VendorUsers/all/{adminId}")]
+
+        public IActionResult GetAllVendorUsers (int adminId)
+        {
+            var result = _vendorService.GetAllVendorUsers(adminId);
+            if(result == null)
+            {
+                return new ObjectResult(new { statusCode = 505, message = "VendorUser not admin!" });
+            }
+            return Ok(result);
+        }
+
     }
 }

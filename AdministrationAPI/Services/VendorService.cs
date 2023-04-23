@@ -536,7 +536,41 @@ namespace AdministrationAPI.Services
 
         }
 
+        public IEnumerable<VendorRoles> GetRolesForVendorUser(int vendorUserId)
+        {
+            using (var context = new VendorDbContext())
+            {
+                var vendorUser = context.VendorUsers.FirstOrDefault(vu => vu.Id == vendorUserId);
 
+                var roles = context.VendorUserRoles.Where(vur => vur.VendorUserId == vendorUserId).Select(r => r.RoleId);
+
+                var returnList = new List<VendorRoles>();
+
+                foreach(var role in roles )
+                {
+                    returnList.Add(context.VendorRoles.FirstOrDefault(r => r.Id == role));
+                }
+                return returnList;
+            }
+        }
+
+        public IEnumerable<VendorUser> GetAllVendorUsers(int adminId)
+        {
+            var roles = GetRolesForVendorUser(adminId);
+            
+
+            if (roles.Any(role => role.Name == "VendorAdmin"))
+            {
+                using (var context = new VendorDbContext())
+                {
+                    var vendorUser = context.VendorUsers.FirstOrDefault(vu => vu.Id == adminId);
+                    var vendorId = vendorUser.VendorId;
+
+                    return context.VendorUsers.Where(vu => vu.VendorId == vendorId).ToList();
+                }
+            }
+            return null;
+        }
         #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace AdministrationAPI.Models.Vendor
         public int VendorId { get; set; }
         public string UserId { get; set; }
 
-        public ICollection<VendorUserRole> Roles { get; set; } = new List<VendorUserRole>();
+        public ICollection<VendorUserRole> Roles { get; set; }
 
         public VendorUser()
         { }

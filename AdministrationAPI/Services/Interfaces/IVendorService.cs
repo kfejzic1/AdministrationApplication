@@ -30,5 +30,8 @@ namespace AdministrationAPI.Services.Interfaces
         IEnumerable<VendorRoles> GetVendorUserRoles();
 
         VendorRoles GetRoleById(Guid roleId);
+        IEnumerable<VendorRoles> GetRolesForVendorUser(int vendorUserId);
+
+        IEnumerable<VendorUser> GetAllVendorUsers(int adminId);
     }
 }
