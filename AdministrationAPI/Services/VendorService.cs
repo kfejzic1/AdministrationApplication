@@ -514,10 +514,21 @@ namespace AdministrationAPI.Services
             }
         }
 
+
+        #endregion
+
+        #region VendorUserRoles
+
         public IEnumerable<VendorUserRole> GetVendorUserRoles()
         {
             return _roleManager.Roles.OfType<VendorUserRole>().ToList();
         }
+
+        public VendorUserRole GetRoleById(Guid roleId)
+        {
+            return _roleManager.Roles.OfType<VendorUserRole>().FirstOrDefault(vu => vu.Id == roleId);
+        }
+
         #endregion
     }
 }

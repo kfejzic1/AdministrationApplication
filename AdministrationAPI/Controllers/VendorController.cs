@@ -360,5 +360,11 @@ namespace AdministrationAPI.Controllers
         {
             return Ok(_vendorService.GetVendorUserRoles());
         }
+
+        [HttpGet("UserRole/{id}")]
+        public IActionResult GetRoleById([FromRoute] Guid id)
+        {
+            return Ok (_vendorService.GetRoleById(id));
+        }
     }
 }
