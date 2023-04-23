@@ -15,10 +15,12 @@ namespace AdministrationAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IDocumentService _documentService;
-        public VendorService(IConfiguration configuration, IDocumentService documentService)
+        private readonly AppDbContext _context;
+        public VendorService(IConfiguration configuration, IDocumentService documentService, AppDbContext context)
         {
             _configuration = configuration;
             _documentService = documentService;
+            _context = context;
         }
 
         #region VendorMain
@@ -521,37 +523,28 @@ namespace AdministrationAPI.Services
 
         public IEnumerable<VendorRoles> GetVendorUserRoles()
         {
-            using (var context = new VendorDbContext())
-            {
-                return context.VendorRoles.ToList();
-            }
-
+            return _context.VendorRoles.ToList();
         }
         public VendorRoles GetRoleById(Guid roleId)
         {
-            using (var context = new VendorDbContext())
-            {
-                return context.VendorRoles.FirstOrDefault(vur => vur.Id == roleId);
-            }
-
+            return _context.VendorRoles.FirstOrDefault(vur => vur.Id == roleId);
         }
 
         public IEnumerable<VendorRoles> GetRolesForVendorUser(int vendorUserId)
         {
-            using (var context = new VendorDbContext())
+           
+            var vendorUser = _context.VendorUsers.FirstOrDefault(vu => vu.Id == vendorUserId);
+
+            var roles = _context.VendorUserRoles.Where(vur => vur.VendorUserId == vendorUserId).Select(r => r.RoleId);
+
+            var returnList = new List<VendorRoles>();
+
+            foreach(var role in roles )
             {
-                var vendorUser = context.VendorUsers.FirstOrDefault(vu => vu.Id == vendorUserId);
-
-                var roles = context.VendorUserRoles.Where(vur => vur.VendorUserId == vendorUserId).Select(r => r.RoleId);
-
-                var returnList = new List<VendorRoles>();
-
-                foreach(var role in roles )
-                {
-                    returnList.Add(context.VendorRoles.FirstOrDefault(r => r.Id == role));
-                }
-                return returnList;
+                returnList.Add(_context.VendorRoles.FirstOrDefault(r => r.Id == role));
             }
+            return returnList;
+            
         }
 
         public IEnumerable<VendorUser> GetAllVendorUsers(int adminId)
@@ -561,13 +554,10 @@ namespace AdministrationAPI.Services
 
             if (roles.Any(role => role.Name == "VendorAdmin"))
             {
-                using (var context = new VendorDbContext())
-                {
-                    var vendorUser = context.VendorUsers.FirstOrDefault(vu => vu.Id == adminId);
-                    var vendorId = vendorUser.VendorId;
+                var vendorUser = _context.VendorUsers.FirstOrDefault(vu => vu.Id == adminId);
+                var vendorId = vendorUser.VendorId;
 
-                    return context.VendorUsers.Where(vu => vu.VendorId == vendorId).ToList();
-                }
+                return _context.VendorUsers.Where(vu => vu.VendorId == vendorId).ToList();    
             }
             return null;
         }
