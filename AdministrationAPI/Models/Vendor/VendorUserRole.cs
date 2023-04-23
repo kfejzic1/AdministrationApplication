@@ -7,6 +7,11 @@ namespace AdministrationAPI.Models.Vendor
     {
         public int Id { get; set; }
         public int VendorUserId { get; set; }
-        public int RoleId { get; set; }
+        public Guid RoleId { get; set; }
+
+        public VendorUserRole()
+        {
+            
+        }
     }
 }

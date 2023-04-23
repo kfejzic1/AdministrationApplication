@@ -7,6 +7,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services
 {
@@ -512,21 +513,28 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public IEnumerable<VendorUserRole> GetVendorUserRoles()
-        {
-            throw new NotImplementedException();
-        }
-
-        public VendorUserRole GetRoleById(Guid roleId)
-        {
-            throw new NotImplementedException();
-        }
 
 
         #endregion
 
         #region VendorUserRoles
 
+        public IEnumerable<VendorRoles> GetVendorUserRoles()
+        {
+            using (var context = new VendorDbContext())
+            {
+                return context.VendorRoles.ToList();
+            }
+
+        }
+        public VendorRoles GetRoleById(Guid roleId)
+        {
+            using (var context = new VendorDbContext())
+            {
+                return context.VendorRoles.FirstOrDefault(vur => vur.Id == roleId);
+            }
+
+        }
 
 
         #endregion
