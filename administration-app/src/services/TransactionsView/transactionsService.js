@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { env } from '../../config/env';
-import { useNavigate } from 'react-router-dom';
 import { transactions } from './mock';
 export function getBasicTransactions(number = 10) {
 	return number < transactions.length
@@ -8,74 +7,113 @@ export function getBasicTransactions(number = 10) {
 		: { data: transactions, hasMore: false };
 }
 export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
-	console.log('Sorting optins=', JSON.stringify(sortingOptions));
+	//console.log('Sorting optins=', JSON.stringify(sortingOptions));
 	var mockSortingOptons = JSON.parse(JSON.stringify(sortingOptions));
 	if (sortingOptions != null) {
-		if (sortingOptions.MinAmount === '') {
-			delete sortingOptions.MinAmount;
+		if (sortingOptions.AmountStartFilter === '') {
+			delete sortingOptions.AmountStartFilter;
 		}
-		if (sortingOptions.SortingOptions === '') {
-			delete sortingOptions.SortingOptions;
+		if (sortingOptions.sortingOrder === '') {
+			delete sortingOptions.sortingOrder;
 		}
 
-		if (sortingOptions.Recipient === '') delete sortingOptions.Recipient;
-		if (sortingOptions.DateTimeEnd === '') delete sortingOptions.DateTimeEnd;
-		else if (sortingOptions.DateTimeEnd)
-			sortingOptions.DateTimeEnd = JSON.stringify(sortingOptions.DateTimeEnd).replaceAll('"', '');
-		if (sortingOptions.DateTimeStart === '') delete sortingOptions.DateTimeStart;
-		else if (sortingOptions.DateTimeStart)
-			sortingOptions.DateTime = JSON.stringify(sortingOptions.DateTimeStart).replaceAll('"', '');
-		if (sortingOptions.Ascending === '') delete sortingOptions.Ascending;
-		if (sortingOptions.Status === '') delete sortingOptions.Status;
-		if (sortingOptions.MaxAmount === '') delete sortingOptions.MaxAmount;
+		if (sortingOptions.RecipientNameFilter === '') delete sortingOptions.RecipientNameFilter;
+		if (sortingOptions.CreatedAtEndFilter === '' || sortingOptions.CreatedAtEndFilter === null)
+			delete sortingOptions.CreatedAtEndFilter;
+		else if (sortingOptions.CreatedAtEndFilter)
+			sortingOptions.CreatedAtEndFilter = JSON.stringify(sortingOptions.CreatedAtEndFilter).replaceAll('"', '');
+		if (sortingOptions.CreatedAtStartFilter === '' || sortingOptions.CreatedAtStartFilter === null)
+			delete sortingOptions.CreatedAtStartFilter;
+		else if (sortingOptions.CreatedAtStartFilter)
+			sortingOptions.CreatedAtStartFilter = JSON.stringify(sortingOptions.CreatedAtStartFilter).replaceAll('"', '');
+		if (sortingOptions.TransactionTypeFilter === '') delete sortingOptions.TransactionTypeFilter;
+		if (sortingOptions.AmountEndFilter === '') delete sortingOptions.AmountEndFilter;
+		if (sortingOptions.CurrencyFilter === '') delete sortingOptions.CurrencyFilter;
 	}
 	return new Promise(function (resolveO, reject) {
+		console.log('treba da zoem');
 		if (!mock)
-			axios(env.API_ENV.url + '/api/transactions?pageNumber=' + pageNumber + '&pageSize=' + pageSize, {
-				method: 'GET',
-				params: sortingOptions,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
+			axios(
+				env.ANDROID_API_ENV.url +
+					'/api/Transaction/GetTransactionsForUser?token=' +
+					localStorage.getItem('token') +
+					'&pageNumber=' +
+					pageNumber +
+					'&pageSize=' +
+					pageSize,
+				{
+					method: 'GET',
+					params: sortingOptions,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					},
+				}
+			)
 				.then(function (response) {
+					console.log('ne vraca nista');
 					resolveO(response);
 				})
 				.catch(function (err) {
+					console.log('erorrrrrrrr');
 					if (err.response.status == 401) reject(401);
 				});
 		else {
-			sortingOptions = mockSortingOptons;
+			console.log('dada ', JSON.stringify(sortingOptions));
+			if (
+				sortingOptions.sortingOrder.slice(sortingOptions.sortingOrder.length - 3, sortingOptions.sortingOrder.length) ==
+				'asc'
+			) {
+				sortingOptions.Ascending = true;
+				sortingOptions.SortingColumn = sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 3);
+			} else {
+				sortingOptions.Ascending = false;
+				sortingOptions.SortingColumn = sortingOptions.sortingOrder.slice(0, sortingOptions.sortingOrder.length - 4);
+			}
+			console.log(sortingOptions.SortingColumn, 'dafdafdfdasf');
 			var temp = transactions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 			if (sortingOptions != null) {
-				if (sortingOptions.Recipient && sortingOptions.Recipient != '') {
-					temp = temp.filter(transaction7 => transaction7.recipient.includes(sortingOptions.Recipient));
+				if (sortingOptions.RecipientNameFilter && sortingOptions.RecipientNameFilter != '') {
+					temp = temp.filter(transaction7 => transaction7.recipient.name?.includes(sortingOptions.RecipientNameFilter));
 				}
-				console.log('temp=', sortingOptions.Recipient, pageNumber, pageSize, JSON.stringify(temp));
+				//console.log('temp=', sortingOptions.RecipientNameFilter, pageNumber, pageSize, JSON.stringify(temp));
 
 				if (sortingOptions.Status && sortingOptions.Status != '') {
-					temp = temp.filter(transaction => transaction.status == sortingOptions.Status);
+					var temp2 = transactions.filter(tr => tr.currency === sortingOptions.Status);
+					temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 				}
 
-				if (sortingOptions.MinAmount && sortingOptions.MinAmount != '') {
-					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.MinAmount));
-				}
-				if (sortingOptions.MaxAmount && sortingOptions.MaxAmount != '') {
-					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.MaxAmount));
+				if (sortingOptions.TransactionTypeFilter && sortingOptions.TransactionTypeFilter != '') {
+					temp = temp.filter(transaction => transaction.TransactionTypeFilter == sortingOptions.TransactionTypeFilter);
 				}
 
-				if (sortingOptions.DateTimeStart && sortingOptions.DateTimeStart.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) > new Date(sortingOptions.DateTimeStart));
+				/*if (sortingOptions.Currency && sortingOptions.Currency != '') {
+							temp = temp.filter(transaction => transaction.currency == sortingOptions.Currency);
+						}*/
+
+				if (sortingOptions.AmountStartFilter && sortingOptions.AmountStartFilter != '') {
+					temp = temp.filter(transaction => transaction.amount > parseInt(sortingOptions.AmountStartFilter));
 				}
-				if (sortingOptions.DateTimeEnd && sortingOptions.DateTimeEnd.length > 14) {
-					temp = temp.filter(transaction => new Date(transaction.dateTime) < new Date(sortingOptions.DateTimeEnd));
+				if (sortingOptions.AmountEndFilter && sortingOptions.AmountEndFilter != '') {
+					temp = temp.filter(transaction => transaction.amount < parseInt(sortingOptions.AmountEndFilter));
 				}
 
-				if (sortingOptions.SortingOptions && sortingOptions.SortingOptions != '') {
-					if (sortingOptions.SortingOptions == 'DateTime')
+				if (sortingOptions.CreatedAtStartFilter && sortingOptions.CreatedAtStartFilter.length > 14) {
+					temp = temp.filter(
+						transaction => new Date(transaction.createdAt) > new Date(sortingOptions.CreatedAtStartFilter)
+					);
+				}
+				if (sortingOptions.CreatedAtEndFilter && sortingOptions.CreatedAtEndFilter.length > 14) {
+					temp = temp.filter(
+						transaction => new Date(transaction.createdAt) < new Date(sortingOptions.CreatedAtEndFilter)
+					);
+				}
+
+				if (sortingOptions.SortingColumn && sortingOptions.SortingColumn != '') {
+					console.log('radiiiiiiiiiiiiiii');
+					if (sortingOptions.SortingColumn == 'createdat')
 						temp = temp.sort((a, b) => {
-							if (new Date(a.dateTime) - new Date(b.dateTime) > 0) {
+							if (new Date(a.createdAt) - new Date(b.createdAt) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
@@ -83,9 +121,9 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 								else return -1;
 							}
 						});
-					if (sortingOptions.SortingOptions == 'Status') {
-						temp = temp.sort((a, b) => {
-							if (a.status.localeCompare(b.status) > 0) {
+					if (sortingOptions.SortingColumn == 'Type') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.transactionType.localeCompare(b.transactionType) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
@@ -93,9 +131,24 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 								else return -1;
 							}
 						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 					}
-					if (sortingOptions.SortingOptions == 'Amount') {
-						temp = temp.sort((a, b) => {
+					if (sortingOptions.SortingColumn == 'Currency') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.currency.localeCompare(b.currency) >= 0) {
+								if (sortingOptions.Ascending) return 1;
+								else return -1;
+							} else {
+								if (!sortingOptions.Ascending) return 1;
+								else return -1;
+							}
+						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					}
+
+					if (sortingOptions.SortingColumn == 'Amount') {
+						console.log('u amonu tsam 1111111111111111111111	');
+						var temp2 = transactions.sort((a, b) => {
 							if (a.amount - b.amount > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
@@ -104,10 +157,11 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 								else return -1;
 							}
 						});
-					}
-					if (sortingOptions.SortingOptions == 'Recipient') {
-						temp = temp.sort((a, b) => {
-							if (a.recipient.localeCompare(b.recipient) > 0) {
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+					} else console.log('u 2amonu tsam 1111111111111111111111	');
+					if (sortingOptions.SortingColumn == 'Recipient') {
+						var temp2 = transactions.sort((a, b) => {
+							if (a.recipient.name?.localeCompare(b.recipient.name) > 0) {
 								if (sortingOptions.Ascending) return 1;
 								else return -1;
 							} else {
@@ -115,10 +169,77 @@ export function getTransactions(pageNumber, pageSize, sortingOptions, mock) {
 								else return -1;
 							}
 						});
+						temp = temp2.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 					}
-				}
+				} else console.log('ne radiiiiiiiiiii');
 			}
 			resolveO({ data: temp });
+		}
+	});
+}
+
+export function getGroupTransactions(group, mock) {
+	return new Promise((resolve, reject) => {
+		if (!mock)
+			axios(
+				env.ANDROID_API_ENV.url +
+					'/api/Transaction/GroupTransactionsBy' +
+					group +
+					'?token=' +
+					localStorage.getItem('token'),
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Acess-Control-Allow-Origin': '*',
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					},
+				}
+			)
+				.then(function (response) {
+					resolve(response.data);
+				})
+				.catch(function (response) {
+					//if (err.response.status === 401) navigate('/login');
+					reject(401);
+				});
+		else {
+			if (group === 'Currency') {
+				var currs = ['CAD', 'CNY', 'EUR', 'GBP', 'JPY', 'USD', 'ZAR', 'BAM'];
+				var result = [];
+				currs.forEach(curr => {
+					var sum = 0;
+					var trans = transactions.filter(a => a.currency == curr);
+					trans.forEach(t => {
+						sum += t.amount;
+					});
+					result.push({
+						keyValue: curr,
+						transactions: trans,
+						totalAmount: sum,
+						numberOfTransactions: trans.length,
+					});
+				});
+				resolve(result);
+			}
+			if (group == 'Type') {
+				var types = ['C2C', 'B2B', 'C2B'];
+				var result = [];
+				types.forEach(ty => {
+					var sum = 0;
+					var trans = transactions.filter(a => a.transactionType == ty);
+					trans.forEach(t => {
+						sum += t.amount;
+					});
+					result.push({
+						keyValue: ty,
+						transactions: trans,
+						totalAmount: sum,
+						numberOfTransactions: trans.length,
+					});
+				});
+				resolve(result);
+			}
 		}
 	});
 }
@@ -151,6 +272,7 @@ export function getTransactionDetails(id, mock) {
 	});
 	*/
 }
+
 export function parseDate(date) {
 	const inputDate = new Date(date);
 
