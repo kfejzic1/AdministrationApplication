@@ -32,6 +32,7 @@ namespace AdministrationAPI.Data
                 .HasForeignKey(vu => vu.RoleId);
 
             Seed(builder);
+          
         }
         public static void Seed(ModelBuilder builder)
         {
@@ -43,7 +44,21 @@ namespace AdministrationAPI.Data
             };
 
             builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
+            SeedRoles(builder);
         }
+
+        private static void SeedRoles(ModelBuilder builder)
+        {
+            List<VendorUserRole> roles = new List<VendorUserRole>()
+            {
+                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorAdmin", ConcurrencyStamp = "1", NormalizedName = "VENDORADMIN" },
+                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorUser", ConcurrencyStamp = "2", NormalizedName = "VENDORUSER" },
+                new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorRestricted", ConcurrencyStamp = "3", NormalizedName = "VENDORRESTRICTED" }
+            };
+
+            builder.Entity<VendorUserRole>().HasData(roles);
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

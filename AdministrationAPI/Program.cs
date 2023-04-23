@@ -158,10 +158,9 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
 var vendorRole= scope.ServiceProvider.GetRequiredService<RoleManager<VendorUserRole>>();
-var roles = new List<string> { "VendorAdmin", "VendorEmployee" };
+var roles = new List<string> { "VendorAdmin", "VendorUser", "VendorRestricted" };
 
 foreach (var role in roles)
 {
@@ -171,6 +170,9 @@ foreach (var role in roles)
     }
 }
 
+
+
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
 
 if (!await roleManager.RoleExistsAsync("Admin"))
