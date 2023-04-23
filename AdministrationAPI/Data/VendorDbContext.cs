@@ -21,6 +21,16 @@ namespace AdministrationAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<VendorUser>()
+          .HasKey(vu => new { vu.UserId, vu.VendorId });
+
+            builder.Entity<VendorUser>()
+                .HasOne(vu => vu.Role)
+                .WithMany()
+                .HasForeignKey(vu => vu.RoleId);
+
             Seed(builder);
         }
         public static void Seed(ModelBuilder builder)
