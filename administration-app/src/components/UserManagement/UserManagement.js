@@ -224,8 +224,8 @@ const UserManagement = () => {
 		setOpenAccessListDialog(true);
 	}
 
-	const handleAccessListDialogClose = user => {
-		setSelectedUser(user);
+	const handleAccessListDialogClose = () => {
+		setSelectedUser({});
 		setOpenAccessListDialog(false);
 	}
 
@@ -507,7 +507,12 @@ const UserManagement = () => {
 					</FormGroup>
 				</List>
 					<DialogActions>
-						<Button onClick={handleAccessListDialogClose}>Ok</Button>
+					<Button onClick={handleAccessListDialogClose} className={`${classes.button}`} variant='outlinedo'>
+								Cancel
+							</Button>
+							<Button type='submit' className={`${classes.button}`} variant='contained'>
+								Save
+							</Button>
 					</DialogActions>
 				</DialogContent>
 			</Dialog>
