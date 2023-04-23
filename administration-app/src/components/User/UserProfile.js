@@ -22,7 +22,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
 import OneSignal from 'react-onesignal';
-
+import { useNavigate } from 'react-router-dom';
 
 
 const ProfilePage = (props) => {
@@ -32,7 +32,7 @@ const ProfilePage = (props) => {
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	
+	const navigate = useNavigate();
 
 	const RedTableCell = withStyles({
 		root: {
@@ -93,6 +93,10 @@ const ProfilePage = (props) => {
 
 	function handleInputMouseLeaveMail() {
 		setShowTooltipMail(false);
+	}
+
+	function openUserTable() {
+		navigate('/b2c-user-management');
 	}
 
 	return (
@@ -214,6 +218,11 @@ const ProfilePage = (props) => {
 							) : null}
 						</Table>
 					</TableContainer>
+
+					<Box className='user-commands'>
+						<Button variant='contained' sx={{ color: 'black' }} className='request-creation-btn' onClick={openUserTable}>My Users</Button>
+					</Box>
+
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>
