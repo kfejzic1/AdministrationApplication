@@ -6,6 +6,7 @@ using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdministrationAPI.Services
 {
@@ -13,11 +14,12 @@ namespace AdministrationAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IDocumentService _documentService;
-
-        public VendorService(IConfiguration configuration, IDocumentService documentService)
+        private readonly RoleManager<VendorUserRole> _roleManager;
+        public VendorService(IConfiguration configuration, IDocumentService documentService, RoleManager<VendorUserRole> roleManager)
         {
             _configuration = configuration;
             _documentService = documentService; 
+            _roleManager = roleManager;
         }
 
         #region VendorMain
@@ -510,6 +512,11 @@ namespace AdministrationAPI.Services
             {
                 return vendorDbContext.InvoiceFrequency.ToList();
             }
+        }
+
+        public IEnumerable<VendorUserRole> GetVendorUserRoles()
+        {
+            return _roleManager.Roles.OfType<VendorUserRole>().ToList();
         }
         #endregion
     }

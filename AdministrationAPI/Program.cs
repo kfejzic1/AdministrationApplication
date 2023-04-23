@@ -19,7 +19,7 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
-builder.Services.AddSingleton<IVendorService, VendorService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddSingleton<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();

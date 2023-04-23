@@ -12,7 +12,7 @@ namespace AdministrationAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
@@ -351,6 +351,14 @@ namespace AdministrationAPI.Controllers
         public IActionResult GetInvoiceFrequency([FromRoute] int id)
         {
             return Ok(_vendorService.GetInvoiceFrequencies());
+        }
+
+
+        [HttpGet("UserRoles")]
+
+        public IActionResult GetVendorUserRoles()
+        {
+            return Ok(_vendorService.GetVendorUserRoles());
         }
     }
 }
