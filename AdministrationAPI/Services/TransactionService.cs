@@ -27,7 +27,6 @@ namespace AdministrationAPI.Services
 
     public async Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options)
     {
-      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiI5MGQxN2ZkYS00NzQ2LTQ2M2MtOTdiYy00ZWFlN2ExY2M0NmYiLCJleHAiOjE2ODE4NTQyMTQsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.uOWMfBPe_WqIv0B4NnII8o9bLfXZ1-r3KUIPr4k45zk";
       string query = "?token=" + token;
       query += (options.PageNumber != null) ? "&PageNumber=" + options.PageNumber.ToString() : "";
       query += (options.PageSize != null) ? "&PageSize=" + options.PageSize.ToString() : "";
@@ -89,7 +88,6 @@ namespace AdministrationAPI.Services
 
     public async Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token)
     {
-      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiJkMjdiMzZjYS04MWYxLTQ2NjAtYWY0Yi02ZmEyZWNmZmQwZWEiLCJleHAiOjE2ODE4NTMyMTMsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.9wJnEBKRPVdxiUEzmCYH7vvPNYVeTWJ_l02SOV32R_8";
       HttpClient client = new HttpClient();
       var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GroupTransactionsByType?token=" + token);
       if (response.IsSuccessStatusCode)
@@ -106,8 +104,6 @@ namespace AdministrationAPI.Services
 
     public async Task<List<TransactionTransfer>> GetGroupedTransactionsByCurrency(string token)
     {
-      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI5ZjViNTg2ZS01YTFmLTRhOWYtODlhMi1hNmMxNDllNDA4MTUiLCJVc2VyTmFtZSI6Im1rb2tvcjIiLCJqdGkiOiJkMjdiMzZjYS04MWYxLTQ2NjAtYWY0Yi02ZmEyZWNmZmQwZWEiLCJleHAiOjE2ODE4NTMyMTMsImlzcyI6Imh0dHA6Ly9zaXByb2pla2F0LmR1Y2tkbnMub3JnOjUwNTEiLCJhdWQiOiJodHRwOi8vc2lwcm9qZWthdC5kdWNrZG5zLm9yZzozMDAwIn0.9wJnEBKRPVdxiUEzmCYH7vvPNYVeTWJ_l02SOV32R_8";
-
       HttpClient client = new HttpClient();
       var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GroupTransactionsByCurrency?token=" + token);
       if (response.IsSuccessStatusCode)
