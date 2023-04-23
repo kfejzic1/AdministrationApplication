@@ -49,10 +49,6 @@ namespace AdministrationAPI.Services
       }
       query += (options.sortOrder != null) ? "&sortingOrder=" + options.sortOrder : "";
 
-
-
-      Console.WriteLine("Generated Query is: " + query);
-
       var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GetTransactionsForUser" + query);
       var trans = await response.Content.ReadAsAsync<List<TransactionDTO>>();
       return trans;
