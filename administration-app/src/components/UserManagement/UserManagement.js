@@ -163,6 +163,7 @@ const UserManagement = () => {
 
 	const [dense, setDense] = useState(false);
 	const [checkedItems, setCheckedItems] = useState([]);
+	const [checkedItemsBefore, setCheckedItemsBefore] = useState([]);
 
 	useEffect(() => {
 		getAllUsers().then(response => {
@@ -221,10 +222,17 @@ const UserManagement = () => {
 
 	const handleAccessListDialogOpen = user => {
 		setSelectedUser(user);
+		setCheckedItemsBefore(checkedItems);
 		setOpenAccessListDialog(true);
 	}
 
 	const handleAccessListDialogClose = () => {
+		setSelectedUser({});
+		setCheckedItems(checkedItemsBefore)
+		setOpenAccessListDialog(false);
+	}
+
+	const handleAccessListUpdate = () => {
 		setSelectedUser({});
 		setOpenAccessListDialog(false);
 	}
@@ -275,9 +283,9 @@ const UserManagement = () => {
 		const isChecked = event.target.checked;
 	
 		if (isChecked) {
-		  setCheckedItems([...checkedItems, itemId]);
+		  setCheckedItems([...checkedItems, itemId + selectedUser.email]);
 		} else {
-		  setCheckedItems(checkedItems.filter((id) => id !== itemId));
+		  setCheckedItems(checkedItems.filter((id) => id !== itemId + selectedUser.email));
 		}
 	};
 
@@ -459,58 +467,58 @@ const UserManagement = () => {
 						<ListItem>
 							<ListItemText primary="View account balance" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('viewBalance')} onChange={handleCheckboxChange} value="viewBalance" />}
+							control={<Checkbox checked={checkedItems.includes('viewBalance' + selectedUser.email)} onChange={handleCheckboxChange} value="viewBalance" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="View transaction history" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('viewHistory')} onChange={handleCheckboxChange} value="viewHistory" />}
+							control={<Checkbox checked={checkedItems.includes('viewHistory' + selectedUser.email)} onChange={handleCheckboxChange} value="viewHistory" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Send payments" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('sendPayments')} onChange={handleCheckboxChange} value="sendPayments" />}
+							control={<Checkbox checked={checkedItems.includes('sendPayments' + selectedUser.email)} onChange={handleCheckboxChange} value="sendPayments" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Receive payments" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('receivePayments')} onChange={handleCheckboxChange} value="receivePayments" />}
+							control={<Checkbox checked={checkedItems.includes('receivePayments' + selectedUser.email)} onChange={handleCheckboxChange} value="receivePayments" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Edit profile information" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('editProfile')} onChange={handleCheckboxChange} value="editProfile" />}
+							control={<Checkbox checked={checkedItems.includes('editProfile' + selectedUser.email)} onChange={handleCheckboxChange} value="editProfile" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Add or remove payment methods" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('addRemovePayment')} onChange={handleCheckboxChange} value="addRemovePayment" />}
+							control={<Checkbox checked={checkedItems.includes('addRemovePayment' + selectedUser.email)} onChange={handleCheckboxChange} value="addRemovePayment" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Set up recurring payments" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('recurringPayments')} onChange={handleCheckboxChange} value="recurringPayments" />}
+							control={<Checkbox checked={checkedItems.includes('recurringPayments' + selectedUser.email)} onChange={handleCheckboxChange} value="recurringPayments" />}
 							/>
 						</ListItem>
 						<ListItem>
 							<ListItemText primary="Cancel pending payments" />
 							<FormControlLabel
-							control={<Checkbox checked={checkedItems.includes('cancelPending')} onChange={handleCheckboxChange} value="cancelPending" />}
+							control={<Checkbox checked={checkedItems.includes('cancelPending' + selectedUser.email)} onChange={handleCheckboxChange} value="cancelPending" />}
 							/>
 						</ListItem>
 					</FormGroup>
 				</List>
 					<DialogActions>
-					<Button onClick={handleAccessListDialogClose} className={`${classes.button}`} variant='outlinedo'>
+							<Button onClick={handleAccessListDialogClose} className={`${classes.button}`} variant='outlinedo'>
 								Cancel
 							</Button>
-							<Button type='submit' className={`${classes.button}`} variant='contained'>
+							<Button type='submit' onClick={handleAccessListUpdate} className={`${classes.button}`} variant='contained'>
 								Save
 							</Button>
 					</DialogActions>
