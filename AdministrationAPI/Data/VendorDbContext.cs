@@ -51,20 +51,12 @@ namespace AdministrationAPI.Data
 
         private static void SeedRoles(ModelBuilder builder)
         {
-            //    List<VendorUserRole> roles = new List<VendorUserRole>()
-            //    {
-            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorAdmin", ConcurrencyStamp = "1", NormalizedName = "VENDORADMIN" },
-            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorUser", ConcurrencyStamp = "2", NormalizedName = "VENDORUSER" },
-            //        new VendorUserRole() {Id = Guid.NewGuid(), Name = "VendorRestricted", ConcurrencyStamp = "3", NormalizedName = "VENDORRESTRICTED" }
-            //    };
-
             builder.Entity<VendorRoles>().HasData(
                 new VendorRoles { Id = Guid.NewGuid(), Name = "VendorAdmin" , NormalizedName="VENDORADMIN" , ConcurrencyStamp = "1"},
                 new VendorRoles { Id = Guid.NewGuid(), Name = "VendorUser", NormalizedName = "VENDORUSER", ConcurrencyStamp = "2" },
                 new VendorRoles { Id = Guid.NewGuid(), Name = "VendorRestricted", NormalizedName = "VENDORRESTRICTED", ConcurrencyStamp = "3" }
             );
         }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

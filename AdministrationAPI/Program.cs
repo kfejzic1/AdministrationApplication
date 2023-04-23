@@ -77,8 +77,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer("server=localhost\\sqlexpress;Database=si_app;trusted_connection=true;TrustServerCertificate=True"));
-//builder.Services.AddDbContext<VendorDbContext>(options => options.UseSqlServer("server=localhost\\sqlexpress;Database=vendordb;trusted_connection=true;TrustServerCertificate=True"));
-builder.Services.AddDbContext<VendorDbContext>();
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
 builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
 
@@ -86,38 +84,6 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
-
-//builder.Services.AddIdentity<VendorUser, VendorUserRole>()
-//    .AddEntityFrameworkStores<VendorDbContext>()
-//    .AddDefaultTokenProviders()
-//    .AddRoles<VendorUserRole>();
-
-//builder.Services.AddScoped<IUserStore<VendorUser>, UserStore<VendorUser, VendorUserRole, VendorDbContext, Guid>>();
-//builder.Services.AddScoped<IRoleStore<VendorUserRole>, RoleStore<VendorUserRole, VendorDbContext, Guid>>();
-//builder.Services.AddScoped<IUserStore<User>, UserStore<User, IdentityRole, AppDbContext, string>>();
-//builder.Services.AddScoped<IRoleStore<IdentityRole>, RoleStore<IdentityRole, AppDbContext, string>>();
-
-//builder.Services.AddIdentityCore<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
-//builder.Services.AddIdentityCore<VendorUser, VendorUserRole>().AddEntityFrameworkStores<VendorDbContext>();
-
-
-//builder.Services.AddIdentityCore<User>()
-//    .AddEntityFrameworkStores<AppDbContext>()
-//    .AddDefaultTokenProviders()
-//    .AddRoles<IdentityRole>()
-//    .AddSignInManager<SignInManager<User>>();
-
-
-
-
-//builder.Services.AddScoped<IUserStore<User>, UserStore<User, IdentityRole, AppDbContext, string>>();
-//builder.Services.AddScoped<IRoleStore<IdentityRole>, RoleStore<IdentityRole, AppDbContext, string>>();
-//builder.Services.AddScoped<IUserStore<VendorUser>>();
-//builder.Services.AddScoped<IRoleStore<VendorUserRole>, RoleStore<VendorUserRole, VendorDbContext, Guid>>();
-
-
-
-
 
 var provider = builder.Services.BuildServiceProvider();
 
@@ -135,19 +101,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-
-//var vendorRole= scope.ServiceProvider.GetRequiredService<RoleManager<VendorUserRole>>();
-//var roles = new List<string> { "VendorAdmin", "VendorUser", "VendorRestricted" };
-
-//foreach (var role in roles)
-//{
-//    if (!await vendorRole.RoleExistsAsync(role))
-//    {
-//        await vendorRole.CreateAsync(new VendorUserRole { Name = role });
-//    }
-//}
-
-
 
 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
