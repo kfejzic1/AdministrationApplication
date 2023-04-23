@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
+using System.Reflection.Emit;
 
 namespace AdministrationAPI.Data
 {
@@ -14,6 +15,9 @@ namespace AdministrationAPI.Data
         {
         }
 
+
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
         public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
         public DbSet<TokenValidity> TokenValidities { get; set; }
@@ -69,6 +73,16 @@ namespace AdministrationAPI.Data
                 .HasOne(rc => rc.User)
                 .WithOne(u => u.SMSActivationCode)
                 .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
+                
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.InputCurrency)
+                .WithMany(c => c.ExchangeRatesAsInput)
+                .HasForeignKey(er => er.InputCurrencyId);
+
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.OutputCurrency)
+                .WithMany(c => c.ExchangeRatesAsOutput)
+                .HasForeignKey(er => er.OutputCurrencyId);
         }
 
         private static void SeedRoles(ModelBuilder builder)
