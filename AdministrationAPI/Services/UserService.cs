@@ -2,6 +2,7 @@
 using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
+using AdministrationAPI.Extensions;
 using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
@@ -82,6 +83,17 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAllUsers()
         {
+            var users = _userManager.Users.ToList();
+            return users;
+        }
+
+        public List<User> GetAllUsersByAdmin()
+        {
+            var isAdmin = IsLoggedInUserAdmin().Result;
+            if (isAdmin == false)
+            {
+                throw new Exception("User is not authorized to edit.");
+            }
             var users = _userManager.Users.ToList();
             return users;
         }
@@ -552,15 +564,20 @@ namespace AdministrationAPI.Services
         }
 
 
-
-        public async Task<IdentityResult> EditUserAdmin(EditRequest request)
+        public async Task<Boolean> IsLoggedInUserAdmin()
         {
             var loggedInUser = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
-            if(loggedInUser == null)
+            if (loggedInUser == null)
             {
                 throw new Exception("Not logged in");
             }
-            var isAdmin = await _signInManager.UserManager.IsInRoleAsync(loggedInUser, "Admin");
+            return await _signInManager.UserManager.IsInRoleAsync(loggedInUser, "Admin");
+        }
+
+
+        public async Task<IdentityResult> EditUserAdmin(EditRequest request)
+        {
+            var isAdmin = await IsLoggedInUserAdmin();
 
             if (isAdmin == false)
             {

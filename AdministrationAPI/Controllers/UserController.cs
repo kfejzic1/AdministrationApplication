@@ -514,7 +514,7 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
-                var users = _userService.GetAllUsers();
+                var users = _userService.GetAllUsersByAdmin();
                 return Ok(users);
             }
             catch (DataException ex)
