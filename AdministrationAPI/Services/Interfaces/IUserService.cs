@@ -21,6 +21,7 @@ namespace AdministrationAPI.Services.Interfaces
         Task<QRCodeResponse> GetTwoFactorQRCode(string id);
         Task<bool> Toggle2FA(string id);
         List<User> GetAllUsers();
+        List<User> GetAllUsersByAdmin();
         User GetUserByName(string name);
         Task<bool> DeleteUserAsync(string username);
         Task<IdentityResult> CreateUser(CreateRequest request);
@@ -28,6 +29,7 @@ namespace AdministrationAPI.Services.Interfaces
         User GetUserById(string id);
         Task<IdentityResult> SetPassword(SetPasswordRequest request);
         Task<IdentityResult> EditUser(EditRequest request);
+        Task<IdentityResult> EditUserAdmin(EditRequest request);
         void SendPasswordResetEmail(string email);
         Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request);
         Task<GetUserResponse> GetUserWithRolesById(string id);
@@ -37,6 +39,13 @@ namespace AdministrationAPI.Services.Interfaces
 
         Task InvalidateToken(string jwt);
         bool IsTokenValid(string jwt);
+
+        Task<IEnumerable<User>> GetUsersForVendor(int adminId);
+
+        Task<IdentityResult> EditVendorUser(EditRequest request, int adminId);
+
+        Task<Boolean> IsLoggedInUserAdmin();
+
 
     }
 }
