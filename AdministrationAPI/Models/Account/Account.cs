@@ -15,6 +15,7 @@ namespace AdministrationAPI.Models
         public Currency Currency { get; set; }
         public string CurrencyId { get; set; }
         public string Description { get; set; }
+        public ICollection<Document> Documents { get; set; }
 
     }
 }
