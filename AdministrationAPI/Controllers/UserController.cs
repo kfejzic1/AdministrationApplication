@@ -431,6 +431,25 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        //[HttpPatch("edit")]
+        //public async Task<IActionResult> EditUser([FromBody] EditRequest request)
+        //{
+        //    var user = _userService.GetUserById(request.Id);
+        //    if (user == null)
+        //    {
+        //        return BadRequest("User doesn't exist");
+        //    }
+        //    var result = await _userService.EditUser(request);
+        //    if (result.Succeeded)
+        //    {
+        //        return Ok("User successfully updated");
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Error while updating user");
+        //    }
+        //}
+
         [HttpPatch("edit")]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
@@ -439,7 +458,7 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User doesn't exist");
             }
-            var result = await _userService.EditUser(request);
+            var result = await _userService.EditUserAdmin(request);
             if (result.Succeeded)
             {
                 return Ok("User successfully updated");
@@ -449,6 +468,34 @@ namespace AdministrationAPI.Controllers
                 return BadRequest("Error while updating user");
             }
         }
+
+        [HttpPatch("editUser")]
+        public async Task<IActionResult> EditUserAdmin([FromBody] EditRequest request) 
+        {
+            
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            try
+            {
+                var result = await _userService.EditUserAdmin(request);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
 
         [HttpGet("allWithRoles")]
         public IActionResult GetAllUsersWithRoles()

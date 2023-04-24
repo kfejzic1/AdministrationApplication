@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace AdministrationAPI.Services
@@ -27,6 +28,8 @@ namespace AdministrationAPI.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
         private readonly IVendorService _vendorService;
+        private readonly IHttpContextAccessor _httpContext;
+
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -35,7 +38,8 @@ namespace AdministrationAPI.Services
             RoleManager<IdentityRole> roleManager,
             AppDbContext context
 ,
-            IVendorService vendorService)
+            IVendorService vendorService,
+            IHttpContextAccessor httpContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,6 +48,7 @@ namespace AdministrationAPI.Services
             _roleManager = roleManager;
             _context = context;
             _vendorService = vendorService;
+            _httpContext = httpContext;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -548,6 +553,22 @@ namespace AdministrationAPI.Services
 
 
 
+        public async Task<IdentityResult> EditUserAdmin(EditRequest request)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            if(loggedInUser == null)
+            {
+                throw new Exception("Not logged in");
+            }
+            var isAdmin = await _signInManager.UserManager.IsInRoleAsync(loggedInUser, "Admin");
+
+            if (isAdmin == false)
+            {
+                throw new Exception("User is not authorized to edit.");
+            }
+            return await EditUser(request);
+        }
+
 
         #region VendorUsers
 
@@ -572,7 +593,7 @@ namespace AdministrationAPI.Services
         public async Task<IdentityResult> EditVendorUser(EditRequest request, int adminId)
         {
             var result = await _vendorService.IsVendorUserAdmin(adminId);
-            if(result==null)
+            if(result==false)
             {
                 throw new Exception("User is not authorized to edit vendor user.");
             }

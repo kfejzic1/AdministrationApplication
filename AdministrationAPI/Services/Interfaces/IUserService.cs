@@ -28,6 +28,7 @@ namespace AdministrationAPI.Services.Interfaces
         User GetUserById(string id);
         Task<IdentityResult> SetPassword(SetPasswordRequest request);
         Task<IdentityResult> EditUser(EditRequest request);
+        Task<IdentityResult> EditUserAdmin(EditRequest request);
         void SendPasswordResetEmail(string email);
         Task<IdentityResult> ResetPasswordAsync(SetPasswordRequest request);
         Task<GetUserResponse> GetUserWithRolesById(string id);
