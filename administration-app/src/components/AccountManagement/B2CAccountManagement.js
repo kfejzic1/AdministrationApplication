@@ -8,7 +8,7 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
-    Divider,
+	Divider,
 	TextField,
 	TableContainer,
 	Table,
@@ -39,7 +39,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import EditIcon from '@mui/icons-material/Edit';
-import { getAllCurrencies}  from '../../services/currencyService'
+import { getAllCurrencies } from '../../services/currencyService';
 import { Typography } from '@material-ui/core';
 import { useParams } from 'react-router';
 
@@ -150,8 +150,8 @@ const useStyles = makeStyles({
 });
 
 const mockAccounts = [
-	{id: '123', description: 'Test account', currency: 'BAM'},
-	{id: '1234', description: 'Test account 2', currency: 'USD'}	
+	{ id: '123', description: 'Test account', currency: 'BAM' },
+	{ id: '1234', description: 'Test account 2', currency: 'USD' },
 ];
 
 const B2CAccManagement = () => {
@@ -164,7 +164,7 @@ const B2CAccManagement = () => {
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
-	const [currencies, setCurrencies] = useState([{name: 'No currencies found'}]);
+	const [currencies, setCurrencies] = useState([{ name: 'No currencies found' }]);
 	const [dense, setDense] = useState(false);
 	const [files, setFiles] = useState(null);
 	const [selectedCurrency, setSelectedCurrency] = useState(null);
@@ -173,26 +173,23 @@ const B2CAccManagement = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
-		
 		getAllCurrencies().then(response => {
 			console.log(response.data);
 			setCurrencies(
 				response.data.map(u => {
 					return {
 						id: u.id,
-						name: u.name
+						name: u.name,
 					};
 				})
-			)
+			);
 			setSelectedCurrency(response.data[0].name);
 		});
-		
+
 		getAllAccounts(getUserId()).then(response => {
-			
 			console.log(response.data);
 			setAccounts(response.data);
-		})
-        
+		});
 	}, [change]);
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
@@ -216,35 +213,37 @@ const B2CAccManagement = () => {
 					formdata.append('ContentType', 'application/pdf');
 					formdata.append('Folder', '/user-requests/' + accountNumber);
 					formdata.append('file', files[i]);
-	
+
 					for (var pair of formdata.entries()) {
-						console.log(pair[0]); 
+						console.log(pair[0]);
 						console.log(pair[1]);
 					}
-					uploadDocument(formdata).then(res => {console.log(res)});
+					uploadDocument(formdata).then(res => {
+						console.log(res);
+					});
 				}
 			}
-			
+
 			let objectData = {
 				accountNumber: accountNumber,
 				currencyId: currency_id,
 				description: description,
-				requestDocumentPath: files ? ('/user-requests/' + accountNumber) : 'null',
+				requestDocumentPath: files ? '/user-requests/' + accountNumber : 'null',
 				approved: false,
 				userId: getUserId(),
 			};
 			console.log(objectData);
-			createAccount(objectData);
-			setAccountNumber(null);
-			setSelectedCurrency(currencies[0].name);
-			setDescription(null);
-			handleCreateDialogClose();
-		}
-		else {
+			createAccount(objectData).then(res => {
+				setAccounts([...accounts, res.data]);
+				setAccountNumber(null);
+				setSelectedCurrency(currencies[0].name);
+				setDescription(null);
+				handleCreateDialogClose();
+			});
+		} else {
 			setErrorMessage('Invalid input data!');
 		}
-		
-	}
+	};
 
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
@@ -252,15 +251,14 @@ const B2CAccManagement = () => {
 
 	function findCurrencyByName(curr) {
 		for (var i = 0; i < currencies.length; i++) {
-			if (currencies[i].name == curr)
-				return currencies[i].id;
+			if (currencies[i].name == curr) return currencies[i].id;
 		}
 		return null;
 	}
 
 	function handleFiles(files) {
 		setFiles(files.target.files);
-	};
+	}
 
 	return (
 		<div>
@@ -277,8 +275,7 @@ const B2CAccManagement = () => {
 											size='small'
 											variant='text'
 											endIcon={<CreateIcon />}
-											onClick={handleCreateDialogOpen}
-										>
+											onClick={handleCreateDialogOpen}>
 											Request Account Creation
 										</Button>
 									</Tooltip>
@@ -288,8 +285,7 @@ const B2CAccManagement = () => {
 								className={classes.root}
 								sx={{ minWidth: '100%' }}
 								aria-labelledby='tableTitle'
-								size={dense ? 'small' : 'medium'}
-							>
+								size={dense ? 'small' : 'medium'}>
 								<AccTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{accounts.map(account => (
@@ -302,8 +298,7 @@ const B2CAccManagement = () => {
 											hover
 											role='checkbox'
 											tabIndex={-1}
-											sx={{ cursor: 'pointer' }}
-										>
+											sx={{ cursor: 'pointer' }}>
 											<TableCell align='left'>{account.id}</TableCell>
 											<TableCell align='left'>{account.description}</TableCell>
 											<TableCell align='left'>{account.currency.name}</TableCell>
@@ -335,27 +330,45 @@ const B2CAccManagement = () => {
 						</Alert>
 					) : null}
 					<form>
-                        <TextField margin='dense' name='account-id' label='Account Number' fullWidth onChange={(e) => {setAccountNumber(e.target.value)}}/>
-                        <TextField margin='dense' name='description' label='Description' fullWidth onChange={(e) => {setDescription(e.target.value)}}/>
+						<TextField
+							margin='dense'
+							name='account-id'
+							label='Account Number'
+							fullWidth
+							onChange={e => {
+								setAccountNumber(e.target.value);
+							}}
+						/>
+						<TextField
+							margin='dense'
+							name='description'
+							label='Description'
+							fullWidth
+							onChange={e => {
+								setDescription(e.target.value);
+							}}
+						/>
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Currency</InputLabel>
-							<Select label='Currency' name='currency' defaultValue={currencies[0].name} onChange={(e) => {setSelectedCurrency(e.target.value)}}>
-                                {
-                                    currencies.map((currency) => {
-                                        return <MenuItem value={currency.name} key={currency.name}>{currency.name}</MenuItem>
-                                    })
-                                }
+							<Select
+								label='Currency'
+								name='currency'
+								defaultValue={currencies[0].name}
+								onChange={e => {
+									setSelectedCurrency(e.target.value);
+								}}>
+								{currencies.map(currency => {
+									return (
+										<MenuItem value={currency.name} key={currency.name}>
+											{currency.name}
+										</MenuItem>
+									);
+								})}
 							</Select>
 						</FormControl>
-                        <Divider sx={{ mt: 1, mb: 1 }}></Divider>
-                        <Typography variant="p">Upload documents for approval here:</Typography>
-                        <input
-                            accept="application/pdf"
-                            id="button-file"
-                            type="file"
-                            multiple
-							onChange={(e) => handleFiles(e)}
-                        />
+						<Divider sx={{ mt: 1, mb: 1 }}></Divider>
+						<Typography variant='p'>Upload documents for approval here:</Typography>
+						<input accept='application/pdf' id='button-file' type='file' multiple onChange={e => handleFiles(e)} />
 
 						<DialogActions>
 							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
@@ -368,7 +381,6 @@ const B2CAccManagement = () => {
 					</form>
 				</DialogContent>
 			</Dialog>
-			
 		</div>
 	);
 };

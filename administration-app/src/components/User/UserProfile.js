@@ -47,7 +47,6 @@ const ProfilePage = props => {
 
 	const navigate = useNavigate();
 
-
 	const RedTableCell = withStyles({
 		root: {
 			border: '2px solid red',
@@ -224,16 +223,16 @@ const ProfilePage = props => {
 					</TableContainer>
 
 					<Box className='user-commands'>
-						<Button variant='contained' sx={{ color: 'black' }} className='request-creation-btn' onClick={openUserTable}>My Accounts</Button>
+						<Button variant='contained' sx={{ color: 'black' }} className='user-commands-btn' onClick={openUserTable}>
+							My Accounts
+						</Button>
+						<Button variant='contained' sx={{ color: 'black' }} className='user-commands-btn' onClick={handleShowModal}>
+							Send notification to subscribed users
+						</Button>
 					</Box>
 
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
-					</Box>
-					<Box textAlign='center' className='mt-4'>
-						<Button variant='contained' onClick={handleShowModal}>
-							Send notification to subscribed users
-						</Button>
 					</Box>
 				</Box>
 			</Box>
