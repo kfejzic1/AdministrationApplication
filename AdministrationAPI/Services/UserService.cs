@@ -26,7 +26,7 @@ namespace AdministrationAPI.Services
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
-
+        private readonly IVendorService _vendorService;
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -34,7 +34,8 @@ namespace AdministrationAPI.Services
             IMapper mapper,
             RoleManager<IdentityRole> roleManager,
             AppDbContext context
-        )
+,
+            IVendorService vendorService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,6 +43,7 @@ namespace AdministrationAPI.Services
             _mapper = mapper;
             _roleManager = roleManager;
             _context = context;
+            _vendorService = vendorService;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -543,6 +545,42 @@ namespace AdministrationAPI.Services
 
             await _context.SaveChangesAsync();
         }
+
+
+
+
+        #region VendorUsers
+
+        public async Task<IEnumerable<User>> GetUsersForVendor(int adminId)
+        {
+            var vendorUsers = await _vendorService.GetVendorUsersForAdmin(adminId);
+            if(vendorUsers == null)
+            {
+                return null;
+            }
+
+            List<User> users = new List<User>();
+
+            foreach(var vu in vendorUsers)
+            {
+                users.Add(GetUserById(vu.UserId));
+            }
+
+            return users.ToList();
+        }
+
+        public async Task<IdentityResult> EditVendorUser(EditRequest request, int adminId)
+        {
+            var result = await _vendorService.IsVendorUserAdmin(adminId);
+            if(result==null)
+            {
+                throw new Exception("User is not authorized to edit vendor user.");
+            }
+            return await EditUser(request);
+
+        }
+
+        #endregion
 
     }
 }

@@ -38,5 +38,10 @@ namespace AdministrationAPI.Services.Interfaces
         Task InvalidateToken(string jwt);
         bool IsTokenValid(string jwt);
 
+        Task<IEnumerable<User>> GetUsersForVendor(int adminId);
+
+        Task<IdentityResult> EditVendorUser(EditRequest request, int adminId);
+
+
     }
 }

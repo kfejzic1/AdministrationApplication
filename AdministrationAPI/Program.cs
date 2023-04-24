@@ -76,7 +76,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer("server=localhost\\sqlexpress;Database=si_app;trusted_connection=true;TrustServerCertificate=True"));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
 builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
 

@@ -378,7 +378,7 @@ namespace AdministrationAPI.Controllers
 
         public IActionResult GetAllVendorUsers (int adminId)
         {
-            var result = _vendorService.GetAllVendorUsers(adminId);
+            var result = _vendorService.GetVendorUsersForAdmin(adminId);
             if(result == null)
             {
                 return new ObjectResult(new { statusCode = 505, message = "VendorUser is not admin!" });

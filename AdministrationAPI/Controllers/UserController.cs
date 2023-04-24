@@ -3,6 +3,7 @@ using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
+using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
@@ -17,7 +18,7 @@ namespace AdministrationAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    
+
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -602,6 +603,36 @@ namespace AdministrationAPI.Controllers
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Logout");
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet("UsersForVendor/{adminId}")]
+        public async Task<IActionResult> GetUsersForVendor([FromRoute] int adminId)
+        {
+            return Ok(await _userService.GetUsersForVendor(adminId));
+        }
+
+        [HttpPost("editVendorUser")]
+        public async Task<IActionResult> EditVendorUser([FromBody] EditRequest request, int adminId)
+        {
+            try
+            {
+                var result = await _userService.EditVendorUser(request, adminId);
+                if (result.Succeeded)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                LoggerUtility.Logger.LogException(ex, "An error occurred while editing the vendor user.");
+                return StatusCode(500);
             }
         }
     }
