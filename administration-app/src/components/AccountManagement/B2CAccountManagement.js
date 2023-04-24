@@ -32,7 +32,7 @@ import {
 import { Alert } from '@mui/material';
 import AccTableHead from './AccTableHead';
 import { Stack } from '@mui/system';
-
+import { uploadDocument } from '../../services/documentService';
 import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -164,6 +164,7 @@ const B2CAccManagement = () => {
 	const [change, setChange] = useState(false);
 	const [currencies, setCurrencies] = useState([{name: 'No currencies found'}]);
 	const [dense, setDense] = useState(false);
+	const [files, setFiles] = useState(null);
 
 	useEffect(() => {
 		
@@ -209,12 +210,43 @@ const B2CAccManagement = () => {
 			})
 			.catch(error => console.error(error));*/
 		
-			
+		if (files) {
+			for (var i = 0; i < files.length; i++) {
+				let formdata = new FormData();
+				formdata.append('document', files[i]);
+				//console.log(formdata);
+				
+				//uploadDocument(formdata);
+			}
+		}
+		
 	};
+
+	const testDocument = () => {
+		if (files) {
+			console.log(files);
+			for (var i = 0; i < files.length; i++) {
+				let formdata = new FormData();
+				formdata.append('ContentType', 'application/pdf');
+				formdata.append('file', files[i]);
+
+				for (var pair of formdata.entries()) {
+					console.log(pair[0]); 
+					console.log(pair[1]);
+				}
+				uploadDocument(formdata);
+			}
+		}
+	}
 
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	function handleFiles(files) {
+		setFiles(files.target.files);
+	};
+
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -302,13 +334,14 @@ const B2CAccManagement = () => {
                             id="button-file"
                             type="file"
                             multiple
+							onChange={(e) => handleFiles(e)}
                         />
 
 						<DialogActions>
 							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
 								Cancel
 							</Button>
-							<Button type='submit' className={`${classes.button}`} variant='contained'>
+							<Button onClick={testDocument} className={`${classes.button}`} variant='contained'>
 								Send Request
 							</Button>
 						</DialogActions>
