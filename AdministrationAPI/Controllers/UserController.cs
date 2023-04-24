@@ -514,6 +514,27 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
+                var users = _userService.GetAllUsers();
+                return Ok(users);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("allAdmin")]
+        public IActionResult GetAllUsersAdmin()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
                 var users = _userService.GetAllUsersByAdmin();
                 return Ok(users);
             }
