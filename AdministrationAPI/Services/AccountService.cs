@@ -36,7 +36,13 @@ namespace AdministrationAPI.Services
         }
         public List<Account> GetAccountsForUser(string userId)
         {
-            return _context.Accounts.Where(a => a.UserId == userId).ToList();
+            var accounts = _context.Accounts.Where(a => a.UserId == userId).ToList();
+            accounts.ForEach(a =>
+            {
+                string ime = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
+                a.Currency = new Currency() { Name = ime };
+            });
+            return accounts;
         }
         public List<Account> GetAccountsForUserName(string userName)
         { //ovo ne radi
