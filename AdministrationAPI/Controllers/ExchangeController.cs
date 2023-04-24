@@ -12,7 +12,7 @@ namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExchangeController : ControllerBase
     {
 
@@ -23,21 +23,58 @@ namespace AdministrationAPI.Controllers
             _exchangeService = exchangeService;
         }
 
-        [HttpPost("account")]
+        [HttpPost("CreateAccount")]
         public async Task<IActionResult> CreateAccount([FromBody] ExchangeAccountRequest request)
         {
-            foreach (var header in Request.Headers)
+            try
             {
-                if(header.Key.CompareTo("Authorization")==0)
-                    Console.WriteLine(header.Value);
+                string token = "";
+                foreach (var header in Request.Headers)
+                {
+                    if (header.Key.CompareTo("Authorization") == 0)
+                        token = header.Value;
+                }
+                var response = await _exchangeService.CreateAccount(request, token);
+                if (response != null)
+                    return Ok(response);
+                else
+                    return BadRequest("Failed");
             }
-            
-            return Ok("radi");
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "ExchangeController.AddExchangeRate");
+                return BadRequest("Failed");
+            }
+
+        }
+        [HttpGet("GetUserAccounts")]
+        public async Task<IActionResult> GetUserAccounts()
+        {
+            try
+            {
+                string token = "";
+                foreach (var header in Request.Headers)
+                {
+                    if (header.Key.CompareTo("Authorization") == 0)
+                        token = header.Value;
+                }
+                var response = await _exchangeService.GetUserAccounts( token);
+                if (response != null)
+                    return Ok(response);
+                else
+                    return BadRequest("Failed");
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "ExchangeController.AddExchangeRate");
+                return BadRequest("Failed");
+            }
+
         }
 
-   
 
-        [HttpPost("transaction")]
+
+        [HttpPost("CreateTransaction")]
         public async Task<IActionResult> MakeTransaction([FromBody] TransactionRequest transactionRequest)
         {
             try
@@ -48,40 +85,15 @@ namespace AdministrationAPI.Controllers
                     if (header.Key.CompareTo("Authorization") == 0)
                         token=header.Value;
                 }
-              var k=  await _exchangeService.MakeTransaction(transactionRequest,token);
-             if(k != null)
-                return Ok(k);
+              var response=  await _exchangeService.MakeTransaction(transactionRequest,token);
+             if(response != null)
+                return Ok(response);
             else
                     return BadRequest("Failed");
             }
             catch (Exception ex)
             {
                 LoggerUtility.Logger.LogException(ex, "ExchangeController.AddExchangeRate");
-                return BadRequest("Failed");
-            }
-        }
-        [HttpPost("transactionWithPhoneNumber")]
-        public async Task<IActionResult> MakeTransactionWithPhoneNumber([FromBody] TransactionPhoneDto transactionRequest)
-        {
-            try
-            {
-                string token = "";
-                foreach (var header in Request.Headers)
-                {
-                    if (header.Key.CompareTo("Authorization") == 0)
-                        token = header.Value;
-                }
-                var k = await _exchangeService.MakeTransactionWithPhoneNumber(transactionRequest, token);
-                if (k != null)
-                    return Ok(k);
-                else
-                    return BadRequest("Failed");
-            }
-            catch (Exception ex)
-            {
-                LoggerUtility.Logger.LogException(ex, "ExchangeController.AddExchangeRate");
-                if (ex.Message.Contains("pss"))
-                    return BadRequest("Error code: " + ex.Message.Substring(3));
                 return BadRequest("Failed");
             }
         }

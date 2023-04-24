@@ -7,7 +7,7 @@
         public string TransactionType { get; set; }
         public string TransactionPurpose { get; set; }
         public string Category { get; set; }
-        // public SenderRequest Sender { get; set; }
+        public SenderRequest Sender { get; set; }
         public RecipientRequest Recipient { get; set; }
     }
 }
