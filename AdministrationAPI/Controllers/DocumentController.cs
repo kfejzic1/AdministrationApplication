@@ -18,7 +18,7 @@ namespace AdministrationAPI.Controllers
         private readonly IDocumentService _documentService;
         private readonly IUserService _userService;
 
-        public DocumentController(IuserService userService, IDocumentService documentService)
+        public DocumentController(IUserService userService, IDocumentService documentService)
         {
             _userService = userService;
             _documentService = documentService;
