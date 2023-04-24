@@ -4,6 +4,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using AdministrationAPI.Extensions;
 
 namespace AdministrationAPI.Controllers
 {
@@ -16,7 +17,7 @@ namespace AdministrationAPI.Controllers
         private readonly ITemplateService _templateService;
         private readonly IUserService _userService;
 
-        public TemplateController(IuserService userService, ITemplateService templateService) {
+        public TemplateController(IUserService userService, ITemplateService templateService) {
             _userService = userService;
             _templateService=templateService;
         }

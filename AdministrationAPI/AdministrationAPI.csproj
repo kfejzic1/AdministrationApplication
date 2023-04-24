@@ -37,4 +37,8 @@
     <PackageReference Include="Twilio" Version="6.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Exchange\" />
+  </ItemGroup>
+
 </Project>
