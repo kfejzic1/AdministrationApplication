@@ -25,6 +25,8 @@ namespace AdministrationAPI.Data
         public DbSet<VendorUser> VendorUsers { get; set; }
         public DbSet<VendorLocation> VendorLocations { get; set; }
         public DbSet<VendorPOS> VendorPOS { get; set; }
+        public DbSet<VendorRoles> VendorRoles { get; set; }
+        public DbSet<VendorUserRole> VendorUserRoles { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
         public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
