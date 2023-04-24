@@ -86,12 +86,12 @@ namespace AdministrationAPI.Services
             throw new AuthenticationException("Invalid token!");
         }
 
-        public async Task<TransactionDetailsDTO> GetTransactionByID(int id, string token)
+        public async Task<TransactionDTO> GetTransactionByID(int id, string token)
         {
-            var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GetTransactionByID?token=" + token);
+            var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GetTransactionByID?token=" + token + "&transactionId=" + id);
             if (response.IsSuccessStatusCode)
             {
-                var transactions = await response.Content.ReadFromJsonAsync<TransactionDetailsDTO>();
+                var transactions = await response.Content.ReadFromJsonAsync<TransactionDTO>();
                 if (transactions == null)
                 {
                     throw new Exception("No transactions found.");

@@ -10,7 +10,7 @@ namespace AdministrationAPI.Services.Interfaces
     public interface ITransactionService
     {
         Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options);
-        Task<TransactionDetailsDTO> GetTransactionByID(int id, string token);
+        Task<TransactionDTO> GetTransactionByID(int id, string token);
 
         Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req);
         int CreateTransactionClaim(ClaimCreateRequest request, string userId);

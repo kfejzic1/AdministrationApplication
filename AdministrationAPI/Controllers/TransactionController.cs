@@ -45,9 +45,9 @@ namespace AdministrationAPI.Controllers.Transaction
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDetailsDTO>> GetTransactionById(int id)
+        public async Task<ActionResult<TransactionDTO>> GetTransactionById(int id)
         {
-            TransactionDetailsDTO response;
+            TransactionDTO response;
 
             try
             {
