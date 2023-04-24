@@ -86,9 +86,19 @@ namespace AdministrationAPI.Services
             throw new AuthenticationException("Invalid token!");
         }
 
-        public Task<TransactionDetailsDTO> GetTransactionByID(int id, string token)
+        public async Task<TransactionDetailsDTO> GetTransactionByID(int id, string token)
         {
-            throw new NotImplementedException();
+            var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GetTransactionByID?token=" + token);
+            if (response.IsSuccessStatusCode)
+            {
+                var transactions = await response.Content.ReadFromJsonAsync<TransactionDetailsDTO>();
+                if (transactions == null)
+                {
+                    throw new Exception("No transactions found.");
+                }
+                return transactions;
+            }
+            throw new AuthenticationException("Invalid token!");
         }
 
         public Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req)
