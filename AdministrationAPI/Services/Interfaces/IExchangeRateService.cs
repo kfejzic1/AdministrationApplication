@@ -9,5 +9,6 @@ namespace AdministrationAPI.Services.Interfaces
         public Task AddExchangeRate(ExchangeRateRequest exchangeRateRequest);
         public Task<ICollection<ExchangeRate>> GetExchangeRates();
         public Task<ICollection<Currency>> GetCurrencies();
+        public Task DeleteAllExchangeRates();
     }
 }
