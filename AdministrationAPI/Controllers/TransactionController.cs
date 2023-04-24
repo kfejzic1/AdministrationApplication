@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using AdministrationAPI.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
-
+using AdministrationAPI.Contracts.Requests.Transactions;
 
 namespace AdministrationAPI.Controllers.Transaction
 {
@@ -17,11 +17,12 @@ namespace AdministrationAPI.Controllers.Transaction
     public class TransactionController : ControllerBase
     {
 
-
+        private readonly IUserService _userService;
         private readonly ITransactionService _transactionService;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(IUserService userService, ITransactionService transactionService)
         {
+            _userService = userService;
             _transactionService = transactionService;
         }
 
@@ -32,6 +33,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 response = await _transactionService.GetTransactions(userId, options);
             }
@@ -51,6 +53,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 response = await _transactionService.GetTransactions("", options);
 
             }
@@ -69,6 +72,7 @@ namespace AdministrationAPI.Controllers.Transaction
 
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 response = await _transactionService.GetTransactionByID(id, userId);
             }
@@ -86,6 +90,7 @@ namespace AdministrationAPI.Controllers.Transaction
             TransactionDetailsDTO res;
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 res = await _transactionService.CreateTransaction(req);
             }
             catch (Exception ex)
@@ -94,6 +99,21 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
             return res;
+        }
+
+        [HttpPost("claim")]
+        public IActionResult CreateTransactionClaim([FromBody] ClaimCreateRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.CreateTransactionClaim(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
         }
 
     }

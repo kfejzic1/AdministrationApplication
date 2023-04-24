@@ -20,11 +20,12 @@ var connectionString = configuration.GetConnectionString("DefaultConnectionStrin
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
-builder.Services.AddSingleton<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
+builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<TokenUtilities>();
 
 
@@ -76,10 +77,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
 builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
-
+builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()

@@ -37,6 +37,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var user = await _userService.GetUser(userId);
 
@@ -153,6 +154,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var qrCode = await _userService.GetTwoFactorQRCode(userId);
 
@@ -174,6 +176,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var result = await _userService.Toggle2FA(userId);
 
@@ -195,6 +198,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 if (_userService.GetUserByEmail(request.Email) != null)
                 {
                     var result = new ObjectResult(new { statusCode = 204, message = "User with this email already exists!" });
@@ -453,6 +457,7 @@ namespace AdministrationAPI.Controllers
         [HttpPatch("edit")]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var user = _userService.GetUserById(request.Id);
             if (user == null)
             {
@@ -500,6 +505,7 @@ namespace AdministrationAPI.Controllers
         [HttpGet("allWithRoles")]
         public IActionResult GetAllUsersWithRoles()
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var users = _userService.GetAllUsers();
             var usersWithRoles = users.Select(u => _userService.GetUserWithRolesById(u.Id));
             return Ok(usersWithRoles);
@@ -551,6 +557,7 @@ namespace AdministrationAPI.Controllers
         [HttpGet("roles")]
         public IEnumerable<IdentityRole> GetRoles()
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return _userService.GetRoles();
         }
 
@@ -563,6 +570,7 @@ namespace AdministrationAPI.Controllers
         [HttpPost("forgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var user = _userService.GetUserById(request.Id);
             if (user == null)
             {
@@ -606,6 +614,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var users = _userService.GetUserByName(name);
                 return Ok(users);
             }
@@ -625,6 +634,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 TokenVerificationResult roles = new TokenVerificationResult();
 
                 bool? validity = null;
@@ -659,6 +669,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 _userService.InvalidateToken(token);
 
                 return Ok();

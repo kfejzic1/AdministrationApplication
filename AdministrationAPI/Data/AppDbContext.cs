@@ -16,22 +16,23 @@ namespace AdministrationAPI.Data
         }
 
 
-       
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
         public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
         public DbSet<TokenValidity> TokenValidities { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<VendorUser> VendorUsers { get; set; }
-        public DbSet<VendorUserRole> VendorUserRoles { get; set; }
-        public DbSet<VendorRoles> VendorRoles { get; set; }
         public DbSet<VendorLocation> VendorLocations { get; set; }
         public DbSet<VendorPOS> VendorPOS { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
         public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
         public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
-     
-
+        public DbSet<TransactionClaim> TransactionClaims { get; set; }
+        public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
+        public DbSet<TransactionClaim> TransactionClaims { get; set; }
+        public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,6 +58,8 @@ namespace AdministrationAPI.Data
             builder.Entity<VendorPaymentTermContract>(entity => { entity.ToTable("ven_payment_term_contract"); });
             builder.Entity<VendorPaymentTerm>(entity => { entity.ToTable("ven_payment_term"); });
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
+            builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
+            builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
             
 
             ApplySnakeCaseNames(builder);
@@ -74,7 +77,16 @@ namespace AdministrationAPI.Data
                 .HasOne(rc => rc.User)
                 .WithOne(u => u.SMSActivationCode)
                 .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
+                
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.InputCurrency)
+                .WithMany(c => c.ExchangeRatesAsInput)
+                .HasForeignKey(er => er.InputCurrencyId);
 
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.OutputCurrency)
+                .WithMany(c => c.ExchangeRatesAsOutput)
+                .HasForeignKey(er => er.OutputCurrencyId);
         }
 
         private static void SeedRoles(ModelBuilder builder)

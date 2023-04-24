@@ -31,6 +31,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.Create(request));
             }
@@ -50,6 +51,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.Delete(request.Id));
             }
             catch (DataException ex)
@@ -68,6 +70,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var vendors = _vendorService.GetAll();
                 vendors.ForEach(vendor =>
                 {
@@ -92,6 +95,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.Get(id));
             }
             catch (DataException ex)
@@ -110,6 +114,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.CreateLocation(request));
             }
@@ -129,6 +134,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.DeleteLocation(request));
             }
             catch (DataException ex)
@@ -147,6 +153,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.GetLocation(locationId));
             }
             catch (DataException ex)
@@ -165,6 +172,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.GetAllLocations());
             }
             catch (DataException ex)
@@ -183,6 +191,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.GetAllLocationsWithVendorId(vendorId));
             }
             catch (DataException ex)
@@ -201,6 +210,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 request.ModifiedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.UpdateLocation(request));
             }
@@ -220,6 +230,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 request.CreatedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.CreatePOS(request));
             }
@@ -239,6 +250,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 request.ModifiedBy = ControlExtensions.GetId(HttpContext);
                 return Ok(_vendorService.UpdatePOS(request.Id, request));
             }
@@ -258,6 +270,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_vendorService.DeletePOS(request.Id));
             }
             catch (DataException ex)
@@ -276,6 +289,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var vendors = _vendorService.GetAllPOS(locationId);
                 vendors.ForEach(vendor =>
                 {
@@ -300,6 +314,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 paymentTermRequest.CreatedBy = ControlExtensions.GetId(HttpContext);
                 //Create payment terms and bond documents
                 _vendorService.CreatePaymentTerm(paymentTermRequest);
@@ -324,18 +339,21 @@ namespace AdministrationAPI.Controllers
         [HttpGet("PaymentTerm")]
         public IActionResult GetAllPaymentTerms()
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return Ok(_vendorService.GetAllPaymentTerms());
         }
         
         [HttpGet("PaymentTerm/{id}")]
         public IActionResult GetPaymentTerm([FromRoute] int id)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return Ok(_vendorService.GetPaymentTerm(id));
         }
 
         [HttpPut("PaymentTerm/Update")]
         public IActionResult UpdatePaymentTerm([FromBody] PaymentTermRequest paymentTermRequest)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             paymentTermRequest.ModifiedBy = ControlExtensions.GetId(HttpContext);
 
             return Ok(_vendorService.UpdatePaymentTerm(paymentTermRequest));
@@ -344,12 +362,14 @@ namespace AdministrationAPI.Controllers
         [HttpDelete("PaymentTerm/{id}")]
         public IActionResult DeletePaymentTerm([FromRoute] int id)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return Ok(_vendorService.DeletePaymentTerm(id));
         }
 
         [HttpGet("InvoiceFrequency")]
         public IActionResult GetInvoiceFrequency([FromRoute] int id)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return Ok(_vendorService.GetInvoiceFrequencies());
         }
 

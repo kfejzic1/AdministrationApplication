@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 		margin: 'auto',
 		border: 'none',
 	},
-	card: { 
+	card: {
 		border: 'none',
 		padding: '5px',
 	},
@@ -182,7 +182,7 @@ function VendorCreateModal(props) {
 	return (
 		<div className='p-0 mt-5'>
 			<form className={classes.root} onSubmit={handleSubmit}>
-				<Card classname={classes.card}>
+				<Card className={classes.card}>
 					<CardHeader align='left' title={'Create B2B Customer'}></CardHeader>
 					<CardContent>
 						<Stack direction='row' spacing={2}>
@@ -263,7 +263,13 @@ function VendorCreateModal(props) {
 						</Stack>
 					</CardContent>
 					<CardActions className={classes.cardActions}>
-						<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
+						<Button
+							className={classes.button}
+							variant='contained'
+							size='small'
+							type='submit'
+							value='Submit'
+							onClick={handleSubmit}>
 							Create
 						</Button>
 					</CardActions>

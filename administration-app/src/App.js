@@ -10,11 +10,12 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { LoginSocialFacebook } from 'reactjs-social-login';
+import Currencies from './components/Currencies/Currencies';
 import './App.css';
+import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -34,7 +35,15 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:type/:recipientName/:transactionAmount/:recipientAccountNumber'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber'
+							element={
+								<ProtectedRoute>
+									<Payment />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/payment/:currency/:transactionPurpose/:transactionType/:transactionAmount/:phoneNumber'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -82,6 +91,16 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+
+						<Route
+							path='/currencies'
+							element={
+								<ProtectedRoute>
+									<Currencies />
+								</ProtectedRoute>
+							}
+						/>
+
 						<Route path='/login' element={<LoginForm setToken={setToken} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />
