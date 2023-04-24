@@ -147,9 +147,15 @@ const useStyles = makeStyles({
 	},
 });
 
+const mockAccounts = [
+	{id: '123', description: 'Test account', currency: 'BAM'},
+	{id: '1234', description: 'Test account 2', currency: 'USD'}	
+];
+
 const B2CAccManagement = () => {
 	const classes = useStyles();
 	const [users, setUsers] = useState([]);
+	const [accounts, setAccounts] = useState(mockAccounts);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
@@ -204,53 +210,6 @@ const B2CAccManagement = () => {
 			.catch(error => console.error(error));
 	};
 
-	const handleUpdateDialogOpen = user => {
-		setSelectedUser(user);
-		setOpenUpdateDialog(true);
-	};
-
-	const handleUpdateDialogClose = () => {
-		setSelectedUser({});
-		setOpenUpdateDialog(false);
-	};
-
-	const handleUpdateUser = event => {
-		event.preventDefault();
-		const form = event.target;
-		const updatedUser = {
-			id: selectedUser.id,
-			firstName: form.name.value,
-			lastName: form.surname.value,
-			email: form.email.value,
-			phoneNumber: form.phone.value,
-			address: form.address.value,
-			role: form.role.value,
-		};
-		editUser(updatedUser)
-			.then(response => {
-				setOpenUpdateDialog(false);
-				setOpenSnackbar(true);
-				setChange(!change);
-			})
-			.catch(error => console.error(error));
-	};
-
-	const handleResetPassword = user => {
-		requestPasswordReset({ id: user.id })
-			.then(response => {
-				setOpenSnackbarPassword(true);
-			})
-			.catch(error => console.error(error));
-	};
-
-	const handleSnackbarClose = () => {
-		setOpenSnackbar(false);
-	};
-
-	const handleSnackbarPasswordClose = () => {
-		setOpenSnackbarPassword(false);
-	};
-
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
@@ -263,7 +222,7 @@ const B2CAccManagement = () => {
 							<Toolbar sx={{ justifyContent: 'space-between' }}>
 								<div></div>
 								<Stack direction='row'>
-									<Tooltip title='Create User'>
+									<Tooltip title='Create Account'>
 										<Button
 											className={classes.button}
 											size='small'
@@ -284,9 +243,9 @@ const B2CAccManagement = () => {
 							>
 								<AccTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
-									{users.map(user => (
+									{accounts.map(account => (
 										<TableRow
-											key={user.id}
+											key={account.id}
 											classes={{
 												root: classes.tableRowRoot,
 												selected: classes.tableRowSelected,
@@ -296,40 +255,10 @@ const B2CAccManagement = () => {
 											tabIndex={-1}
 											sx={{ cursor: 'pointer' }}
 										>
-											<TableCell component='th' scope='row' padding='none'></TableCell>
-
-											<TableCell align='left'>{user.firstName}</TableCell>
-											<TableCell align='left'>{user.lastName}</TableCell>
-											<TableCell align='left'>{user.email}</TableCell>
-											<TableCell align='left'>{user.phoneNumber}</TableCell>
-											<TableCell align='left'>{user.address}</TableCell>
-											<TableCell align='left'>{user.role}</TableCell>
-											<TableCell align='center'>
-												<ButtonGroup variant='text' aria-label='text button group'>
-													<Button
-														title='Edit'
-														size='small'
-														className={`${classes.button}`}
-														variant='outline'
-														onClick={() => {
-															handleUpdateDialogOpen(user);
-														}}
-													>
-														<EditIcon></EditIcon>
-													</Button>
-													<Button
-														size='small'
-														title='Reset password'
-														className={`${classes.button}`}
-														variant='outline'
-														onClick={() => {
-															handleResetPassword(user);
-														}}
-													>
-														<LockResetIcon></LockResetIcon>
-													</Button>
-												</ButtonGroup>
-											</TableCell>
+											<TableCell align='left'>{account.id}</TableCell>
+											<TableCell align='left'>{account.description}</TableCell>
+											<TableCell align='left'>{account.currency}</TableCell>
+											
 										</TableRow>
 									))}
 								</TableBody>
@@ -384,52 +313,7 @@ const B2CAccManagement = () => {
 					</form>
 				</DialogContent>
 			</Dialog>
-			<Dialog open={openUpdateDialog} onClose={handleUpdateDialogClose}>
-				<DialogTitle>Update User</DialogTitle>
-				<DialogContent>
-					<DialogContentText>Please update the user information below.</DialogContentText>
-					<form onSubmit={handleUpdateUser}>
-						<TextField
-							autoFocus
-							margin='dense'
-							name='name'
-							label='Name'
-							fullWidth
-							defaultValue={selectedUser.firstName}
-						/>
-						<TextField margin='dense' name='surname' label='Surname' fullWidth defaultValue={selectedUser.lastName} />
-						<TextField margin='dense' name='email' label='Email' fullWidth defaultValue={selectedUser.email} />
-						<TextField margin='dense' name='phone' label='Phone' fullWidth defaultValue={selectedUser.phoneNumber} />
-						<TextField margin='dense' name='address' label='Address' fullWidth defaultValue={selectedUser.address} />
-						<FormControl fullWidth margin='dense'>
-							<InputLabel>Role</InputLabel>
-							<Select label='Role' name='role' defaultValue={selectedUser.role}>
-								<MenuItem value='User'>User</MenuItem>
-								<MenuItem value='Admin'>Admin</MenuItem>
-								<MenuItem value='Restricted'>Restricted</MenuItem>
-							</Select>
-						</FormControl>
-						<DialogActions>
-							<Button onClick={handleUpdateDialogClose} className={`${classes.button}`} variant='outlinedo'>
-								Cancel
-							</Button>
-							<Button type='submit' className={`${classes.button}`} variant='contained'>
-								Save
-							</Button>
-						</DialogActions>
-					</form>
-				</DialogContent>
-			</Dialog>
-			<Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleSnackbarClose}>
-				<Alert onClose={handleSnackbarClose} severity='success'>
-					User saved successfully!
-				</Alert>
-			</Snackbar>
-			<Snackbar open={openSnackbarPassword} autoHideDuration={3000} onClose={handleSnackbarPasswordClose}>
-				<Alert onClose={handleSnackbarPasswordClose} severity='success'>
-					Email to reset password has been sent!
-				</Alert>
-			</Snackbar>
+			
 		</div>
 	);
 };

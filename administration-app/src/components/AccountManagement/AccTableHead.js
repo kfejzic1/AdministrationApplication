@@ -37,7 +37,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const headCells = [
 	{
-		id: 'account-id',
+		id: 'id',
 		visible: true,
 		numeric: false,
 		disablePadding: false,
