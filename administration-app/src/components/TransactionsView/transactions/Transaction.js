@@ -7,7 +7,6 @@ export default function Transaction(arg) {
 	const [openClaimForm, setOpenClaimForm] = useState(false);
 	const handleOpenClaimForm = () => setOpenClaimForm(true);
 	const handleCloseForm = () => setOpenClaimForm(false);
-	console.log("Args  are: ", arg);
 	if (arg.variant && arg.variant == 'group')
 		return (
 			<TableRow sx={{ bgcolor: '#fff' }}>
@@ -46,7 +45,7 @@ export default function Transaction(arg) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-				<ClaimForm id={arg.prop.transactionId}></ClaimForm>
+				<ClaimForm id={arg.prop.transactionId} onClose={handleCloseForm}></ClaimForm>
             </Modal>
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell></TableCell>

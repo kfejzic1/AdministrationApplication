@@ -50,13 +50,16 @@ export default function ClaimForm(props){
 			</Box>
       <Button align='center'
         onClick={() => {
-          var request = {
-            transactionId: props.id,
-            subject: claimSubject,
-            description: claimDescription
-          }
-          fileTransactionClaim(request);
-          const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'transactions/claims', props.id))));
+          const calls = files.map(x => new Promise(resolve => resolve(uploadFile(x, 'transactions/claims', props.id))).then((res) => {
+            var request = {
+              transactionId: props.id,
+              subject: claimSubject,
+              description: claimDescription,
+              documentIds: Array(1).fill(res.data) 
+            }
+            fileTransactionClaim(request);
+            props.onClose();
+          }));
         }}>
         File claim
       </Button>
