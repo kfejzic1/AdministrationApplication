@@ -73,6 +73,11 @@ namespace AdministrationAPI.Data
                 .WithOne(a => a.User)
                 .HasForeignKey(a => a.UserId);
 
+            /*builder.Entity<Account>()
+                .HasMany(u => u.Documents)
+                //.WithOne(d => d.Id)
+                .HasForeignKey(a => a.AccountId);*/
+
             builder.Entity<EmailActivationCode>()
                 .HasOne(rc => rc.User)
                 .WithOne(u => u.EmailActivationCode)
