@@ -228,13 +228,14 @@ const B2CAccManagement = () => {
 			for (var i = 0; i < files.length; i++) {
 				let formdata = new FormData();
 				formdata.append('ContentType', 'application/pdf');
+				formdata.append('Folder', '/user-requests');
 				formdata.append('file', files[i]);
 
 				for (var pair of formdata.entries()) {
 					console.log(pair[0]); 
 					console.log(pair[1]);
 				}
-				uploadDocument(formdata);
+				uploadDocument(formdata).then(res => {console.log(res)});
 			}
 		}
 	}
