@@ -22,7 +22,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
+import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor, getUserId } from '../../services/userService';
 import OneSignal from 'react-onesignal';
 import SendNotificationModal from './SendNotificationModal';
 import { useNavigate } from 'react-router-dom';
