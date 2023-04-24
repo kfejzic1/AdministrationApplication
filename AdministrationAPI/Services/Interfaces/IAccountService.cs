@@ -6,6 +6,6 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IAccountService
     {
         List<Account> GetUserAccounts(string userId);
-        Task CreateUserAccount(UserAccountCreateRequest request);
+        Task<Account> CreateUserAccount(UserAccountCreateRequest request);
     }
 }

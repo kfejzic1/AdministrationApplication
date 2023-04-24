@@ -32,7 +32,7 @@ namespace AdministrationAPI.Services
             return accounts;
         }
 
-        public async Task CreateUserAccount(UserAccountCreateRequest request)
+        public async Task<Account> CreateUserAccount(UserAccountCreateRequest request)
         {
             var newAccount = new Account
             {
@@ -46,7 +46,11 @@ namespace AdministrationAPI.Services
 
             _context.Accounts.Add(newAccount);
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+
+            newAccount.Currency = _context.Currencies.FirstOrDefault(c => c.Id == newAccount.CurrencyId);
+
+            return newAccount;
         }
     }
 }

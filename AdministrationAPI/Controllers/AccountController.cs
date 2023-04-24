@@ -90,9 +90,9 @@ namespace AdministrationAPI.Controllers
                 var userId = ControlExtensions.GetId(HttpContext);
                 request.UserId = userId;
 
-                await _accountService.CreateUserAccount(request);
+                var result = await _accountService.CreateUserAccount(request);
 
-                return Ok();
+                return Ok(result);
             }
             catch (Exception ex)
             {
