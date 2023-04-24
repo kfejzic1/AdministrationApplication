@@ -191,7 +191,7 @@ const B2CAccManagement = () => {
 	};
 
 	const handleCreateUser = event => {
-		event.preventDefault();
+		/*event.preventDefault();
 		const form = event.target;
 		const newUser = {
 			firstName: form.name.value,
@@ -207,7 +207,9 @@ const B2CAccManagement = () => {
 				setOpenSnackbar(true);
 				setChange(!change);
 			})
-			.catch(error => console.error(error));
+			.catch(error => console.error(error));*/
+		
+			
 	};
 
 	const handleChangeDense = event => {

@@ -31,6 +31,7 @@ namespace AdministrationAPI.Data
         public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -47,6 +48,7 @@ namespace AdministrationAPI.Data
             builder.Entity<EmailActivationCode>(entity => { entity.ToTable("usr_email_activation_codes"); });
             builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
+            builder.Entity<Account>(entity => { entity.ToTable("usr_accounts"); });
             builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
             builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
             builder.Entity<VendorLocation>(entity => { entity.ToTable("ven_vendor_location"); });
@@ -58,11 +60,17 @@ namespace AdministrationAPI.Data
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
 
+
             ApplySnakeCaseNames(builder);
 
             //SeedRoles(builder);
             //SeedUsers(builder);
             Seed(builder);
+
+            builder.Entity<User>()
+                .HasMany(u => u.Accounts)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
 
             builder.Entity<EmailActivationCode>()
                 .HasOne(rc => rc.User)
