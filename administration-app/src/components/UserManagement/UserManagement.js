@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import jsPDF from 'jspdf';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
 import {
 	Button,
@@ -10,11 +11,9 @@ import {
 	TextField,
 	TableContainer,
 	Table,
-	TableHead,
 	TableRow,
 	TableCell,
 	TableBody,
-	IconButton,
 	Snackbar,
 	FormControl,
 	InputLabel,
@@ -27,17 +26,21 @@ import {
 	Tooltip,
 	Toolbar,
 	ButtonGroup,
+	List,
+	ListItem,
+	ListItemText,
 } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
 import { Stack } from '@mui/system';
-
+import ClearIcon from '@mui/icons-material/Clear';
+import DownloadIcon from '@mui/icons-material/Download';
 import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import EditIcon from '@mui/icons-material/Edit';
-
 const theme = createTheme({
 	components: {
 		MuiSwitch: {
@@ -143,17 +146,35 @@ const useStyles = makeStyles({
 		},
 	},
 });
-
+const accounts = [
+	{
+		id: 1,
+		firstName: 'Neko',
+		lastName: 'Nekic',
+		email: 'nekonekic@mail.com',
+		address: 'Adresa',
+		phone: '111111',
+	},
+	{
+		id: 2,
+		firstName: 'Niko',
+		lastName: 'Nikic',
+		email: 'nikonikic@mail.com',
+		address: 'Adresa',
+		phone: '123456',
+	},
+];
 const UserManagement = () => {
 	const classes = useStyles();
 	const [users, setUsers] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+	const [openPendingRequestsDialog, setOpenPendingRequestsDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
-
+	const [accountRequests, setAccountRequests] = useState(accounts);
 	const [dense, setDense] = useState(false);
 
 	useEffect(() => {
@@ -177,10 +198,32 @@ const UserManagement = () => {
 		setOpenCreateDialog(true);
 	};
 
+	const handlePendingRequestsDialogOpen = () => {
+		setOpenPendingRequestsDialog(true);
+	};
+
+	const handlePendingRequestsDialogClose = () => {
+		setOpenPendingRequestsDialog(false);
+	};
 	const handleCreateDialogClose = () => {
 		setOpenCreateDialog(false);
 	};
 
+	const handleApprove = id => {
+		setAccountRequests(accountRequests.filter(r => r.id !== id));
+	};
+	const handleDecline = id => {
+		setAccountRequests(accountRequests.filter(r => r.id !== id));
+	};
+
+	const handleDownload = request => {
+		const doc = new jsPDF();
+		doc.text(`Name: ${request.firstName} ${request.lastName}`, 10, 20);
+		doc.text(`Address: ${request.address}`, 10, 30);
+		doc.text(`Phone: ${request.phone}`, 10, 40);
+		doc.text(`Email: ${request.email}`, 10, 50);
+		doc.save(`${request.firstName}-${request.lastName}.pdf`);
+	};
 	const handleCreateUser = event => {
 		event.preventDefault();
 		const form = event.target;
@@ -271,6 +314,16 @@ const UserManagement = () => {
 											Create User
 										</Button>
 									</Tooltip>
+									<Tooltip title='Pending requests'>
+										<Button
+											className={classes.button}
+											size='small'
+											variant='text'
+											onClick={handlePendingRequestsDialogOpen}
+										>
+											Pending requests
+										</Button>
+									</Tooltip>
 								</Stack>
 							</Toolbar>
 							<Table
@@ -344,6 +397,33 @@ const UserManagement = () => {
 				</ThemeProvider>
 			</Box>
 
+			<Dialog open={openPendingRequestsDialog} onClose={handlePendingRequestsDialogClose}>
+				<DialogTitle>Account Creation Requests</DialogTitle>
+				<DialogContent>
+					<List>
+						{accountRequests.map(request => (
+							<ListItem key={request.id}>
+								<ListItemText
+									primary={`${request.firstName} ${request.lastName}`}
+									secondary={`${request.email}, ${request.address}, ${request.phone}`}
+								/>
+								<Button onClick={() => handleApprove(request.id)}>
+									<CheckIcon />
+								</Button>
+								<Button onClick={() => handleDecline(request.id)}>
+									<ClearIcon />
+								</Button>
+								<Button onClick={() => handleDownload(request)}>
+									<DownloadIcon />
+								</Button>
+							</ListItem>
+						))}
+					</List>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handlePendingRequestsDialogClose}>Close</Button>
+				</DialogActions>
+			</Dialog>
 			<Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
 				<DialogTitle>Create User</DialogTitle>
 				<DialogContent>

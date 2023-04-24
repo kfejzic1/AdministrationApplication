@@ -10,11 +10,11 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-
+import AccountRequestList from './components/UserManagement/AccountRequestList';
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { LoginSocialFacebook } from 'reactjs-social-login'
-import Currencies from './components/Currencies/Currencies'
+import { LoginSocialFacebook } from 'reactjs-social-login';
+import Currencies from './components/Currencies/Currencies';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 
@@ -105,6 +105,7 @@ function App() {
 						<Route path='/login' element={<LoginForm setToken={setToken} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />
+						<Route path='/requests' element={<AccountRequestList />} />
 					</Routes>
 				</Router>
 			</div>
