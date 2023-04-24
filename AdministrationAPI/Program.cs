@@ -23,6 +23,7 @@ builder.Services.AddScoped<IActivationCodeService, ActivationCodeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<TokenUtilities>();
 
 

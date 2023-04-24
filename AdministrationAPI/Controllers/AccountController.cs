@@ -25,10 +25,12 @@ namespace AdministrationAPI.Controllers
 
 
         private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IAccountService accountService)
         {
             _userService = userService;
+            _accountService = accountService;
         }
 
         [HttpGet("check")]
@@ -37,20 +39,58 @@ namespace AdministrationAPI.Controllers
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             User user = _userService.GetUserByFirstName(name);
 
-            if (user is null) {
+            if (user is null)
+            {
                 return NotFound("User with specified name not found");
             }
-            else {
-                if (user.AccountNumber is null) {
+            else
+            {
+                if (user.AccountNumber is null)
+                {
                     return BadRequest("User doesn't have account");
                 }
 
-                if (user.AccountNumber.Equals(accountNumber)) {
+                if (user.AccountNumber.Equals(accountNumber))
+                {
                     return Ok();
                 }
-                else {
+                else
+                {
                     return BadRequest("User with specified name doesn't have specified account number");
                 }
+            }
+        }
+        [HttpPost("user-accounts-id")]
+
+        public IActionResult getAccountsWithId([FromBody] UserIdRequest userIdRequest)
+        {
+            try
+            {
+                var accounts = _accountService.GetAccountsForUser(userIdRequest.UserId);
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.getAccountsWithId");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("user-accounts-username")]
+        public IActionResult getAccountsWithUsername([FromBody] UserRequest userRequest)
+        {
+            try
+            {
+                //ne radi
+                // var id = _accountService.getIdFromUsername(userRequest.UserName);
+                //var accounts = _accountService.GetAccountsForUser(id);
+                var accounts = _accountService.GetAccountsForUserName(userRequest.UserName);
+
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.getAccountsWithUsername");
+                return StatusCode(500, ex.Message);
             }
         }
     }
