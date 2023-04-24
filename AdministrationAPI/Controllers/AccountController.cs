@@ -13,6 +13,7 @@ using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Contracts.Requests.Users;
 
 namespace AdministrationAPI.Controllers
 {
@@ -60,13 +61,17 @@ namespace AdministrationAPI.Controllers
                 }
             }
         }
-        [HttpPost("user-accounts-id")]
 
-        public IActionResult getAccountsWithId([FromBody] UserIdRequest userIdRequest)
+        [HttpGet("user-accounts")]
+        public IActionResult GetUserAccounts()
         {
             try
             {
-                var accounts = _accountService.GetAccountsForUser(userIdRequest.UserId);
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                var userId = ControlExtensions.GetId(HttpContext);
+
+                var accounts = _accountService.GetUserAccounts(userId);
+
                 return Ok(accounts);
             }
             catch (Exception ex)
@@ -75,21 +80,23 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost("user-accounts-username")]
-        public IActionResult getAccountsWithUsername([FromBody] UserRequest userRequest)
+
+        [HttpPost("user-account-create")]
+        public async Task<IActionResult> CreateUserAccount([FromBody] UserAccountCreateRequest request)
         {
             try
             {
-                //ne radi
-                // var id = _accountService.getIdFromUsername(userRequest.UserName);
-                //var accounts = _accountService.GetAccountsForUser(id);
-                var accounts = _accountService.GetAccountsForUserName(userRequest.UserName);
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                var userId = ControlExtensions.GetId(HttpContext);
+                request.UserId = userId;
 
-                return Ok(accounts);
+                await _accountService.CreateUserAccount(request);
+
+                return Ok();
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "AccountController.getAccountsWithUsername");
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
                 return StatusCode(500, ex.Message);
             }
         }

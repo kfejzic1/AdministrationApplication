@@ -1,4 +1,5 @@
 
+using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
@@ -11,30 +12,15 @@ namespace AdministrationAPI.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
 
         public AccountService(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IConfiguration configuration,
-            IMapper mapper,
-            RoleManager<IdentityRole> roleManager,
             AppDbContext context
         )
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
-            _mapper = mapper;
-            _roleManager = roleManager;
             _context = context;
         }
-        public List<Account> GetAccountsForUser(string userId)
+        public List<Account> GetUserAccounts(string userId)
         {
             var accounts = _context.Accounts.Where(a => a.UserId == userId).ToList();
             accounts.ForEach(a =>
@@ -42,25 +28,25 @@ namespace AdministrationAPI.Services
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
                 a.Currency = new Currency() { Name = name };
             });
+
             return accounts;
         }
-        public List<Account> GetAccountsForUserName(string userName)
-        { //ovo ne radi
-            /*var user = _context.Users.FirstOrDefault(u => u.UserName == userName);
-            if (user == null)*/
-            return new List<Account>();
-            // return _context.Accounts.Where(a => a.UserId == user.Id).ToList();
-        }
-        public string getIdFromUsername(string userName)
+
+        public async Task CreateUserAccount(UserAccountCreateRequest request)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserName == userName);
-            if (user == null)
-                return null;
-            return user.Id;
+            var newAccount = new Account
+            {
+                UserId = request.UserId,
+                AccountNumber = request.AccountNumber,
+                CurrencyId = request.CurrencyId,
+                Description = request.Description,
+                RequestDocumentPath = request.RequestDocumentPath,
+                Approved = request.Approved
+            };
+
+            _context.Accounts.Add(newAccount);
+
+            _context.SaveChangesAsync();
         }
-
-
-
-
     }
 }
