@@ -30,7 +30,7 @@ import {
 	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import UsersTableHead from './UsersTableHead';
+import AccTableHead from './AccTableHead';
 import { Stack } from '@mui/system';
 
 import CreateIcon from '@mui/icons-material/Add';
@@ -40,18 +40,6 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import EditIcon from '@mui/icons-material/Edit';
 import { getAllCurrencies}  from '../../services/currencyService'
 import { Typography } from '@material-ui/core';
-
-// Ovo jos ne radi - baca 404
-//const currencies = getAllCurrencies();
-
-// Mock:
-const currencies = [
-    {name: 'EUR'},
-    {name: 'USD'},
-    {name: 'BAM'},
-    {name: 'RSD'},
-    {name: 'CHF'}
-];
 
 const theme = createTheme({
 	components: {
@@ -159,7 +147,7 @@ const useStyles = makeStyles({
 	},
 });
 
-const UserManagement = () => {
+const B2CAccManagement = () => {
 	const classes = useStyles();
 	const [users, setUsers] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -168,28 +156,25 @@ const UserManagement = () => {
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
-
+	const [currencies, setCurrencies] = useState([{name: 'No currencies found'}]);
 	const [dense, setDense] = useState(false);
 
 	useEffect(() => {
-		/*getAllUsers().then(response => {
-			setUsers(
+		
+		getAllCurrencies().then(response => {
+			console.log(response.data);
+			setCurrencies(
 				response.data.map(u => {
 					return {
-						id: u.result.user.id,
-						firstName: u.result.user.firstName,
-						lastName: u.result.user.lastName,
-						email: u.result.user.email,
-						phoneNumber: u.result.user.phoneNumber,
-						address: u.result.user.address,
-						role: u.result.userRole,
+						id: u.id,
+						name: u.name
 					};
 				})
-			);
-		});*/
+			)
+		});
 
-        // Staviti getallusers za tog b2c-a
-        console.log(currencies);
+        // Staviti getallaccounts za tog b2c-a
+        
 	}, [change]);
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
@@ -286,7 +271,7 @@ const UserManagement = () => {
 											endIcon={<CreateIcon />}
 											onClick={handleCreateDialogOpen}
 										>
-											Request User Creation
+											Request Account Creation
 										</Button>
 									</Tooltip>
 								</Stack>
@@ -297,7 +282,7 @@ const UserManagement = () => {
 								aria-labelledby='tableTitle'
 								size={dense ? 'small' : 'medium'}
 							>
-								<UsersTableHead onClick={handleCreateDialogOpen} />
+								<AccTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{users.map(user => (
 										<TableRow
@@ -363,17 +348,10 @@ const UserManagement = () => {
 			</Box>
 
 			<Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
-				<DialogTitle>Create User</DialogTitle>
+				<DialogTitle>Create Account</DialogTitle>
 				<DialogContent>
-					<DialogContentText>Please fill out the form below to create a new user.</DialogContentText>
+					<DialogContentText>Please fill out the form below to create a new account.</DialogContentText>
 					<form onSubmit={handleCreateUser}>
-						<TextField autoFocus margin='dense' name='name' label='Name' fullWidth />
-						<TextField margin='dense' name='surname' label='Surname' fullWidth />
-                        <Divider sx={{ mt: 1, mb: 1 }}></Divider>
-						<TextField margin='dense' name='email' label='Email' fullWidth />
-						<TextField margin='dense' name='phone' label='Phone' fullWidth />
-						<TextField margin='dense' name='address' label='Address' fullWidth />
-                        <Divider sx={{ mt: 1, mb: 1 }}></Divider>
                         <TextField margin='dense' name='account-id' label='Account Number' fullWidth />
                         <TextField margin='dense' name='description' label='Description' fullWidth />
 						<FormControl fullWidth margin='dense'>
@@ -456,4 +434,4 @@ const UserManagement = () => {
 	);
 };
 
-export default UserManagement;
+export default B2CAccManagement;

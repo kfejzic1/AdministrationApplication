@@ -96,7 +96,7 @@ const ProfilePage = (props) => {
 	}
 
 	function openUserTable() {
-		navigate('/b2c-user-management');
+		navigate('/myaccounts');
 	}
 
 	return (
@@ -220,7 +220,7 @@ const ProfilePage = (props) => {
 					</TableContainer>
 
 					<Box className='user-commands'>
-						<Button variant='contained' sx={{ color: 'black' }} className='request-creation-btn' onClick={openUserTable}>My Users</Button>
+						<Button variant='contained' sx={{ color: 'black' }} className='request-creation-btn' onClick={openUserTable}>My Accounts</Button>
 					</Box>
 
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
