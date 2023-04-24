@@ -90,3 +90,24 @@ export function toggle2FA() {
 		},
 	});
 }
+
+export function getAllAccounts(id) {
+	return axios(env.API_ENV.url + '/api/Account/user-accounts', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+export function createAccount(data) {
+	return axios(env.API_ENV.url + '/api/Account/user-account-create', {
+		method: 'POST',
+		data: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+			 Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
