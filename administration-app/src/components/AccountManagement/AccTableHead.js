@@ -37,11 +37,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const headCells = [
 	{
-		id: 'id',
+		id: 'account-number',
 		visible: true,
 		numeric: false,
 		disablePadding: false,
-		label: 'Account-ID',
+		label: 'Account number',
 	},
 	{
 		id: 'description',
@@ -111,7 +111,7 @@ export default function AccTableHead() {
 							key={headCell.id}
 							align={headCell.numeric ? 'right' : 'left'}
 							padding={headCell.disablePadding ? 'none' : 'normal'}
-							width={headCell.label === 'Account-ID' ? '4%' : '15%'}
+							width={headCell.label === 'Account number' ? '4%' : '15%'}
 						>
 							{headCell.label}
 						</TableCell>
