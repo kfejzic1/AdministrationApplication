@@ -10,6 +10,8 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
+import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
+
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { LoginSocialFacebook } from 'reactjs-social-login';
@@ -91,6 +93,15 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+
+						<Route
+							path='/myaccounts'
+							element={
+								<ProtectedRoute>
+									<B2CAccManagement />
+								</ProtectedRoute>
+							}
+						/>	
 
 						<Route
 							path='/currencies'

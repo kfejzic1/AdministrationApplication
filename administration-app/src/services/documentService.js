@@ -10,3 +10,14 @@ export function deleteDocument(id) {
 		},
 	});
 }
+
+export function uploadDocument(data) {
+	return axios(env.API_ENV.url + '/api/Document/UploadDocument', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			Authorization: 'Bearer ' + localStorage.getItem('token')
+		},
+		data: data
+	});
+}

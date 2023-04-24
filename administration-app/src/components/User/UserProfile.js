@@ -22,10 +22,10 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
+import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor, getUserId } from '../../services/userService';
 import OneSignal from 'react-onesignal';
 import SendNotificationModal from './SendNotificationModal';
-
+import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
 	modal: {
 		position: 'absolute',
@@ -44,6 +44,9 @@ const ProfilePage = props => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const classes = useStyles();
+
+	const navigate = useNavigate();
+
 
 	const RedTableCell = withStyles({
 		root: {
@@ -104,6 +107,10 @@ const ProfilePage = props => {
 
 	function handleInputMouseLeaveMail() {
 		setShowTooltipMail(false);
+	}
+
+	function openUserTable() {
+		navigate('/myaccounts');
 	}
 
 	const handleShowModal = () => setShowModal(true);
@@ -215,6 +222,11 @@ const ProfilePage = props => {
 							) : null}
 						</Table>
 					</TableContainer>
+
+					<Box className='user-commands'>
+						<Button variant='contained' sx={{ color: 'black' }} className='request-creation-btn' onClick={openUserTable}>My Accounts</Button>
+					</Box>
+
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>

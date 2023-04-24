@@ -13,6 +13,6 @@ namespace AdministrationAPI.Models
 
         public EmailActivationCode? EmailActivationCode { get; set; }
         public SMSActivationCode? SMSActivationCode { get; set; }
-
+        public ICollection<Account> Accounts { get; set; }
     }
 }
