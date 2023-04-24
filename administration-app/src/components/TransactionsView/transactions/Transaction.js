@@ -1,5 +1,5 @@
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
-import { Card, TableRow, TableCell, Button } from '@mui/material';
+import { Card, TableRow, TableCell, Button, Tab } from '@mui/material';
 export default function Transaction(arg) {
 	if (arg.variant && arg.variant == 'group')
 		return (
@@ -49,6 +49,16 @@ export default function Transaction(arg) {
 						Details
 					</Button>
 				</TableCell>
+				<TableCell align='center'>
+					<Button
+					onClick={() => {
+					 
+					}}>
+					 Claim
+					 </Button>
+					 </TableCell>
+					 
 			</TableRow>
+		
 		);
 }
