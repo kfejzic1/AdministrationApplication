@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AdministrationAPI.Extensions;
 
 namespace AdministrationAPI.Controllers
 {
@@ -27,7 +29,7 @@ namespace AdministrationAPI.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

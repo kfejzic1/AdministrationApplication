@@ -1,6 +1,13 @@
+import { Button, TableCell, TableRow } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import { useState } from "react";
+import ClaimForm from '../TransactionClaim/ClaimForm';
 import { parseDate } from './../../../services/TransactionsView/transactionsService';
-import { Card, TableRow, TableCell, Button, Tab } from '@mui/material';
 export default function Transaction(arg) {
+	const [openClaimForm, setOpenClaimForm] = useState(false);
+	const handleOpenClaimForm = () => setOpenClaimForm(true);
+	const handleCloseForm = () => setOpenClaimForm(false);
+	console.log("Args  are: ", arg);
 	if (arg.variant && arg.variant == 'group')
 		return (
 			<TableRow sx={{ bgcolor: '#fff' }}>
@@ -32,6 +39,15 @@ export default function Transaction(arg) {
 		);
 	else
 		return (
+			<>
+			<Modal
+                open={openClaimForm}
+                onClose={handleCloseForm}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+				<ClaimForm id={arg.prop.transactionId}></ClaimForm>
+            </Modal>
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell></TableCell>
 				<TableCell align='center'>{parseDate(arg.prop.createdAt)}</TableCell>
@@ -51,14 +67,12 @@ export default function Transaction(arg) {
 				</TableCell>
 				<TableCell align='center'>
 					<Button
-					onClick={() => {
-					 
-					}}>
+					onClick={handleOpenClaimForm}>
 					 Claim
 					 </Button>
 					 </TableCell>
 					 
 			</TableRow>
-		
+			</>		
 		);
 }

@@ -4,6 +4,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using AdministrationAPI.Extensions;
 
 namespace AdministrationAPI.Controllers
 {
@@ -16,9 +17,10 @@ namespace AdministrationAPI.Controllers
         private readonly ITemplateService _templateService;
         private readonly IUserService _userService;
 
-        public TemplateController(IuserService userService, ITemplateService templateService) {
+        public TemplateController(IUserService userService, ITemplateService templateService)
+        {
             _userService = userService;
-            _templateService=templateService;
+            _templateService = templateService;
         }
 
         [HttpGet]
@@ -34,18 +36,19 @@ namespace AdministrationAPI.Controllers
         public async Task<ActionResult<List<Template>>> GetOneTemplate(int id)
         {
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            var result=await _templateService.GetOneTemplate(id);
-            if(result is null) {
+            var result = await _templateService.GetOneTemplate(id);
+            if (result is null)
+            {
                 return NotFound("Sorry, this template doesn't exist.");
             }
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Template>>> AddTemplate([FromBody]Template template)
+        public async Task<ActionResult<List<Template>>> AddTemplate([FromBody] Template template)
         {
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            var result=await _templateService.AddTemplate(template);
+            var result = await _templateService.AddTemplate(template);
             return Ok(result);
         }
 
@@ -54,8 +57,9 @@ namespace AdministrationAPI.Controllers
         public async Task<ActionResult<List<Template>>> UpdateTemplate(int id, Template request)
         {
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            var result=await _templateService.UpdateTemplate(id, request);
-            if(result is null) {
+            var result = await _templateService.UpdateTemplate(id, request);
+            if (result is null)
+            {
                 return NotFound("Sorry, this template doesn't exist.");
             }
             return Ok(result);
@@ -66,8 +70,9 @@ namespace AdministrationAPI.Controllers
         public async Task<ActionResult<List<Template>>> DeleteTemplate(int id)
         {
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            var result=await _templateService.DeleteTemplate(id);
-            if(result is null) {
+            var result = await _templateService.DeleteTemplate(id);
+            if (result is null)
+            {
                 return NotFound("Sorry, this template doesn't exist.");
             }
             return Ok(result);

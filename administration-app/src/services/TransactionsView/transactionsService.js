@@ -304,3 +304,30 @@ function formatDateForDb(inputDate) {
 	// Return the formatted date string
 	return isoDate;
 }
+
+export async function uploadFile(file, folder, transactionId) {
+	let data = new FormData();
+	data.append('file', file, file.name);
+	data.append('Folder', folder);
+	data.append('NodeName', transactionId);
+	console.log(localStorage.getItem('token'));
+	var tokencic = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NGFjM2RkYy1iYzIwLTQwMzUtYTlkOC03ZTMxYTFhZjM4MDUiLCJVc2VyTmFtZSI6ImFkbWluVXNlciIsImp0aSI6ImZmMGU4YjgwLTY1ODQtNDc3MC05YjliLTAyOTkxNDE0MDQwYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE2ODIzNjkxNjMsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA1MSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCJ9.xxP3XJu6dgjmwLbOpusWNAEx9OE3RG05vtkHYOUfFfM";
+	return axios.post(env.API_ENV.testUrl + '/api/Document/UploadDocument', data, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			Authorization: 'Bearer ' + tokencic,
+		},
+	});
+}
+
+export function fileTransactionClaim(request) {
+	var tokencic = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NGFjM2RkYy1iYzIwLTQwMzUtYTlkOC03ZTMxYTFhZjM4MDUiLCJVc2VyTmFtZSI6ImFkbWluVXNlciIsImp0aSI6ImZmMGU4YjgwLTY1ODQtNDc3MC05YjliLTAyOTkxNDE0MDQwYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE2ODIzNjkxNjMsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA1MSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCJ9.xxP3XJu6dgjmwLbOpusWNAEx9OE3RG05vtkHYOUfFfM";
+	return axios(env.API_ENV.testUrl + '/api/transactions/claim', {
+		method: 'POST',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + tokencic,
+		},
+	});
+}
