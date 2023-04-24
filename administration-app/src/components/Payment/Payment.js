@@ -21,6 +21,7 @@ export const Payment = props => {
 	const [transactionAmountState, setTransactionAmount] = useState(
 		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
 	);
+	const [senderAccountNumber, setSenderAccountNumber] = useState('');
 	const [recipientNameState, setRecipientName] = useState(
 		recipientName != undefined && recipientName != -1 ? recipientName : ''
 	);
@@ -99,7 +100,8 @@ export const Payment = props => {
 						justifyContent: 'center',
 						alignItems: 'center',
 						height: '100vh',
-					}}>
+					}}
+				>
 					<Typography>Please select one of the following options</Typography>
 					<Box>
 						<Button variant='contained' onClick={() => handleButtonClick('recipientName')} sx={{ marginRight: '10px' }}>
@@ -138,7 +140,8 @@ export const Payment = props => {
 						backgroundPosition: 'right',
 						backgroundSize: '70% 70%',
 						backgroundRepeat: 'no-repeat',
-					}}>
+					}}
+				>
 					<Button
 						onClick={goBackHandler}
 						variant='contained'
@@ -150,7 +153,8 @@ export const Payment = props => {
 							borderRadius: '5px',
 							padding: 'var(--inputPadding)',
 							marginLeft: '5px',
-						}}>
+						}}
+					>
 						<span>{'<'}</span>
 					</Button>
 					<Box
@@ -163,7 +167,8 @@ export const Payment = props => {
 							borderRadius: '50px',
 							boxShadow: '0 0.3rem 0.7rem 0 var(--highlights)',
 							height: '95%',
-						}}>
+						}}
+					>
 						<Typography
 							variant='h3'
 							sx={{
@@ -172,7 +177,8 @@ export const Payment = props => {
 								fontWeight: 800,
 								color: 'black',
 								margin: 0,
-							}}>
+							}}
+						>
 							New Transaction
 						</Typography>
 
@@ -184,7 +190,8 @@ export const Payment = props => {
 								alignItems: 'center',
 								lineHeight: 'var(--formGap)',
 							}}
-							onSubmit={handleSubmit}>
+							onSubmit={handleSubmit}
+						>
 							<br />
 							<br />
 							<TextField
@@ -208,18 +215,21 @@ export const Payment = props => {
 									justifyContent: 'space-around',
 									width: '70%',
 									display: 'flex',
-								}}>
+								}}
+							>
 								<Box
 									sx={{
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Purpose:
 									</Box>
 								</Box>
@@ -233,7 +243,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={transactionPurposeState}
-									onChange={event => setTransactionPurpose(event.target.value)}>
+									onChange={event => setTransactionPurpose(event.target.value)}
+								>
 									<MenuItem value='Credit'>Credit</MenuItem>
 									<MenuItem value='Payment'>Payment</MenuItem>
 									<MenuItem value='Recip'>Recip</MenuItem>
@@ -244,12 +255,14 @@ export const Payment = props => {
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Currency:
 									</Box>
 								</Box>
@@ -263,7 +276,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={currencyState}
-									onChange={event => setCurrency(event.target.value)}>
+									onChange={event => setCurrency(event.target.value)}
+								>
 									<MenuItem value='EUR'>EUR</MenuItem>
 									<MenuItem value='USD'>USD</MenuItem>
 									<MenuItem value='BAM'>BAM</MenuItem>
@@ -287,18 +301,21 @@ export const Payment = props => {
 									justifyContent: 'space-around',
 									width: '70%',
 									display: 'flex',
-								}}>
+								}}
+							>
 								<Box
 									sx={{
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Party:
 									</Box>
 								</Box>
@@ -313,7 +330,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={interestingGroupState}
-									onChange={event => setInterestingGroup(event.target.value)}>
+									onChange={event => setInterestingGroup(event.target.value)}
+								>
 									<MenuItem value='Person'>Person</MenuItem>
 									<MenuItem value='Company'>Company</MenuItem>
 								</Select>
@@ -322,12 +340,14 @@ export const Payment = props => {
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Type:
 									</Box>
 								</Box>
@@ -341,7 +361,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={transactionTypeState}
-									onChange={event => setTransactionType(event.target.value)}>
+									onChange={event => setTransactionType(event.target.value)}
+								>
 									<MenuItem value='B2B'>B2B</MenuItem>
 									<MenuItem value='B2C'>B2C</MenuItem>
 									<MenuItem value='C2B'>C2B</MenuItem>
@@ -382,11 +403,24 @@ export const Payment = props => {
 								placeholder='Write recipient account number here'
 								value={recipientAccountNumberState}
 								onChange={event => setRecipientAccountNumber(event.target.value)}
-								error={!isValidAccountNumber}
 								helperText={!isValidAccountNumber && 'Account number must contain only numbers'}
 								required
 							/>
-
+							<TextField
+								label='Sender account number'
+								sx={{
+									padding: 'var(--inputPadding)',
+									borderRadius: '5px',
+									border: '0px',
+									width: '70%',
+									fontSize: 'var(--text-size)',
+								}}
+								type='text'
+								placeholder='Write sender account number'
+								value={senderAccountNumber}
+								onChange={event => setSenderAccountNumber(event.target.value)}
+								required
+							/>
 							<TextField
 								label='Category'
 								sx={{
@@ -414,8 +448,8 @@ export const Payment = props => {
 									padding: 'var(--inputPadding)',
 								}}
 								onClick={() => {
-									if (isValidAccountNumber && isValidRecipientName) {
-										/* const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
+									//if (isValidAccountNumber && isValidRecipientName) {
+									/* const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
 									const regexForSpace = /\s/g
 									const numberOfSpaces = recipientNameState.match(regexForSpace).length
 									let last = '';
@@ -426,27 +460,31 @@ export const Payment = props => {
 									else
 										last = lastPrimary */ // SAD JE BACKEND ODLUCIO DA SE SALJE FULLNAME, AKO PROMIJENE MISLJENJE SAMO SE ODKOMENTARISE OVAJ KOD JER RADI
 
-										sendPaymentInfoAccount({
-											amount: parseFloat(transactionAmountState),
-											currency: currencyState,
-											transactionType: transactionTypeState,
-											transactionPurpose: transactionPurposeState,
-											category: categoryState,
-											recipient: {
-												name: recipientNameState,
-												accountNumber: recipientAccountNumberState,
-											},
+									sendPaymentInfoAccount({
+										amount: parseFloat(transactionAmountState),
+										currency: currencyState,
+										transactionType: transactionTypeState,
+										transactionPurpose: transactionPurposeState,
+										category: categoryState,
+										recipient: {
+											name: recipientNameState,
+											accountNumber: recipientAccountNumberState,
+										},
+										sender: {
+											accountNumber: senderAccountNumber,
+										},
+									})
+										.then(() => {
+											alert('Payment successfuly sent!');
+											sendNotification('New transaction has been made');
 										})
-											.then(() => {
-												alert('Payment successfuly sent!');
-												sendNotification('New transaction has been made');
-											})
-											.catch(e => {
-												alert('Failed!', JSON.stringify(e));
-												sendNotification('Transaction payment failed.');
-											});
-									}
-								}}>
+										.catch(e => {
+											alert('Failed!', JSON.stringify(e));
+											sendNotification('Transaction payment failed.');
+										});
+									//}
+								}}
+							>
 								Submit
 							</Button>
 						</FormGroup>
@@ -481,7 +519,8 @@ export const Payment = props => {
 						backgroundPosition: 'right',
 						backgroundSize: '70% 70%',
 						backgroundRepeat: 'no-repeat',
-					}}>
+					}}
+				>
 					<Button
 						onClick={goBackHandler}
 						variant='contained'
@@ -493,7 +532,8 @@ export const Payment = props => {
 							borderRadius: '5px',
 							padding: 'var(--inputPadding)',
 							marginLeft: '5px',
-						}}>
+						}}
+					>
 						<span>{'<'}</span>
 					</Button>
 					<Box
@@ -506,7 +546,8 @@ export const Payment = props => {
 							borderRadius: '50px',
 							boxShadow: '0 0.3rem 0.7rem 0 var(--highlights)',
 							height: '95%',
-						}}>
+						}}
+					>
 						<Typography
 							variant='h3'
 							sx={{
@@ -515,7 +556,8 @@ export const Payment = props => {
 								fontWeight: 800,
 								color: 'black',
 								margin: 0,
-							}}>
+							}}
+						>
 							New Transaction
 						</Typography>
 
@@ -527,7 +569,8 @@ export const Payment = props => {
 								alignItems: 'center',
 								lineHeight: 'var(--formGap)',
 							}}
-							onSubmit={handleSubmit}>
+							onSubmit={handleSubmit}
+						>
 							<br />
 							<br />
 							<TextField
@@ -551,18 +594,21 @@ export const Payment = props => {
 									justifyContent: 'space-around',
 									width: '70%',
 									display: 'flex',
-								}}>
+								}}
+							>
 								<Box
 									sx={{
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Purpose:
 									</Box>
 								</Box>
@@ -576,7 +622,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={transactionPurposeState}
-									onChange={event => setTransactionPurpose(event.target.value)}>
+									onChange={event => setTransactionPurpose(event.target.value)}
+								>
 									<MenuItem value='Credit'>Credit</MenuItem>
 									<MenuItem value='Payment'>Payment</MenuItem>
 									<MenuItem value='Recip'>Recip</MenuItem>
@@ -587,12 +634,14 @@ export const Payment = props => {
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Currency:
 									</Box>
 								</Box>
@@ -606,7 +655,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={currencyState}
-									onChange={event => setCurrency(event.target.value)}>
+									onChange={event => setCurrency(event.target.value)}
+								>
 									<MenuItem value='EUR'>EUR</MenuItem>
 									<MenuItem value='USD'>USD</MenuItem>
 									<MenuItem value='BAM'>BAM</MenuItem>
@@ -630,18 +680,21 @@ export const Payment = props => {
 									justifyContent: 'space-around',
 									width: '70%',
 									display: 'flex',
-								}}>
+								}}
+							>
 								<Box
 									sx={{
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Party:
 									</Box>
 								</Box>
@@ -656,7 +709,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={interestingGroupState}
-									onChange={event => setInterestingGroup(event.target.value)}>
+									onChange={event => setInterestingGroup(event.target.value)}
+								>
 									<MenuItem value='Person'>Person</MenuItem>
 									<MenuItem value='Company'>Company</MenuItem>
 								</Select>
@@ -666,12 +720,14 @@ export const Payment = props => {
 										display: 'flex',
 										justifyContent: 'center',
 										alignItems: 'center',
-									}}>
+									}}
+								>
 									<Box
 										sx={{
 											color: 'var(--babyblue)',
 											display: 'inline-block',
-										}}>
+										}}
+									>
 										Type:
 									</Box>
 								</Box>
@@ -686,7 +742,8 @@ export const Payment = props => {
 										lineHeight: 1,
 									}}
 									value={transactionTypeState}
-									onChange={event => setTransactionType(event.target.value)}>
+									onChange={event => setTransactionType(event.target.value)}
+								>
 									<MenuItem value='B2B'>B2B</MenuItem>
 									<MenuItem value='B2C'>B2C</MenuItem>
 									<MenuItem value='C2B'>C2B</MenuItem>
@@ -761,7 +818,8 @@ export const Payment = props => {
 												sendNotification('Transaction payment failed.');
 											});
 									}
-								}}>
+								}}
+							>
 								Submit
 							</Button>
 						</FormGroup>
