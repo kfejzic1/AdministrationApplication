@@ -82,5 +82,14 @@ namespace AdministrationAPI.Controllers
                 return BadRequest("Failed to add currency");
             }
         }
+
+        [HttpPost("delete")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteAllExchangeRates()
+        {
+            await _exchangeRateService.DeleteAllExchangeRates();
+
+            return Ok();
+        }
     }
 }

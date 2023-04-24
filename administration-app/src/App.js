@@ -14,8 +14,8 @@ import B2CAccManagement from './components/AccountManagement/B2CAccountManagemen
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { LoginSocialFacebook } from 'reactjs-social-login'
-import Currencies from './components/Currencies/Currencies'
+import { LoginSocialFacebook } from 'reactjs-social-login';
+import Currencies from './components/Currencies/Currencies';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 

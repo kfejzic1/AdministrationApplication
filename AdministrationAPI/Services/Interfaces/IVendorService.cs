@@ -27,5 +27,15 @@ namespace AdministrationAPI.Services.Interfaces
         public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest);
         public bool DeletePaymentTerm(int id);
         public List<InvoiceFrequency> GetInvoiceFrequencies();
+        Task<IEnumerable<VendorRoles>> GetVendorUserRoles();
+
+        Task<VendorRoles> GetRoleById(Guid roleId);
+        Task<IEnumerable<VendorRoles>> GetRolesForVendorUser(int vendorUserId);
+
+        Task<IEnumerable<VendorUser>> GetVendorUsersForAdmin(int adminId);
+        Task<Boolean> IsVendorUserAdmin(int adminId);
+
+
+
     }
 }

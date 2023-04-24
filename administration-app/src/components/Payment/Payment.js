@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { sendPaymentInfoAccount, sendPaymentInfoPhone } from '../../services/Payment/PaymentServices';
 import { useLocation } from 'react-router-dom';
-
+import { sendNotification } from '../../services/utilityService';
 import { TextField, Button, FormGroup, Select, MenuItem, Menu, Typography, Box, InputLabel } from '@mui/material';
 
 import Modal from '@mui/material/Modal';
@@ -21,6 +21,7 @@ export const Payment = props => {
 	const [transactionAmountState, setTransactionAmount] = useState(
 		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
 	);
+	const [senderAccountNumber, setSenderAccountNumber] = useState('');
 	const [recipientNameState, setRecipientName] = useState(
 		recipientName != undefined && recipientName != -1 ? recipientName : ''
 	);
@@ -28,7 +29,9 @@ export const Payment = props => {
 		recipientAccountNumber != undefined && recipientAccountNumber != -1 ? recipientAccountNumber : ''
 	);
 	const [currencyState, setCurrency] = useState(currency != undefined && currency != -1 ? currency : 'USD');
-	const [transactionTypeState, setTransactionType] = useState(transactionType != undefined && transactionType != -1 ? transactionType : 'B2C');
+	const [transactionTypeState, setTransactionType] = useState(
+		transactionType != undefined && transactionType != -1 ? transactionType : 'B2C'
+	);
 	// const [descriptionState, setDescription] = useState(description != undefined && description != -1 ? description : '');
 	const [categoryState, setCategory] = useState('');
 	const [interestingGroupState, setInterestingGroup] = useState('Person');
@@ -49,7 +52,10 @@ export const Payment = props => {
 	useEffect(() => {
 		if (transactionTypeState != undefined && transactionTypeState === 'B2B') {
 			setInterestingGroup('Company');
-		} else if (transactionTypeState != undefined && (transactionTypeState === 'B2C' || transactionTypeState === 'C2C')) {
+		} else if (
+			transactionTypeState != undefined &&
+			(transactionTypeState === 'B2C' || transactionTypeState === 'C2C')
+		) {
 			setInterestingGroup('Person');
 		} else if (transactionTypeState != undefined && transactionTypeState === 'C2B') {
 			setInterestingGroup('Company');
@@ -397,11 +403,24 @@ export const Payment = props => {
 								placeholder='Write recipient account number here'
 								value={recipientAccountNumberState}
 								onChange={event => setRecipientAccountNumber(event.target.value)}
-								error={!isValidAccountNumber}
 								helperText={!isValidAccountNumber && 'Account number must contain only numbers'}
 								required
 							/>
-
+							<TextField
+								label='Sender account number'
+								sx={{
+									padding: 'var(--inputPadding)',
+									borderRadius: '5px',
+									border: '0px',
+									width: '70%',
+									fontSize: 'var(--text-size)',
+								}}
+								type='text'
+								placeholder='Write sender account number'
+								value={senderAccountNumber}
+								onChange={event => setSenderAccountNumber(event.target.value)}
+								required
+							/>
 							<TextField
 								label='Category'
 								sx={{
@@ -429,8 +448,8 @@ export const Payment = props => {
 									padding: 'var(--inputPadding)',
 								}}
 								onClick={() => {
-									if (isValidAccountNumber && isValidRecipientName) {
-										/* const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
+									//if (isValidAccountNumber && isValidRecipientName) {
+									/* const [first, lastPrimary, lastSecondary] = recipientNameState.split(/[\s-]+/)
 									const regexForSpace = /\s/g
 									const numberOfSpaces = recipientNameState.match(regexForSpace).length
 									let last = '';
@@ -441,24 +460,29 @@ export const Payment = props => {
 									else
 										last = lastPrimary */ // SAD JE BACKEND ODLUCIO DA SE SALJE FULLNAME, AKO PROMIJENE MISLJENJE SAMO SE ODKOMENTARISE OVAJ KOD JER RADI
 
-										sendPaymentInfoAccount({
-											amount: parseFloat(transactionAmountState),
-											currency: currencyState,
-											transactionType: transactionTypeState,
-											transactionPurpose: transactionPurposeState,
-											category: categoryState,
-											recipient: {
-												name: recipientNameState,
-												accountNumber: recipientAccountNumberState,
-											},
+									sendPaymentInfoAccount({
+										amount: parseFloat(transactionAmountState),
+										currency: currencyState,
+										transactionType: transactionTypeState,
+										transactionPurpose: transactionPurposeState,
+										category: categoryState,
+										recipient: {
+											name: recipientNameState,
+											accountNumber: recipientAccountNumberState,
+										},
+										sender: {
+											accountNumber: senderAccountNumber,
+										},
+									})
+										.then(() => {
+											alert('Payment successfuly sent!');
+											sendNotification('New transaction has been made');
 										})
-											.then(() => {
-												alert('Payment successfuly sent!');
-											})
-											.catch(e => {
-												alert('Failed!', JSON.stringify(e));
-											});
-									}
+										.catch(e => {
+											alert('Failed!', JSON.stringify(e));
+											sendNotification('Transaction payment failed.');
+										});
+									//}
 								}}
 							>
 								Submit
@@ -624,7 +648,7 @@ export const Payment = props => {
 								<Select
 									sx={{
 										color: '#fff',
-										backgroundColor: '#1976D2', 
+										backgroundColor: '#1976D2',
 										alignSelf: 'flex-end',
 										borderRadius: '5px',
 										padding: 0,
@@ -787,9 +811,11 @@ export const Payment = props => {
 										})
 											.then(() => {
 												alert('Payment successfuly sent!');
+												sendNotification('New transaction has been made');
 											})
 											.catch(e => {
 												alert('Failed!', JSON.stringify(e));
+												sendNotification('Transaction payment failed.');
 											});
 									}
 								}}

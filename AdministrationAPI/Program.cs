@@ -1,19 +1,22 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
+using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AdministrationAPI.Utilities.TokenUtility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -24,6 +27,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IExchangeService, ExchangeService>();
 builder.Services.AddScoped<TokenUtilities>();
 
 
@@ -83,7 +87,6 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
 
-
 var provider = builder.Services.BuildServiceProvider();
 
 builder.Services.AddCors(options =>
@@ -100,7 +103,10 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
+
 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+
 if (!await roleManager.RoleExistsAsync("Admin"))
 {
     await roleManager.CreateAsync(new IdentityRole("Admin"));

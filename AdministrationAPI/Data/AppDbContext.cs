@@ -31,7 +31,7 @@ namespace AdministrationAPI.Data
         public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Account> Accounts { get; set; }        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,6 +50,8 @@ namespace AdministrationAPI.Data
             builder.Entity<Account>(entity => { entity.ToTable("usr_accounts"); });
             builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
             builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
+            builder.Entity<VendorUserRole>(entity => { entity.ToTable("ven_vendor_user_roles"); });
+            builder.Entity<VendorRoles>(entity => { entity.ToTable("ven_vendor_roles"); });
             builder.Entity<VendorLocation>(entity => { entity.ToTable("ven_vendor_location"); });
             builder.Entity<VendorPOS>(entity => { entity.ToTable("ven_vendor_pos"); });
             builder.Entity<Document>(entity => { entity.ToTable("dm_documents"); });
@@ -58,7 +60,7 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
-
+            
 
             ApplySnakeCaseNames(builder);
 
@@ -196,6 +198,14 @@ namespace AdministrationAPI.Data
             };
 
             builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
+
+            //Seed VendorRoles
+
+            builder.Entity<VendorRoles>().HasData(
+              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorAdmin", NormalizedName = "VENDORADMIN", ConcurrencyStamp = "1" },
+              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorUser", NormalizedName = "VENDORUSER", ConcurrencyStamp = "2" },
+              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorRestricted", NormalizedName = "VENDORRESTRICTED", ConcurrencyStamp = "3" }
+          );
 
 
             // Seed Currencies
