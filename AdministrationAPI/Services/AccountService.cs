@@ -39,8 +39,8 @@ namespace AdministrationAPI.Services
             var accounts = _context.Accounts.Where(a => a.UserId == userId).ToList();
             accounts.ForEach(a =>
             {
-                string ime = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
-                a.Currency = new Currency() { Name = ime };
+                string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
+                a.Currency = new Currency() { Name = name };
             });
             return accounts;
         }
