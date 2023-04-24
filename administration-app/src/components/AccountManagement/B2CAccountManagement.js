@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
+import { getAllAccounts, getUser, getUserId, createAccount } from '../../services/userService';
 import {
 	Button,
 	Dialog,
@@ -40,6 +41,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import EditIcon from '@mui/icons-material/Edit';
 import { getAllCurrencies}  from '../../services/currencyService'
 import { Typography } from '@material-ui/core';
+import { useParams } from 'react-router';
 
 const theme = createTheme({
 	components: {
@@ -165,6 +167,10 @@ const B2CAccManagement = () => {
 	const [currencies, setCurrencies] = useState([{name: 'No currencies found'}]);
 	const [dense, setDense] = useState(false);
 	const [files, setFiles] = useState(null);
+	const [selectedCurrency, setSelectedCurrency] = useState(null);
+	const [accountNumber, setAccountNumber] = useState(null);
+	const [description, setDescription] = useState(null);
+	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
 		
@@ -178,9 +184,14 @@ const B2CAccManagement = () => {
 					};
 				})
 			)
+			setSelectedCurrency(response.data[0].name);
 		});
-
-        // Staviti getallaccounts za tog b2c-a
+		
+		getAllAccounts(getUserId()).then(response => {
+			
+			console.log(response.data);
+			setAccounts(response.data);
+		})
         
 	}, [change]);
 	const handleCreateDialogOpen = () => {
@@ -189,60 +200,63 @@ const B2CAccManagement = () => {
 
 	const handleCreateDialogClose = () => {
 		setOpenCreateDialog(false);
+		setErrorMessage('');
 	};
 
-	const handleCreateUser = event => {
-		/*event.preventDefault();
-		const form = event.target;
-		const newUser = {
-			firstName: form.name.value,
-			lastName: form.surname.value,
-			email: form.email.value,
-			phoneNumber: form.phone.value,
-			address: form.address.value,
-			role: form.role.value,
-		};
-		createUser(newUser)
-			.then(response => {
-				setOpenCreateDialog(false);
-				setOpenSnackbar(true);
-				setChange(!change);
-			})
-			.catch(error => console.error(error));*/
-		
-		if (files) {
-			for (var i = 0; i < files.length; i++) {
-				let formdata = new FormData();
-				formdata.append('document', files[i]);
-				//console.log(formdata);
-				
-				//uploadDocument(formdata);
-			}
-		}
-		
-	};
+	const handleSendRequest = () => {
+		let currency_id = findCurrencyByName(selectedCurrency);
 
-	const testDocument = () => {
-		if (files) {
-			console.log(files);
-			for (var i = 0; i < files.length; i++) {
-				let formdata = new FormData();
-				formdata.append('ContentType', 'application/pdf');
-				formdata.append('Folder', '/user-requests');
-				formdata.append('file', files[i]);
+		if (accountNumber && currency_id && description && accountNumber != '' && description != '') {
+			setErrorMessage('');
 
-				for (var pair of formdata.entries()) {
-					console.log(pair[0]); 
-					console.log(pair[1]);
+			if (files) {
+				console.log(files);
+				for (var i = 0; i < files.length; i++) {
+					let formdata = new FormData();
+					formdata.append('ContentType', 'application/pdf');
+					formdata.append('Folder', '/user-requests/' + accountNumber);
+					formdata.append('file', files[i]);
+	
+					for (var pair of formdata.entries()) {
+						console.log(pair[0]); 
+						console.log(pair[1]);
+					}
+					uploadDocument(formdata).then(res => {console.log(res)});
 				}
-				uploadDocument(formdata).then(res => {console.log(res)});
 			}
+			
+			let objectData = {
+				accountNumber: accountNumber,
+				currencyId: currency_id,
+				description: description,
+				requestDocumentPath: files ? ('/user-requests/' + accountNumber) : 'null',
+				approved: false,
+				userId: getUserId(),
+			};
+			console.log(objectData);
+			createAccount(objectData);
+			setAccountNumber(null);
+			setSelectedCurrency(currencies[0].name);
+			setDescription(null);
+			handleCreateDialogClose();
 		}
+		else {
+			setErrorMessage('Invalid input data!');
+		}
+		
 	}
 
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	function findCurrencyByName(curr) {
+		for (var i = 0; i < currencies.length; i++) {
+			if (currencies[i].name == curr)
+				return currencies[i].id;
+		}
+		return null;
+	}
 
 	function handleFiles(files) {
 		setFiles(files.target.files);
@@ -292,8 +306,8 @@ const B2CAccManagement = () => {
 										>
 											<TableCell align='left'>{account.id}</TableCell>
 											<TableCell align='left'>{account.description}</TableCell>
-											<TableCell align='left'>{account.currency}</TableCell>
-											
+											<TableCell align='left'>{account.currency.name}</TableCell>
+											<TableCell align='left'>{account.approved ? 'Active' : 'Waiting for approval'}</TableCell>
 										</TableRow>
 									))}
 								</TableBody>
@@ -315,12 +329,17 @@ const B2CAccManagement = () => {
 				<DialogTitle>Create Account</DialogTitle>
 				<DialogContent>
 					<DialogContentText>Please fill out the form below to create a new account.</DialogContentText>
-					<form onSubmit={handleCreateUser}>
-                        <TextField margin='dense' name='account-id' label='Account Number' fullWidth />
-                        <TextField margin='dense' name='description' label='Description' fullWidth />
+					{errorMessage.length > 0 ? (
+						<Alert severity='error' variant='filled'>
+							{errorMessage}
+						</Alert>
+					) : null}
+					<form>
+                        <TextField margin='dense' name='account-id' label='Account Number' fullWidth onChange={(e) => {setAccountNumber(e.target.value)}}/>
+                        <TextField margin='dense' name='description' label='Description' fullWidth onChange={(e) => {setDescription(e.target.value)}}/>
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Currency</InputLabel>
-							<Select label='Currency' name='currency' defaultValue={currencies[0].name}>
+							<Select label='Currency' name='currency' defaultValue={currencies[0].name} onChange={(e) => {setSelectedCurrency(e.target.value)}}>
                                 {
                                     currencies.map((currency) => {
                                         return <MenuItem value={currency.name} key={currency.name}>{currency.name}</MenuItem>
@@ -342,7 +361,7 @@ const B2CAccManagement = () => {
 							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
 								Cancel
 							</Button>
-							<Button onClick={testDocument} className={`${classes.button}`} variant='contained'>
+							<Button onClick={handleSendRequest} className={`${classes.button}`} variant='contained'>
 								Send Request
 							</Button>
 						</DialogActions>
