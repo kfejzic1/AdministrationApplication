@@ -1,0 +1,66 @@
+.header_row {
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.currency_table {
+    width: 50%;
+    margin: 1rem;
+    border: 3px solid black;
+    font-size: 2rem;
+}
+
+.flex_center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.flex_column{
+    display: flex;
+    flex-direction: column;
+}
+.element_row {
+    border: 2px solid black;
+    text-align: center;
+}
+
+.element_cell {
+    border-right: 2px solid black;
+}
+
+.create_currency_modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400;
+    border: 2px solid #000;
+}
+.modal_input{
+    width: 80%;
+    margin: 0.25rem;
+}
+.rate_input{
+    width: 30%;
+    margin: 0.25rem;
+}
+.modal_add_button{
+    padding: 0.5rem;
+    width: 25%;
+    margin: 0.25rem;
+    background-color: #ffaf36;
+    color: black;
+}
+.flex_row{
+    display: flex;
+    flex-direction: row;
+}
+.flex_row_between{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

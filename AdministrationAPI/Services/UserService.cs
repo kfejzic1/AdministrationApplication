@@ -82,6 +82,37 @@ namespace AdministrationAPI.Services
         {
             return _userManager.Users.FirstOrDefault(x => x.UserName == name);
         }
+        public async Task<User> GetUserByEmailPhone(string email, string phone)
+        {
+            User user = new User();
+
+            if (email != null)
+                user = await _userManager.FindByEmailAsync(email);
+            else
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == phone);
+
+            return user;
+        }
+
+        public async Task<AuthenticationResult> GetTokenForUser(User user)
+        {
+            if (user == null)
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User not found!" }
+                };
+
+            var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
+
+            var token = TokenUtilities.CreateToken(authClaims, _configuration);
+
+            return new AuthenticationResult
+            {
+                Success = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+
+        }
 
         public async Task<AuthenticationResult> Login(LoginRequest loginRequest)
         {
@@ -131,6 +162,29 @@ namespace AdministrationAPI.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
+        public async Task<User> GetUserFromLoginRequest(MobileLoginRequest mobileLoginRequest)
+        {
+            User user = new User();
+
+            if (mobileLoginRequest.Email != null)
+                user = await _userManager.FindByEmailAsync(mobileLoginRequest.Email);
+            else
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == mobileLoginRequest.Phone);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            if (!await _userManager.CheckPasswordAsync(user, mobileLoginRequest.Password))
+                throw new Exception("Email/Phone/Password combination mismatch!");
+
+
+            if ((mobileLoginRequest.Email != null && !user.EmailConfirmed) || (mobileLoginRequest.Phone != null && !user.PhoneNumberConfirmed))
+                throw new Exception("Provided email/phone is not confirmed!");
+
+            return user;
+        }
+
+
 
         public async Task<AuthenticationResult> FacebookSocialLogin(string token)
         {
@@ -241,13 +295,9 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
-            using (var context = new VendorDbContext())
-            {
-                var userIds = context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
+                var userIds = _context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
                 var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
                 return users;
-            }
-
         }
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)

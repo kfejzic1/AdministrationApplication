@@ -34,6 +34,7 @@ namespace AdministrationAPI.Controllers
         [HttpGet("check")]
         public async Task<IActionResult> Check([FromQuery] string name, string accountNumber)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             User user = _userService.GetUserByFirstName(name);
 
             if (user is null) {

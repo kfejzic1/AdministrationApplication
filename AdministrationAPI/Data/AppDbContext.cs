@@ -1,8 +1,11 @@
 ﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models.Transaction;
+using AdministrationAPI.Models.Vendor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
+using System.Reflection.Emit;
 
 namespace AdministrationAPI.Data
 {
@@ -12,8 +15,23 @@ namespace AdministrationAPI.Data
         {
         }
 
-        public DbSet<ActivationCode> ActivationCodes { get; set; }
+
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<EmailActivationCode> EmailActivationCodes { get; set; }
+        public DbSet<SMSActivationCode> SMSActivationCodes { get; set; }
         public DbSet<TokenValidity> TokenValidities { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorUser> VendorUsers { get; set; }
+        public DbSet<VendorLocation> VendorLocations { get; set; }
+        public DbSet<VendorPOS> VendorPOS { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<VendorPaymentTermContract> VendorPaymentTermContract { get; set; }
+        public DbSet<VendorPaymentTerm> VendorPaymentTerm { get; set; }
+        public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
+        public DbSet<TransactionClaim> TransactionClaims { get; set; }
+        public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,9 +44,19 @@ namespace AdministrationAPI.Data
             builder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable("usr_user_logins"); });
             builder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable("usr_user_tokens"); });
             builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("usr_role_claims"); });
-            builder.Entity<ActivationCode>(entity => { entity.ToTable("usr_activation_codes"); });
+            builder.Entity<EmailActivationCode>(entity => { entity.ToTable("usr_email_activation_codes"); });
+            builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
-
+            builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
+            builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
+            builder.Entity<VendorLocation>(entity => { entity.ToTable("ven_vendor_location"); });
+            builder.Entity<VendorPOS>(entity => { entity.ToTable("ven_vendor_pos"); });
+            builder.Entity<Document>(entity => { entity.ToTable("dm_documents"); });
+            builder.Entity<VendorPaymentTermContract>(entity => { entity.ToTable("ven_payment_term_contract"); });
+            builder.Entity<VendorPaymentTerm>(entity => { entity.ToTable("ven_payment_term"); });
+            builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
+            builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
+            builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
 
             ApplySnakeCaseNames(builder);
 
@@ -36,10 +64,25 @@ namespace AdministrationAPI.Data
             //SeedUsers(builder);
             Seed(builder);
 
-            builder.Entity<ActivationCode>()
+            builder.Entity<EmailActivationCode>()
                 .HasOne(rc => rc.User)
-                .WithOne(u => u.ActivationCode)
-                .HasForeignKey<ActivationCode>(rc => rc.UserId);
+                .WithOne(u => u.EmailActivationCode)
+                .HasForeignKey<EmailActivationCode>(rc => rc.UserId);
+
+            builder.Entity<SMSActivationCode>()
+                .HasOne(rc => rc.User)
+                .WithOne(u => u.SMSActivationCode)
+                .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
+                
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.InputCurrency)
+                .WithMany(c => c.ExchangeRatesAsInput)
+                .HasForeignKey(er => er.InputCurrencyId);
+
+            builder.Entity<ExchangeRate>()
+                .HasOne<Currency>(er => er.OutputCurrency)
+                .WithMany(c => c.ExchangeRatesAsOutput)
+                .HasForeignKey(er => er.OutputCurrencyId);
         }
 
         private static void SeedRoles(ModelBuilder builder)
@@ -130,6 +173,16 @@ namespace AdministrationAPI.Data
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
 
+
+            //Seed InvoiceFrequency
+            List<InvoiceFrequency> invoiceFrequencies = new List<InvoiceFrequency>()
+            {
+                new InvoiceFrequency() { Id = 1, Name = "Monthly", FrequencyDays = 30 },
+                new InvoiceFrequency() { Id = 2, Name = "Weekly", FrequencyDays = 7 },
+                new InvoiceFrequency() { Id = 3, Name = "Biweekly", FrequencyDays = 14 },
+            };
+
+            builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
         }
 
     }
