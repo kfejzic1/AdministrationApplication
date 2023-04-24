@@ -28,16 +28,31 @@
 .user-commands {
     margin: 10px;
     display: flex;
+    gap: 50px;
     justify-content: center;
     align-items: center;
 }
 
-.request-creation-btn {
+.user-commands-btn {
     background-image: linear-gradient(144deg, #ffb649 35%,#ffee00);
 	border-radius: 15px;
     color: black;
-	width: 50%;
+	width: 30%;
 }
+
+@media (max-width: 1200px) {
+    .user-commands-btn {
+        height: 80px;
+    }
+}
+
+@media (max-width: 800px) {
+    .user-commands-btn {
+        height: 120px;
+    }
+}
+
+
 
 .request-creation-btn:hover {
     background-image: linear-gradient(144deg, #e9a642 65%,#e9de00);
