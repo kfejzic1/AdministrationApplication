@@ -28,6 +28,7 @@ builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IExchangeService, ExchangeService>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<TokenUtilities>();
 
 

@@ -101,6 +101,15 @@ namespace AdministrationAPI.Data
                 .WithMany(c => c.ExchangeRatesAsOutput)
                 .HasForeignKey(er => er.OutputCurrencyId);
 
+            //set status to new created vaucher on ISSUED 
+            builder.Entity<Voucher>()
+           .Property(e => e.CurrentStatus)
+           .HasDefaultValue(0);
+
+            builder.Entity<Voucher>()
+           .HasIndex(e => e.Code)
+           .IsUnique();
+
             builder.Entity<Voucher>()
              .HasOne(v => v.User)
              .WithOne()
