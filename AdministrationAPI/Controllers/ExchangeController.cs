@@ -71,6 +71,30 @@ namespace AdministrationAPI.Controllers
             }
 
         }
+        [HttpGet("GetAllAccounts")]
+        public async Task<IActionResult> GetaLLAccounts()
+        {
+            try
+            {
+                string token = "";
+                foreach (var header in Request.Headers)
+                {
+                    if (header.Key.CompareTo("Authorization") == 0)
+                        token = header.Value;
+                }
+                var response = await _exchangeService.GetAllAccounts(token);
+                if (response != null)
+                    return Ok(response);
+                else
+                    return BadRequest("Failed");
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "ExchangeController.AddExchangeRate");
+                return BadRequest("Failed");
+            }
+
+        }
 
 
 

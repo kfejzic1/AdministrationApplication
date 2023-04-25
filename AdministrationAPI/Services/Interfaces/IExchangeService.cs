@@ -9,6 +9,7 @@ namespace AdministrationAPI.Services.Interfaces
         public Task<TransactionResponse?> MakeTransaction(TransactionRequest transactionRequest, string token);
         public Task<CurrencyAccount?> CreateAccount(ExchangeAccountRequest Request, string token);
 
+        public Task<List<CurrencyAccount>?> GetAllAccounts(string token);
         public Task<List<CurrencyAccount>?> GetUserAccounts(string token);
     }
 }

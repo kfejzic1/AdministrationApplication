@@ -72,6 +72,30 @@ namespace AdministrationAPI.Services
             }
 
         }
+        public async Task<List<CurrencyAccount>?> GetAllAccounts(string token)
+        {
+            try
+            {
+                HttpClient client = new();
+
+                var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Account/GetAllAccounts?token=" + token.Substring(7));
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var userTransfer = await response.Content.ReadFromJsonAsync<List<CurrencyAccount>>();
+                    return userTransfer;
+                }
+                else
+                {
+                    throw new Exception("pss" + response.StatusCode.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
+        }
         public async Task<TransactionResponse?> MakeTransaction(TransactionRequest transactionRequest,string token)
         {
             try
