@@ -12,7 +12,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createCurrency, createExchangeRate, getAllCurrencies, getAllExchangeRates } from "../../services/currencyService";
+import { createCurrency, createExchangeRate, createExchangeTransaction, getAllCurrencies, getAllExchangeRates, getUserTransactions } from "../../services/currencyService";
+import { getUser } from "../../services/userService";
+import { getUserByName } from "../../services/userService";
+import { getAllUsers } from "../../services/userService";
 
 export default function Currencies() {
 
@@ -378,24 +381,56 @@ export default function Currencies() {
         },
         { field: 'endDate', headerName: 'End Date', width: 300, headerAlign: 'center', align: 'center' }
     ]
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUserNumber, setCurrentUserNumber] = useState('');
+
+    const [allUsers, setAllUsers] = useState([]);
+
     useEffect(() => {
         fetchExchangeRates();
         fetchCurrencies();
+        fetchCurrentUser();
+        fetchAllUsers();
+
     }, []);
+    const [selectedUser, setSelectedUser] = useState({
+        name: '',
+        accountNumber: ''
+    });
     const [currencies, setCurrencies] = useState(dummyCurrencies);
     const [exchanges, setExchanges] = useState(dummyExchangeRates);
     const [open, setOpen] = useState(false);
+    const [openRequests, setOpenRequests] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [currentCurrency, setCurrentCurrency] = useState(defaultCurrency)
     const [inputCurrency, setInputCurrency] = useState(
         currencies[0].id
     );
-    const [outputCurrency, setOutputCurrency] = useState(        
+    const [outputCurrency, setOutputCurrency] = useState(
         currencies.length == 1 ? currencies[0].id : currencies[1].id
     );
     const [rate, setRate] = useState();
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+
+    const [amount, setAmount] = useState('');
+    const [transactionCurrency, setTransactionCurrency] = useState(currencies.length == 0 ? {
+        id: '0',
+        country: '',
+        name: ''
+    } : currencies[0]);
+
+    const [transactions, setTransactions] = useState([]);
+    const [transactionType, setTransactionType] = useState('');
+    const [transactionPurpose, setTransactionPurpose] = useState('');
+    const [transactionCategory, setTransactionCategory] = useState('');
+    const [sender, setSender] = useState({
+        accountNumber: ''
+    })
+    const [recipient, setRecipient] = useState({
+        name: '',
+        accountNumber: ''
+    })
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -409,7 +444,16 @@ export default function Currencies() {
         )
     }
     const [openExchange, setOpenExchange] = useState(false);
+    const [openExchangeTransaction, setOpenExchangeTransaction] = useState(false);
     const handleOpenExchange = () => setOpenExchange(true);
+    const handleOpenRequests = () => {
+        fetchTransactions();
+        setOpenRequests(true);
+    }
+    const handleCloseRequests = () => setOpenRequests(false);
+
+    const handleOpenExchangeTransaction = () => setOpenExchangeTransaction(true);
+    const handleCloseExchangeTransaction = () => setOpenExchangeTransaction(false);
     const handleCloseExchange = () => {
         setOpenExchange(false);
         setNewExchange(
@@ -422,21 +466,56 @@ export default function Currencies() {
             }
         )
     }
+
+    const fetchCurrentUserNumber = async (username) => {
+        getUserByName(username).then(res => {
+            setCurrentUserNumber(res.data);
+        })
+    }
+    const fetchAllUsers = async () => {
+        getAllUsers().then(res => {
+            setAllUsers(res.data);
+            setSelectedUser({
+                name: res.data.userName,
+                accountNumber: res.data.accountNumber
+            })
+        })
+    }
     const fetchCurrencies = async () => {
         getAllCurrencies().then(res => {
             console.log(res);
-            if(res.data.length != 0)
-            setCurrencies(res.data);
+            if (res.data.length != 0)
+                setCurrencies(res.data);
         });
     };
+    const fetchCurrentUser = async () => {
+        getUser().then(res => {
+            setCurrentUser(res.data);
+
+            fetchCurrentUserNumber(res.data.userName);
+        })
+    }
     const fetchExchangeRates = async () => {
         getAllExchangeRates().then(res => {
             console.log('exxx ', res)
-            if(res.data.length != 0)
-            setExchanges(res.data);
+            if (res.data.length != 0)
+                setExchanges(res.data);
         });
     };
-   
+    const fetchUserAccounts = async () => {
+
+    }
+    const fetchTransactions = async () => {
+        getUserTransactions().then(res => {
+            if (res.status == 200) {
+                setTransactions(res.data)
+            }
+            else {
+                setTransactions([]);
+            }
+        })
+    }
+
     const [openCurrencyList, setOpenCurrencyList] = useState(false);
     const handleOpenCurrencyList = () => {
         fetchCurrencies();
@@ -516,6 +595,33 @@ export default function Currencies() {
             setIsValid(false);
         }
     }
+    const onCreateExchangeTransaction = (event) => {
+        event.preventDefault();
+
+        console.log(selectedUser);
+        console.log(selectedUser.accountNumber)
+
+        const newExchangeTransaction = {
+            amount: amount,
+            currency: transactionCurrency,
+            transactionType: transactionType,
+            transactionPurpose: transactionPurpose,
+            category: transactionCategory,
+            sender: {
+                accountNumber: 'ABC8'
+            },
+            recipient: {
+                name: selectedUser.firstName + " " + selectedUser.lastName,
+                accountNumber: 'ABC9'
+            }
+        }
+
+        createExchangeTransaction(newExchangeTransaction).then(res => {
+            console.log(res);
+
+        })
+        console.log(currentUserNumber.accountNumber)
+    }
     const onCreateExchange = (event) => {
         event.preventDefault();
         if (error === '') {
@@ -530,44 +636,53 @@ export default function Currencies() {
 
             // Display the exchange rate in the table
             // if (exchangeRate) {
-                const newExchange = {
-                    id: exchanges.length + 1,
-                    country: `${inputCurrencyObj.country} - ${outputCurrencyObj.country}`,
-                    name: `${inputCurrencyObj.name} - ${outputCurrencyObj.name}`,
-                    rate: rate,
-                    startDate: startDate,
-                    endDate: endDate
-                };
-                console.log(startDate.getFullYear());
-                console.log(startDate.getMonth() + 1);
-                console.log(startDate.getDate());
-                console.log(startDate.getDay() + 1);
-                console.log(startDate.toISOString().slice(0, 10))
-                createExchangeRate({
-                    inputCurreny: `${inputCurrencyObj.country} (${inputCurrencyObj.name})`,
-                    outputCurrency: `${outputCurrencyObj.country} (${outputCurrencyObj.name})`,
-                    rate: +rate,
-                    startDate: startDate.toISOString().slice(0, 10),
-                    endDate: endDate.toISOString().slice(0, 10)
-                })
-                    .then(res => {
-                        console.log(res);
-                        fetchExchangeRates();
+            const newExchange = {
+                id: exchanges.length + 1,
+                country: `${inputCurrencyObj.country} - ${outputCurrencyObj.country}`,
+                name: `${inputCurrencyObj.name} - ${outputCurrencyObj.name}`,
+                rate: rate,
+                startDate: startDate,
+                endDate: endDate
+            };
+            console.log(startDate.getFullYear());
+            console.log(startDate.getMonth() + 1);
+            console.log(startDate.getDate());
+            console.log(startDate.getDay() + 1);
+            console.log(startDate.toISOString().slice(0, 10))
+            createExchangeRate({
+                inputCurreny: `${inputCurrencyObj.country} (${inputCurrencyObj.name})`,
+                outputCurrency: `${outputCurrencyObj.country} (${outputCurrencyObj.name})`,
+                rate: +rate,
+                startDate: startDate.toISOString().slice(0, 10),
+                endDate: !endDate ? null : endDate.toISOString().slice(0, 10)
+            })
+                .then(res => {
+                    console.log(res);
+                    fetchExchangeRates();
 
-                    })
-                    .catch(error => {
-                        console.log('error', error);
-                    });
-                // setExchanges((prevState) => {
-                //     return [...prevState, newExchange];
-                // });
-                handleCloseExchange();
+                })
+                .catch(error => {
+                    console.log('error', error);
+                });
+            // setExchanges((prevState) => {
+            //     return [...prevState, newExchange];
+            // });
+            handleCloseExchange();
 
             // }
         }
     }
+    const handleTransactionCurrencyChange = (event) => {
+        setTransactionCurrency(event.target.value);
+    }
+
+    const handleSelectedUserChange = (event) => {
+        setSelectedUser(event.target.value)
+    }
+
     const handleInputCurrencyChange = (event) => {
         setInputCurrency(event.target.value);
+
 
     };
     const handleOutputCurrencyChange = (event) => {
@@ -699,6 +814,136 @@ export default function Currencies() {
                 </Box>
             </Modal>
             <Modal
+                open={openExchangeTransaction}
+                onClose={handleCloseExchangeTransaction}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ p: 1 }}>
+                        Make new exchange transaction
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <div className={styles.flex_column}>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <TextField id="outlined-basic" label="Amount" variant="outlined" onChange={(event) => {
+                                    setAmount(event.target.value);
+
+                                }}
+                                />
+                            </Box>
+
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <TextField id="outlined-basic" label="Transaction Type" variant="outlined" onChange={(event) => {
+                                    setTransactionType(event.target.value);
+                                }}
+                                />
+                            </Box>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <TextField id="outlined-basic" label="Transaction Purpose" variant="outlined" onChange={(event) => {
+                                    setTransactionPurpose(event.target.value);
+                                }}
+                                />
+                            </Box>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <TextField id="outlined-basic" label="Category" variant="outlined" onChange={(event) => {
+                                    setTransactionCategory(event.target.value);
+                                }}
+                                />
+                            </Box>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Select Currency</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={transactionCurrency}
+                                        label="Currency"
+                                        onChange={handleTransactionCurrencyChange}
+                                    >
+                                        {currencies.map((currency) => (
+                                            <MenuItem value={currency.id}>{currency.name}({currency.country})</MenuItem>
+                                        ))}
+
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Select user</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={selectedUser}
+                                        label="User"
+                                        onChange={handleSelectedUserChange}
+                                    >
+                                        {allUsers.map((user) => (
+                                            <MenuItem value={user}>{user.firstName} {user.lastName}</MenuItem>
+                                        ))}
+
+                                    </Select>
+                                </FormControl>
+                            </Box>
+
+                            <Button onClick={onCreateExchangeTransaction} sx={{
+                                bgcolor: '#ffaf36',
+                                color: 'white',
+                                p: 1, mt: 1,
+                                "&:hover": {
+                                    backgroundColor: '#ea8c00'
+                                },
+                            }} className={styles.modal_add_button}>Add</Button>
+                        </div>
+                        {isValid ? <div></div> : <div style={{ color: 'red' }}>Please fill out all fields.</div>}
+
+                    </Typography>
+                </Box>
+            </Modal>
+            <Modal
+                open={openRequests}
+                onClose={handleCloseRequests}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ p: 1 }}>
+                        All Transaction Requests
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <div className={styles.flex_column}>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Purpose</th>
+                                        <th>Category</th>
+                                        <th>Currency</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {transactions.map((transaction) => (
+                                        <tr key={transaction.transactionId}>
+                                            <td>{transaction.amount}</td>
+                                            <td>{transaction.transactionType}</td>
+                                            <td>{transaction.transactionPurpose}</td>
+                                            <td>{transaction.category}</td>
+                                            <td>{transaction.currency}</td>
+                                            <td>{transaction.sender.name}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </Typography>
+                </Box>
+            </Modal>
+            <Modal
                 open={openCurrencyList}
                 onClose={handleCloseCurrencyList}
                 aria-labelledby="modal-modal-title"
@@ -753,13 +998,27 @@ export default function Currencies() {
                     }}>Show All Currencies</Button>
 
                 </div>
-                <Button onClick={handleOpenExchange} className="p-3 m-5" sx={{
-                    color: 'white',
-                    bgcolor: '#ffaf36', "&:hover": {
-                        backgroundColor: '#ea8c00'
-                    }
-                }}>Add New Exchange Rate</Button>
+                <div>
+                    <Button onClick={handleOpenRequests} className="p-3 m-5" sx={{
+                        color: 'white',
+                        bgcolor: '#ffaf36', "&:hover": {
+                            backgroundColor: '#ea8c00'
+                        }
+                    }}>Transaction Requests</Button>
+                    <Button onClick={handleOpenExchange} className="p-3 m-5" sx={{
+                        color: 'white',
+                        bgcolor: '#ffaf36', "&:hover": {
+                            backgroundColor: '#ea8c00'
+                        }
+                    }}>Add New Exchange Rate</Button>
 
+                    <Button onClick={handleOpenExchangeTransaction} className="p-3 m-5" sx={{
+                        color: 'white',
+                        bgcolor: '#ffaf36', "&:hover": {
+                            backgroundColor: '#ea8c00'
+                        }
+                    }}>New Exchange Transaction</Button>
+                </div>
                 {/* <div className={styles.flex_row}>
                     <h2 className="p-3 mt-5">Selected currency: {currentCurrency.country} - {currentCurrency.name}</h2>
 

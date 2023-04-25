@@ -43,3 +43,34 @@ export function createCurrency(request) {
 		},
 	});
 }
+
+export function createExchangeTransaction(request) {
+	return axios('https://processingserver.herokuapp.com/api/Transaction/CreateTransaction?token=' + localStorage.getItem('token'), {
+		method: 'POST',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+export function getUserAccounts(){
+	return axios('https://processingserver.herokuapp.com/api/Account/GetAllAccountsForUser?token=' + localStorage.getItem('token'), {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+export function getUserTransactions(){
+	return axios('https://processingserver.herokuapp.com/api/Transaction/GetTransactionsForUser?token=' + localStorage.getItem('token'), {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
