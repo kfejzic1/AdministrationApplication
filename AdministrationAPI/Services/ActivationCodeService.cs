@@ -105,7 +105,7 @@ public class ActivationCodeService : IActivationCodeService
 
         EmailActivationCode activationCode = new EmailActivationCode
         {
-            Id = new Guid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             Code = code,
             User = user
         };
@@ -140,7 +140,7 @@ public class ActivationCodeService : IActivationCodeService
 
         SMSActivationCode activationCode = new SMSActivationCode
         {
-            Id = new Guid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             Code = code,
             User = user
         };
