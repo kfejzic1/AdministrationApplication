@@ -33,7 +33,7 @@ namespace AdministrationAPI.Data
         public DbSet<InvoiceFrequency> InvoiceFrequency { get; set; }
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
-        public DbSet<Account> Accounts { get; set; }        
+        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -62,7 +62,7 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
-            
+
 
             ApplySnakeCaseNames(builder);
 

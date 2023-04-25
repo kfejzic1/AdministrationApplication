@@ -86,7 +86,7 @@ export default function TransactionDetails(arg) {
 							}}
 						>
 							Reuse
-						</Button>
+						</Button> 	
 					</TableCell>
 				</TableRow>
 			</Table>

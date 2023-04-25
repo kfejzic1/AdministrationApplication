@@ -304,3 +304,27 @@ function formatDateForDb(inputDate) {
 	// Return the formatted date string
 	return isoDate;
 }
+
+export async function uploadFile(file, folder, transactionId) {
+	let data = new FormData();
+	data.append('file', file, file.name);
+	data.append('Folder', folder);
+	data.append('NodeName', transactionId);
+	return axios.post(env.API_ENV.url + '/api/Document/UploadDocument', data, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+export function fileTransactionClaim(request) {
+	return axios(env.API_ENV.url + '/api/transactions/claim', {
+		method: 'POST',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
