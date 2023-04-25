@@ -12,7 +12,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createCurrency, createExchangeRate, createExchangeTransaction, getAllCurrencies, getAllExchangeRates, getUserTransactions } from "../../services/currencyService";
+
+import { createCurrency, createExchangeRate, createExchangeTransaction, getAllAcounts, getAllCurrencies, getAllExchangeRates, getUserTransactions } from "../../services/currencyService";
+
 import { getUser } from "../../services/userService";
 import { getUserByName } from "../../services/userService";
 import { getAllUsers } from "../../services/userService";
@@ -391,6 +393,8 @@ export default function Currencies() {
         fetchCurrencies();
         fetchCurrentUser();
         fetchAllUsers();
+        fetchAllAccounts();
+
 
     }, []);
     const [selectedUser, setSelectedUser] = useState({
@@ -424,6 +428,9 @@ export default function Currencies() {
     const [transactionType, setTransactionType] = useState('');
     const [transactionPurpose, setTransactionPurpose] = useState('');
     const [transactionCategory, setTransactionCategory] = useState('');
+
+    const [allAccounts, setAllAccounts] = useState([]);
+
     const [sender, setSender] = useState({
         accountNumber: ''
     })
@@ -431,6 +438,9 @@ export default function Currencies() {
         name: '',
         accountNumber: ''
     })
+
+    const [exchangeUnavailable, setExchangeUnavailable] = useState(false);
+
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -472,6 +482,13 @@ export default function Currencies() {
             setCurrentUserNumber(res.data);
         })
     }
+
+    const fetchAllAccounts = async () => {
+        getAllAcounts().then(res => {
+            setAllAccounts(res.data);
+        })
+    }
+
     const fetchAllUsers = async () => {
         getAllUsers().then(res => {
             setAllUsers(res.data);
@@ -598,7 +615,9 @@ export default function Currencies() {
     const onCreateExchangeTransaction = (event) => {
         event.preventDefault();
 
-        console.log(selectedUser);
+
+        console.log(selectedUser.owner.name);
+
         console.log(selectedUser.accountNumber)
 
         const newExchangeTransaction = {
@@ -611,13 +630,23 @@ export default function Currencies() {
                 accountNumber: 'ABC8'
             },
             recipient: {
-                name: selectedUser.firstName + " " + selectedUser.lastName,
-                accountNumber: 'ABC9'
+
+                name: selectedUser.owner.name,
+                accountNumber: selectedUser.accountNumber
+
             }
         }
 
         createExchangeTransaction(newExchangeTransaction).then(res => {
-            console.log(res);
+
+            console.log(res.data.message)
+            if (res.data.message.includes('not available')) {
+                setExchangeUnavailable(true);
+            }
+            else{
+                setExchangeUnavailable(false);
+            }
+
 
         })
         console.log(currentUserNumber.accountNumber)
@@ -878,8 +907,10 @@ export default function Currencies() {
                                         label="User"
                                         onChange={handleSelectedUserChange}
                                     >
-                                        {allUsers.map((user) => (
-                                            <MenuItem value={user}>{user.firstName} {user.lastName}</MenuItem>
+
+                                        {allAccounts.map((user) => (
+                                            <MenuItem value={user}>{user.owner.name} ({user.currency})</MenuItem>
+
                                         ))}
 
                                     </Select>
@@ -894,6 +925,10 @@ export default function Currencies() {
                                     backgroundColor: '#ea8c00'
                                 },
                             }} className={styles.modal_add_button}>Add</Button>
+
+
+                            {!exchangeUnavailable ? <div></div> : <div style={{ color: 'red' }}>Exchange rate not available.</div>}
+
                         </div>
                         {isValid ? <div></div> : <div style={{ color: 'red' }}>Please fill out all fields.</div>}
 
