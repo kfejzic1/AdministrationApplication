@@ -6,6 +6,9 @@ using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AdministrationAPI.Services
 {
@@ -442,6 +445,59 @@ namespace AdministrationAPI.Services
         public List<InvoiceFrequency> GetInvoiceFrequencies()
         {
            return _context.InvoiceFrequency.ToList();
+        }
+
+
+
+        #endregion
+
+        #region VendorUserRoles
+
+        public async Task<IEnumerable<VendorRoles>> GetVendorUserRoles()
+        {
+            return await _context.VendorRoles.ToListAsync();
+        }
+        public async Task<VendorRoles> GetRoleById(Guid roleId)
+        {
+            return await _context.VendorRoles.FirstOrDefaultAsync(vur => vur.Id == roleId);
+        }
+
+        public async Task<IEnumerable<VendorRoles>> GetRolesForVendorUser(int vendorUserId)
+        {
+           
+            var vendorUser = await _context.VendorUsers.FirstOrDefaultAsync(vu => vu.Id == vendorUserId);
+
+            var roles = await _context.VendorUserRoles.Where(vur => vur.VendorUserId == vendorUserId).Select(r => r.RoleId).ToListAsync();
+
+            var returnList = new List<VendorRoles>();
+
+            foreach(var role in roles )
+            {
+                returnList.Add(await GetRoleById(role));
+            }
+            return returnList;
+            
+        }
+
+        public async Task<Boolean> IsVendorUserAdmin(int adminId)
+        {
+            var roles = await GetRolesForVendorUser(adminId);
+            return await Task.Run(() => roles.Any(role => role.Name == "VendorAdmin"));
+        }
+
+        public async Task<IEnumerable<VendorUser>> GetVendorUsersForAdmin(int adminId)
+        {
+            var roles = await GetRolesForVendorUser(adminId);
+
+
+            if (await Task.Run(() => roles.Any(role => role.Name == "VendorAdmin")))
+            {
+                var vendorUser = await _context.VendorUsers.FirstOrDefaultAsync(vu => vu.Id == adminId);
+                var vendorId = vendorUser.VendorId;
+
+                return await _context.VendorUsers.Where(vu => vu.VendorId == vendorId).ToListAsync();    
+            }
+            return null;
         }
         #endregion
     }

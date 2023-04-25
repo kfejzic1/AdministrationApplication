@@ -10,11 +10,12 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
+import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { LoginSocialFacebook } from 'reactjs-social-login'
-import Currencies from './components/Currencies/Currencies'
+import { LoginSocialFacebook } from 'reactjs-social-login';
+import Currencies from './components/Currencies/Currencies';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 
@@ -36,15 +37,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber'
-							element={
-								<ProtectedRoute>
-									<Payment />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path='/payment/:currency/:transactionPurpose/:transactionType/:transactionAmount/:phoneNumber'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -92,6 +85,15 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+
+						<Route
+							path='/myaccounts'
+							element={
+								<ProtectedRoute>
+									<B2CAccManagement />
+								</ProtectedRoute>
+							}
+						/>	
 
 						<Route
 							path='/currencies'

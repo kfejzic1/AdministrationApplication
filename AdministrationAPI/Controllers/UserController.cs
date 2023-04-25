@@ -3,6 +3,7 @@ using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
+using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
@@ -17,6 +18,7 @@ namespace AdministrationAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -433,6 +435,25 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        //[HttpPatch("edit")]
+        //public async Task<IActionResult> EditUser([FromBody] EditRequest request)
+        //{
+        //    var user = _userService.GetUserById(request.Id);
+        //    if (user == null)
+        //    {
+        //        return BadRequest("User doesn't exist");
+        //    }
+        //    var result = await _userService.EditUser(request);
+        //    if (result.Succeeded)
+        //    {
+        //        return Ok("User successfully updated");
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Error while updating user");
+        //    }
+        //}
+
         [HttpPatch("edit")]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
@@ -442,7 +463,7 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User doesn't exist");
             }
-            var result = await _userService.EditUser(request);
+            var result = await _userService.EditUserAdmin(request);
             if (result.Succeeded)
             {
                 return Ok("User successfully updated");
@@ -452,6 +473,34 @@ namespace AdministrationAPI.Controllers
                 return BadRequest("Error while updating user");
             }
         }
+
+        [HttpPatch("editUser")]
+        public async Task<IActionResult> EditUserAdmin([FromBody] EditRequest request) 
+        {
+            
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            try
+            {
+                var result = await _userService.EditUserAdmin(request);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
 
         [HttpGet("allWithRoles")]
         public IActionResult GetAllUsersWithRoles()
@@ -463,6 +512,7 @@ namespace AdministrationAPI.Controllers
 
         }
 
+
         [HttpGet("all")]
         public IActionResult GetAllUsers()
         {
@@ -471,6 +521,27 @@ namespace AdministrationAPI.Controllers
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
                 var users = _userService.GetAllUsers();
+                return Ok(users);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("allAdmin")]
+        public IActionResult GetAllUsersAdmin()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var users = _userService.GetAllUsersByAdmin();
                 return Ok(users);
             }
             catch (DataException ex)
@@ -611,6 +682,36 @@ namespace AdministrationAPI.Controllers
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Logout");
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet("UsersForVendor/{adminId}")]
+        public async Task<IActionResult> GetUsersForVendor([FromRoute] int adminId)
+        {
+            return Ok(await _userService.GetUsersForVendor(adminId));
+        }
+
+        [HttpPost("editVendorUser")]
+        public async Task<IActionResult> EditVendorUser([FromBody] EditRequest request, int adminId)
+        {
+            try
+            {
+                var result = await _userService.EditVendorUser(request, adminId);
+                if (result.Succeeded)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                LoggerUtility.Logger.LogException(ex, "An error occurred while editing the vendor user.");
+                return StatusCode(500);
             }
         }
     }

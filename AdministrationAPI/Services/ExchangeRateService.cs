@@ -65,5 +65,10 @@ namespace AdministrationAPI.Services
         {
             return await _context.Currencies.ToListAsync();
         }
+
+        public async Task DeleteAllExchangeRates()
+        {
+            await _context.ExchangeRates.ExecuteDeleteAsync();
+        }
     }
 }
