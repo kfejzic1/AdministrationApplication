@@ -34,6 +34,7 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -62,7 +63,7 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
-
+            builder.Entity<Voucher>(entity => { entity.ToTable("usr_vouchers"); });
 
             ApplySnakeCaseNames(builder);
 
@@ -99,7 +100,13 @@ namespace AdministrationAPI.Data
                 .HasOne<Currency>(er => er.OutputCurrency)
                 .WithMany(c => c.ExchangeRatesAsOutput)
                 .HasForeignKey(er => er.OutputCurrencyId);
+
+            builder.Entity<Voucher>()
+             .HasOne(v => v.User)
+             .WithOne()
+             .HasForeignKey<Voucher>(v => v.UserId);
         }
+
 
         private static void SeedRoles(ModelBuilder builder)
         {
