@@ -11,4 +11,5 @@ public class RegisterRequest
     public string Address { get; set; }
     public string PhoneNumber { get; set; }
     public string? AccountNumber { get; set; }
+    public string? Type { get; set; }
 }
