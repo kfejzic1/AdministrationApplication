@@ -87,7 +87,7 @@ namespace AdministrationAPI.Services
             Voucher voucer = new Voucher();
             voucer.Code =  await GenerateOneTimeCode();
             voucer.Amount = voucherRequest.Amount;
-            voucer.CurrencyName = voucherRequest.Name;
+            voucer.CurrencyName = voucherRequest.CurrencyName;
             voucer.CurrentStatus = Voucher.Status.ISSUED;
             _context.Vouchers.Add(voucer);
             _context.SaveChanges();
@@ -146,5 +146,24 @@ namespace AdministrationAPI.Services
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public void VoidVoucher(string code)
+        {
+            try
+            {
+                Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
+                if (voucher != null && (voucher.CurrentStatus == Voucher.Status.ACTIVE || voucher.CurrentStatus == Voucher.Status.ISSUED))
+                {
+                    voucher.CurrentStatus = Voucher.Status.VOID;
+                }
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
     }
 }

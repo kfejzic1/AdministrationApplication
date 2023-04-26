@@ -110,5 +110,29 @@ namespace AdministrationAPI.Controllers
         }
 
 
+        [HttpPost("void-voucher")]
+        public async Task<IActionResult> VoidVoucher([FromBody] string code)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+                if (token.Roles.Contains("Admin"))
+                {
+                    _voucherService.VoidVoucher(code);
+
+                }
+
+                else throw new Exception("Admin is not logged in!");
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return StatusCode(200, "Admin is logged in!");
+        }
+
+
     }
 }
