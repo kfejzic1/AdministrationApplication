@@ -440,6 +440,12 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
+           
+            if (newUser.Type == null)
+            {
+                newUser.Type = "Person";
+            }
+
             IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
             // _userManager.SaveChanges();
 
