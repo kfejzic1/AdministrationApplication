@@ -440,6 +440,10 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
+
+            newUser.EmailConfirmed = true;
+            newUser.PhoneNumberConfirmed = true;
+
             IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
             // _userManager.SaveChanges();
 
