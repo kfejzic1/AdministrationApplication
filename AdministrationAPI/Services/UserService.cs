@@ -70,7 +70,9 @@ namespace AdministrationAPI.Services
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
                 AuthenticatorKey = user.AuthenticatorKey,
                 IsEmailValidated = user.EmailConfirmed,
-                IsPhoneValidated = user.PhoneNumberConfirmed
+                IsPhoneValidated = user.PhoneNumberConfirmed,
+                AccountNumber = user.AccountNumber,
+                Type = user.Type
             };
         }
 
