@@ -1,4 +1,5 @@
-﻿using AdministrationAPI.Models;
+﻿using AdministrationAPI.Contracts.Requests.Vouchers;
+using AdministrationAPI.Models;
 
 namespace AdministrationAPI.Services.Interfaces
 {
@@ -6,5 +7,6 @@ namespace AdministrationAPI.Services.Interfaces
     {
         public Task<string> GenerateOneTimeCode();
         public List<Voucher> GetVouchersByCode(string code);
+        public void CreateVoucher(VoucherRequest voucherRequest);
     }
 }
