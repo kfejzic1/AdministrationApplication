@@ -6,6 +6,6 @@ namespace AdministrationAPI.Contracts.Requests.Vouchers
     {
         public int NoVouchers { get; set; }
         public int Amount { get; set; }
-        public Currency Currency { get; set; }
+        public string Name { get; set; }
     }
 }

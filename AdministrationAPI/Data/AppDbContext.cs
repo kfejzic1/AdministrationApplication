@@ -102,9 +102,11 @@ namespace AdministrationAPI.Data
                 .HasForeignKey(er => er.OutputCurrencyId);
 
             //set status to new created vaucher on ISSUED 
+            /*
             builder.Entity<Voucher>()
            .Property(e => e.CurrentStatus)
            .HasDefaultValue(0);
+            */
 
             builder.Entity<Voucher>()
            .HasIndex(e => e.Code)
@@ -202,6 +204,8 @@ namespace AdministrationAPI.Data
                 UserId = u.Id,
                 RoleId = roles.First(q => q.Name == "User").Id
             }));
+
+
 
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);

@@ -45,7 +45,7 @@ namespace AdministrationAPI.Controllers
 
                 }
 
-                else throw new Exception("Nije admin!");
+               else throw new Exception("Nije admin!");
             }
             catch (Exception e)
             {
