@@ -45,7 +45,7 @@ namespace AdministrationAPI.Controllers
 
                 }
 
-               else throw new Exception("Nije admin!");
+               else throw new Exception("Admin is not logged in!");
             }
             catch (Exception e)
             {
@@ -54,6 +54,61 @@ namespace AdministrationAPI.Controllers
 
             return StatusCode(200, "Admin is logged in!");
         }
+
+
+        [HttpPost("activate-voucher")]
+        public async Task<IActionResult> ActivateVoucher([FromBody] string username, string code)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+                if (token.Roles.Contains("Admin"))
+                {
+                    User user = _userService.GetUserByName(username);
+                    
+                    user.UserName = username;
+                    _voucherService.UpdateVoucher(user, code);
+                   
+                }
+
+                else throw new Exception("Admin is not logged in!");
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return StatusCode(200, "Admin is logged in!");
+        }
+
+
+        [HttpPost("redeem-voucher")]
+        public async Task<IActionResult> RedeemVoucher([FromBody] string username, string code)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+                if (token.Roles.Contains("Admin"))
+                {
+                    User user = _userService.GetUserByName(username);
+
+                    user.UserName = username;
+                    _voucherService.RedeemVoucher(user, code);
+
+                }
+
+                else throw new Exception("Admin is not logged in!");
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return StatusCode(200, "Admin is logged in!");
+        }
+
 
     }
 }

@@ -3,6 +3,9 @@ using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using MimeKit.Encodings;
 using System.Linq;
 using System.Text;
 
@@ -85,11 +88,63 @@ namespace AdministrationAPI.Services
             voucer.Code =  await GenerateOneTimeCode();
             voucer.Amount = voucherRequest.Amount;
             voucer.CurrencyName = voucherRequest.Name;
-            voucer.CurrentStatus = 0;
+            voucer.CurrentStatus = Voucher.Status.ISSUED;
             _context.Vouchers.Add(voucer);
             _context.SaveChanges();
         }
 
-  
+        // async ?
+        public void UpdateVoucher(User user, string code)
+        {
+            try
+            {
+                Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
+                if (voucher != null)
+                {
+                    voucher.User = user;
+                    voucher.UserId = user.Id;
+
+                    if (voucher.CurrentStatus != Voucher.Status.ISSUED)
+                       throw new Exception("Status is not ISSUED");
+                    //napraviti da bude status 400 
+                   
+
+
+                    voucher.CurrentStatus = Voucher.Status.ACTIVE;
+                }
+
+                _context.SaveChanges();
+            }catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void RedeemVoucher(User user, string code)
+        {
+            try
+            {
+                Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
+                if (voucher != null)
+                {
+                    voucher.User = user;
+                    voucher.UserId = user.Id;
+
+                    if (voucher.CurrentStatus != Voucher.Status.ACTIVE)
+                        throw new Exception("Status is not ACTIVE");
+                    //napraviti da bude status 400 
+
+
+
+                    voucher.CurrentStatus = Voucher.Status.REDEEMED;
+                }
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
