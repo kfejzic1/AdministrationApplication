@@ -440,6 +440,10 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
+
+            newUser.EmailConfirmed = true;
+            newUser.PhoneNumberConfirmed = true;
+
             IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
             // _userManager.SaveChanges();
 
@@ -486,7 +490,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendConfirmationEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
@@ -522,7 +526,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendPasswordResetEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
