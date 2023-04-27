@@ -6,10 +6,11 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IVoucherService
     {
         public Task<string> GenerateOneTimeCode();
-        //public List<Voucher> GetVouchersByCode(string code);
         public void CreateVoucher(VoucherRequest voucherRequest);
-        public void UpdateVoucher(User user, string code);
-        public void RedeemVoucher(User user, string code);
-        public void VoidVoucher(string code);
+        public Voucher GetVoucherByCode(string code);
+        public Voucher GetVoucherByUserId(string userId);
+        public Voucher UpdateVoucher(User user, string code);
+        public Voucher RedeemVoucher(User user, string code);
+        public Voucher VoidVoucher(string code);
     }
 }

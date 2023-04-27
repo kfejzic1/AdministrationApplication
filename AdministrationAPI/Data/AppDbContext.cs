@@ -101,13 +101,7 @@ namespace AdministrationAPI.Data
                 .WithMany(c => c.ExchangeRatesAsOutput)
                 .HasForeignKey(er => er.OutputCurrencyId);
 
-            //set status to new created vaucher on ISSUED 
-            /*
-            builder.Entity<Voucher>()
-           .Property(e => e.CurrentStatus)
-           .HasDefaultValue(0);
-            */
-
+       
             builder.Entity<Voucher>()
            .HasIndex(e => e.Code)
            .IsUnique();
@@ -198,15 +192,22 @@ namespace AdministrationAPI.Data
             // Seed UserRoles
             List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
 
-
-            users.ForEach(u => userRoles.Add(new IdentityUserRole<string>
+            foreach (var user in users)
             {
-                UserId = u.Id,
-                RoleId = roles.First(q => q.Name == "Admin").Id
-            }));
-
-
-
+                if (user.UserName != "abrulic1")
+                    userRoles.Add(new IdentityUserRole<string>
+                    {
+                        UserId = user.Id,
+                        RoleId = roles.First(q => q.Name == "User").Id
+                    });
+                else
+                 userRoles.Add(new IdentityUserRole<string>
+                 {
+                     UserId = user.Id,
+                     RoleId = roles.First(q => q.Name == "Admin").Id
+                 });
+            }
+           
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
 
