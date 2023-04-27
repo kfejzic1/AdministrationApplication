@@ -113,7 +113,7 @@ public class ActivationCodeService : IActivationCodeService
         _context.EmailActivationCodes.Add(activationCode);
         await _context.SaveChangesAsync();
 
-        EmailSender emailSender = new EmailSender();
+        EmailSender emailSender = new EmailSender(_config);
         try
         {
             await emailSender.SendEmailAsync(user.Email, code);
