@@ -100,5 +100,78 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("requests")]
+        public IActionResult ListRequests()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+               
+                var result = _accountService.GetRequests();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("approve")]
+        public IActionResult ApproveRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.ApproveRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("decline")]
+        public IActionResult DeclineRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.DeclineRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("history")]
+        public IActionResult RequestHistory([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.GetHistory();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }
