@@ -100,7 +100,7 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("requests")]
         public IActionResult ListRequests()
         {
@@ -118,7 +118,7 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("approve")]
         public IActionResult ApproveRequest([FromQuery] int id)
         {
@@ -136,7 +136,7 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("decline")]
         public IActionResult DeclineRequest([FromQuery] int id)
         {
@@ -154,7 +154,7 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("history")]
         public IActionResult RequestHistory([FromQuery] int id)
         {
