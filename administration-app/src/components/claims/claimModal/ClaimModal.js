@@ -98,78 +98,68 @@ export default function ClaimModal(props) {
   return (
     <div>
       <div className="container">
-        <form className={classes.root}>
-          <Card className={classes.card}>
-            <CardHeader align="left" title={"Claim information"}></CardHeader>
-            <CardContent>
-              <Stack direction="column" spacing={2}>
-                <Box>
+        <Card className={classes.card}>
+          <CardHeader align="left" title={"Claim information"}></CardHeader>
+          <CardContent>
+            <Stack direction="column" spacing={2}>
+              <Box alignContent={"center"} sx={{ maxWidth: '100%', mt: 3 }}>
+                <Grid container spacing={0.5}>
+                  {/* Table Header */}
                   <Grid item xs={12}>
-                    <Typography
-                    sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Claim ID"
-                      variant="standard"
-                    >
-                      {claim.id}
-                    </Typography>
-                    <Typography
-                    sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Subject"
-                      variant="standard"
-                    >
-                      {claim.subject}
-                    </Typography>
-                    <Typography
-                      sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Last Modified"
-                      variant="standard"
-                    >
-                      {claim.modified}
-                    </Typography>
-
-                    <Typography
-                      sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Status"
-                      variant="standard"
-                    >
-                      {claim.status}
-                    </Typography>
-
-                    <Typography
-                    sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Created"
-                      variant="standard"
-                    >
-                      {claim.created}
-                    </Typography>
-
-                    <Typography
-                    sx={{ pl: '1%' }}
-                      className={classes.Typography}
-                      id="standard-basic"
-                      label="Description"
-                      variant="standard"
-                    >
-                      {claim.description}
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: '14px' }}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={2}>
+                          Claim id
+                        </Grid>
+                        <Grid item xs={2}>
+                          Subject
+                        </Grid>
+                        <Grid item xs={2}>
+                          Created
+                        </Grid>
+                        <Grid item xs={2}>
+                          Last activity
+                        </Grid>
+                        <Grid item xs={2}>
+                          Description
+                        </Grid>
+                        <Grid item xs={2}>
+                          Status
+                        </Grid>
+                      </Grid>
                     </Typography>
                   </Grid>
-                </Box>
-                <Box>Poruke</Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </form>
-        <Loader open={open} loaderState={loaderState} />
+                  {/* Table Data */}
+                  <Grid item xs={12}>
+                    <Typography sx={{ fontSize: '14px' }}>
+                      <Grid container spacing={2}>
+                          <Grid item xs={2}>
+                            {claim.id}
+                          </Grid>
+                          <Grid item xs={2}>
+                            {claim.subject}
+                          </Grid>
+                          <Grid item xs={2}>
+                            {claim.created}
+                          </Grid>
+                          <Grid item xs={2}>
+                            {claim.modified}
+                          </Grid>
+                          <Grid item xs={2}>
+                            {claim.description}
+                          </Grid>
+                          <Grid item xs={2}>
+                            {claim.status}
+                          </Grid>
+                      </Grid>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Box>Poruke</Box>
+            </Stack>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
