@@ -307,44 +307,45 @@ namespace AdministrationAPI.Services
         #region PaymentTerms
         public int CreatePaymentTerm(PaymentTermRequest request)
         {
-                var paymentTerm = new VendorPaymentTerm
+            var paymentTerm = new VendorPaymentTerm
+            {
+                Name = request.Name,
+                VendorId = request.VendorId,
+                StartDate = request.StartDate,
+                ExpiryDate = request.ExpiryDate,
+                InvoiceFrequencyTypeId = request.InvoiceFrequencyTypeId,
+                DueDate = request.DueDate,
+                Created = DateTime.UtcNow,
+                CreatedBy = request.CreatedBy
+            };
+
+            _context.VendorPaymentTerm.Add(paymentTerm);
+            _context.SaveChanges();
+
+            //Create bond between contracts and payment terms
+            foreach (var documentId in request.DocumentIds)
+            {
+                var paymentTermContract = new VendorPaymentTermContract
                 {
-                    Name = request.Name,
-                    StartDate = request.StartDate,
-                    ExpiryDate = request.ExpiryDate,
-                    InvoiceFrequencyTypeId = request.InvoiceFrequencyTypeId,
-                    DueDate = request.DueDate,
-                    Created = DateTime.UtcNow,
-                    CreatedBy = request.CreatedBy
+                    PaymentTermId = paymentTerm.Id,
+                    ContractId = documentId,
                 };
-
-                _context.VendorPaymentTerm.Add(paymentTerm);
-                _context.SaveChanges();
-
-                //Create bond between contracts and payment terms
-                foreach (var documentId in request.DocumentIds)
-                {
-                    var paymentTermContract = new VendorPaymentTermContract
-                    {
-                        PaymentTermId = paymentTerm.Id,
-                        ContractId = documentId,
-                    };
                 _context.VendorPaymentTermContract.Add(paymentTermContract);
-                }
-                _context.SaveChanges();
+            }
 
-                return paymentTerm.Id;
+            _context.SaveChanges();
+
+            return paymentTerm.Id;
         }
 
-        public List<PaymentTermResponse> GetAllPaymentTerms()
+        public List<PaymentTermResponse> GetAllPaymentTerms(int vendorId)
         {
-                var paymentTerms = _context.VendorPaymentTerm.ToList();
+                var paymentTerms = _context.VendorPaymentTerm.Where(x => x.VendorId == vendorId).ToList();
                 var paymentTermResponse = new List<PaymentTermResponse>();
                 foreach (var pt in paymentTerms)
                 {
                     InvoiceFrequency invoiceFrequency = _context.InvoiceFrequency.FirstOrDefault(x => x.Id == pt.InvoiceFrequencyTypeId);
                     
-
                     var documentIds = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
                     var contracts = _context.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
 
@@ -382,9 +383,7 @@ namespace AdministrationAPI.Services
         public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest)
         {
                 var paymentTerm = _context.VendorPaymentTerm.FirstOrDefault(p => p.Id == paymentTermRequest.Id);
-                var paymentTermContract = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == paymentTermRequest.Id);
-
-                
+                var paymentTermContract = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == paymentTermRequest.Id);               
 
                 if (paymentTerm != null)
                 {
@@ -422,15 +421,15 @@ namespace AdministrationAPI.Services
         public bool DeletePaymentTerm(int id)
         {
                 var paymentTerm = _context.VendorPaymentTerm.FirstOrDefault(v => v.Id == id);
-                var documentIds = _context.VendorPaymentTermContract.Where(v => v.PaymentTermId == id);
-                var contracts = _context.Documents.Where(d => documentIds.Select(x => x.ContractId).Contains(d.Id));
+                var documentIds = _context.VendorPaymentTermContract.Where(v => v.PaymentTermId == id).ToList();
+                var contracts = _context.Documents.Where(d => documentIds.Select(x => x.ContractId).Contains(d.Id)).ToList();
 
                 if (paymentTerm != null)
                 {
                     foreach(var doc in documentIds)
                     {
-                    _context.VendorPaymentTermContract.Remove(doc);
                         _documentService.DocumentDelete(doc.ContractId);
+                        _context.VendorPaymentTermContract.Remove(doc);
                     }
 
                     _context.VendorPaymentTerm.Remove(paymentTerm);
