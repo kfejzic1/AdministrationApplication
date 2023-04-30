@@ -336,18 +336,11 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpGet("PaymentTerm")]
-        public IActionResult GetAllPaymentTerms()
+        [HttpGet("PaymentTerm/{vendorId}")]
+        public IActionResult GetAllPaymentTerms([FromRoute] int vendorId)
         {
             _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            return Ok(_vendorService.GetAllPaymentTerms());
-        }
-        
-        [HttpGet("PaymentTerm/{id}")]
-        public IActionResult GetPaymentTerm([FromRoute] int id)
-        {
-            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-            return Ok(_vendorService.GetPaymentTerm(id));
+            return Ok(_vendorService.GetAllPaymentTerms(vendorId));
         }
 
         [HttpPut("PaymentTerm/Update")]
