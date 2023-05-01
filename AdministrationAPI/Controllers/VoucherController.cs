@@ -61,22 +61,37 @@ namespace AdministrationAPI.Controllers
             }
 
         }
-
+    
         [Authorize(Roles = "Admin")]
-        [HttpPost("activate-voucher")]
-        public async Task<IActionResult> ActivateVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
+        [HttpPost("change-voucher-status")]
+        public async Task<IActionResult> ChangeVoucherStatus([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
         {
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
 
-                Voucher voucherFromDatabase = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
-                if (voucherFromDatabase == null)
-                    throw new Exception("Voucher with this code is not in database!");
-                else if (voucherFromDatabase.User != null)
-                    throw new Exception("This voucher is already attached to user!");
+                Voucher voucher = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
+                if (voucher == null)
+                    throw new Exception("Voucher with this code doesn't exist!");
 
-                var voucher = _voucherService.ActivateVoucher(changeVoucherStatusRequest.Code);
+                if (changeVoucherStatusRequest.StatusId == "1")
+                    voucher = _voucherService.ActivateVoucher(changeVoucherStatusRequest.Code);
+                
+                else if (changeVoucherStatusRequest.StatusId == "2")
+                {
+                    User user = _userService.GetUserByName(changeVoucherStatusRequest.Username);
+                    if (user == null)
+                        throw new Exception("User with this username doesn't exist!");
+                    voucher = await _voucherService.RedeemVoucher(user, changeVoucherStatusRequest.Code);
+                }
+
+                else if (changeVoucherStatusRequest.StatusId == "3")
+                    voucher = await _voucherService.VoidVoucher(changeVoucherStatusRequest.Code);
+        
+                 else
+                        throw new Exception("Invalid voucher status provided!");
+
                 return Ok(voucher);
             }
             catch (DataException ex)
@@ -89,63 +104,6 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("redeem-voucher")]
-        public async Task<IActionResult> RedeemVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
-        {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-
-                User user = _userService.GetUserByName(changeVoucherStatusRequest.Username);
-                if (user == null)
-                    throw new Exception("User with this username doesn't exists!");
-
-                Voucher voucher = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
-                if (voucher == null)
-                    throw new Exception("Voucher with this code doesn't exists!");
-
-                user.UserName = changeVoucherStatusRequest.Username;
-                if (voucher.Code != changeVoucherStatusRequest.Code)
-                    throw new Exception("This user is not attached with this voucher code!");
-                Voucher v = await _voucherService.RedeemVoucher(user, changeVoucherStatusRequest.Code);
-                return Ok(v);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost("void-voucher")]
-        public async Task<IActionResult> VoidVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
-        {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-                Voucher voucher = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
-                if (voucher == null)
-                    throw new Exception("Voucher with this code doesn't exists!");
-
-                Voucher v = await _voucherService.VoidVoucher(changeVoucherStatusRequest.Code);
-                return Ok(v);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-vouchers")]
