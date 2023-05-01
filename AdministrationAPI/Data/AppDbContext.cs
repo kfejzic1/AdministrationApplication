@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Models;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
+using AdministrationAPI.Models.Voucher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,8 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,7 +66,8 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
-            builder.Entity<Voucher>(entity => { entity.ToTable("usr_vouchers"); });
+            builder.Entity<Voucher>(entity => { entity.ToTable("vou_vouchers"); });
+            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });
 
             ApplySnakeCaseNames(builder);
 
@@ -103,13 +107,29 @@ namespace AdministrationAPI.Data
 
        
             builder.Entity<Voucher>()
-           .HasIndex(e => e.Code)
-           .IsUnique();
+               .HasIndex(e => e.Code)
+               .IsUnique();
+
+      
+            builder.Entity<Voucher>()
+                .HasOne(v => v.Admin)
+                .WithMany()
+                .HasForeignKey(v => v.CreatedBy);
 
             builder.Entity<Voucher>()
-             .HasOne(v => v.User)
-             .WithOne()
-             .HasForeignKey<Voucher>(v => v.UserId);
+                .HasOne(v => v.User)
+                .WithOne()
+                .HasForeignKey<Voucher>(v => v.RedeemedBy);
+
+            builder.Entity<Voucher>().
+                HasOne(v => v.Currency)
+                .WithMany()
+                .HasForeignKey(v => v.CurrencyId);
+
+            builder.Entity<Voucher>()
+                .HasOne(v => v.VoucherStatus)
+                .WithMany()
+                .HasForeignKey(v => v.VoucherStatusId);
         }
 
 
@@ -141,6 +161,8 @@ namespace AdministrationAPI.Data
 
         }
 
+    
+
         private void ApplySnakeCaseNames(ModelBuilder modelBuilder)
         {
             var mapper = new NpgsqlSnakeCaseNameTranslator();
@@ -168,6 +190,17 @@ namespace AdministrationAPI.Data
             };
 
             builder.Entity<IdentityRole>().HasData(roles);
+
+
+            List<VoucherStatus> voucherStatuses = new List<VoucherStatus>() {
+                   new VoucherStatus { Id = "0", Status = "ISSUED" },
+                   new VoucherStatus { Id = "1", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "2", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "3", Status = "VOID" }
+                   };
+
+            builder.Entity<VoucherStatus>().HasData(voucherStatuses);
+                 
 
 
             // Seed Users
