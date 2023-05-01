@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
   Button,
   TextField,
@@ -8,9 +7,9 @@ import {
   CardHeader,
   CardContent,
   CardActions,
+  Modal,
 } from "@material-ui/core";
 import { Stack, Typography, Box } from "@mui/material";
-
 import { makeStyles } from "@material-ui/core/styles";
 import { getUserId } from "../../../services/userService";
 import Loader from "../../loaderDialog/Loader";
@@ -68,12 +67,37 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "right",
     paddingTop: 20,
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 export default function ClaimModal(props) {
   const [claim, setClaim] = useState({});
+  const [open, setOpen] = useState(false);
+  const [loaderState, setLoaderState] = useState({
+    success: false,
+    loading: true,
+  });
+  const [chatMessages, setChatMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
 
   const classes = useStyles();
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const setStatusFlag = (status) => {
+    return status === "Open" ? "green" : "red";
+  };
+
   const fetchData = async () => {
     // To connect with BE
     setClaim({
@@ -85,15 +109,16 @@ export default function ClaimModal(props) {
       description: "Poslo pare nisu dosle",
     });
   };
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  const [open, setOpen] = useState(false);
-  const [loaderState, setLoaderState] = useState({
-    success: false,
-    loading: true,
-  });
+  const handleSubmit = () => {
+    // Handle form submit here
+    setChatMessages([...chatMessages, newMessage]);
+    setNewMessage("");
+  };
 
   return (
     <div>
@@ -133,34 +158,101 @@ export default function ClaimModal(props) {
                   <Grid item xs={12}>
                     <Typography sx={{ fontSize: '14px' }}>
                       <Grid container spacing={2}>
-                          <Grid item xs={2}>
-                            {claim.id}
-                          </Grid>
-                          <Grid item xs={2}>
-                            {claim.subject}
-                          </Grid>
-                          <Grid item xs={2}>
-                            {claim.created}
-                          </Grid>
-                          <Grid item xs={2}>
-                            {claim.modified}
-                          </Grid>
-                          <Grid item xs={2}>
-                            {claim.description}
-                          </Grid>
-                          <Grid item xs={2}>
+                        <Grid item xs={2}>
+                          {claim.id}
+                        </Grid>
+                        <Grid item xs={2}>
+                          {claim.subject}
+                        </Grid>
+                        <Grid item xs={2}>
+                          {claim.created}
+                        </Grid>
+                        <Grid item xs={2}>
+                          {claim.modified}
+                        </Grid>
+                        <Grid item xs={2}>
+                          {claim.description}
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Typography sx={{ fontSize: '14px', color: setStatusFlag(claim.status) }}>
                             {claim.status}
-                          </Grid>
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </Typography>
                   </Grid>
                 </Grid>
               </Box>
-              <Box>Poruke</Box>
+
+              <Box>
+                <Stack spacing={2}>
+                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      User
+                    </Typography>
+                    <Typography>
+                      Pozdrav, imam neki problem.
+                    </Typography>
+                    <Typography sx={{ fontSize: '12px' }}>
+                      10:05 AM
+                    </Typography>
+                  </Card>
+
+                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Admin
+                    </Typography>
+                    <Typography>
+                      Dobar dan, o kojem je problemu riječ?
+                    </Typography>
+                    <Typography sx={{ fontSize: '12px' }}>
+                      10:07 AM
+                    </Typography>
+                  </Card>
+
+                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      User
+                    </Typography>
+                    <Typography>
+                      Želio bih prijaviti...
+                    </Typography>
+                    <Typography sx={{ fontSize: '12px' }}>
+                      10:10 AM
+                    </Typography>
+                  </Card>
+                </Stack>
+              </Box>
+
+              {/* Chat Input */}
+              <Grid container spacing={0} alignItems="flex-end" maxWidth={false}>
+                <Grid item xs={12} sm={8}>
+                  <TextField
+                    label="Add message"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <input type="file" />
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={5} sm={4} container justify="flex-end">
+                  <Button variant="contained" className={classes.button}>Send</Button>
+                </Grid>
+              </Grid>
             </Stack>
           </CardContent>
+          <CardActions className={classes.cardActions}>
+          <Grid item xs={5} sm={4} container justify="flex-end">
+            <Button variant="contained" className={classes.button}>
+              Close
+            </Button>
+            </Grid>
+          </CardActions>
         </Card>
       </div>
     </div>
   );
-}
+}  
