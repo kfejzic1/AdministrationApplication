@@ -215,10 +215,6 @@ const Voucher = () => {
 		setOpenSnackbar(false);
 	};
 
-	const handleSnackbarPasswordClose = () => {
-		setOpenSnackbarPassword(false);
-	};
-
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
