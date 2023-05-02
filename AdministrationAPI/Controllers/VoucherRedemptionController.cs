@@ -46,34 +46,27 @@ namespace AdministrationAPI.Controllers
                     if (header.Key.CompareTo("Authorization") == 0)
                         tokenForPS = header.Value;
                 }
-                Console.WriteLine("vadvdav "+token1.Length);
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                Console.WriteLine("vavav="+token1);
                 TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-                
                 User user = _userService.GetUserByName(token.Username);
-                Console.WriteLine("dfaddfadfd");
                 if (user == null)
                     return BadRequest("User with this username doesn't exist!");
                 Voucher voucher = _voucherService.GetVoucherByCode(code.Code);
                 if (voucher == null)
                     return BadRequest("Voucher with this code doesn't exist!");
-                if (voucher.VoucherStatusId != "1")
+                if (voucher.VoucherStatusId != "2")
                     return BadRequest("Voucher is not active!");
                 var currencyList = await _exchangeRateService.GetCurrencies();
                 for (var i = 0; i < currencyList.Count; i++)
                 {
                     if (currencyList.ElementAt(i).Id == voucher.CurrencyId)
                     {
-                        Console.WriteLine("moaaa=" + currencyList.ElementAt(i).Country);
                    //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
-                        var response = await _exchangeService.GetUserAccounts("Bearer "+token1);
+                        var response = await _exchangeService.GetUserAccounts(token1);
                         if (response.obj != null)
                         {
                             for(var j=0; j < response.obj.Count;j++)
                             {
-                                Console.WriteLine
-                            ("eh sad=" + response.obj[j].Currency);
                                 if (response.obj[j].Currency==currencyList.ElementAt(i).Name)
                                 {
                                     //all ok, now we redeem 
@@ -84,16 +77,16 @@ namespace AdministrationAPI.Controllers
                             return BadRequest("User doesn't have account in this currency");
                         }
                         else if (response.message != "")
-                            return BadRequest("rere-"+response.message);
+                            return BadRequest(response.message);
                         else return BadRequest("User doesn't have an account!");
                     }
                 }
                 ////////////////////////////
-                    return BadRequest("Failed2");
+                    return BadRequest("Failed!");
             }
             catch (Exception ex)
             {
-                return BadRequest("Failed1"+ex.Message);
+                return BadRequest("Failed: "+ex.Message);
             }
 
         }
