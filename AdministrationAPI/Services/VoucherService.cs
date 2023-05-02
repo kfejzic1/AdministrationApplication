@@ -138,9 +138,10 @@ namespace AdministrationAPI.Services
             return voucher;
         }
 
-        public Task<List<Voucher>> GetVouchers(string adminId)
+        public Task<List<Voucher>> GetVouchers(string adminUsername)
         {
-            var vouchers = _context.Vouchers.Where(v => v.CreatedBy == adminId).ToListAsync();
+            var admin = _context.Users.FirstOrDefault(v => v.UserName == adminUsername);
+            var vouchers = _context.Vouchers.Where(v => v.CreatedBy == admin.Id).ToListAsync();
             return vouchers;
         }
     }

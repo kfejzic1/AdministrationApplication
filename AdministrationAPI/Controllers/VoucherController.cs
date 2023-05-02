@@ -107,9 +107,9 @@ namespace AdministrationAPI.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-vouchers")]
-        public async  Task<IActionResult> GetVouchers([FromQuery] string adminId)
+        public async  Task<IActionResult> GetVouchers([FromQuery] string adminUsername)
         {
-            List<Voucher> vouchers = await _voucherService.GetVouchers(adminId);
+            List<Voucher> vouchers = await _voucherService.GetVouchers(adminUsername);
             return Ok(vouchers);
         }
 
