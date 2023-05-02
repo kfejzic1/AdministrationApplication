@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests.Vouchers;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Voucher;
@@ -51,7 +52,7 @@ namespace AdministrationAPI.Services
             voucer.Amount = voucherRequest.Amount;
             voucer.CurrencyId = voucherRequest.CurrencyId;
             voucer.CreatedBy = createdBy;
-            voucer.VoucherStatusId = "0";
+            voucer.VoucherStatusId = "1";
             _context.Vouchers.Add(voucer);
             try
             {
@@ -70,10 +71,10 @@ namespace AdministrationAPI.Services
                 Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
                 if (voucher != null)
                 {
-                    if (voucher.VoucherStatusId != "0")
+                    if (voucher.VoucherStatusId != "1")
                        throw new Exception("Status is not ISSUED");
 
-                voucher.VoucherStatusId = "1";
+                voucher.VoucherStatusId = "2";
                 }
 
                 _context.SaveChanges();
@@ -90,10 +91,10 @@ namespace AdministrationAPI.Services
                     voucher.User = user;
                     voucher.RedeemedBy = user.Id;
 
-                    if (voucher.VoucherStatusId != "1")
+                    if (voucher.VoucherStatusId != "2")
                         throw new Exception("Status is not ACTIVE");
 
-                    voucher.VoucherStatusId = "2";
+                    voucher.VoucherStatusId = "3";
                 }
 
                 _context.SaveChanges();
@@ -110,9 +111,9 @@ namespace AdministrationAPI.Services
             try
             {
                 Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
-                if (voucher != null && (voucher.VoucherStatusId == "1" || voucher.VoucherStatusId == "0"))
+                if (voucher != null && (voucher.VoucherStatusId == "1" || voucher.VoucherStatusId == "2"))
                 {
-                    voucher.VoucherStatusId = "3";
+                    voucher.VoucherStatusId = "4";
                 }
                 else throw new Exception("Voucher status is not ISSUED/ACTIVE!");
 
@@ -138,11 +139,19 @@ namespace AdministrationAPI.Services
             return voucher;
         }
 
-        public Task<List<Voucher>> GetVouchers(string adminUsername)
+        public async Task<List<VoucherDataResponse>> GetVouchers(string username)
         {
-            var admin = _context.Users.FirstOrDefault(v => v.UserName == adminUsername);
-            var vouchers = _context.Vouchers.Where(v => v.CreatedBy == admin.Id).ToListAsync();
-            return vouchers;
+            var admin = _context.Users.FirstOrDefault(v => v.UserName == username);
+            var vouchersTask = _context.Vouchers.Where(v => v.CreatedBy == admin.Id).ToListAsync();
+            List<VoucherDataResponse> response = new List<VoucherDataResponse>();
+
+            var vouchers = await vouchersTask;
+            foreach(var v in vouchers)
+            {
+                VoucherDataResponse voucherDataResponse = new VoucherDataResponse() { Id = v.Id, Amount = v.Amount, Code = v.Code, CreatedBy = v.CreatedBy, CurrencyId = v.CurrencyId, RedeemedBy = v.RedeemedBy, VoucherStatusId = v.VoucherStatusId };
+                response.Add(voucherDataResponse);
+            }
+            return response;
         }
     }
 }

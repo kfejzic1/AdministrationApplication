@@ -118,8 +118,8 @@ namespace AdministrationAPI.Data
 
             builder.Entity<Voucher>()
                 .HasOne(v => v.User)
-                .WithOne()
-                .HasForeignKey<Voucher>(v => v.RedeemedBy);
+                .WithMany()
+                .HasForeignKey(v => v.RedeemedBy);
 
             builder.Entity<Voucher>().
                 HasOne(v => v.Currency)
@@ -193,10 +193,10 @@ namespace AdministrationAPI.Data
 
 
             List<VoucherStatus> voucherStatuses = new List<VoucherStatus>() {
-                   new VoucherStatus { Id = "0", Status = "ISSUED" },
-                   new VoucherStatus { Id = "1", Status = "ACTIVE" },
-                   new VoucherStatus { Id = "2", Status = "REDEEMED" },
-                   new VoucherStatus { Id = "3", Status = "VOID" }
+                   new VoucherStatus { Id = "1", Status = "ISSUED" },
+                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "4", Status = "VOID" }
                    };
 
             builder.Entity<VoucherStatus>().HasData(voucherStatuses);
@@ -284,10 +284,10 @@ namespace AdministrationAPI.Data
             //Seed Vouchers
             List<Voucher> vouchers = new List<Voucher>()
             {
-                new Voucher() { Id = 1, Amount = 50, CurrencyId = "1", Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "0", CreatedBy = users[7].Id},
-                new Voucher() { Id = 2, Amount = 20, CurrencyId = "1", Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "0", CreatedBy = users[7].Id},
-                new Voucher() { Id = 3, Amount = 50, CurrencyId = "1", Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "1", CreatedBy = users[7].Id},
-                new Voucher() { Id = 4, Amount = 50, CurrencyId = "1", Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "2", CreatedBy = users[7].Id, RedeemedBy = users[6].Id} 
+                new Voucher() { Id = 1, Amount = 50, CurrencyId = "1", Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 2, Amount = 20, CurrencyId = "1", Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 3, Amount = 50, CurrencyId = "1", Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "2", CreatedBy = users[7].Id},
+                new Voucher() { Id = 4, Amount = 50, CurrencyId = "1", Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id} 
             };
 
             builder.Entity<Voucher>().HasData(vouchers);

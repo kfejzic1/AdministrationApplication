@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Requests.Vouchers;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Voucher;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,6 @@ namespace AdministrationAPI.Services.Interfaces
         public Voucher ActivateVoucher(string code);
         public Task<Voucher> RedeemVoucher(User user, string code);
         public Task<Voucher> VoidVoucher(string code);
-        public Task<List<Voucher>> GetVouchers(string adminUsername);
+        public Task<List<VoucherDataResponse>> GetVouchers(string username);
     }
 }
