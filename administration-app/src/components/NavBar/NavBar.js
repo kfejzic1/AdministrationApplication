@@ -18,6 +18,9 @@ export const NavBar = props => {
 					<Button component={Link} to='/' color='primary'>
 						Home
 					</Button>
+					<Button component={Link} to='/voucher' color='primary'>
+						Voucher
+					</Button>
 					<Button component={Link} to='/transactions' color='primary'>
 						Transactions
 					</Button>

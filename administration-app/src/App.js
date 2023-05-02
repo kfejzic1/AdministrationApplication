@@ -11,10 +11,9 @@ import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
 import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
-
+import Voucher from './components/Voucher/Voucher';
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
@@ -51,7 +50,8 @@ function App() {
 									<Payment />
 								</ProtectedRoute>
 							}
-						/>
+						/>	 
+					
 
 						<Route
 							path='/user'
@@ -100,6 +100,15 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Currencies />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/voucher'
+							element={
+								<ProtectedRoute>
+									<Voucher />
 								</ProtectedRoute>
 							}
 						/>
