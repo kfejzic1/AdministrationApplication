@@ -39,13 +39,13 @@ namespace AdministrationAPI.Controllers
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
            
-                List<Voucher> vouchers = new List<Voucher>();
+                List<VoucherDataResponse> vouchers = new List<VoucherDataResponse>();
 
                 for (int i = 0; i < voucherRequest.NoVouchers; i++)
                 {
                     var user =  _userService.GetUserByName(token.Username);
-                   Voucher v = await _voucherService.CreateVoucher(voucherRequest, user.Id);
-                    vouchers.Add(v);
+                    Voucher v = await _voucherService.CreateVoucher(voucherRequest, user.Id);
+                    vouchers.Add(new VoucherDataResponse() { Id = v.Id, Amount = v.Amount, Code = v.Code, CreatedBy = v.CreatedBy, CurrencyId = v.CurrencyId, RedeemedBy = v.RedeemedBy, VoucherStatusId = v.VoucherStatusId });
                 }
 
                     return Ok(vouchers);
@@ -75,24 +75,25 @@ namespace AdministrationAPI.Controllers
                 if (voucher == null)
                     throw new Exception("Voucher with this code doesn't exist!");
 
-                if (changeVoucherStatusRequest.StatusId == "1")
+                if (changeVoucherStatusRequest.StatusId == "2")  //activate voucher
                     voucher = _voucherService.ActivateVoucher(changeVoucherStatusRequest.Code);
                 
-                else if (changeVoucherStatusRequest.StatusId == "2")
+                else if (changeVoucherStatusRequest.StatusId == "3") //redeem token
                 {
-                    User user = _userService.GetUserByName(changeVoucherStatusRequest.Username);
+                    User user = _userService.GetUserByName(token.Username);
                     if (user == null)
                         throw new Exception("User with this username doesn't exist!");
                     voucher = await _voucherService.RedeemVoucher(user, changeVoucherStatusRequest.Code);
                 }
 
-                else if (changeVoucherStatusRequest.StatusId == "3")
+                else if (changeVoucherStatusRequest.StatusId == "4")  //void token
                     voucher = await _voucherService.VoidVoucher(changeVoucherStatusRequest.Code);
         
                  else
                         throw new Exception("Invalid voucher status provided!");
 
-                return Ok(voucher);
+                var response = new VoucherDataResponse() { Id = voucher.Id, Amount = voucher.Amount, Code = voucher.Code, CreatedBy = voucher.CreatedBy, CurrencyId = voucher.CurrencyId, RedeemedBy = voucher.RedeemedBy, VoucherStatusId = voucher.VoucherStatusId };
+                return Ok(response);
             }
             catch (DataException ex)
             {
@@ -107,9 +108,12 @@ namespace AdministrationAPI.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-vouchers")]
-        public async  Task<IActionResult> GetVouchers([FromQuery] string adminUsername)
+        public async  Task<IActionResult> GetVouchers()
         {
-            List<Voucher> vouchers = await _voucherService.GetVouchers(adminUsername);
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+            TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+
+            List<VoucherDataResponse> vouchers = await _voucherService.GetVouchers(token.Username);
             return Ok(vouchers);
         }
 
