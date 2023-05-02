@@ -36,26 +36,28 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("RedeemVoucher")]
-        public async Task<IActionResult> RedeemVoucher([FromBody] string code)
+        public async Task<IActionResult> RedeemVoucher([FromBody] RedeemVoucherRequest code,[FromQuery] string token1)
         {
-
-           
             try
             {
-                string token = "";
+                string tokenForPS = "";
                 foreach (var header in Request.Headers)
                 {
                     if (header.Key.CompareTo("Authorization") == 0)
-                        token = header.Value;
+                        tokenForPS = header.Value;
                 }
-
-                ///////////////////////////////
+                Console.WriteLine("vadvdav "+token1.Length);
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                var userId = ControlExtensions.GetId(HttpContext);
-               var  userTemp = await _userService.GetUser(userId);
-
-                User user = _userService.GetUserByName(userTemp.UserName);
-                Voucher voucher = _voucherService.GetVoucherByCode(code);
+                Console.WriteLine("vavav="+token1);
+                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+                
+                User user = _userService.GetUserByName(token.Username);
+                Console.WriteLine("dfaddfadfd");
+                if (user == null)
+                    return BadRequest("User with this username doesn't exist!");
+                Voucher voucher = _voucherService.GetVoucherByCode(code.Code);
+                if (voucher == null)
+                    return BadRequest("Voucher with this code doesn't exist!");
                 if (voucher.VoucherStatusId != "1")
                     return BadRequest("Voucher is not active!");
                 var currencyList = await _exchangeRateService.GetCurrencies();
@@ -63,31 +65,35 @@ namespace AdministrationAPI.Controllers
                 {
                     if (currencyList.ElementAt(i).Id == voucher.CurrencyId)
                     {
-                        var response = await _exchangeService.GetUserAccounts(token);
+                        Console.WriteLine("moaaa=" + currencyList.ElementAt(i).Country);
+                   //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
+                        var response = await _exchangeService.GetUserAccounts("Bearer "+token1);
                         if (response.obj != null)
                         {
                             for(var j=0; j < response.obj.Count;j++)
                             {
-                                if (response.obj[j].Currency==currencyList.ElementAt(i).Country)
+                                Console.WriteLine
+                            ("eh sad=" + response.obj[j].Currency);
+                                if (response.obj[j].Currency==currencyList.ElementAt(i).Name)
                                 {
                                     //all ok, now we redeem 
-                                    voucher = await _voucherService.RedeemVoucher(user, code);
+                                    voucher = await _voucherService.RedeemVoucher(user, code.Code);
                                     return Ok(voucher);
                                 }    
                             }
                             return BadRequest("User doesn't have account in this currency");
                         }
                         else if (response.message != "")
-                            return BadRequest(response.message);
+                            return BadRequest("rere-"+response.message);
                         else return BadRequest("User doesn't have an account!");
                     }
                 }
                 ////////////////////////////
-                    return BadRequest("Failed");
+                    return BadRequest("Failed2");
             }
             catch (Exception ex)
             {
-                return BadRequest("Failed");
+                return BadRequest("Failed1"+ex.Message);
             }
 
         }
