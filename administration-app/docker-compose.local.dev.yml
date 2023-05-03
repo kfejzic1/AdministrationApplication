@@ -4,7 +4,7 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile.dev
-    image: evlahovlja1/siprojekat:latest
+    image: siprojekat:latest
     container_name: siprojekat
     ports:
       - "3000:3000"
