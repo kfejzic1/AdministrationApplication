@@ -45,7 +45,7 @@ export function createCurrency(request) {
 }
 
 export function createExchangeTransaction(request) {
-	return axios('https://processingserver.herokuapp.com/api/Transaction/CreateTransaction?token=' + localStorage.getItem('token'), {
+	return axios(env.API_ENV.url + "/api/exchange/createtransaction", {
 		method: 'POST',
 		data: request,
 		headers: {
