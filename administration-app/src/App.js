@@ -16,6 +16,7 @@ import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 
@@ -100,6 +101,14 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Currencies />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/redeem-voucher'
+							element={
+								<ProtectedRoute>
+									<VoucherRedemption />
 								</ProtectedRoute>
 							}
 						/>

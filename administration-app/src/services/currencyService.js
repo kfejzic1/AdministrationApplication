@@ -55,6 +55,16 @@ export function createExchangeTransaction(request) {
 	});
 }
 
+export function getAccounts(){
+	return axios('http://siprojekat.duckdns.org:5051/api/Account/user-accounts', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer '+localStorage.getItem('token'),
+		},
+	});
+}
+
 export function getUserAccounts(){
 	return axios('https://processingserver.herokuapp.com/api/Account/GetAllAccountsForUser?token=' + localStorage.getItem('token'), {
 		method: 'GET',
