@@ -26,17 +26,19 @@ namespace AdministrationAPI.Controllers
 
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IExchangeService _exchangeService;
+        private readonly IRedeemVoucherService _redeemVoucherService;
 
-        public VoucherRedemptionController(IVoucherService voucherService, IUserService userService, IExchangeRateService exchangeRateServices, IExchangeService exchangeService)
+        public VoucherRedemptionController(IVoucherService voucherService, IUserService userService, IExchangeRateService exchangeRateServices, IExchangeService exchangeService,IRedeemVoucherService redeemVoucherService)
         {
             _voucherService = voucherService;
             _userService = userService;
             _exchangeRateService = exchangeRateServices;
             _exchangeService = exchangeService;
+            _redeemVoucherService = redeemVoucherService;
         }
 
         [HttpPost("RedeemVoucher")]
-        public async Task<IActionResult> RedeemVoucher([FromBody] RedeemVoucherRequest code,[FromQuery] string token1)
+        public async Task<IActionResult> RedeemVoucher([FromBody] RedeemVoucherRequest request ,[FromQuery] string token1)
         {
             try
             {
@@ -51,7 +53,7 @@ namespace AdministrationAPI.Controllers
                 User user = _userService.GetUserByName(token.Username);
                 if (user == null)
                     return BadRequest("User with this username doesn't exist!");
-                Voucher voucher = _voucherService.GetVoucherByCode(code.Code);
+                Voucher voucher = _voucherService.GetVoucherByCode(request.Code);
                 if (voucher == null)
                     return BadRequest("Voucher with this code doesn't exist!");
                 if (voucher.VoucherStatusId != "2")
@@ -62,19 +64,37 @@ namespace AdministrationAPI.Controllers
                     if (currencyList.ElementAt(i).Id == voucher.CurrencyId)
                     {
                    //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
-                        var response = await _exchangeService.GetUserAccounts(token1);
+                        var response = await _exchangeService.GetAllAccounts(token1);
                         if (response.obj != null)
                         {
                             for(var j=0; j < response.obj.Count;j++)
                             {
-                                if (response.obj[j].Currency==currencyList.ElementAt(i).Name)
+                                if (response.obj[j].AccountNumber==request.AccountNumber)
                                 {
-                                    //all ok, now we redeem 
-                                    voucher = await _voucherService.RedeemVoucher(user, code.Code);
-                                    return Ok(voucher);
-                                }    
+                                    if (response.obj[j].Currency==currencyList.ElementAt(i).Name)
+                                    {
+                                        //all ok, now we redeem 
+                                        RedeemVoucherResponse data = new RedeemVoucherResponse();
+                                        data.AccountNumber = request.AccountNumber;
+                                        data.Amount = voucher.Amount;
+                                        //zamjeniti token1 sa tokenForPs
+                                        var psRespone = await _redeemVoucherService.MakeTransaction(data, token1);
+                                        if (psRespone.obj)
+                                        {
+                                            voucher = await _voucherService.RedeemVoucher(user, request.Code);
+                                            return Ok(voucher);
+                                        }
+                                        else
+                                            return BadRequest(
+                                                psRespone.message);
+                                    }
+                                    else
+                                    return BadRequest("This account isn't in same currency as voucher!");
+                                    break;
+                                }
+                                
                             }
-                            return BadRequest("User doesn't have account in this currency");
+                                return BadRequest("This account doesn't exist!");
                         }
                         else if (response.message != "")
                             return BadRequest(response.message);
@@ -90,6 +110,7 @@ namespace AdministrationAPI.Controllers
             }
 
         }
-       
+
+        
     }
 }
