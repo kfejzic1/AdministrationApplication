@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
+
+import { getAllCurrencies, getAllVouchers, createVoucher, changeVoucherStatus } from '../../services/voucher';
+
 import {
 	Button,
 	Dialog,
@@ -62,6 +65,14 @@ const theme = createTheme({
 		},
 	},
 });
+
+
+/*
+new VoucherStatus { Id = "1", Status = "ISSUED" },
+                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "4", Status = "VOID" }
+*/
 
 const tableTheme = createTheme({
 	palette: {
@@ -142,7 +153,8 @@ const useStyles = makeStyles({
 
 const Voucher = () => {
 	const classes = useStyles();
-	const [users, setUsers] = useState([]);
+	const [vouchers, setVouchers] = useState([]);
+	const [currencys, setCurrecys] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
@@ -152,22 +164,27 @@ const Voucher = () => {
 	const [dense, setDense] = useState(false);
 
 	useEffect(() => {
-		getAllUsers().then(response => {
-			setUsers(
+		getAllVouchers().then(response => {
+			setVouchers(
 				response.data.map(u => {
 					return {
-						id: u.result.user.id,
-						firstName: u.result.user.firstName,
-						lastName: u.result.user.lastName,
-						email: u.result.user.email,
-						phoneNumber: u.result.user.phoneNumber,
-						address: u.result.user.address,
-						role: u.result.userRole,
+						id: u.id,
+						amount: u.amount,
+						currencyId: u.currencyId,
+						code: u.code,
+						voucherStatusId: u.voucherStatusId,
 					};
 				})
 			);
 		});
-	}, [change]);
+	}, []);
+
+	useEffect(() => {
+		getAllCurrencies().then(response => {
+			setCurrecys(response.data);
+		})
+	}, []);
+
 	const handleCreateDialogOpen = () => {
 		setOpenCreateDialog(true);
 	};
@@ -218,6 +235,23 @@ const Voucher = () => {
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	const statusV = (a) => {
+		/*new VoucherStatus { Id = "1", Status = "ISSUED" },
+                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "4", Status = "VOID" }*/
+		if(a === '1') return "ISSUED";
+		else if(a === '2') return "ACTIVE";
+		else if(a === '3') return "REDEEMED";
+		else if( a === '4') return "VOID";
+		return "INVALID STATUS";
+	} 
+	const currencyV = (a) => {
+		//return currencys.filter(v => v.id===a)[0].name;	
+		return 'KM';	
+	}
+
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -248,9 +282,9 @@ const Voucher = () => {
 							>
 								<VoucherTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
-									{users.map(user => (
+									{vouchers.map(voucher => (
 										<TableRow
-											key={user.id}
+											key={voucher.id}
 											classes={{
 												root: classes.tableRowRoot,
 												selected: classes.tableRowSelected,
@@ -261,13 +295,10 @@ const Voucher = () => {
 											sx={{ cursor: 'pointer' }}
 										>
 											<TableCell component='th' scope='row' padding='none'></TableCell>
-
-											<TableCell align='left'>{user.firstName}</TableCell>
-											<TableCell align='left'>{user.lastName}</TableCell>
-											<TableCell align='left'>{user.email}</TableCell>
-											<TableCell align='left'>{user.phoneNumber}</TableCell>
-											<TableCell align='left'>{user.address}</TableCell>
-											<TableCell align='left'>{user.role}</TableCell>
+											<TableCell align='left'>{voucher.code}</TableCell>
+											<TableCell align='left'>{voucher.amount}</TableCell>
+											<TableCell align='left'>{currencyV(voucher.currencyId)}</TableCell>
+											<TableCell align='left'>{statusV(voucher.voucherStatusId)}</TableCell>
 											<TableCell align='center'>
 												<ButtonGroup variant='text' aria-label='text button group'>
 													<Button
@@ -276,7 +307,7 @@ const Voucher = () => {
 														className={`${classes.button}`}
 														variant='outline'
 														onClick={() => {
-															handleUpdateDialogOpen(user);
+															handleUpdateDialogOpen(voucher);
 														}}
 													>
 														<EditIcon></EditIcon>
@@ -287,7 +318,7 @@ const Voucher = () => {
 														className={`${classes.button}`}
 														variant='outline'
 														onClick={() => {
-															handleResetPassword(user);
+															handleResetPassword(voucher);
 														}}
 													>
 														<LockResetIcon></LockResetIcon>

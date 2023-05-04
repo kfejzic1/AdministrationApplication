@@ -15,7 +15,7 @@ namespace AdministrationAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VoucherController : Controller
     {
         private readonly IVoucherService _voucherService;
