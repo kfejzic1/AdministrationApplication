@@ -158,6 +158,7 @@ export default function PaymentTermsModal(props) {
 				invoiceFrequencyTypeId: selectedInvoiceFrequency,
 				documentIds,
 				dueDate: dateDue,
+				vendorId: props.vendorId,
 			};
 			createPaymentTerm(request)
 				.then(res => {

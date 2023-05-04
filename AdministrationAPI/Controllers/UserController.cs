@@ -83,6 +83,25 @@ namespace AdministrationAPI.Controllers
 
             }
 
+            return Ok(new { message = "Registration successful" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("send/email")]
+        public async Task<IActionResult> SendRegistrationEmail([FromQuery] string email)
+        {
+            if (email == null)
+            {
+                return BadRequest(new { message = "Email is null" });
+            }
+
+            var user = _userService.GetUserByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest(new { message = "User not found" });
+            }
+
             bool success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
 
             if (success)

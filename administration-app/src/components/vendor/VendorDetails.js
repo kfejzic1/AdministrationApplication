@@ -73,7 +73,7 @@ export default function VendorDetails() {
 				</div>
 					*/}
 			</div>
-			<PaymentTermsBasicInfo vendorName={vendor.name} />
+			<PaymentTermsBasicInfo vendorName={vendor.name} vendorId={params.id} />
 			<VendorLocationPanel />
 		</Paper>
 	);

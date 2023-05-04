@@ -174,6 +174,7 @@ export default function PaymentTermsTableToolBar(props) {
 						paymentTerm={props.selectedRows}
 						handleClose={handleClose}
 						vendorName={props.vendorName}
+						vendorId={props.vendorId}
 					/>
 				</Modal>
 			</Toolbar>
