@@ -3,6 +3,6 @@
     public class ChangeVoucherStatusRequest
     {
         public string Code { get; set; }
-        public string? Username { get; set; }
+        public string StatusId { get; set; }
     }
 }

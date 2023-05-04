@@ -1,8 +1,11 @@
 ﻿using AdministrationAPI.Contracts.Requests.Vouchers;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
+using AdministrationAPI.Models.Voucher;
 using AdministrationAPI.Services.Interfaces;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace AdministrationAPI.Services
@@ -42,36 +45,43 @@ namespace AdministrationAPI.Services
             return code.ToString();
         }
 
-        public async void CreateVoucher(VoucherRequest voucherRequest)
+        public async Task<Voucher> CreateVoucher(VoucherRequest voucherRequest, string createdBy)
         {
             Voucher voucer = new Voucher();
             voucer.Code =  await GenerateOneTimeCode();
             voucer.Amount = voucherRequest.Amount;
-            voucer.CurrencyName = voucherRequest.CurrencyName;
-            voucer.CurrentStatus = Voucher.Status.ISSUED;
+            voucer.CurrencyId = voucherRequest.CurrencyId;
+            voucer.CreatedBy = createdBy;
+            voucer.VoucherStatusId = "1";
             _context.Vouchers.Add(voucer);
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw ex;
+            }
+            return voucer;
         }
 
-        public Voucher UpdateVoucher(User user, string code)
+        public Voucher ActivateVoucher(string code)
         {
                 Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
                 if (voucher != null)
                 {
-                    voucher.User = user;
-                    voucher.UserId = user.Id;
-
-                    if (voucher.CurrentStatus != Voucher.Status.ISSUED)
+                    if (voucher.VoucherStatusId != "1")
                        throw new Exception("Status is not ISSUED");
 
-                    voucher.CurrentStatus = Voucher.Status.ACTIVE;
+                voucher.VoucherStatusId = "2";
                 }
 
                 _context.SaveChanges();
                 return voucher;
         }
 
-        public Voucher RedeemVoucher(User user, string code)
+        public async Task<Voucher> RedeemVoucher(User user, string code)
         {
             try
             {
@@ -79,12 +89,12 @@ namespace AdministrationAPI.Services
                 if (voucher != null)
                 {
                     voucher.User = user;
-                    voucher.UserId = user.Id;
+                    voucher.RedeemedBy = user.Id;
 
-                    if (voucher.CurrentStatus != Voucher.Status.ACTIVE)
+                    if (voucher.VoucherStatusId != "2")
                         throw new Exception("Status is not ACTIVE");
 
-                    voucher.CurrentStatus = Voucher.Status.REDEEMED;
+                    voucher.VoucherStatusId = "3";
                 }
 
                 _context.SaveChanges();
@@ -96,14 +106,14 @@ namespace AdministrationAPI.Services
             }
         }
 
-        public Voucher VoidVoucher(string code)
+        public async Task<Voucher> VoidVoucher(string code)
         {
             try
             {
                 Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.Code == code);
-                if (voucher != null && (voucher.CurrentStatus == Voucher.Status.ACTIVE || voucher.CurrentStatus == Voucher.Status.ISSUED))
+                if (voucher != null && (voucher.VoucherStatusId == "1" || voucher.VoucherStatusId == "2"))
                 {
-                    voucher.CurrentStatus = Voucher.Status.VOID;
+                    voucher.VoucherStatusId = "4";
                 }
                 else throw new Exception("Voucher status is not ISSUED/ACTIVE!");
 
@@ -122,10 +132,26 @@ namespace AdministrationAPI.Services
             return voucher;
         }
 
+        
         public Voucher GetVoucherByUserId(string userId)
         {
-            Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.UserId == userId);
+            Voucher voucher = _context.Vouchers.FirstOrDefault(u => u.RedeemedBy == userId);
             return voucher;
+        }
+
+        public async Task<List<VoucherDataResponse>> GetVouchers(string username)
+        {
+            var admin = _context.Users.FirstOrDefault(v => v.UserName == username);
+            var vouchersTask = _context.Vouchers.Where(v => v.CreatedBy == admin.Id).ToListAsync();
+            List<VoucherDataResponse> response = new List<VoucherDataResponse>();
+
+            var vouchers = await vouchersTask;
+            foreach(var v in vouchers)
+            {
+                VoucherDataResponse voucherDataResponse = new VoucherDataResponse() { Id = v.Id, Amount = v.Amount, Code = v.Code, CreatedBy = v.CreatedBy, CurrencyId = v.CurrencyId, RedeemedBy = v.RedeemedBy, VoucherStatusId = v.VoucherStatusId };
+                response.Add(voucherDataResponse);
+            }
+            return response;
         }
     }
 }

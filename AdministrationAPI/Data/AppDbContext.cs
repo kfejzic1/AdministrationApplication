@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Models;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
+using AdministrationAPI.Models.Voucher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,8 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,7 +66,8 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
-            builder.Entity<Voucher>(entity => { entity.ToTable("usr_vouchers"); });
+            builder.Entity<Voucher>(entity => { entity.ToTable("vou_vouchers"); });
+            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });
 
             ApplySnakeCaseNames(builder);
 
@@ -103,13 +107,29 @@ namespace AdministrationAPI.Data
 
        
             builder.Entity<Voucher>()
-           .HasIndex(e => e.Code)
-           .IsUnique();
+               .HasIndex(e => e.Code)
+               .IsUnique();
+
+      
+            builder.Entity<Voucher>()
+                .HasOne(v => v.Admin)
+                .WithMany()
+                .HasForeignKey(v => v.CreatedBy);
 
             builder.Entity<Voucher>()
-             .HasOne(v => v.User)
-             .WithOne()
-             .HasForeignKey<Voucher>(v => v.UserId);
+                .HasOne(v => v.User)
+                .WithMany()
+                .HasForeignKey(v => v.RedeemedBy);
+
+            builder.Entity<Voucher>().
+                HasOne(v => v.Currency)
+                .WithMany()
+                .HasForeignKey(v => v.CurrencyId);
+
+            builder.Entity<Voucher>()
+                .HasOne(v => v.VoucherStatus)
+                .WithMany()
+                .HasForeignKey(v => v.VoucherStatusId);
         }
 
 
@@ -141,6 +161,8 @@ namespace AdministrationAPI.Data
 
         }
 
+    
+
         private void ApplySnakeCaseNames(ModelBuilder modelBuilder)
         {
             var mapper = new NpgsqlSnakeCaseNameTranslator();
@@ -168,6 +190,16 @@ namespace AdministrationAPI.Data
             };
 
             builder.Entity<IdentityRole>().HasData(roles);
+
+
+            List<VoucherStatus> voucherStatuses = new List<VoucherStatus>() {
+                   new VoucherStatus { Id = "1", Status = "ISSUED" },
+                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "4", Status = "VOID" }
+                   };
+
+            builder.Entity<VoucherStatus>().HasData(voucherStatuses);
 
 
             // Seed Users
@@ -247,6 +279,18 @@ namespace AdministrationAPI.Data
                 new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3", Approved = true, RequestDocumentPath = "/"}
             };
             builder.Entity<Account>().HasData(accounts);
+
+
+            //Seed Vouchers
+            List<Voucher> vouchers = new List<Voucher>()
+            {
+                new Voucher() { Id = 1, Amount = 50, CurrencyId = "1", Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 2, Amount = 20, CurrencyId = "1", Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 3, Amount = 50, CurrencyId = "1", Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "2", CreatedBy = users[7].Id},
+                new Voucher() { Id = 4, Amount = 50, CurrencyId = "1", Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id} 
+            };
+
+            builder.Entity<Voucher>().HasData(vouchers);
 
         }
 

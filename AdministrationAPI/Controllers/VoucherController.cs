@@ -2,6 +2,7 @@
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
+using AdministrationAPI.Models.Voucher;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
@@ -29,6 +30,7 @@ namespace AdministrationAPI.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create-voucher")]
         public async Task<IActionResult> CreateVoucher([FromBody] VoucherRequest voucherRequest)
         {
@@ -36,15 +38,17 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-                var tokenRole = token.Roles;
-                if (token.Roles.Contains("Admin"))
-                {
-                    for (int i = 0; i < voucherRequest.NoVouchers; i++)
-                        _voucherService.CreateVoucher(voucherRequest);
+           
+                List<VoucherDataResponse> vouchers = new List<VoucherDataResponse>();
 
-                    return Ok(voucherRequest);
+                for (int i = 0; i < voucherRequest.NoVouchers; i++)
+                {
+                    var user =  _userService.GetUserByName(token.Username);
+                    Voucher v = await _voucherService.CreateVoucher(voucherRequest, user.Id);
+                    vouchers.Add(new VoucherDataResponse() { Id = v.Id, Amount = v.Amount, Code = v.Code, CreatedBy = v.CreatedBy, CurrencyId = v.CurrencyId, RedeemedBy = v.RedeemedBy, VoucherStatusId = v.VoucherStatusId });
                 }
-                    return StatusCode(500, "Admin is not logged in!");
+
+                    return Ok(vouchers);
               
             }
             catch (DataException ex)
@@ -57,75 +61,39 @@ namespace AdministrationAPI.Controllers
             }
 
         }
-
-
-        [HttpPost("activate-voucher")]
-        public async Task<IActionResult> ActivateVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
+    
+        [Authorize(Roles = "Admin")]
+        [HttpPost("change-voucher-status")]
+        public async Task<IActionResult> ChangeVoucherStatus([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
         {
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-
-                if (!token.Roles.Contains("Admin"))
-                    return StatusCode(500, "Admin is not logged in!");
-
-                User user = _userService.GetUserByName(changeVoucherStatusRequest.Username);
-                if (user == null)
-                    throw new Exception("This username doesn't exists!");
-
-                user.UserName = changeVoucherStatusRequest.Username;
-                Voucher voucherFromDatabase = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
-                if (voucherFromDatabase == null)
-                    throw new Exception("Voucher with this code is not in database!");
-                else if (voucherFromDatabase.User != null)
-                    throw new Exception("This voucher is already attached to user!");
-
-                voucherFromDatabase = _voucherService.GetVoucherByUserId(user.Id);
-                if (voucherFromDatabase != null)
-                    throw new Exception("This username already has a voucher!");
-
-                var voucher = _voucherService.UpdateVoucher(user, changeVoucherStatusRequest.Code);
-                return Ok(voucher);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-
-        [HttpPost("redeem-voucher")]
-        public async Task<IActionResult> RedeemVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
-        {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
-
-                if (!token.Roles.Contains("Admin"))
-                    return StatusCode(500, "Admin is not logged in!");
-
-                User user = _userService.GetUserByName(changeVoucherStatusRequest.Username);
-                if (user == null)
-                    throw new Exception("User with this username doesn't exists!");
 
                 Voucher voucher = _voucherService.GetVoucherByCode(changeVoucherStatusRequest.Code);
                 if (voucher == null)
-                    throw new Exception("Voucher with this code doesn't exists!");
+                    throw new Exception("Voucher with this code doesn't exist!");
 
-                user.UserName = changeVoucherStatusRequest.Username;
-                 voucher = _voucherService.GetVoucherByUserId(user.Id);
-                if(voucher == null)
-                    throw new Exception("This voucher is not attached to any user!");
-                if (voucher.Code != changeVoucherStatusRequest.Code)
-                    throw new Exception("This user is not attached with this voucher code!");
-                Voucher v = _voucherService.RedeemVoucher(user, changeVoucherStatusRequest.Code);
-                return Ok(v);
+                if (changeVoucherStatusRequest.StatusId == "2")  //activate voucher
+                    voucher = _voucherService.ActivateVoucher(changeVoucherStatusRequest.Code);
+                
+                else if (changeVoucherStatusRequest.StatusId == "3") //redeem token
+                {
+                    User user = _userService.GetUserByName(token.Username);
+                    if (user == null)
+                        throw new Exception("User with this username doesn't exist!");
+                    voucher = await _voucherService.RedeemVoucher(user, changeVoucherStatusRequest.Code);
+                }
+
+                else if (changeVoucherStatusRequest.StatusId == "4")  //void token
+                    voucher = await _voucherService.VoidVoucher(changeVoucherStatusRequest.Code);
+        
+                 else
+                        throw new Exception("Invalid voucher status provided!");
+
+                var response = new VoucherDataResponse() { Id = voucher.Id, Amount = voucher.Amount, Code = voucher.Code, CreatedBy = voucher.CreatedBy, CurrencyId = voucher.CurrencyId, RedeemedBy = voucher.RedeemedBy, VoucherStatusId = voucher.VoucherStatusId };
+                return Ok(response);
             }
             catch (DataException ex)
             {
@@ -138,28 +106,16 @@ namespace AdministrationAPI.Controllers
         }
 
 
-        [HttpPost("void-voucher")]
-        public async Task<IActionResult> VoidVoucher([FromBody] ChangeVoucherStatusRequest changeVoucherStatusRequest)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("get-vouchers")]
+        public async  Task<IActionResult> GetVouchers()
         {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+            TokenVerificationResult token = TokenUtilities.VerifyToken(ControlExtensions.GetToken(HttpContext));
 
-                if (!token.Roles.Contains("Admin"))
-                    return StatusCode(500, "Admin is not logged in!");
-
-                Voucher v = _voucherService.VoidVoucher(changeVoucherStatusRequest.Code);
-                return Ok(v);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            List<VoucherDataResponse> vouchers = await _voucherService.GetVouchers(token.Username);
+            return Ok(vouchers);
         }
+
     }
 }
