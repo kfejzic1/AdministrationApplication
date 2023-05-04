@@ -36,6 +36,9 @@ export const NavBar = props => {
 					<Button component={Link} to='/currencies' color='primary'>
 						Currencies
 					</Button>
+					<Button component={Link} to='/claims' color='primary'>
+						Claims
+					</Button>
 					<LogoutButton />
 				</Toolbar>
 			) : (
