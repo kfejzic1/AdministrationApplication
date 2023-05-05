@@ -35,8 +35,9 @@ import { Stack } from '@mui/system';
 import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LockResetIcon from '@mui/icons-material/LockReset';
+import RedeemIcon from '@mui/icons-material/Redeem';
 import EditIcon from '@mui/icons-material/Edit';
+import { Icon } from '@mui/material';
 const theme = createTheme({
 	components: {
 		MuiSwitch: {
@@ -66,13 +67,6 @@ const theme = createTheme({
 	},
 });
 
-
-/*
-new VoucherStatus { Id = "1", Status = "ISSUED" },
-                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
-                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
-                   new VoucherStatus { Id = "4", Status = "VOID" }
-*/
 
 const tableTheme = createTheme({
 	palette: {
@@ -177,7 +171,7 @@ const Voucher = () => {
 				})
 			);
 		});
-	}, []);
+	}, [change]);
 
 	useEffect(() => {
 		getAllCurrencies().then(response => {
@@ -193,24 +187,20 @@ const Voucher = () => {
 		setOpenCreateDialog(false);
 	};
 
-	const handleCreateUser = event => {
+	const handleCreateVoucher = event => {
 		event.preventDefault();
 		const form = event.target;
-		const newUser = {
-			firstName: form.name.value,
-			lastName: form.surname.value,
-			email: form.email.value,
-			phoneNumber: form.phone.value,
-			address: form.address.value,
-			role: form.role.value,
-		};
-		createUser(newUser)
-			.then(response => {
-				setOpenCreateDialog(false);
-				setOpenSnackbar(true);
-				setChange(!change);
-			})
-			.catch(error => console.error(error));
+		var noVoucher1 = form.NumberOfVouchers.value;
+		var noVoucherNumber = noVoucher1 * 1;
+		var amou = form.amount.value;
+		var amountNumber = amou* 1;
+		var string1 = form.currency.value;
+		createVoucher(noVoucherNumber,amountNumber,string1).then(response => {
+			setOpenCreateDialog(false);
+			setOpenSnackbar(true);
+			setChange(!change);
+		})
+		.catch(error => console.error(error));
 	};
 
 	const handleUpdateDialogOpen = user => {
@@ -218,14 +208,17 @@ const Voucher = () => {
 		setOpenUpdateDialog(true);
 	};
 
+	const handleSnackbarPasswordClose = () => {
+		setOpenSnackbarPassword(false);
+	};
 
 
-	const handleResetPassword = user => {
-		requestPasswordReset({ id: user.id })
-			.then(response => {
-				setOpenSnackbarPassword(true);
-			})
-			.catch(error => console.error(error));
+	const handleResetPassword = voucher => {
+		console.log("Voucher ovdje kad se pozve je " + JSON.stringify(voucher));
+		changeVoucherStatus({ code: voucher.code , statusId: voucher.voucherStatusId}).then(response => {
+			setOpenSnackbarPassword(true);
+		})
+		.catch(error => console.error(error));
 	};
 
 	const handleSnackbarClose = () => {
@@ -248,10 +241,17 @@ const Voucher = () => {
 		return "INVALID STATUS";
 	} 
 	const currencyV = (a) => {
-		//return currencys.filter(v => v.id===a)[0].name;	
-		return 'KM';	
+		var b=currencys.filter(v => v.id===a)[0]
+		if(b)
+		return b.name;
+		else return "BAM";	
 	}
 
+	const isTrueSt = (a) => {
+		if(a === "REDEEMED") return true;
+		else return false
+	} 
+	
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -312,17 +312,21 @@ const Voucher = () => {
 													>
 														<EditIcon></EditIcon>
 													</Button>
+													{isTrueSt(statusV(voucher.voucherStatusId))?(
+														<RedeemIcon style={{ visibility: 'hidden' }} />
+													):(
 													<Button
 														size='small'
-														title='Reset password'
+														title='Redeem code'
 														className={`${classes.button}`}
 														variant='outline'
 														onClick={() => {
 															handleResetPassword(voucher);
 														}}
 													>
-														<LockResetIcon></LockResetIcon>
+														<RedeemIcon></RedeemIcon>
 													</Button>
+													)}
 												</ButtonGroup>
 											</TableCell>
 										</TableRow>
@@ -347,11 +351,11 @@ const Voucher = () => {
 				<DialogTitle>Create Voucher</DialogTitle>
 				<DialogContent>
 					<DialogContentText>Please fill out the form below to create a new voucher.</DialogContentText>
-					<form onSubmit={handleCreateUser}>
-						<TextField autoFocus margin='dense' name='Number of vouchers' label='Number of vouchers' fullWidth />
+					<form onSubmit={handleCreateVoucher}>
+						<TextField autoFocus margin='dense' name='NumberOfVouchers' label='Number of vouchers' fullWidth />
 						<FormControl fullWidth margin='dense'>
 							<InputLabel>Amount</InputLabel>
-							<Select label='Amount' name='amount' defaultValue={1}>
+							<Select label='Amount' name='amount' defaultValue={10}>
 								<MenuItem value='10'>10</MenuItem>
 								<MenuItem value='20'>20</MenuItem>
 								<MenuItem value='50'>50</MenuItem>
@@ -361,9 +365,12 @@ const Voucher = () => {
 						</FormControl>
                         <FormControl fullWidth margin='dense'>
 							<InputLabel>Currency</InputLabel>
-							<Select label='Currency' name='currency' defaultValue={'KM'}>
-								<MenuItem value='KM'>KM</MenuItem>
-								<MenuItem value='EUR'>EUR</MenuItem>
+							<Select label='Currency' name='currency' defaultValue={'BAM'}>
+								{currencys.map(curr => (
+									<MenuItem value={curr.name}>{curr.name}</MenuItem>
+								)
+								)}
+
 							</Select>
 						</FormControl>
 						<DialogActions>
@@ -377,9 +384,17 @@ const Voucher = () => {
 					</form>
 				</DialogContent>
 			</Dialog>
+
+
 			<Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleSnackbarClose}>
 				<Alert onClose={handleSnackbarClose} severity='success'>
-					User saved successfully!
+					Voucher created successfully!
+				</Alert>
+			</Snackbar>
+
+			<Snackbar open={openSnackbarPassword} autoHideDuration={3000} onClose={handleSnackbarPasswordClose}>
+				<Alert onClose={handleSnackbarPasswordClose} severity='success'>
+					Email to reset password has been sent!
 				</Alert>
 			</Snackbar>
 		</div>
