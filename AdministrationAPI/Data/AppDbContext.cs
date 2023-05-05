@@ -34,6 +34,7 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,6 +51,7 @@ namespace AdministrationAPI.Data
             builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
             builder.Entity<Account>(entity => { entity.ToTable("usr_accounts"); });
+            builder.Entity<AccountCreationRequest>(entity => { entity.ToTable("usr_account_creation_requests"); });
             builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
             builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
             builder.Entity<VendorUserRole>(entity => { entity.ToTable("ven_vendor_user_roles"); });
