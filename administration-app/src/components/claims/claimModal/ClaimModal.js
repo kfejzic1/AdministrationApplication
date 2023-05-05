@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef,  useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -11,9 +11,10 @@ import {
 } from "@material-ui/core";
 import { Stack, Typography, Box } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import { getUserId } from "../../../services/userService";
+import { getUser } from "../../../services/userService";
 import Loader from "../../loaderDialog/Loader";
-
+import sendIcon from '../../../../src/sencIcon.png';
+import { replaceInvalidDateByNull } from "@mui/x-date-pickers/internals";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -72,7 +73,31 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  chatModalMessages: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  chatModalMessage: {
+    margin: "5px 10px",
+    padding: "10px",
+    borderRadius: "10px",
+    maxWidth: "70%",
+  },
+  chatModalMessageUser: {
+    alignSelf: "flex-end",
+    backgroundColor: "#eee",
+  },
+  chatModalMessageAgent: {
+    alignSelf: "flex-start",
+    backgroundColor: "#0084ff",
+    color: "white",
+  },
+  chatModalMessageText: {
+    fontSize: "14px",
+  },
 }));
+
+
 
 export default function ClaimModal(props) {
   const [claim, setClaim] = useState({});
@@ -83,43 +108,75 @@ export default function ClaimModal(props) {
   });
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-
+  const [file, setFile] = useState(null);
   const classes = useStyles();
-
+ const [event,setEvent]=useState(null)
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    props.handleClose();
   };
 
   const setStatusFlag = (status) => {
     return status === "Open" ? "green" : "red";
   };
-
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+    setFile(file);
+    setEvent(event)
+  };
+  const [messages, setMessages] = useState([
+    {
+      text: "Zdravo, imam problem sa transakcijom koju sam napravila danas. Broj transakcije je : 123123123. Status transakcije je poslano, ali pare nisu stigle.",
+      isUser: false,
+      name: "Ines",
+      file:null
+    },{text: "Ova transakcija mi je hitna pa bi trebala biti poslana što prije.",
+    isUser:false,
+    name:"Ines",
+    file:null
+  }
+   ]);
   const fetchData = async () => {
     // To connect with BE
+    // Add the new message to the chatMessages state
     setClaim({
       id: 1,
       status: "Open",
       subject: "Nema para",
-      modified: "Juce",
+      modified: "Jucer",
       created: "Prije neki dan",
-      description: "Poslo pare nisu dosle",
+      description: "Poslao, pare nisu dosle",
     });
   };
-
+  const chatListRef = useRef(null);
   useEffect(() => {
+    const card = chatListRef.current;
+    card.scrollTop = card.scrollHeight;
     fetchData();
-  }, []);
+  }, [messages]);
 
   const handleSubmit = () => {
     // Handle form submit here
     setChatMessages([...chatMessages, newMessage]);
     setNewMessage("");
   };
+  
 
+  const handleSendMessage = () => {
+    if (newMessage.trim() !== '') {
+       getUser().then(res=>{
+      setMessages([...messages, { text: newMessage,isUser:true, name:res.data.firstName,file: file }]);
+      setNewMessage('');
+      setFile(null);
+      event.target.value=''
+    });
+    
+    }
+  };
   return (
     <div>
       <div className="container">
@@ -184,69 +241,71 @@ export default function ClaimModal(props) {
                 </Grid>
               </Box>
 
-              <Box>
-                <Stack spacing={2}>
-                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      User
-                    </Typography>
-                    <Typography>
-                      Pozdrav, imam neki problem.
-                    </Typography>
-                    <Typography sx={{ fontSize: '12px' }}>
-                      10:05 AM
-                    </Typography>
-                  </Card>
+              <div className={classes.chatModal}>
+  <div
+    className={classes.chatModalMessages}
+    style={{ height: "300px" , overflowY: "auto",margin: "0 70px", display: "flex"  }}
+    ref={chatListRef}
+  >
+    {messages.map((message, index) => (
+      <div
+        key={index}
+        className={`${classes.chatModalMessage} ${
+          message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent
+        }`}
+      >
+        <div className={classes.chatModalMessageText}><span ><b>{message.name}</b></span>: {message.text} 
+        {message.file && (
+           <div
+           key={index}
+           className={`${classes.chatModalMessage} ${
+             message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent
+           }`}
+         >
+  <a href={URL.createObjectURL(message.file)} download>
+    {message.file.name}
+  </a></div>
+)}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
-                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      Admin
-                    </Typography>
-                    <Typography>
-                      Dobar dan, o kojem je problemu riječ?
-                    </Typography>
-                    <Typography sx={{ fontSize: '12px' }}>
-                      10:07 AM
-                    </Typography>
-                  </Card>
-
-                  <Card variant="outlined" sx={{ p: 1, backgroundColor: "#f0f0f0" }}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      User
-                    </Typography>
-                    <Typography>
-                      Želio bih prijaviti...
-                    </Typography>
-                    <Typography sx={{ fontSize: '12px' }}>
-                      10:10 AM
-                    </Typography>
-                  </Card>
-                </Stack>
-              </Box>
 
               {/* Chat Input */}
-              <Grid container spacing={0} alignItems="flex-end" maxWidth={false}>
-                <Grid item xs={12} sm={8}>
-                  <TextField
-                    label="Add message"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <input type="file" />
-                      )
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={5} sm={4} container justify="flex-end">
-                  <Button variant="contained" className={classes.button}>Send</Button>
-                </Grid>
-              </Grid>
+              <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+  <Grid item xs={9} sm={8}>
+    <TextField
+      label="Add message"
+      variant="outlined"
+      value={newMessage}
+      onChange={(e) => setNewMessage(e.target.value)}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') {
+          handleSendMessage();
+        }
+      }}
+      fullWidth
+      InputProps={{
+        endAdornment: (
+          <input type="file" onChange={handleFileUpload}/>
+        )
+      }}
+    />
+  </Grid>
+  <Grid item xs={3} sm={4}>
+    <Button variant="contained" onClick={handleSendMessage}>
+      <img src={sendIcon} style={{ width: 20, height: 20 }}/>
+    </Button>
+  </Grid>
+</Grid>
+
             </Stack>
           </CardContent>
           <CardActions className={classes.cardActions}>
           <Grid item xs={5} sm={4} container justify="flex-end">
-            <Button variant="contained" className={classes.button}>
+            <Button variant="contained" className={classes.button} onClick={handleClose} >
               Close
             </Button>
             </Grid>
