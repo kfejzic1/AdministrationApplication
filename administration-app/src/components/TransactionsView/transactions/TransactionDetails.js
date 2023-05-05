@@ -37,20 +37,26 @@ export default function TransactionDetails(arg) {
 						<TableCell align='center'>Date</TableCell>
 						<TableCell align='center'>Recipient</TableCell>
 						<TableCell align='center'>Amount</TableCell>
-						<TableCell align='center'>Status</TableCell>
-						<TableCell align='center'>Bank Account</TableCell>
-						<TableCell align='center'>Name of the Payee</TableCell>
+						<TableCell align='center'>Currency</TableCell>
+						<TableCell align='center'>Sender</TableCell>
+						<TableCell align='center'>Type</TableCell>
+						<TableCell align='center'>Purpose</TableCell>
 						<TableCell align='center'></TableCell>
 					</TableRow>
 				</TableHead>
 				<TableRow>
-					<TableCell align='center'>{arg.props.id}</TableCell>
-					<TableCell align='center'>{parseDate(props.dateTime)}</TableCell>
-					<TableCell align='center'>{props.recipient}</TableCell>
-					<TableCell align='center'>{props.amount}</TableCell>
-					<TableCell align='center'>{props.status}</TableCell>
-					<TableCell align='center'>{props.account}</TableCell>
-					<TableCell align='center'>{props.type}</TableCell>
+					<TableCell align='center'>{arg.props.transactionId}</TableCell>
+					<TableCell align='center'>{parseDate(arg.props.createdAt)}</TableCell>
+					<TableCell align='center'>
+						{arg.props.recipient.name ? arg.props.recipient.name : arg.props.recipient.phoneNumber}
+					</TableCell>
+					<TableCell align='center'>{arg.props.amount}</TableCell>
+					<TableCell align='center'>{arg.props.currency}</TableCell>
+					<TableCell align='center'>
+						{arg.props.sender.name ? arg.props.sender.name : arg.props.sender.phoneNumber}
+					</TableCell>
+					<TableCell align='center'>{arg.props.transactionType}</TableCell>
+					<TableCell align='center'>{arg.props.transactionPurpose}</TableCell>
 					<TableCell sx={{ justifyContent: 'space-around', display: 'flex', flexDirection: 'row' }}>
 						<Button
 							onClick={() => {
@@ -61,11 +67,26 @@ export default function TransactionDetails(arg) {
 						</Button>
 						<Button
 							onClick={() => {
-								navigate('/payment/USD/Payment/' + props.recipient + '/' + props.amount + '/' + props.account);
+								navigate(
+									'/payment/' +
+										arg.props.currency +
+										'/' +
+										arg.props.transactionPurpose +
+										'/' +
+										arg.props.recipient.name +
+										'/' +
+										arg.props.transactionType +
+										'/' +
+										arg.props.amount +
+										'/' +
+										arg.props.recipient.accountNumber +
+										'/' +
+										arg.props.sender.accountNumber
+								);
 							}}
 						>
 							Reuse
-						</Button>
+						</Button> 	
 					</TableCell>
 				</TableRow>
 			</Table>

@@ -4,6 +4,7 @@ export const env = {
 	},
 	API_ENV: {
 		url: 'http://siprojekat.duckdns.org:5051',
+		testUrl: 'http://localhost:5051',
 	},
 	NOTIFICATION_API: {
 		key: 'Tm1RME5USm1aR1F0T0dRd05TMDBZV1ppTFdFMllXVXRaVFl6WVRka05UZGhaREU0',

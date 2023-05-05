@@ -9,6 +9,7 @@ namespace AdministrationAPI.Models.Vendor
         [Key, Column(Order = 0)]
         public int Id { get; set; }
         public string Name { get; set; }
+        public int VendorId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public int InvoiceFrequencyTypeId { get; set; }

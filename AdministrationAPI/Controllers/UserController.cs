@@ -3,6 +3,7 @@ using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
+using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AutoMapper;
@@ -17,6 +18,7 @@ namespace AdministrationAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -35,6 +37,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var user = await _userService.GetUser(userId);
 
@@ -78,6 +81,25 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User not created. Password must contain at least one uppercase letter, a digit and a non-alphanumeric character. Password must be at least six characters long.");
 
+            }
+
+            return Ok(new { message = "Registration successful" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("send/email")]
+        public async Task<IActionResult> SendRegistrationEmail([FromQuery] string email)
+        {
+            if (email == null)
+            {
+                return BadRequest(new { message = "Email is null" });
+            }
+
+            var user = _userService.GetUserByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest(new { message = "User not found" });
             }
 
             bool success = await _activationCodeService.GenerateEmailActivationCodeForUserAsync(user);
@@ -151,6 +173,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var qrCode = await _userService.GetTwoFactorQRCode(userId);
 
@@ -172,6 +195,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 var result = await _userService.Toggle2FA(userId);
 
@@ -193,6 +217,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 if (_userService.GetUserByEmail(request.Email) != null)
                 {
                     var result = new ObjectResult(new { statusCode = 204, message = "User with this email already exists!" });
@@ -429,15 +454,35 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        //[HttpPatch("edit")]
+        //public async Task<IActionResult> EditUser([FromBody] EditRequest request)
+        //{
+        //    var user = _userService.GetUserById(request.Id);
+        //    if (user == null)
+        //    {
+        //        return BadRequest("User doesn't exist");
+        //    }
+        //    var result = await _userService.EditUser(request);
+        //    if (result.Succeeded)
+        //    {
+        //        return Ok("User successfully updated");
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Error while updating user");
+        //    }
+        //}
+
         [HttpPatch("edit")]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var user = _userService.GetUserById(request.Id);
             if (user == null)
             {
                 return BadRequest("User doesn't exist");
             }
-            var result = await _userService.EditUser(request);
+            var result = await _userService.EditUserAdmin(request);
             if (result.Succeeded)
             {
                 return Ok("User successfully updated");
@@ -448,14 +493,44 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpPatch("editUser")]
+        public async Task<IActionResult> EditUserAdmin([FromBody] EditRequest request) 
+        {
+            
+            var user = _userService.GetUserById(request.Id);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            try
+            {
+                var result = await _userService.EditUserAdmin(request);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpGet("allWithRoles")]
         public IActionResult GetAllUsersWithRoles()
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var users = _userService.GetAllUsers();
             var usersWithRoles = users.Select(u => _userService.GetUserWithRolesById(u.Id));
             return Ok(usersWithRoles);
 
         }
+
 
         [HttpGet("all")]
         public IActionResult GetAllUsers()
@@ -477,9 +552,31 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("allAdmin")]
+        public IActionResult GetAllUsersAdmin()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var users = _userService.GetAllUsersByAdmin();
+                return Ok(users);
+            }
+            catch (DataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "UserController.Login");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpGet("roles")]
         public IEnumerable<IdentityRole> GetRoles()
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             return _userService.GetRoles();
         }
 
@@ -492,6 +589,7 @@ namespace AdministrationAPI.Controllers
         [HttpPost("forgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             var user = _userService.GetUserById(request.Id);
             if (user == null)
             {
@@ -535,6 +633,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var users = _userService.GetUserByName(name);
                 return Ok(users);
             }
@@ -554,6 +653,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 TokenVerificationResult roles = new TokenVerificationResult();
 
                 bool? validity = null;
@@ -588,6 +688,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 _userService.InvalidateToken(token);
 
                 return Ok();
@@ -600,6 +701,36 @@ namespace AdministrationAPI.Controllers
             {
                 LoggerUtility.Logger.LogException(ex, "UserController.Logout");
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet("UsersForVendor/{adminId}")]
+        public async Task<IActionResult> GetUsersForVendor([FromRoute] int adminId)
+        {
+            return Ok(await _userService.GetUsersForVendor(adminId));
+        }
+
+        [HttpPost("editVendorUser")]
+        public async Task<IActionResult> EditVendorUser([FromBody] EditRequest request, int adminId)
+        {
+            try
+            {
+                var result = await _userService.EditVendorUser(request, adminId);
+                if (result.Succeeded)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                LoggerUtility.Logger.LogException(ex, "An error occurred while editing the vendor user.");
+                return StatusCode(500);
             }
         }
     }

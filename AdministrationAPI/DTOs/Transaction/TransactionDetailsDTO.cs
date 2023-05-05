@@ -1,4 +1,4 @@
-using AdministrationAPI.Models.Transaction;
+using AdministrationAPI.Models;
 
 namespace AdministrationAPI.DTOs
 {

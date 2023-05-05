@@ -2,6 +2,7 @@
 using AdministrationAPI.Contracts.Requests.Users;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Data;
+using AdministrationAPI.Extensions;
 using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services.Interfaces;
@@ -10,9 +11,11 @@ using AutoMapper;
 using Facebook;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace AdministrationAPI.Services
@@ -25,6 +28,8 @@ namespace AdministrationAPI.Services
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
+        private readonly IVendorService _vendorService;
+        private readonly IHttpContextAccessor _httpContext;
 
         public UserService(
             UserManager<User> userManager,
@@ -33,7 +38,9 @@ namespace AdministrationAPI.Services
             IMapper mapper,
             RoleManager<IdentityRole> roleManager,
             AppDbContext context
-        )
+,
+            IVendorService vendorService,
+            IHttpContextAccessor httpContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,6 +48,8 @@ namespace AdministrationAPI.Services
             _mapper = mapper;
             _roleManager = roleManager;
             _context = context;
+            _vendorService = vendorService;
+            _httpContext = httpContext;
         }
 
         public async Task<UserDT> GetUser(string id)
@@ -61,7 +70,8 @@ namespace AdministrationAPI.Services
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
                 AuthenticatorKey = user.AuthenticatorKey,
                 IsEmailValidated = user.EmailConfirmed,
-                IsPhoneValidated = user.PhoneNumberConfirmed
+                IsPhoneValidated = user.PhoneNumberConfirmed,
+                Type = user.Type
             };
         }
 
@@ -74,6 +84,17 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAllUsers()
         {
+            var users = _userManager.Users.ToList();
+            return users;
+        }
+
+        public List<User> GetAllUsersByAdmin()
+        {
+            var isAdmin = IsLoggedInUserAdmin().Result;
+            if (isAdmin == false)
+            {
+                throw new Exception("User is not authorized to edit.");
+            }
             var users = _userManager.Users.ToList();
             return users;
         }
@@ -295,13 +316,9 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
-            using (var context = new VendorDbContext())
-            {
-                var userIds = context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
+                var userIds = _context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
                 var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
                 return users;
-            }
-
         }
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
@@ -424,6 +441,16 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
+           
+            if (newUser.Type == null)
+            {
+                newUser.Type = "Person";
+            }
+
+            newUser.EmailConfirmed = true;
+            newUser.PhoneNumberConfirmed = true;
+
+
             IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
             // _userManager.SaveChanges();
 
@@ -470,7 +497,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendConfirmationEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
@@ -506,7 +533,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendPasswordResetEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
@@ -542,5 +569,63 @@ namespace AdministrationAPI.Services
 
             await _context.SaveChangesAsync();
         }
+
+
+        public async Task<Boolean> IsLoggedInUserAdmin()
+        {
+            var loggedInUser = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            if (loggedInUser == null)
+            {
+                throw new Exception("Not logged in");
+            }
+            return await _signInManager.UserManager.IsInRoleAsync(loggedInUser, "Admin");
+        }
+
+
+        public async Task<IdentityResult> EditUserAdmin(EditRequest request)
+        {
+            var isAdmin = await IsLoggedInUserAdmin();
+
+            if (isAdmin == false)
+            {
+                throw new Exception("User is not authorized to edit.");
+            }
+            return await EditUser(request);
+        }
+
+
+        #region VendorUsers
+
+        public async Task<IEnumerable<User>> GetUsersForVendor(int adminId)
+        {
+            var vendorUsers = await _vendorService.GetVendorUsersForAdmin(adminId);
+            if(vendorUsers == null)
+            {
+                return null;
+            }
+
+            List<User> users = new List<User>();
+
+            foreach(var vu in vendorUsers)
+            {
+                users.Add(GetUserById(vu.UserId));
+            }
+
+            return users.ToList();
+        }
+
+        public async Task<IdentityResult> EditVendorUser(EditRequest request, int adminId)
+        {
+            var result = await _vendorService.IsVendorUserAdmin(adminId);
+            if(result==false)
+            {
+                throw new Exception("User is not authorized to edit vendor user.");
+            }
+            return await EditUser(request);
+
+        }
+
+        #endregion
+
     }
 }

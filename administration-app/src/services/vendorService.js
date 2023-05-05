@@ -131,8 +131,8 @@ export async function uploadFile(file, folder, vendorName) {
 	});
 }
 
-export function getAllPaymentTerms() {
-	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm', {
+export function getAllPaymentTerms(vendorId) {
+	return axios(env.API_ENV.url + '/api/Vendor/PaymentTerm/' + vendorId, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',

@@ -16,43 +16,48 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MenuItem from '@mui/material/MenuItem';
 
 export default function TransactionsListHeader(arg) {
-	const [sortingColumn, setSortingColumn] = useState('');
+	const [sortingColumn, setSortingColumn] = useState('createdat');
 	const [sortingDirection, setSortingDirection] = useState('asc');
 	const [dateStartFilter, setDateStartFilter] = useState(null);
 	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
-	const [statusFilter, setStatusFilter] = useState('');
-
+	const [currencyFilter, setCurrencyFilter] = useState('');
+	const [typeFilter, setTypeFilter] = useState('');
 	const [amountMin, setAmountMin] = useState('');
 	const [amountMax, setAmountMax] = useState('');
-
+	const [groupByValue, setGroupByValue] = useState(arg.groupBy);
+	console.log('header ', arg.groupBy);
 	useEffect(() => {
 		updateFilterOptions();
 	}, [sortingColumn, sortingDirection]);
-
+	useEffect(() => {
+		setGroupByValue(arg.groupBy);
+		console.log('group by effect', arg.groupBy);
+	}, [arg.groupBy]);
 	const updateFilterOptions = () => {
 		arg.setFilterOptions({
-			Recipient: recipientFilter,
-			Status: statusFilter,
-			DateTimeStart: dateStartFilter,
-			DateTimeEnd: dateEndFilter,
-			MinAmount: amountMin,
-			MaxAmount: amountMax,
-			SortingOptions: sortingColumn,
-			Ascending: sortingDirection == 'asc' ? true : false,
+			CreatedAtStartFilter: dateStartFilter,
+			CreatedAtEndFilter: dateEndFilter,
+			AmountStartFilter: amountMin,
+			AmountEndFilter: amountMax,
+			CurrencyFilter: currencyFilter,
+			TransactionTypeFilter: typeFilter,
+			RecipientNameFilter: recipientFilter,
+			sortingOrder: sortingColumn + sortingDirection,
 		});
 	};
 
 	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
 	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
 	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
-	const [sortDirectionStatus, setSortDirectionStatus] = useState('asc');
+	const [sortDirectionType, setSortDirectionType] = useState('asc');
+	const [sortDirectionCurrency, setSortDirectionCurrency] = useState('asc');
 
 	const handleSortDirectionDateChange = () => {
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
 		setSortDirectionDate(newSortDirection);
 		setSortingDirection(newSortDirection);
-		setSortingColumn('DateTime');
+		setSortingColumn('createdat');
 		updateFilterOptions();
 	};
 
@@ -76,11 +81,19 @@ export default function TransactionsListHeader(arg) {
 		updateFilterOptions();
 	};
 
-	const handleSortDirectionStatusChange = () => {
-		const newSortDirection = sortDirectionStatus === 'asc' ? 'desc' : 'asc';
-		setSortDirectionStatus(newSortDirection);
+	const handleSortDirectionCurrencyChange = () => {
+		const newSortDirection = sortDirectionCurrency === 'asc' ? 'desc' : 'asc';
+		setSortDirectionCurrency(newSortDirection);
 		setSortingDirection(newSortDirection);
-		setSortingColumn('Status');
+		setSortingColumn('Currency');
+		updateFilterOptions();
+	};
+
+	const handleSortDirectionTypeChange = () => {
+		const newSortDirection = sortDirectionType === 'asc' ? 'desc' : 'asc';
+		setSortDirectionType(newSortDirection);
+		setSortingDirection(newSortDirection);
+		setSortingColumn('Type');
 		updateFilterOptions();
 	};
 
@@ -88,17 +101,17 @@ export default function TransactionsListHeader(arg) {
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell>
-					<Typography variant='h6'>ID</Typography>
+				<TableCell align='center' sx={{ width: '11%' }}>
+					<Typography variant='h6'>Group by</Typography>
 				</TableCell>
-				<TableCell align='center'>
-					{sortingColumn != 'DateTime' ? (
+				<TableCell align='center' sx={{ width: '20%' }}>
+					{sortingColumn != 'createdat' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Date</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
-									setSortingColumn('DateTime');
+									setSortingColumn('createdat');
 									setSortingDirection('asc');
 								}}
 							/>
@@ -119,7 +132,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
+				<TableCell align='center' sx={{ width: '20%' }}>
 					{sortingColumn != 'Recipient' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Recipient</Typography>
@@ -148,7 +161,7 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
+				<TableCell align='center' sx={{ width: '20%' }}>
 					{sortingColumn != 'Amount' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
 							<Typography variant='h6'>Amount </Typography>
@@ -177,22 +190,22 @@ export default function TransactionsListHeader(arg) {
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell align='center'>
-					{sortingColumn != 'Status' ? (
+				<TableCell align='center' sx={{ width: '10%' }}>
+					{sortingColumn != 'Currency' ? (
 						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
-							<Typography variant='h6'>Status </Typography>
+							<Typography variant='h6'>Currency</Typography>
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
-									setSortingColumn('Status');
+									setSortingColumn('Currency');
 									setSortingDirection('asc');
 								}}
 							/>
 						</Box>
 					) : (
 						<TableSortLabel
-							direction={sortDirectionStatus}
-							onClick={handleSortDirectionStatusChange}
+							direction={sortDirectionCurrency}
+							onClick={handleSortDirectionCurrencyChange}
 							sx={{
 								'& .MuiTableSortLabel-icon': {
 									color: 'black !important',
@@ -201,15 +214,82 @@ export default function TransactionsListHeader(arg) {
 							hideSortIcon={false}
 							active={true}
 						>
-							<Typography variant='h6'>Status</Typography>
+							<Typography variant='h6'>Currency</Typography>
 						</TableSortLabel>
 					)}
 				</TableCell>
-				<TableCell></TableCell>
+				<TableCell align='center' sx={{ width: '13%' }}>
+					{sortingColumn != 'Type' ? (
+						<Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'center' }}>
+							<Typography variant='h6'>Type</Typography>
+							<SwapVertSharpIcon
+								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
+								onClick={() => {
+									setSortingColumn('Type');
+									setSortingDirection('asc');
+								}}
+							/>
+						</Box>
+					) : (
+						<TableSortLabel
+							direction={sortDirectionType}
+							onClick={handleSortDirectionTypeChange}
+							sx={{
+								'& .MuiTableSortLabel-icon': {
+									color: 'black !important',
+								},
+							}}
+							hideSortIcon={false}
+							active={true}
+						>
+							<Typography variant='h6'>Type</Typography>
+						</TableSortLabel>
+					)}
+				</TableCell>
+				<TableCell sx={{ width: '7%' }}></TableCell>
 			</TableRow>
 
 			<TableRow>
-				<TableCell></TableCell>
+				<TableCell>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							displayEmpty
+							value={arg.groupBy}
+							onChange={e => {
+								arg.setGroupBy(e.target.value);
+								setGroupByValue(e.target.value);
+								//restart filter
+								setRecipientFilter('');
+								setDateStartFilter(null);
+								setDateEndFilter(null);
+								setAmountMin('');
+								setAmountMax('');
+								setTypeFilter('');
+								setCurrencyFilter('');
+								setSortingDirection('asc');
+								setSortingColumn('createdat');
+								arg.setFilterOptions({
+									CreatedAtStartFilter: '',
+									CreatedAtEndFilter: '',
+									AmountStartFilter: '',
+									AmountEndFilter: '',
+									CurrencyFilter: '',
+									TransactionTypeFilter: '',
+									RecipientNameFilter: '',
+									sortingOrder: 'createdatasc',
+								});
+							}}
+						>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+							<MenuItem value='Currency'>Currency</MenuItem>
+							<MenuItem value='Type'>Type</MenuItem>
+						</Select>
+					</FormControl>
+				</TableCell>
 				<TableCell>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						<Box
@@ -244,6 +324,7 @@ export default function TransactionsListHeader(arg) {
 				<TableCell align='center'>
 					<TextField
 						value={recipientFilter}
+						fullWidth={true}
 						onChange={e => {
 							setRecipientFilter(e.target.value);
 						}}
@@ -276,27 +357,55 @@ export default function TransactionsListHeader(arg) {
 						<Select
 							labelId='filter-status-label'
 							id='filter-status'
-							value={statusFilter}
+							value={currencyFilter}
 							displayEmpty
 							onChange={e => {
-								setStatusFilter(e.target.value);
+								setCurrencyFilter(e.target.value);
 							}}
 						>
-							<MenuItem value='Processing'>Processing</MenuItem>
-							<MenuItem value='Pending'>Pending</MenuItem>
-							<MenuItem value='Success'>Success</MenuItem>
-							<MenuItem value='Failure'> Failure</MenuItem>
 							<MenuItem value=''>
 								<em>None</em>
 							</MenuItem>
+							<MenuItem value='EUR'>EUR</MenuItem>
+							<MenuItem value='USD'>USD</MenuItem>
+							<MenuItem value='BAM'>BAM</MenuItem>
+							<MenuItem value='JPY'>JPY</MenuItem>
+							<MenuItem value='GBP'>GBP</MenuItem>
+							<MenuItem value='CAD'>CAD</MenuItem>
+							<MenuItem value='AUD'>AUD</MenuItem>
+							<MenuItem value='CHF'>CHF</MenuItem>
+							<MenuItem value='CNY'>CNY</MenuItem>
+							<MenuItem value='NZD'>NZD</MenuItem>
+							<MenuItem value='MXN'>MXN</MenuItem>
+							<MenuItem value='BRL'>BRL</MenuItem>
 						</Select>
 					</FormControl>
 				</TableCell>
 				<TableCell>
-					<Box display={'flex'} gap={3} justifyContent={'center'}>
+					<FormControl fullWidth>
+						<Select
+							labelId='filter-status-label'
+							id='filter-status'
+							value={typeFilter}
+							displayEmpty
+							onChange={e => {
+								setTypeFilter(e.target.value);
+							}}
+						>
+							<MenuItem value=''>
+								<em>None</em>
+							</MenuItem>
+							<MenuItem value='B2B'>B2B</MenuItem>
+							<MenuItem value='C2B'>C2B</MenuItem>
+							<MenuItem value='C2C'>C2C</MenuItem>
+						</Select>
+					</FormControl>
+				</TableCell>
+
+				<TableCell>
+					<Box display={'flex'} gap={1} flexDirection={'column'} justifyContent={'center'}>
 						<Button
 							onClick={() => {
-								const regex = /^\d*\.?\d+$/;
 								if (
 									amountMax.includes('e') ||
 									amountMin.includes('e') ||
@@ -308,34 +417,42 @@ export default function TransactionsListHeader(arg) {
 									(parseInt(amountMin) == '' && parseInt(amountMax) !== '')
 								)
 									alert('Invalid amount filter value!');
-								else updateFilterOptions();
+								else {
+									updateFilterOptions();
+									setGroupByValue('');
+									arg.setGroupBy('');
+								}
 							}}
 						>
-							Click to filter
+							Filter
 						</Button>
 						<Button
 							onClick={() => {
+								//restart filter
 								setRecipientFilter('');
-								setStatusFilter('');
 								setDateStartFilter(null);
 								setDateEndFilter(null);
 								setAmountMin('');
 								setAmountMax('');
+								setTypeFilter('');
+								setCurrencyFilter('');
 								setSortingDirection('asc');
-								setSortingColumn('DateTime');
+								setSortingColumn('createdat');
 								arg.setFilterOptions({
-									Recipient: '',
-									Status: '',
-									DateTimeStart: '',
-									DateTimeEnd: '',
-									MinAmount: '',
-									MaxAmount: '',
-									SortingOptions: 'DateTime',
-									Ascending: 'asc',
+									CreatedAtStartFilter: '',
+									CreatedAtEndFilter: '',
+									AmountStartFilter: '',
+									AmountEndFilter: '',
+									CurrencyFilter: '',
+									TransactionTypeFilter: '',
+									RecipientNameFilter: '',
+									sortingOrder: 'createdatasc',
 								});
+								arg.setGroupBy('');
+								setGroupByValue('');
 							}}
 						>
-							Restart filter
+							Restart
 						</Button>
 					</Box>
 				</TableCell>

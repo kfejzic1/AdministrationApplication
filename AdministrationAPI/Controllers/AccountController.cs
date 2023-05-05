@@ -13,6 +13,7 @@ using AdministrationAPI.Helpers;
 using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using AdministrationAPI.Contracts.Requests.Users;
 
 namespace AdministrationAPI.Controllers
 {
@@ -25,32 +26,153 @@ namespace AdministrationAPI.Controllers
 
 
         private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IAccountService accountService)
         {
             _userService = userService;
+            _accountService = accountService;
         }
 
         [HttpGet("check")]
         public async Task<IActionResult> Check([FromQuery] string name, string accountNumber)
         {
+            _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
             User user = _userService.GetUserByFirstName(name);
 
-            if (user is null) {
+            if (user is null)
+            {
                 return NotFound("User with specified name not found");
             }
-            else {
-                if (user.AccountNumber is null) {
+            else
+            {
+                if (user.AccountNumber is null)
+                {
                     return BadRequest("User doesn't have account");
                 }
 
-                if (user.AccountNumber.Equals(accountNumber)) {
+                if (user.AccountNumber.Equals(accountNumber))
+                {
                     return Ok();
                 }
-                else {
+                else
+                {
                     return BadRequest("User with specified name doesn't have specified account number");
                 }
             }
         }
+
+        [HttpGet("user-accounts")]
+        public IActionResult GetUserAccounts()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                var userId = ControlExtensions.GetId(HttpContext);
+
+                var accounts = _accountService.GetUserAccountCreationRequests(userId);
+
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.getAccountsWithId");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("user-account-create")]
+        public async Task<IActionResult> CreateUserAccount([FromBody] AccountCreationRequestCreateRequest request)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                var userId = ControlExtensions.GetId(HttpContext);
+                request.UserId = userId;
+                request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
+
+                var result = await _accountService.CreateUserAccountCreationRequest(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("requests")]
+        public IActionResult ListRequests()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+               
+                var result = _accountService.GetRequests();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("approve")]
+        public IActionResult ApproveRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.ApproveRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("decline")]
+        public IActionResult DeclineRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.DeclineRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("history")]
+        public IActionResult RequestHistory([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.GetHistory();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

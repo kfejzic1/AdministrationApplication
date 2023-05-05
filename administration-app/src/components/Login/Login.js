@@ -8,7 +8,7 @@ import { LinearProgress, Typography, Input, Alert, Box, Button, accordionSummary
 import TwoFactorView from './TwoFactor';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { useGoogleLogin } from '@react-oauth/google';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { env } from '../../config/env';
 import axios, { formToJSON } from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
@@ -141,11 +141,11 @@ const LoginForm = props => {
 						style={{width: '80%'}} 
 					/>
 					<FacebookLogin
-						appId='959179271739907'
+						appId='620744499469183'
 						callback={onSuccess}
 						onFailure={onFailure}
 						render={(renderProps) => (
-							<button onClick={renderProps.onClick}>Login with Facebook</button>
+							<FacebookLoginButton onClick={renderProps.onClick} style={{width: '80%'}}></FacebookLoginButton>
 						)}
 					/>
 

@@ -6,6 +6,9 @@ using AdministrationAPI.Extensions;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AdministrationAPI.Services
 {
@@ -13,18 +16,18 @@ namespace AdministrationAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IDocumentService _documentService;
+        private readonly AppDbContext _context;
 
-        public VendorService(IConfiguration configuration, IDocumentService documentService)
+        public VendorService(IConfiguration configuration, IDocumentService documentService, AppDbContext context)
         {
             _configuration = configuration;
-            _documentService = documentService; 
+            _documentService = documentService;
+            _context = context;
         }
 
         #region VendorMain
         public bool Create(VendorCreateRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
                 var vendor = new Vendor
                 {
                     Name = request.Name,
@@ -35,32 +38,26 @@ namespace AdministrationAPI.Services
                     CreatedBy = request.CreatedBy
                 };
 
-                context.Vendors.Add(vendor);
-                context.SaveChanges();
+                _context.Vendors.Add(vendor);
+                _context.SaveChanges();
 
                 foreach (string id in request.AssignedUserIds)
                 {
                     var vendorUser = new VendorUser() { VendorId = vendor.Id, UserId = id };
-                    context.VendorUsers.Add(vendorUser);
+                    _context.VendorUsers.Add(vendorUser);
                 }
-                context.SaveChanges();
+                _context.SaveChanges();
 
                 return true;
-            }
         }
         public Vendor? Get(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                return context.Vendors.FirstOrDefault(v => v.Id == id);
-            }
+                return _context.Vendors.FirstOrDefault(v => v.Id == id);
         }
         public List<VendorsResponse> GetAll()
         {
-            using (var context = new VendorDbContext())
-            {
                 var response = new List<VendorsResponse>() { };
-                var vendors = context.Vendors.ToList();
+                var vendors = _context.Vendors.ToList();
                 vendors.ForEach(vendor =>
                 {
                     VendorsResponse vendorResponse = new()
@@ -78,78 +75,66 @@ namespace AdministrationAPI.Services
                     response.Add(vendorResponse);
                 });
                 return response;
-            }
         }
         public bool Delete(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+                var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
                 if (vendor != null)
                 {
-                    var vendorLocations = context.VendorLocations.ToList().FindAll(loc =>
+                    var vendorLocations = _context.VendorLocations.ToList().FindAll(loc =>
                     {
                         return loc.VendorId == id;
                     });
                     vendorLocations.ForEach(loc =>
                     {
-                        var vendorPOS = context.VendorPOS.ToList().FindAll(pos =>
+                        var vendorPOS = _context.VendorPOS.ToList().FindAll(pos =>
                         {
                             return pos.LocationId == loc.Id;
                         });
                         vendorPOS.ForEach(pos =>
                         {
-                            context.VendorPOS.Remove(pos);
+                            _context.VendorPOS.Remove(pos);
                         });
-                        context.VendorLocations.Remove(loc);
+                        _context.VendorLocations.Remove(loc);
                     });
-                    context.Vendors.Remove(vendor);
-                    context.SaveChanges();
+                    _context.Vendors.Remove(vendor);
+                    _context.SaveChanges();
                     return true;
                 }
                 return false;
-            }
         }
         public bool UpdateAddress(int id, string address)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+                var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
 
                 if (vendor != null)
                 {
                     vendor.Address = address;
                     vendor.Modified = DateTime.UtcNow;
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     return true;
                 }
 
                 return false;
-            }
         }
         public bool DeleteAddress(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.Vendors.FirstOrDefault(v => v.Id == id);
+                var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
 
                 if (vendor != null)
                 {
                     vendor.Address = null;
                     vendor.Modified = DateTime.UtcNow;
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     return true;
                 }
 
                 return false;
-            }
         }
         #endregion
         #region VendorPOS
         public bool CreatePOS(POSCreateRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
                 var pos = new VendorPOS
                 {
                     Name = request.Name,
@@ -158,29 +143,23 @@ namespace AdministrationAPI.Services
                     CreatedBy = request.CreatedBy
                 };
 
-                context.VendorPOS.Add(pos);
+            _context.VendorPOS.Add(pos);
 
 
-                context.SaveChanges();
+            _context.SaveChanges();
 
                 return true;
-            }
         }
 
         public VendorPOS? GetPOS(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                return context.VendorPOS.FirstOrDefault(v => v.Id == id);
-            }
+                return _context.VendorPOS.FirstOrDefault(v => v.Id == id);
         }
 
         public List<POSResponse> GetAllPOS(int locationId)
         {
-            using (var context = new VendorDbContext())
-            {
                 var response = new List<POSResponse>();
-                var vendors = context.VendorPOS.Where(v => v.LocationId == locationId).ToList();
+                var vendors = _context.VendorPOS.Where(v => v.LocationId == locationId).ToList();
                 vendors.ForEach(vendor =>
                 {
                     POSResponse vendorResponse = new()
@@ -196,14 +175,11 @@ namespace AdministrationAPI.Services
                     response.Add(vendorResponse);
                 });
                 return response;
-            }
         }
 
         public bool UpdatePOS(int id, POSUpdateRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
-                var pos = context.VendorPOS.FirstOrDefault(p => p.Id == id);
+                var pos = _context.VendorPOS.FirstOrDefault(p => p.Id == id);
 
                 if (pos != null)
                 {
@@ -212,37 +188,31 @@ namespace AdministrationAPI.Services
                     pos.Modified = DateTime.UtcNow;
                     pos.ModifiedBy = request.ModifiedBy;
 
-                    context.VendorPOS.Update(pos);
-                    context.SaveChanges();
+                _context.VendorPOS.Update(pos);
+                _context.SaveChanges();
 
                     return true;
                 }
 
                 return false;
-            }
         }
         public bool DeletePOS(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendor = context.VendorPOS.FirstOrDefault(v => v.Id == id);
+                var vendor = _context.VendorPOS.FirstOrDefault(v => v.Id == id);
 
                 if (vendor != null)
                 {
-                    context.VendorPOS.Remove(vendor);
-                    context.SaveChanges();
+                    _context.VendorPOS.Remove(vendor);
+                    _context.SaveChanges();
                     return true;
                 }
 
                 return false;
-            }
         }
         #endregion
         #region VendorLocation
         public bool CreateLocation(VendorLocationCreateRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
                 var vendorLocation = new VendorLocation
                 {
                     Name = request.Name,
@@ -251,39 +221,30 @@ namespace AdministrationAPI.Services
                     CreatedBy = request.CreatedBy,
                     VendorId = request.VendorId
                 };
-                context.VendorLocations.Add(vendorLocation);
-                context.SaveChanges();
+            _context.VendorLocations.Add(vendorLocation);
+            _context.SaveChanges();
                 return true;
-            }
         }
         public bool DeleteLocation(VendorLocationDeleteRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendorLocation = context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
+                var vendorLocation = _context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
 
                 if (vendorLocation != null)
                 {
-                    context.VendorLocations.Remove(vendorLocation);
-                    context.SaveChanges();
+                _context.VendorLocations.Remove(vendorLocation);
+                _context.SaveChanges();
                     return true;
                 }
                 return false;
-            }
         }
         public VendorLocation? GetLocation(int id)
         {
-            using (var context = new VendorDbContext())
-            {
-                return context.VendorLocations.FirstOrDefault(l => l.Id == id);
-            }
+                return _context.VendorLocations.FirstOrDefault(l => l.Id == id);
         }
         public List<VendorLocationResponse> GetAllLocations()
         {
-            using (var context = new VendorDbContext())
-            {
                 var response = new List<VendorLocationResponse>() { };
-                var vendorLocations = context.VendorLocations.ToList();
+                var vendorLocations = _context.VendorLocations.ToList();
                 vendorLocations.ForEach(loc =>
                 {
                     VendorLocationResponse vendorLocationResponse = new()
@@ -300,14 +261,11 @@ namespace AdministrationAPI.Services
                     response.Add(vendorLocationResponse);
                 });
                 return response;
-            }
         }
         public List<VendorLocationResponse> GetAllLocationsWithVendorId(int id)
         {
-            using (var context = new VendorDbContext())
-            {
                 var response = new List<VendorLocationResponse>() { };
-                var vendorLocations = context.VendorLocations.ToList().FindAll(loc =>
+                var vendorLocations = _context.VendorLocations.ToList().FindAll(loc =>
                 {
                     return loc.VendorId == id;
                 });
@@ -327,13 +285,10 @@ namespace AdministrationAPI.Services
                     response.Add(vendorLocationResponse);
                 });
                 return response;
-            }
         }
         public bool UpdateLocation(VendorLocationUpdateRequest request)
         {
-            using (var context = new VendorDbContext())
-            {
-                var vendorLocation = context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
+                var vendorLocation = _context.VendorLocations.FirstOrDefault(l => l.Id == request.Id);
 
                 if (vendorLocation != null)
                 {
@@ -342,62 +297,57 @@ namespace AdministrationAPI.Services
                     vendorLocation.Modified = DateTime.UtcNow;
                     vendorLocation.ModifiedBy = request.ModifiedBy;
                     vendorLocation.VendorId = request.VendorId;
-                    context.VendorLocations.Update(vendorLocation);
-                    context.SaveChanges();
+                    _context.VendorLocations.Update(vendorLocation);
+                    _context.SaveChanges();
                     return true;
                 };
                 return false;
-            }
         }
         #endregion
         #region PaymentTerms
         public int CreatePaymentTerm(PaymentTermRequest request)
         {
-            using (var vendorDbContext = new VendorDbContext())
+            var paymentTerm = new VendorPaymentTerm
             {
-                var paymentTerm = new VendorPaymentTerm
+                Name = request.Name,
+                VendorId = request.VendorId,
+                StartDate = request.StartDate,
+                ExpiryDate = request.ExpiryDate,
+                InvoiceFrequencyTypeId = request.InvoiceFrequencyTypeId,
+                DueDate = request.DueDate,
+                Created = DateTime.UtcNow,
+                CreatedBy = request.CreatedBy
+            };
+
+            _context.VendorPaymentTerm.Add(paymentTerm);
+            _context.SaveChanges();
+
+            //Create bond between contracts and payment terms
+            foreach (var documentId in request.DocumentIds)
+            {
+                var paymentTermContract = new VendorPaymentTermContract
                 {
-                    Name = request.Name,
-                    StartDate = request.StartDate,
-                    ExpiryDate = request.ExpiryDate,
-                    InvoiceFrequencyTypeId = request.InvoiceFrequencyTypeId,
-                    DueDate = request.DueDate,
-                    Created = DateTime.UtcNow,
-                    CreatedBy = request.CreatedBy
+                    PaymentTermId = paymentTerm.Id,
+                    ContractId = documentId,
                 };
-
-                vendorDbContext.VendorPaymentTerm.Add(paymentTerm);
-                vendorDbContext.SaveChanges();
-
-                //Create bond between contracts and payment terms
-                foreach (var documentId in request.DocumentIds)
-                {
-                    var paymentTermContract = new VendorPaymentTermContract
-                    {
-                        PaymentTermId = paymentTerm.Id,
-                        ContractId = documentId,
-                    };
-                    vendorDbContext.VendorPaymentTermContract.Add(paymentTermContract);
-                }
-                vendorDbContext.SaveChanges();
-
-                return paymentTerm.Id;
+                _context.VendorPaymentTermContract.Add(paymentTermContract);
             }
+
+            _context.SaveChanges();
+
+            return paymentTerm.Id;
         }
 
-        public List<PaymentTermResponse> GetAllPaymentTerms()
+        public List<PaymentTermResponse> GetAllPaymentTerms(int vendorId)
         {
-            using (var vendorDbContext = new VendorDbContext())
-            {
-                var paymentTerms = vendorDbContext.VendorPaymentTerm.ToList();
+                var paymentTerms = _context.VendorPaymentTerm.Where(x => x.VendorId == vendorId).ToList();
                 var paymentTermResponse = new List<PaymentTermResponse>();
                 foreach (var pt in paymentTerms)
                 {
-                    InvoiceFrequency invoiceFrequency = vendorDbContext.InvoiceFrequency.FirstOrDefault(x => x.Id == pt.InvoiceFrequencyTypeId);
+                    InvoiceFrequency invoiceFrequency = _context.InvoiceFrequency.FirstOrDefault(x => x.Id == pt.InvoiceFrequencyTypeId);
                     
-
-                    var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
-                    var contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
+                    var documentIds = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == pt.Id).Select(x => x.ContractId);
+                    var contracts = _context.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
 
                     var paymentTerm = new PaymentTermResponse()
                     {
@@ -418,36 +368,28 @@ namespace AdministrationAPI.Services
                 }
 
                 return paymentTermResponse;
-            }
         }
 
         public VendorPaymentTerm GetPaymentTerm(int id)
         {
-            using (var vendorDbContext = new VendorDbContext())
-            {
-                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == id).Select(x => x.ContractId).ToList();
-                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(x => x.Id == id);
+                var documentIds = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == id).Select(x => x.ContractId).ToList();
+                var paymentTerm = _context.VendorPaymentTerm.FirstOrDefault(x => x.Id == id);
 
-                paymentTerm.Contracts = vendorDbContext.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
+                paymentTerm.Contracts = _context.Documents.Where(c => documentIds.Contains(c.Id)).ToList();
 
                 return paymentTerm;
-            }
         }
 
         public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest)
         {
-            using (var vendorDbContext = new VendorDbContext())
-            {
-                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(p => p.Id == paymentTermRequest.Id);
-                var paymentTermContract = vendorDbContext.VendorPaymentTermContract.Where(x => x.PaymentTermId == paymentTermRequest.Id);
-
-                
+                var paymentTerm = _context.VendorPaymentTerm.FirstOrDefault(p => p.Id == paymentTermRequest.Id);
+                var paymentTermContract = _context.VendorPaymentTermContract.Where(x => x.PaymentTermId == paymentTermRequest.Id);               
 
                 if (paymentTerm != null)
                 {
                     foreach (var payCon in paymentTermContract)
                     {
-                        vendorDbContext.VendorPaymentTermContract.Remove(payCon);
+                    _context.VendorPaymentTermContract.Remove(payCon);
                     }
                     foreach (var docId in paymentTermRequest.DocumentIds)
                     {
@@ -457,7 +399,7 @@ namespace AdministrationAPI.Services
                             PaymentTermId = paymentTermRequest.Id,
                         };
 
-                        vendorDbContext.VendorPaymentTermContract.Add(paymentContract);
+                        _context.VendorPaymentTermContract.Add(paymentContract);
                     }
 
                     paymentTerm.Name = paymentTermRequest.Name;
@@ -468,48 +410,93 @@ namespace AdministrationAPI.Services
                     paymentTerm.ModifiedBy = paymentTermRequest.ModifiedBy;
                     paymentTerm.InvoiceFrequencyTypeId = paymentTermRequest.InvoiceFrequencyTypeId;
 
-                    vendorDbContext.VendorPaymentTerm.Update(paymentTerm);
-                    vendorDbContext.SaveChanges();
+                    _context.VendorPaymentTerm.Update(paymentTerm);
+                    _context.SaveChanges();
 
                     return true;
                 }
 
                 return false;
-            }
         }
         public bool DeletePaymentTerm(int id)
         {
-            using (var vendorDbContext = new VendorDbContext())
-            {
-                var paymentTerm = vendorDbContext.VendorPaymentTerm.FirstOrDefault(v => v.Id == id);
-                var documentIds = vendorDbContext.VendorPaymentTermContract.Where(v => v.PaymentTermId == id);
-                var contracts = vendorDbContext.Documents.Where(d => documentIds.Select(x => x.ContractId).Contains(d.Id));
+                var paymentTerm = _context.VendorPaymentTerm.FirstOrDefault(v => v.Id == id);
+                var documentIds = _context.VendorPaymentTermContract.Where(v => v.PaymentTermId == id).ToList();
+                var contracts = _context.Documents.Where(d => documentIds.Select(x => x.ContractId).Contains(d.Id)).ToList();
 
                 if (paymentTerm != null)
                 {
                     foreach(var doc in documentIds)
                     {
-                        vendorDbContext.VendorPaymentTermContract.Remove(doc);
                         _documentService.DocumentDelete(doc.ContractId);
+                        _context.VendorPaymentTermContract.Remove(doc);
                     }
 
-                    vendorDbContext.VendorPaymentTerm.Remove(paymentTerm);
-                    vendorDbContext.SaveChanges();
+                    _context.VendorPaymentTerm.Remove(paymentTerm);
+                    _context.SaveChanges();
                     return true;
                 }
 
                 return false;
-            }
         }
         #endregion
-
         #region InvoiceFrequency
         public List<InvoiceFrequency> GetInvoiceFrequencies()
         {
-            using (var vendorDbContext = new VendorDbContext())
+           return _context.InvoiceFrequency.ToList();
+        }
+
+
+
+        #endregion
+
+        #region VendorUserRoles
+
+        public async Task<IEnumerable<VendorRoles>> GetVendorUserRoles()
+        {
+            return await _context.VendorRoles.ToListAsync();
+        }
+        public async Task<VendorRoles> GetRoleById(Guid roleId)
+        {
+            return await _context.VendorRoles.FirstOrDefaultAsync(vur => vur.Id == roleId);
+        }
+
+        public async Task<IEnumerable<VendorRoles>> GetRolesForVendorUser(int vendorUserId)
+        {
+           
+            var vendorUser = await _context.VendorUsers.FirstOrDefaultAsync(vu => vu.Id == vendorUserId);
+
+            var roles = await _context.VendorUserRoles.Where(vur => vur.VendorUserId == vendorUserId).Select(r => r.RoleId).ToListAsync();
+
+            var returnList = new List<VendorRoles>();
+
+            foreach(var role in roles )
             {
-                return vendorDbContext.InvoiceFrequency.ToList();
+                returnList.Add(await GetRoleById(role));
             }
+            return returnList;
+            
+        }
+
+        public async Task<Boolean> IsVendorUserAdmin(int adminId)
+        {
+            var roles = await GetRolesForVendorUser(adminId);
+            return await Task.Run(() => roles.Any(role => role.Name == "VendorAdmin"));
+        }
+
+        public async Task<IEnumerable<VendorUser>> GetVendorUsersForAdmin(int adminId)
+        {
+            var roles = await GetRolesForVendorUser(adminId);
+
+
+            if (await Task.Run(() => roles.Any(role => role.Name == "VendorAdmin")))
+            {
+                var vendorUser = await _context.VendorUsers.FirstOrDefaultAsync(vu => vu.Id == adminId);
+                var vendorId = vendorUser.VendorId;
+
+                return await _context.VendorUsers.Where(vu => vu.VendorId == vendorId).ToListAsync();    
+            }
+            return null;
         }
         #endregion
     }

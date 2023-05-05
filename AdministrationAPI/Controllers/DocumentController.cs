@@ -16,9 +16,11 @@ namespace AdministrationAPI.Controllers
     public class DocumentController : Controller
     {
         private readonly IDocumentService _documentService;
+        private readonly IUserService _userService;
 
-        public DocumentController(IDocumentService documentService)
+        public DocumentController(IUserService userService, IDocumentService documentService)
         {
+            _userService = userService;
             _documentService = documentService;
         }
 
@@ -28,6 +30,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var httpRequest = HttpContext.Request;
                 if (httpRequest.Form.Files.Count > 0)
                 {
@@ -67,6 +70,7 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 return Ok(_documentService.DocumentDelete(id));
             }
             catch (DataException ex)

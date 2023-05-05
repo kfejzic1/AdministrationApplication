@@ -105,7 +105,7 @@ public class ActivationCodeService : IActivationCodeService
 
         EmailActivationCode activationCode = new EmailActivationCode
         {
-            Id = new Guid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             Code = code,
             User = user
         };
@@ -113,7 +113,7 @@ public class ActivationCodeService : IActivationCodeService
         _context.EmailActivationCodes.Add(activationCode);
         await _context.SaveChangesAsync();
 
-        EmailSender emailSender = new EmailSender();
+        EmailSender emailSender = new EmailSender(_config);
         try
         {
             await emailSender.SendEmailAsync(user.Email, code);
@@ -140,7 +140,7 @@ public class ActivationCodeService : IActivationCodeService
 
         SMSActivationCode activationCode = new SMSActivationCode
         {
-            Id = new Guid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             Code = code,
             User = user
         };

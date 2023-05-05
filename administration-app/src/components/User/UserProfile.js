@@ -17,30 +17,43 @@ import {
 	DialogContentText,
 	DialogActions,
 	LinearProgress,
+	Modal,
 } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor } from '../../services/userService';
+import { getUser, getTwoFactorQRCode, toggle2FA as toggle2Factor, getUserId } from '../../services/userService';
 import OneSignal from 'react-onesignal';
+import SendNotificationModal from './SendNotificationModal';
+import { useNavigate } from 'react-router-dom';
+const useStyles = makeStyles(theme => ({
+	modal: {
+		position: 'absolute',
+		overflow: 'scroll',
+		height: '100%',
+		display: 'block',
+	},
+}));
 
-
-
-const ProfilePage = (props) => {
+const ProfilePage = props => {
 	const [user, setUser] = useState(null);
 	const [qrCode, setQrCode] = useState(null);
 	const [showDialog, setShowDialog] = useState(false);
 	const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 	const [is2FASettedUp, setIs2FASettedUp] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	
+	const [showModal, setShowModal] = useState(false);
+	const classes = useStyles();
+
+	const navigate = useNavigate();
 
 	const RedTableCell = withStyles({
 		root: {
-		  border: '2px solid red',
-		  borderBottom: '2px solid red',
-		  borderRadius: '10px', // Add this line to add rounded corners
+			border: '2px solid red',
+			borderBottom: '2px solid red',
+			borderRadius: '10px', // Add this line to add rounded corners
 		},
-	  })(TableCell);
+	})(TableCell);
 
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [showTooltipMail, setShowTooltipMail] = useState(false);
@@ -95,6 +108,14 @@ const ProfilePage = (props) => {
 		setShowTooltipMail(false);
 	}
 
+	function redirectAccountCreationRequest() {
+		navigate('/myaccounts');
+	}
+
+	const handleShowModal = () => setShowModal(true);
+
+	const handleCloseModal = () => setShowModal(false);
+
 	return (
 		<div className='container'>
 			<Box className='profile-banner rounded-left text-center'>
@@ -139,56 +160,43 @@ const ProfilePage = (props) => {
 								<TableCell align='center' variant='head'>
 									Email
 								</TableCell>
-								
-									{user?.isEmailValidated? (
-										<TableCell 						
-											align='center'
-										>{user?.email}
-										</TableCell>
-									): (
-										<Tooltip
+
+								{user?.isEmailValidated ? (
+									<TableCell align='center'>{user?.email}</TableCell>
+								) : (
+									<Tooltip
 										title={<Typography fontSize={15}>Email is not confirmed/verified</Typography>}
 										open={showTooltipMail}
-										placement="right-start"
-										>
-											<RedTableCell 
-												onMouseEnter={handleInputMouseEnterMail}
-												onMouseLeave={handleInputMouseLeaveMail}
-												align='center'
-											>
-												{user?.email}
-											</RedTableCell>
-										</Tooltip>
-									)}
-										
-						
+										placement='right-start'>
+										<RedTableCell
+											onMouseEnter={handleInputMouseEnterMail}
+											onMouseLeave={handleInputMouseLeaveMail}
+											align='center'>
+											{user?.email}
+										</RedTableCell>
+									</Tooltip>
+								)}
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
 									Phone
 								</TableCell>
 
-								{user?.isPhoneValidated  ? (
-									<TableCell 						
-										align='center'
-									>{user?.phone}
-									</TableCell>
-									
-								):(
+								{user?.isPhoneValidated ? (
+									<TableCell align='center'>{user?.phone}</TableCell>
+								) : (
 									<Tooltip
 										title={<Typography fontSize={15}>Phone is not confirmed/verified</Typography>}
 										open={showTooltip}
-										placement="right-start"
-									>
-										<RedTableCell 
+										placement='right-start'>
+										<RedTableCell
 											onMouseEnter={handleInputMouseEnter}
 											onMouseLeave={handleInputMouseLeave}
-											align='center'
-										>{user?.phone}
+											align='center'>
+											{user?.phone}
 										</RedTableCell>
 									</Tooltip>
 								)}
-
 							</TableRow>
 							<TableRow>
 								<TableCell align='center' variant='head'>
@@ -198,7 +206,6 @@ const ProfilePage = (props) => {
 								<TableCell align='center'>
 									<Button onClick={toggle2FA}>{is2FAEnabled ? 'Disable' : 'Enable'}</Button>
 								</TableCell>
-							
 							</TableRow>
 							{is2FAEnabled ? (
 								<TableRow>
@@ -214,6 +221,20 @@ const ProfilePage = (props) => {
 							) : null}
 						</Table>
 					</TableContainer>
+
+					<Box className='user-commands'>
+						<Button
+							variant='contained'
+							sx={{ color: 'black' }}
+							className='user-commands-btn'
+							onClick={redirectAccountCreationRequest}>
+							My Accounts
+						</Button>
+						<Button variant='contained' sx={{ color: 'black' }} className='user-commands-btn' onClick={handleShowModal}>
+							Send notification to subscribed users
+						</Button>
+					</Box>
+
 					<Box sx={{ width: '100%' }} className='mb-2' visibility={isLoading ? 'visible' : 'hidden'}>
 						<LinearProgress />
 					</Box>
@@ -238,6 +259,15 @@ const ProfilePage = (props) => {
 					<Button onClick={handleDialogClose}>OK</Button>
 				</DialogActions>
 			</Dialog>
+
+			<Modal
+				className={classes.modal}
+				open={showModal}
+				onClose={handleCloseModal}
+				aria-labelledby='modal-modal-title'
+				aria-describedby='modal-modal-description'>
+				<SendNotificationModal handleClose={handleCloseModal} />
+			</Modal>
 		</div>
 	);
 };

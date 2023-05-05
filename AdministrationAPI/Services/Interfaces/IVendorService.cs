@@ -22,10 +22,20 @@ namespace AdministrationAPI.Services.Interfaces
         bool DeleteLocation(VendorLocationDeleteRequest request);
         public bool UpdateLocation(VendorLocationUpdateRequest request);
         public int CreatePaymentTerm(PaymentTermRequest request);
-        public List<PaymentTermResponse> GetAllPaymentTerms();
+        public List<PaymentTermResponse> GetAllPaymentTerms(int vendorId);
         public VendorPaymentTerm GetPaymentTerm(int id);
         public bool UpdatePaymentTerm(PaymentTermRequest paymentTermRequest);
         public bool DeletePaymentTerm(int id);
         public List<InvoiceFrequency> GetInvoiceFrequencies();
+        Task<IEnumerable<VendorRoles>> GetVendorUserRoles();
+
+        Task<VendorRoles> GetRoleById(Guid roleId);
+        Task<IEnumerable<VendorRoles>> GetRolesForVendorUser(int vendorUserId);
+
+        Task<IEnumerable<VendorUser>> GetVendorUsersForAdmin(int adminId);
+        Task<Boolean> IsVendorUserAdmin(int adminId);
+
+
+
     }
 }
