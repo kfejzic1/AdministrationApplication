@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import VendorLocationPanel from './location/VendorLocationPanel';
+import VendorLocationPanel from './Location/VendorLocationPanel';
 import PaymentTermsBasicInfo from './paymentTerms/PaymentTermsBasicInfo';
 
 export default function VendorDetails() {
