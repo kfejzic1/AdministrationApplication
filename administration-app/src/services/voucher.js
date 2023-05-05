@@ -15,7 +15,7 @@ export function getAllCurrencies() {
 
 export function getAllVouchers() {
 	console.log("Da li se poziva ova funkcija");
-	return axios('http://localhost:5051/api/Voucher/get-vouchers', {
+	return axios(env.API_ENV.testUrl + '/api/Voucher/get-vouchers', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',

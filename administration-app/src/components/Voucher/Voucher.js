@@ -37,7 +37,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import EditIcon from '@mui/icons-material/Edit';
-import { Icon } from '@mui/material';
+import SellIcon from '@mui/icons-material/Sell';
+
 const theme = createTheme({
 	components: {
 		MuiSwitch: {
@@ -153,7 +154,8 @@ const Voucher = () => {
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
+	const [openSnackbarVoucher, setOpenSnackbarVoucher] = useState(false);
+	const [openSnackbarVoucherVoid, setOpenSnackbarVoucherVoid] = useState(false);
 	const [change, setChange] = useState(false);
 	const [dense, setDense] = useState(false);
 
@@ -213,24 +215,30 @@ const Voucher = () => {
 		setOpenUpdateDialog(true);
 	};
 
-	const handleSnackbarPasswordClose = () => {
-		setOpenSnackbarPassword(false);
+	const handleSnackbarVoucherClose = () => {
+		setOpenSnackbarVoucher(false);
 	};
 
+	const handleSnackbarVoucherVoidClose = () => {
+		setOpenSnackbarVoucherVoid(false);
+	};
 
-	const handleResetPassword = voucher => {
-		console.log("Voucher ovdje kad se pozve je " + JSON.stringify(voucher));
-		var b = "";
-		if (voucher.voucherStatusId === "1")
-		 b = "2";
-		 else if (voucher.voucherStatusId === "2")
-		 b = "3";
-		else if (voucher.voucherStatusId === "3")
-		 b = "4";
-	
-	
+	const handleVoidVoucher = voucher => {
+		var b = "4";
 		changeVoucherStatus({ code: voucher.code , statusId: b}).then(response => {
-			setOpenSnackbarPassword(true);
+			setOpenSnackbarVoucherVoid(true);
+			setChange(!change);
+		})
+		.catch(error => console.error(error));
+	}
+
+
+	const handleRedeemVoucher = voucher => {
+		console.log("Voucher ovdje kad se pozve je " + JSON.stringify(voucher));
+		var b = returnStatus(voucher.voucherStatusId);	
+		changeVoucherStatus({ code: voucher.code , statusId: b}).then(response => {
+			setOpenSnackbarVoucher(true);
+			setChange(!change);
 		})
 		.catch(error => console.error(error));
 	};
@@ -242,6 +250,16 @@ const Voucher = () => {
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	const returnStatus = (a) => {
+		if (a === "1")
+		 	return "2";
+		else if (a === "2")
+		 	return "3";
+		else if (a === "3")
+			return "4";
+		return "1";
+	}
 
 	const statusV = (a) => {
 		/*new VoucherStatus { Id = "1", Status = "ISSUED" },
@@ -262,9 +280,14 @@ const Voucher = () => {
 	}
 
 	const isTrueSt = (a) => {
-		if(a === "REDEEMED") return true;
+		if(a === "REDEEMED" || a === "ISSUED") return true;
 		else return false
 	} 
+	const is1or2 = (a) => {
+		if( a === "1" || a === "2") return true;
+		return false;
+
+	}
 	
 	return (
 		<div>
@@ -327,7 +350,13 @@ const Voucher = () => {
 														<EditIcon></EditIcon>
 													</Button>
 													{isTrueSt(statusV(voucher.voucherStatusId))?(
+															<Button
+															size='small'
+															variant='outline'
+															className={`${classes.button}`}															
+														>
 														<RedeemIcon style={{ visibility: 'hidden' }} />
+														</Button>
 													):(
 													<Button
 														size='small'
@@ -335,12 +364,33 @@ const Voucher = () => {
 														className={`${classes.button}`}
 														variant='outline'
 														onClick={() => {
-															handleResetPassword(voucher);
+															handleRedeemVoucher(voucher);
 														}}
 													>
 														<RedeemIcon></RedeemIcon>
 													</Button>
 													)}
+													{is1or2(voucher.voucherStatusId)?(
+													<Button
+														size='small'
+														title='Void vaucher'
+														className={`${classes.button}`}
+														variant='outline'
+														onClick={() => {
+															handleVoidVoucher(voucher);
+														}}
+													>
+														<SellIcon></SellIcon>
+													</Button>
+													):(
+														<Button
+														size='small'
+														className={`${classes.button}`}
+														variant='outline'														
+													>
+														<SellIcon style={{ visibility: 'hidden' }} />
+													</Button>
+													)}													
 												</ButtonGroup>
 											</TableCell>
 										</TableRow>
@@ -406,9 +456,15 @@ const Voucher = () => {
 				</Alert>
 			</Snackbar>
 
-			<Snackbar open={openSnackbarPassword} autoHideDuration={3000} onClose={handleSnackbarPasswordClose}>
-				<Alert onClose={handleSnackbarPasswordClose} severity='success'>
-					Email to reset password has been sent!
+			<Snackbar open={openSnackbarVoucher} autoHideDuration={3000} onClose={handleSnackbarVoucherClose}>
+				<Alert onClose={handleSnackbarVoucherClose} severity='success'>
+					Voucher has been redeemed!
+				</Alert>
+			</Snackbar>
+
+			<Snackbar open={openSnackbarVoucherVoid} autoHideDuration={3000} onClose={handleSnackbarVoucherVoidClose}>
+				<Alert onClose={handleSnackbarVoucherVoidClose} severity='success'>
+					Voucher is changed to void!
 				</Alert>
 			</Snackbar>
 		</div>
