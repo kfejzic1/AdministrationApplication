@@ -17,7 +17,7 @@ namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VoucherRedemptionController : ControllerBase
     {
 
@@ -38,7 +38,7 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("RedeemVoucher")]
-        public async Task<IActionResult> RedeemVoucher([FromBody] RedeemVoucherRequest request ,[FromQuery] string token1)
+        public async Task<IActionResult> RedeemVoucher([FromBody] RedeemVoucherRequest request )
         {
             try
             {
@@ -64,7 +64,7 @@ namespace AdministrationAPI.Controllers
                     if (currencyList.ElementAt(i).Id == voucher.CurrencyId)
                     {
                    //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
-                        var response = await _exchangeService.GetAllAccounts(token1);
+                        var response = await _exchangeService.GetAllAccounts(tokenForPS);
                         if (response.obj != null)
                         {
                             for(var j=0; j < response.obj.Count;j++)
@@ -78,7 +78,7 @@ namespace AdministrationAPI.Controllers
                                         data.AccountNumber = request.AccountNumber;
                                         data.Amount = voucher.Amount;
                                         //zamjeniti token1 sa tokenForPs
-                                        var psRespone = await _redeemVoucherService.MakeTransaction(data, token1);
+                                        var psRespone = await _redeemVoucherService.MakeTransaction(data,tokenForPS);
                                         if (psRespone.obj)
                                         {
                                             voucher = await _voucherService.RedeemVoucher(user, request.Code);
