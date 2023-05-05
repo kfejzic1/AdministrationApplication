@@ -167,7 +167,7 @@ export default function PaymentTermsTable(props) {
 
 	const fetchData = async () => {
 		setSelected([]);
-		getAllPaymentTerms().then(res => {
+		getAllPaymentTerms(props.vendorId).then(res => {
 			setPaymentTerms(res.data);
 		});
 	};
@@ -241,6 +241,7 @@ export default function PaymentTermsTable(props) {
 				<PaymentTermsTableToolBar
 					fetchPaymentTerms={fetchData}
 					vendorName={props.vendorName}
+					vendorId={props.vendorId}
 					numSelected={selected.length}
 					selectedIds={selected}
 					selectedRows={selectedRows}
