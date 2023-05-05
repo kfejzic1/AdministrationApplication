@@ -56,7 +56,7 @@ export function createExchangeTransaction(request) {
 }
 
 export function getUserAccounts(){
-	return axios('https://processingserver.herokuapp.com/api/Account/GetAllAccountsForUser?token=' + localStorage.getItem('token'), {
+	return axios(env.API_ENV.url + "/api/exchange/getuseraccounts", {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export function getUserAccounts(){
 
 
 export function getAllAcounts(){
-	return axios('https://processingserver.herokuapp.com/api/Account/GetAllAccounts?token=' + localStorage.getItem('token'), {
+	return axios(env.API_ENV.url + '/api/exchange/getallaccounts', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
