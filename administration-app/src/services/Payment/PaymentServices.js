@@ -20,11 +20,12 @@ export function getAccounts() {
 	});
 }
 export function sendPaymentInfoAccount(info) {
-	return axios(env.ANDROID_API_ENV.url + '/api/Transaction/CreateTransaction?token=' + localStorage.getItem('token'), {
+	return axios(env.API_ENV.url + '/api/Exchange/CreateTransaction', {
 		method: 'POST',
 		data: info,
 		headers: {
 			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }
