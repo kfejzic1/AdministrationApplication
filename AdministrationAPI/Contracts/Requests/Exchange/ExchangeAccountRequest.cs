@@ -4,5 +4,6 @@
     {
         public string currency { get; set; }
         public string bankName { get; set; }
+        public string Description { get; set; }
     }
 }
