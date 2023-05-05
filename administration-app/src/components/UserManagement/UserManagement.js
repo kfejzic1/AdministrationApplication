@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AccountRequestsDialog from './AccountRequestsDialog';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
 import {
 	Button,
@@ -10,11 +11,9 @@ import {
 	TextField,
 	TableContainer,
 	Table,
-	TableHead,
 	TableRow,
 	TableCell,
 	TableBody,
-	IconButton,
 	Snackbar,
 	FormControl,
 	InputLabel,
@@ -36,7 +35,6 @@ import {
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
 import { Stack } from '@mui/system';
-
 import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -156,11 +154,11 @@ const UserManagement = () => {
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 	const [openAccessListDialog, setOpenAccessListDialog] = useState(false);
+	const [openPendingRequestsDialog, setOpenPendingRequestsDialog] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarPassword, setOpenSnackbarPassword] = useState(false);
 	const [change, setChange] = useState(false);
-
 	const [dense, setDense] = useState(false);
 	const [checkedItems, setCheckedItems] = useState([]);
 	const [checkedItemsBefore, setCheckedItemsBefore] = useState([]);
@@ -186,6 +184,13 @@ const UserManagement = () => {
 		setOpenCreateDialog(true);
 	};
 
+	const handlePendingRequestsDialogOpen = () => {
+		setOpenPendingRequestsDialog(true);
+	};
+
+	const handlePendingRequestsDialogClose = () => {
+		setOpenPendingRequestsDialog(false);
+	};
 	const handleCreateDialogClose = () => {
 		setOpenCreateDialog(false);
 	};
@@ -309,6 +314,16 @@ const UserManagement = () => {
 											Create User
 										</Button>
 									</Tooltip>
+									<Tooltip title='Pending requests'>
+										<Button
+											className={classes.button}
+											size='small'
+											variant='text'
+											onClick={handlePendingRequestsDialogOpen}
+										>
+											Pending requests
+										</Button>
+									</Tooltip>
 								</Stack>
 							</Toolbar>
 							<Table
@@ -392,6 +407,8 @@ const UserManagement = () => {
 					/>
 				</ThemeProvider>
 			</Box>
+
+			<AccountRequestsDialog open={openPendingRequestsDialog} onClose={handlePendingRequestsDialogClose} />
 
 			<Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
 				<DialogTitle>Create User</DialogTitle>
