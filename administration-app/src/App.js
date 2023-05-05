@@ -37,7 +37,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount/:category'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -93,7 +93,7 @@ function App() {
 									<B2CAccManagement />
 								</ProtectedRoute>
 							}
-						/>	
+						/>
 
 						<Route
 							path='/currencies'

@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import VendorLocationPanel from './Location/VendorLocationPanel';
+import VendorLocationPanel from './location/VendorLocationPanel';
 import PaymentTermsBasicInfo from './paymentTerms/PaymentTermsBasicInfo';
 
 export default function VendorDetails() {
@@ -46,7 +46,8 @@ export default function VendorDetails() {
 				margin: '25px',
 				backgroundColor: '#F5F5F5',
 				height: '100%',
-			}}>
+			}}
+		>
 			<div
 				style={{
 					backgroundColor: '##ffffff00',
@@ -54,7 +55,8 @@ export default function VendorDetails() {
 					borderRadius: '5px',
 					width: '100%',
 					textAlign: 'center',
-				}}>
+				}}
+			>
 				<div style={{ marginBottom: '10px' }}>
 					<Typography variant='h4' gutterBottom style={{ marginTop: '3%', color: 'black', fontWeight: 'bold' }}>
 						{vendor.name}
