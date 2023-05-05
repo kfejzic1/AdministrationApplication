@@ -188,6 +188,7 @@ const Voucher = () => {
 	};
 
 	const handleCreateVoucher = event => {
+
 		event.preventDefault();
 		const form = event.target;
 		var noVoucher1 = form.NumberOfVouchers.value;
@@ -195,13 +196,17 @@ const Voucher = () => {
 		var amou = form.amount.value;
 		var amountNumber = amou* 1;
 		var string1 = form.currency.value;
-		createVoucher(noVoucherNumber,amountNumber,string1).then(response => {
+		var b = currencys.filter(v => v.name == string1)[0];
+		console.log("bbb ", b.id);
+		createVoucher(noVoucherNumber,amountNumber,b.id).then(response => {
 			setOpenCreateDialog(false);
 			setOpenSnackbar(true);
 			setChange(!change);
 		})
 		.catch(error => console.error(error));
 	};
+
+
 
 	const handleUpdateDialogOpen = user => {
 		setSelectedUser(user);
@@ -215,7 +220,16 @@ const Voucher = () => {
 
 	const handleResetPassword = voucher => {
 		console.log("Voucher ovdje kad se pozve je " + JSON.stringify(voucher));
-		changeVoucherStatus({ code: voucher.code , statusId: voucher.voucherStatusId}).then(response => {
+		var b = "";
+		if (voucher.voucherStatusId === "1")
+		 b = "2";
+		 else if (voucher.voucherStatusId === "2")
+		 b = "3";
+		else if (voucher.voucherStatusId === "3")
+		 b = "4";
+	
+	
+		changeVoucherStatus({ code: voucher.code , statusId: b}).then(response => {
 			setOpenSnackbarPassword(true);
 		})
 		.catch(error => console.error(error));
