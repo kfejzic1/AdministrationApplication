@@ -5,8 +5,8 @@ namespace AdministrationAPI.Services.Interfaces
 {
     public interface IAccountService
     {
-        List<Account> GetUserAccounts(string userId);
-        Task<Account> CreateUserAccount(UserAccountCreateRequest request);
+        List<AccountCreationRequest> GetUserAccountCreationRequests (string userId);
+        Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request);
         List<Account> GetRequests();
         Task<int> ApproveRequest(int id);
         Task<int> DeclineRequest(int id);

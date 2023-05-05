@@ -31,7 +31,7 @@ import {
 	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import AccTableHead from './AccTableHead';
+import AccountCreationRequestTableHeader from './AccountCreationRequestTableHeader';
 import { Stack } from '@mui/system';
 import { uploadDocument } from '../../services/documentService';
 import CreateIcon from '@mui/icons-material/Add';
@@ -154,7 +154,7 @@ const mockAccounts = [
 	{ id: '1234', description: 'Test account 2', currency: 'USD' },
 ];
 
-const B2CAccManagement = () => {
+const AccountCreationRequestsPanel = () => {
 	const classes = useStyles();
 	const [users, setUsers] = useState([]);
 	const [accounts, setAccounts] = useState(mockAccounts);
@@ -168,7 +168,6 @@ const B2CAccManagement = () => {
 	const [dense, setDense] = useState(false);
 	const [files, setFiles] = useState(null);
 	const [selectedCurrency, setSelectedCurrency] = useState(null);
-	const [accountNumber, setAccountNumber] = useState(null);
 	const [description, setDescription] = useState(null);
 	const [errorMessage, setErrorMessage] = useState('');
 
@@ -203,7 +202,7 @@ const B2CAccManagement = () => {
 	const handleSendRequest = () => {
 		let currency_id = findCurrencyByName(selectedCurrency);
 
-		if (accountNumber && currency_id && description && accountNumber != '' && description != '') {
+		if (currency_id && description && description != '') {
 			setErrorMessage('');
 
 			if (files) {
@@ -211,7 +210,7 @@ const B2CAccManagement = () => {
 				for (var i = 0; i < files.length; i++) {
 					let formdata = new FormData();
 					formdata.append('ContentType', 'application/pdf');
-					formdata.append('Folder', '/user-requests/' + accountNumber);
+					formdata.append('Folder', '/user-requests/' + getUserId() + '/' + currency_id);
 					formdata.append('file', files[i]);
 
 					for (var pair of formdata.entries()) {
@@ -225,17 +224,14 @@ const B2CAccManagement = () => {
 			}
 
 			let objectData = {
-				accountNumber: accountNumber,
 				currencyId: currency_id,
 				description: description,
-				requestDocumentPath: files ? '/user-requests/' + accountNumber : 'null',
+				requestDocumentPath: files ? '/user-requests/' : null,
 				approved: false,
-				userId: getUserId(),
 			};
-			console.log(objectData);
+
 			createAccount(objectData).then(res => {
 				setAccounts([...accounts, res.data]);
-				setAccountNumber(null);
 				setSelectedCurrency(currencies[0].name);
 				setDescription(null);
 				handleCreateDialogClose();
@@ -269,7 +265,7 @@ const B2CAccManagement = () => {
 							<Toolbar sx={{ justifyContent: 'space-between' }}>
 								<div></div>
 								<Stack direction='row'>
-									<Tooltip title='Create Account'>
+									<Tooltip title='Make Account Creation Request'>
 										<Button
 											className={classes.button}
 											size='small'
@@ -286,7 +282,7 @@ const B2CAccManagement = () => {
 								sx={{ minWidth: '100%' }}
 								aria-labelledby='tableTitle'
 								size={dense ? 'small' : 'medium'}>
-								<AccTableHead onClick={handleCreateDialogOpen} />
+								<AccountCreationRequestTableHeader onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{accounts.map(account => (
 										<TableRow
@@ -321,24 +317,15 @@ const B2CAccManagement = () => {
 			</Box>
 
 			<Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
-				<DialogTitle>Create Account</DialogTitle>
+				<DialogTitle>Make Request</DialogTitle>
 				<DialogContent>
-					<DialogContentText>Please fill out the form below to create a new account.</DialogContentText>
+					<DialogContentText>Please fill out the form below to make a new account creation request.</DialogContentText>
 					{errorMessage.length > 0 ? (
 						<Alert severity='error' variant='filled'>
 							{errorMessage}
 						</Alert>
 					) : null}
 					<form>
-						<TextField
-							margin='dense'
-							name='account-id'
-							label='Account Number'
-							fullWidth
-							onChange={e => {
-								setAccountNumber(e.target.value);
-							}}
-						/>
 						<TextField
 							margin='dense'
 							name='description'
@@ -385,4 +372,4 @@ const B2CAccManagement = () => {
 	);
 };
 
-export default B2CAccManagement;
+export default AccountCreationRequestsPanel;

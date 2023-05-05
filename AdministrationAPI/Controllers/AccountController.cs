@@ -70,7 +70,7 @@ namespace AdministrationAPI.Controllers
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
 
-                var accounts = _accountService.GetUserAccounts(userId);
+                var accounts = _accountService.GetUserAccountCreationRequests(userId);
 
                 return Ok(accounts);
             }
@@ -82,15 +82,16 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("user-account-create")]
-        public async Task<IActionResult> CreateUserAccount([FromBody] UserAccountCreateRequest request)
+        public async Task<IActionResult> CreateUserAccount([FromBody] AccountCreationRequestCreateRequest request)
         {
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 request.UserId = userId;
+                request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
 
-                var result = await _accountService.CreateUserAccount(request);
+                var result = await _accountService.CreateUserAccountCreationRequest(request);
 
                 return Ok(result);
             }
