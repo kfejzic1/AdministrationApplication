@@ -1,10 +1,14 @@
 {
   "dependencies": {
+    "@mui/joy": "^5.0.0-alpha.78",
+    "@mui/x-data-grid": "^6.3.1",
     "@mui/x-date-pickers": "^6.2.1",
     "@react-oauth/google": "^0.10.0",
     "dayjs": "^1.11.7",
+    "jspdf": "^2.5.1",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.4",
+    "react-datepicker": "^4.11.0",
     "react-facebook-login": "^4.1.1",
     "react-onesignal": "^2.0.4",
     "reactjs-social-login": "^2.6.2"
