@@ -117,5 +117,19 @@ namespace AdministrationAPI.Controllers
             return Ok(vouchers);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("get-voucher")]
+        public async Task<IActionResult> GetVoucher([FromQuery] int voucherId)
+        {
+            Voucher voucher = await _voucherService.GetVoucherById(voucherId);
+
+            if (voucher == null)
+            {
+                return NotFound(new { message = "Voucher with specified id not found!" });
+            }
+
+            return Ok(voucher);
+        }
+
     }
 }
