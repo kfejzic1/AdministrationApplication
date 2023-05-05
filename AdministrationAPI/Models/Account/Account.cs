@@ -16,6 +16,6 @@ namespace AdministrationAPI.Models
         public string CurrencyId { get; set; }
         public string Description { get; set; }
         public string RequestDocumentPath { get; set; }
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
     }
 }

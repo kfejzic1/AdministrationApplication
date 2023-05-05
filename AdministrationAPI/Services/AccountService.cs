@@ -32,6 +32,18 @@ namespace AdministrationAPI.Services
             return accounts;
         }
 
+        public List<Account> GetRequests()
+        {
+            var accounts = _context.Accounts.Where(a => a.Approved == null).ToList();
+            return accounts;
+        }
+
+        public List<Account> GetHistory()
+        {
+            var accounts = _context.Accounts.Where(a => a.Approved != null).ToList();
+            return accounts;
+        }
+
         public async Task<Account> CreateUserAccount(UserAccountCreateRequest request)
         {
             var newAccount = new Account
@@ -51,6 +63,26 @@ namespace AdministrationAPI.Services
             newAccount.Currency = _context.Currencies.FirstOrDefault(c => c.Id == newAccount.CurrencyId);
 
             return newAccount;
+        }
+
+        public async Task<int> ApproveRequest(int id)
+        {
+           
+           var account = _context.Accounts.First(a => a.Id == id);
+           account.Approved = true;
+           var result = await _context.SaveChangesAsync();
+
+            return result;
+        }
+
+        public async Task<int> DeclineRequest(int id)
+        {
+
+            var account = _context.Accounts.First(a => a.Id == id);
+            account.Approved = false;
+            var result = await _context.SaveChangesAsync();
+
+            return result;
         }
     }
 }
