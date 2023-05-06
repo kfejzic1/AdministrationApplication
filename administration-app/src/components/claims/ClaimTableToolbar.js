@@ -84,9 +84,3 @@ export default function ClaimTableToolbar(props) {
 	);
 }
 
-ClaimTableToolbar.propTypes = {
-	numSelected: PropTypes.number.isRequired,
-	fetchClaims: PropTypes.func.isRequired,
-	selectedIds: PropTypes.array.isRequired,
-	refreshSelected: PropTypes.func.isRequired,
-};
