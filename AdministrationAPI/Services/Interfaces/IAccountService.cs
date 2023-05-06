@@ -9,7 +9,6 @@ namespace AdministrationAPI.Services.Interfaces
         Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request);
         List<AccountCreationRequest> GetAllRequests();
         Task<int> ApproveRequest(int id);
-        Task<int> DeclineRequest(int id);
         List<AccountCreationRequest> GetRequestHistory();
     }
 }

@@ -89,14 +89,5 @@ namespace AdministrationAPI.Services
             return account;
         }
 
-        public async Task<int> DeclineRequest(int id)
-        {
-
-            var request = _context.AccountCreationRequests.First(a => a.Id == id);
-            request.Approved = false;
-            var result = await _context.SaveChangesAsync();
-
-            return result;
-        }
     }
 }
