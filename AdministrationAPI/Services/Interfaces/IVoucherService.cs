@@ -16,5 +16,7 @@ namespace AdministrationAPI.Services.Interfaces
         public Task<Voucher> RedeemVoucher(User user, string code);
         public Task<Voucher> VoidVoucher(string code);
         public Task<List<VoucherDataResponse>> GetVouchers(string username);
+        public Task<Voucher> GetVoucherById(int id);
+
     }
 }

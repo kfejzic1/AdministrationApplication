@@ -153,5 +153,11 @@ namespace AdministrationAPI.Services
             }
             return response;
         }
+
+        public async Task<Voucher> GetVoucherById(int id)
+        {
+            var voucher = _context.Vouchers.FirstOrDefault(v => v.Id == id);
+            return voucher;
+        }
     }
 }
