@@ -7,9 +7,9 @@ namespace AdministrationAPI.Services.Interfaces
     {
         List<AccountCreationRequest> GetUserAccountCreationRequests (string userId);
         Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request);
-        List<Account> GetRequests();
+        List<AccountCreationRequest> GetAllRequests();
         Task<int> ApproveRequest(int id);
         Task<int> DeclineRequest(int id);
-        List<Account> GetHistory();
+        List<AccountCreationRequest> GetRequestHistory();
     }
 }
