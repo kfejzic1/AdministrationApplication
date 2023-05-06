@@ -7,6 +7,7 @@ namespace AdministrationAPI.Contracts.Responses
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public string? Type { get; set; }
         public bool IsTwoFactorEnabled { get; set; }
         public string AuthenticatorKey { get; set; }
         public bool IsEmailValidated { get; set; }

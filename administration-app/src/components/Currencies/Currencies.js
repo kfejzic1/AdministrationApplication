@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { createCurrency, createExchangeRate, createExchangeTransaction, getAllAcounts, getAllCurrencies, getAllExchangeRates, getUserTransactions } from "../../services/currencyService";
+import { createCurrency, createExchangeRate, createExchangeTransaction, getAllAcounts, getAllCurrencies, getAllExchangeRates, getUserAccounts, getUserTransactions } from "../../services/currencyService";
 
 import { getUser } from "../../services/userService";
 import { getUserByName } from "../../services/userService";
@@ -21,341 +21,8 @@ import { getAllUsers } from "../../services/userService";
 
 export default function Currencies() {
 
-    const dummyCurrencies = [
-        {
-            id: '1',
-            country: 'USA',
-            name: 'Dollar',
-            exchangeRates: [
-                {
-                    id: '1',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '2',
-                    rate: '15',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '2',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '3',
-                    rate: '14.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '3',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '4',
-                    rate: '14',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '4',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '5',
-                    rate: '13.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        },
-        {
-            id: '2',
-            country: 'BiH',
-            name: 'BAM',
-            exchangeRates: [
-                {
-                    id: '5',
-                    inputCurrencyId: '2',
-                    outputCurrencyId: '1',
-                    rate: '13',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '6',
-                    inputCurrencyId: '2',
-                    outputCurrencyId: '3',
-                    rate: '12.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '7',
-                    inputCurrencyId: '2',
-                    outputCurrencyId: '4',
-                    rate: '12',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '8',
-                    inputCurrencyId: '2',
-                    outputCurrencyId: '5',
-                    rate: '11.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        },
-        {
-            id: '3',
-            country: 'UK',
-            name: 'GBP',
-            exchangeRates: [
-                {
-                    id: '8',
-                    inputCurrencyId: '3',
-                    outputCurrencyId: '1',
-                    rate: '11',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '10',
-                    inputCurrencyId: '3',
-                    outputCurrencyId: '2',
-                    rate: '10.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '11',
-                    inputCurrencyId: '3',
-                    outputCurrencyId: '4',
-                    rate: '10',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '12',
-                    inputCurrencyId: '3',
-                    outputCurrencyId: '5',
-                    rate: '9.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        },
-        {
-            id: '4',
-            country: 'China',
-            name: 'YEN',
-            exchangeRates: [
-                {
-                    id: '13',
-                    inputCurrencyId: '4',
-                    outputCurrencyId: '1',
-                    rate: '9',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '14',
-                    inputCurrencyId: '4',
-                    outputCurrencyId: '2',
-                    rate: '8.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '15',
-                    inputCurrencyId: '4',
-                    outputCurrencyId: '3',
-                    rate: '8',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '16',
-                    inputCurrencyId: '4',
-                    outputCurrencyId: '5',
-                    rate: '7.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        },
-        {
-            id: '5',
-            country: 'EU',
-            name: 'EUR',
-            exchangeRates: [
-                {
-                    id: '17',
-                    inputCurrencyId: '5',
-                    outputCurrencyId: '1',
-                    rate: '7',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '18',
-                    inputCurrencyId: '5',
-                    outputCurrencyId: '2',
-                    rate: '6.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '19',
-                    inputCurrencyId: '5',
-                    outputCurrencyId: '3',
-                    rate: '6',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '20',
-                    inputCurrencyId: '5',
-                    outputCurrencyId: '4',
-                    rate: '5.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        },
-        {
-            id: '6',
-            country: 'Australia',
-            name: 'AUD',
-            exchangeRates: [
-                {
-                    id: '1',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '2',
-                    rate: '5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '2',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '3',
-                    rate: '4.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '3',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '4',
-                    rate: '4',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '4',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '5',
-                    rate: '3.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        }, {
-            id: '7',
-            country: 'Switzerland',
-            name: 'CHF',
-            exchangeRates: [
-                {
-                    id: '1',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '2',
-                    rate: '3',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '2',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '3',
-                    rate: '2.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '3',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '4',
-                    rate: '2',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-                {
-                    id: '4',
-                    inputCurrencyId: '1',
-                    outputCurrencyId: '5',
-                    rate: '1.5',
-                    startDate: new Date(),
-                    endDate: new Date()
-                },
-
-            ]
-        }
-
-    ]
-
-    var defaultCurrency = {
-        id: '1',
-        country: 'USA',
-        name: 'Dollar',
-        exchangeRates: [
-            {
-                id: '1',
-                inputCurrencyId: '1',
-                outputCurrencyId: '2',
-                rate: '3',
-                startDate: new Date("2022-03-25"),
-                endDate: new Date("2022-06-25")
-            },
-            {
-                id: '2',
-                inputCurrencyId: '1',
-                outputCurrencyId: '3',
-                rate: '2.5',
-                startDate: new Date("2012-03-25"),
-                endDate: new Date("2012-06-25")
-            },
-            {
-                id: '3',
-                inputCurrencyId: '1',
-                outputCurrencyId: '4',
-                rate: '2',
-                startDate: new Date("2002-03-25"),
-                endDate: new Date("2002-06-25")
-            },
-            {
-                id: '4',
-                inputCurrencyId: '1',
-                outputCurrencyId: '5',
-                rate: '1.5',
-                startDate: new Date("1990-03-25"),
-                endDate: new Date("1990-06-25")
-            },
-
-        ]
-    }
-    var dummyExchangeRates = [{
-
-        id: 1,
-        country: 'BIH - USA',
-        name: 'Dollar - BAM',
-        rate: '0.57',
-        startDate: new Date("2022-03-25"),
-        endDate: new Date("2022-06-25")
-
-    }]
     function getStartDate(params) {
-        console.log('params ', params)
+        
         for (let item of currentCurrency.exchangeRates) {
             if (item.outputCurrencyId == params.id)
                 console.log('params ', item.startDate)
@@ -394,6 +61,7 @@ export default function Currencies() {
         fetchCurrentUser();
         fetchAllUsers();
         fetchAllAccounts();
+        fetchUserAccounts();
 
 
     }, []);
@@ -401,28 +69,21 @@ export default function Currencies() {
         name: '',
         accountNumber: ''
     });
-    const [currencies, setCurrencies] = useState(dummyCurrencies);
-    const [exchanges, setExchanges] = useState(dummyExchangeRates);
+    const [currencies, setCurrencies] = useState([]);
+    const [exchanges, setExchanges] = useState([]);
     const [open, setOpen] = useState(false);
     const [openRequests, setOpenRequests] = useState(false);
     const [isValid, setIsValid] = useState(true);
-    const [currentCurrency, setCurrentCurrency] = useState(defaultCurrency)
-    const [inputCurrency, setInputCurrency] = useState(
-        currencies[0].id
-    );
-    const [outputCurrency, setOutputCurrency] = useState(
-        currencies.length == 1 ? currencies[0].id : currencies[1].id
-    );
+    const [currentCurrency, setCurrentCurrency] = useState({})
+    const [inputCurrency, setInputCurrency] = useState('');
+    const [outputCurrency, setOutputCurrency] = useState('');
     const [rate, setRate] = useState();
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
 
     const [amount, setAmount] = useState('');
-    const [transactionCurrency, setTransactionCurrency] = useState(currencies.length == 0 ? {
-        id: '0',
-        country: '',
-        name: ''
-    } : currencies[0]);
+    const [transactionCurrency, setTransactionCurrency] = useState({});
+    const [userTransactionAccount, setUserTransactionAccount] = useState({})
 
     const [transactions, setTransactions] = useState([]);
     const [transactionType, setTransactionType] = useState('');
@@ -430,6 +91,7 @@ export default function Currencies() {
     const [transactionCategory, setTransactionCategory] = useState('');
 
     const [allAccounts, setAllAccounts] = useState([]);
+    const [userAccounts, setUserAccounts] = useState([])
 
     const [sender, setSender] = useState({
         accountNumber: ''
@@ -500,7 +162,7 @@ export default function Currencies() {
     }
     const fetchCurrencies = async () => {
         getAllCurrencies().then(res => {
-            console.log(res);
+            
             if (res.data.length != 0)
                 setCurrencies(res.data);
         });
@@ -514,13 +176,17 @@ export default function Currencies() {
     }
     const fetchExchangeRates = async () => {
         getAllExchangeRates().then(res => {
-            console.log('exxx ', res)
+            
             if (res.data.length != 0)
                 setExchanges(res.data);
         });
     };
     const fetchUserAccounts = async () => {
-
+        getUserAccounts().then(res => {
+            if (res.data.length != 0) {
+                setUserAccounts(res.data)
+            }
+        })
     }
     const fetchTransactions = async () => {
         getUserTransactions().then(res => {
@@ -615,41 +281,36 @@ export default function Currencies() {
     const onCreateExchangeTransaction = (event) => {
         event.preventDefault();
 
-
-        console.log(selectedUser.owner.name);
-
-        console.log(selectedUser.accountNumber)
-
         const newExchangeTransaction = {
-            amount: amount,
-            currency: transactionCurrency,
+            amount: +amount,
+            currency: userTransactionAccount.currency,
             transactionType: transactionType,
             transactionPurpose: transactionPurpose,
             category: transactionCategory,
             sender: {
-                accountNumber: 'ABC8'
+                accountNumber: userTransactionAccount.accountNumber
             },
             recipient: {
-
                 name: selectedUser.owner.name,
                 accountNumber: selectedUser.accountNumber
-
             }
         }
 
         createExchangeTransaction(newExchangeTransaction).then(res => {
 
-            console.log(res.data.message)
-            if (res.data.message.includes('not available')) {
-                setExchangeUnavailable(true);
-            }
-            else{
-                setExchangeUnavailable(false);
-            }
+            
+            // if (res.data.message.includes('not available')) {
+            //     setExchangeUnavailable(true);
+            // }
+            // else{
+            //     setExchangeUnavailable(false);
+            // }
 
-
+            handleCloseExchangeTransaction()
         })
-        console.log(currentUserNumber.accountNumber)
+        .catch(err => {
+            console.log(err)
+        })
     }
     const onCreateExchange = (event) => {
         event.preventDefault();
@@ -658,7 +319,7 @@ export default function Currencies() {
             const inputCurrencyObj = currencies.find((currency) => currency.id === inputCurrency);
             const outputCurrencyObj = currencies.find((currency) => currency.id === outputCurrency);
 
-            console.log(inputCurrencyObj);
+            
 
             // Find the exchange rate object that matches the input and output currencies
             // const exchangeRate = inputCurrencyObj.exchangeRates.find((rate) => rate.outputCurrencyId === outputCurrencyObj.id);
@@ -673,11 +334,11 @@ export default function Currencies() {
                 startDate: startDate,
                 endDate: endDate
             };
-            console.log(startDate.getFullYear());
-            console.log(startDate.getMonth() + 1);
-            console.log(startDate.getDate());
-            console.log(startDate.getDay() + 1);
-            console.log(startDate.toISOString().slice(0, 10))
+            
+            
+            
+            
+            
             createExchangeRate({
                 inputCurreny: `${inputCurrencyObj.country} (${inputCurrencyObj.name})`,
                 outputCurrency: `${outputCurrencyObj.country} (${outputCurrencyObj.name})`,
@@ -686,7 +347,7 @@ export default function Currencies() {
                 endDate: !endDate ? null : endDate.toISOString().slice(0, 10)
             })
                 .then(res => {
-                    console.log(res);
+                    
                     fetchExchangeRates();
 
                 })
@@ -703,6 +364,10 @@ export default function Currencies() {
     }
     const handleTransactionCurrencyChange = (event) => {
         setTransactionCurrency(event.target.value);
+    }
+
+    const handleUserAccountChange = (event) => {
+        setUserTransactionAccount(event.target.value)
     }
 
     const handleSelectedUserChange = (event) => {
@@ -882,16 +547,16 @@ export default function Currencies() {
                             </Box>
                             <Box sx={{ minWidth: 120, marginTop: 2 }}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Select Currency</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">Select Account</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={transactionCurrency}
-                                        label="Currency"
-                                        onChange={handleTransactionCurrencyChange}
+                                        value={userTransactionAccount}
+                                        label="Your account"
+                                        onChange={handleUserAccountChange}
                                     >
-                                        {currencies.map((currency) => (
-                                            <MenuItem value={currency.id}>{currency.name}({currency.country})</MenuItem>
+                                        {userAccounts.map((acc) => (
+                                            <MenuItem value={acc}>{acc.currency} ({acc.bankName})</MenuItem>
                                         ))}
 
                                     </Select>

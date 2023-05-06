@@ -70,7 +70,8 @@ namespace AdministrationAPI.Services
                 IsTwoFactorEnabled = user.TwoFactorEnabled,
                 AuthenticatorKey = user.AuthenticatorKey,
                 IsEmailValidated = user.EmailConfirmed,
-                IsPhoneValidated = user.PhoneNumberConfirmed
+                IsPhoneValidated = user.PhoneNumberConfirmed,
+                Type = user.Type
             };
         }
 
@@ -124,12 +125,12 @@ namespace AdministrationAPI.Services
 
             var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-            var token = TokenUtilities.CreateToken(authClaims, _configuration);
+            var token = await TokenUtilities.CreateTokenAsync(authClaims, _configuration, _context);
 
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = token
             };
 
         }
@@ -174,12 +175,12 @@ namespace AdministrationAPI.Services
 
             var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-            var token = TokenUtilities.CreateToken(authClaims, _configuration);
+            var token = await TokenUtilities.CreateTokenAsync(authClaims, _configuration, _context);
 
             return new AuthenticationResult
             {
                 Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = token
             };
         }
         public async Task<User> GetUserFromLoginRequest(MobileLoginRequest mobileLoginRequest)
@@ -240,12 +241,12 @@ namespace AdministrationAPI.Services
 
                     var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-                    var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+                    var jwtToken = await TokenUtilities.CreateTokenAsync(authClaims, _configuration, _context);
 
                     return new AuthenticationResult
                     {
                         Success = true,
-                        Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                        Token = token
                     };
                 }
             }
@@ -293,12 +294,12 @@ namespace AdministrationAPI.Services
 
                         var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
 
-                        var jwtToken = TokenUtilities.CreateToken(authClaims, _configuration);
+                        var jwtToken = await TokenUtilities.CreateTokenAsync(authClaims, _configuration, _context);
 
                         return new AuthenticationResult
                         {
                             Success = true,
-                            Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+                            Token = token
                         };
                     }
                 }
@@ -342,12 +343,12 @@ namespace AdministrationAPI.Services
             if (result)
             {
                 var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, _userManager);
-                var token = TokenUtilities.CreateToken(authClaims, _configuration);
+                var token = await TokenUtilities.CreateTokenAsync(authClaims, _configuration, _context);
 
                 return new AuthenticationResult
                 {
                     Success = true,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token)
+                    Token = token
                 };
             }
 
@@ -440,6 +441,16 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
+           
+            if (newUser.Type == null)
+            {
+                newUser.Type = "Person";
+            }
+
+            newUser.EmailConfirmed = true;
+            newUser.PhoneNumberConfirmed = true;
+
+
             IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
             // _userManager.SaveChanges();
 
@@ -486,7 +497,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendConfirmationEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/setPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
@@ -522,7 +533,7 @@ namespace AdministrationAPI.Services
         {
             var user = GetUserByEmail(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = new EmailSender(_configuration);
             await emailSender.SendPasswordResetEmailAsync(email, $"http://siprojekat.duckdns.org:3000/user/resetPassword?token={WebUtility.UrlEncode(token)}&id={user.Id}");
         }
 
@@ -548,13 +559,6 @@ namespace AdministrationAPI.Services
             var token = _context.TokenValidities.FirstOrDefault(x => x.Token.Equals(jwt));
             if (token != null)
                 token.IsValid = false;
-
-            else
-                _context.TokenValidities.Add(new TokenValidity
-                {
-                    Token = jwt,
-                    IsValid = false
-                });
 
             await _context.SaveChangesAsync();
         }

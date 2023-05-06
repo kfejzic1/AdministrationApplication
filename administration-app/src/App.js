@@ -12,6 +12,8 @@ import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
 import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
 import Voucher from './components/Voucher/Voucher';
+import AccountCreationRequestsPanel from './components/AccountManagement/AccountCreationRequestsPanel';
+
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Currencies from './components/Currencies/Currencies';
@@ -36,7 +38,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount/:category'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -90,10 +92,10 @@ function App() {
 							path='/myaccounts'
 							element={
 								<ProtectedRoute>
-									<B2CAccManagement />
+									<AccountCreationRequestsPanel />
 								</ProtectedRoute>
 							}
-						/>	
+						/>
 
 						<Route
 							path='/currencies'
