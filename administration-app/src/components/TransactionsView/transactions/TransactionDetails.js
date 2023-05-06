@@ -67,6 +67,7 @@ export default function TransactionDetails(arg) {
 						</Button>
 						<Button
 							onClick={() => {
+								console.log('dsafdasf=', JSON.stringify(arg.props));
 								navigate(
 									'/payment/' +
 										arg.props.currency +
@@ -81,12 +82,14 @@ export default function TransactionDetails(arg) {
 										'/' +
 										arg.props.recipient.accountNumber +
 										'/' +
-										arg.props.sender.accountNumber
+										arg.props.sender.accountNumber +
+										'/' +
+										arg.props.category
 								);
 							}}
 						>
 							Reuse
-						</Button> 	
+						</Button>
 					</TableCell>
 				</TableRow>
 			</Table>

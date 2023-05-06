@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,7 @@ namespace AdministrationAPI.Utilities
     public class TokenUtilities
     {
 
-        public static JwtSecurityToken CreateToken(List<Claim> authClaims, IConfiguration configuration)
+        public static async Task<string> CreateTokenAsync(List<Claim> authClaims, IConfiguration configuration, AppDbContext context)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]));
 
@@ -23,7 +24,17 @@ namespace AdministrationAPI.Utilities
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
-            return token;
+            var newToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            context.TokenValidities.Add(new TokenValidity
+            {
+                Id = Guid.NewGuid(),
+                Token = newToken,
+                IsValid = true
+            });
+            await context.SaveChangesAsync();
+
+            return newToken;
         }
 
         public static async Task<List<Claim>> GetAuthClaimsAsync(User user, UserManager<User> userManager)
