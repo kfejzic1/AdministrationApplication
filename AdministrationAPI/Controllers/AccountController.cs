@@ -138,7 +138,7 @@ namespace AdministrationAPI.Controllers
             }
         }
         [Authorize(Roles = "Admin")]
-        [HttpPost("history")]
+        [HttpGet("history")]
         public IActionResult RequestHistory([FromQuery] int id)
         {
             try
