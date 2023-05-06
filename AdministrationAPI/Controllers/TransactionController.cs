@@ -131,5 +131,22 @@ namespace AdministrationAPI.Controllers.Transaction
             return Ok(response);
         }
 
+        [HttpGet("unclaimed")]
+        public async Task<ActionResult<List<TransactionDTO>>> GetUnclaimedTransactions([FromQuery] TransactionQueryOptions options)
+        {
+            List<TransactionDTO> response;
+
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                response = await _transactionService.GetUnclaimedTransactions(ControlExtensions.GetToken(HttpContext), options);
+            }
+            catch (Exception e)
+            {
+                return NotFound("Error: " + e.Message);
+            }
+
+            return Ok(response);
+        }
     }
 }

@@ -1,4 +1,6 @@
 
+using AdministrationAPI.Models;
+
 namespace AdministrationAPI.DTOs
 {
     public class TransactionDTO
@@ -17,5 +19,7 @@ namespace AdministrationAPI.DTOs
         public string senderId { get; set; }
         public TransactionUser Sender { get; set; }
 
+        public string AdminResponsible { get; set; } = string.Empty;
+        public TransactionState State { get; set; }
     }
 }

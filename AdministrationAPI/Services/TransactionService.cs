@@ -9,6 +9,7 @@ using AdministrationAPI.Models.Transaction;
 using System.Security.Authentication;
 using AdministrationAPI.Contracts.Requests.Transactions;
 using System.Globalization;
+using System.Linq;
 
 namespace AdministrationAPI.Services
 {
@@ -56,6 +57,14 @@ namespace AdministrationAPI.Services
             var trans = await response.Content.ReadAsAsync<List<TransactionDTO>>();
             return trans;
         }
+
+        public async Task<List<TransactionDTO>> GetUnclaimedTransactions(string token, TransactionQueryOptions options)
+        {
+            var trans = await GetTransactions(token, options);
+            var filtered = trans.Where(t => t.AdminResponsible == null).ToList();
+            return filtered;
+        }
+
         public async Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token)
         {
             var response = await client.GetAsync("https://processingserver.herokuapp.com/api/Transaction/GroupTransactionsByType?token=" + token);
