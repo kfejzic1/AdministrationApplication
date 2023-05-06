@@ -11,7 +11,7 @@ export function getCurrencys() {
 	});
 }
 export function getAccounts() {
-	return axios(env.API_ENV.url + '/api/Transaction/CreateTransaction?token=', {
+	return axios(env.API_ENV.url + '/api/Exchange/GetUserAccounts', {
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
