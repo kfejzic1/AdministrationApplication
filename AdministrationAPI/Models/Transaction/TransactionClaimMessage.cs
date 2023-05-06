@@ -4,27 +4,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdministrationAPI.Models.Transaction
 {
-    public class TransactionClaim
+    public class TransactionClaimMessage
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
         public int Id { get; set; }
-        public int TransactionId { get; set; }
-        public string Subject { get; set; }
-        public string Description { get; set; }
+        public int TransactionClaimId { get; set; }
+        public string Message { get; set; }
         public DateTime? Created { get; set; }
-        public string? CreatedBy { get; set; }
+        public string UserId { get; set; }
         public DateTime? Modified { get; set; }
         public string? ModifiedBy { get; set; }
-
-        public TransactionClaimStatus Status { get; set; }
-
-        public TransactionClaim()
+        public TransactionClaimMessage()
         {
-            TransactionId = -1;
-            Subject = string.Empty;
-            Description = string.Empty;
-            Status = TransactionClaimStatus.Open;
+            TransactionClaimId = -1;
+            Message = UserId = string.Empty;
         }
     }
 }

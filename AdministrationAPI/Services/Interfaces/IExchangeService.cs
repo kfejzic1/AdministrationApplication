@@ -6,10 +6,10 @@ namespace AdministrationAPI.Services.Interfaces
 {
     public interface IExchangeService
     {
-        public Task<TransactionResponse?> MakeTransaction(TransactionRequest transactionRequest, string token);
-        public Task<CurrencyAccount?> CreateAccount(ExchangeAccountRequest Request, string token);
+        public Task<(string message, TransactionResponse? obj)> MakeTransaction(TransactionRequest transactionRequest, string token);
+        public Task<(string message, CurrencyAccount? obj)> CreateAccount(ExchangeAccountRequest Request, string token);
 
-        public Task<List<CurrencyAccount>?> GetAllAccounts(string token);
-        public Task<List<CurrencyAccount>?> GetUserAccounts(string token);
+        public Task<(string message, List<CurrencyAccount>? obj)> GetAllAccounts(string token);
+        public Task<(string message,List<CurrencyAccount>? obj)> GetUserAccounts(string token);
     }
 }
