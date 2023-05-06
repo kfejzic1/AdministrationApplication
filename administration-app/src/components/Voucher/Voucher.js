@@ -361,17 +361,6 @@ const Voucher = () => {
 											<TableCell align='left'>{statusV(voucher.voucherStatusId)}</TableCell>
 											<TableCell align='center'>
 												<ButtonGroup variant='text' aria-label='text button group'>
-													<Button
-														title='Edit'
-														size='small'
-														className={`${classes.button}`}
-														variant='outline'
-														onClick={() => {
-															handleUpdateDialogOpen(voucher);
-														}}
-													>
-														<EditIcon></EditIcon>
-													</Button>
 													{isTrueSt(statusV(voucher.voucherStatusId))?(
 															<Button 
 															disabled
