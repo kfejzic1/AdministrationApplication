@@ -109,7 +109,7 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                
-                var result = _accountService.GetRequests();
+                var result = _accountService.GetAllRequests();
 
                 return Ok(result);
             }
@@ -138,24 +138,6 @@ namespace AdministrationAPI.Controllers
             }
         }
         [Authorize(Roles = "Admin")]
-        [HttpPost("decline")]
-        public IActionResult DeclineRequest([FromQuery] int id)
-        {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-
-                var result = _accountService.DeclineRequest(id);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
-                return StatusCode(500, ex.Message);
-            }
-        }
-        [Authorize(Roles = "Admin")]
         [HttpPost("history")]
         public IActionResult RequestHistory([FromQuery] int id)
         {
@@ -163,7 +145,7 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
-                var result = _accountService.GetHistory();
+                var result = _accountService.GetRequestHistory();
 
                 return Ok(result);
             }
