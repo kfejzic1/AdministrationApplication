@@ -193,7 +193,7 @@ namespace AdministrationAPI.Data
             users.ForEach(u => userRoles.Add(new IdentityUserRole<string>
             {
                 UserId = u.Id,
-                RoleId = roles.First(q => q.Name == "User").Id
+                RoleId = roles.First(q => q.Name == "Admin").Id
             }));
 
 
