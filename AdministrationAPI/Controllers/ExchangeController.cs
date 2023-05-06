@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System;
 using System.Collections.Generic;
 
 namespace AdministrationAPI.Controllers
@@ -63,7 +64,7 @@ namespace AdministrationAPI.Controllers
                 var response = await _exchangeService.GetUserAccounts(token);
                 if (response.obj != null)
                     return Ok(response.obj);
-                else if (response.message != "")
+                else if(response.message!="")
                     return BadRequest(response.message);
                 else return BadRequest("Failed");
             }
@@ -113,7 +114,7 @@ namespace AdministrationAPI.Controllers
                     if (header.Key.CompareTo("Authorization") == 0)
                         token = header.Value;
                 }
-                var response = await _exchangeService.MakeTransaction(transactionRequest, token);
+              var response=  await _exchangeService.MakeTransaction(transactionRequest,token);
                 if (response.obj != null)
                     return Ok(response.obj);
                 else if (response.message != "")

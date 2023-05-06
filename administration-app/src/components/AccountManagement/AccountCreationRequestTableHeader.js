@@ -37,11 +37,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const headCells = [
 	{
-		id: 'account-number',
+		id: 'account-creation-id',
 		visible: true,
 		numeric: false,
 		disablePadding: false,
-		label: 'Account number',
+		label: 'Account Creation Request ID',
 	},
 	{
 		id: 'description',
@@ -59,8 +59,8 @@ const headCells = [
 		id: 'status',
 		numeric: false,
 		disablePadding: false,
-		label: 'Status'
-	}
+		label: 'Status',
+	},
 ];
 
 const tableTheme = createTheme({
@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function AccTableHead() {
+export default function AccountCreationRequestTableHeader() {
 	const classes = useStyles();
 	return (
 		<ThemeProvider theme={tableTheme}>
@@ -117,8 +117,7 @@ export default function AccTableHead() {
 							key={headCell.id}
 							align={headCell.numeric ? 'right' : 'left'}
 							padding={headCell.disablePadding ? 'none' : 'normal'}
-							width={headCell.label === 'Account number' ? '4%' : '15%'}
-						>
+							width={headCell.label === 'Account number' ? '4%' : '15%'}>
 							{headCell.label}
 						</TableCell>
 					))}

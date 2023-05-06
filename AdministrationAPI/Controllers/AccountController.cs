@@ -70,7 +70,7 @@ namespace AdministrationAPI.Controllers
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
 
-                var accounts = _accountService.GetUserAccounts(userId);
+                var accounts = _accountService.GetUserAccountCreationRequests(userId);
 
                 return Ok(accounts);
             }
@@ -82,15 +82,16 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("user-account-create")]
-        public async Task<IActionResult> CreateUserAccount([FromBody] UserAccountCreateRequest request)
+        public async Task<IActionResult> CreateUserAccount([FromBody] AccountCreationRequestCreateRequest request)
         {
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 request.UserId = userId;
+                request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
 
-                var result = await _accountService.CreateUserAccount(request);
+                var result = await _accountService.CreateUserAccountCreationRequest(request);
 
                 return Ok(result);
             }
@@ -100,5 +101,78 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("requests")]
+        public IActionResult ListRequests()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+               
+                var result = _accountService.GetRequests();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("approve")]
+        public IActionResult ApproveRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.ApproveRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("decline")]
+        public IActionResult DeclineRequest([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.DeclineRequest(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("history")]
+        public IActionResult RequestHistory([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.GetHistory();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

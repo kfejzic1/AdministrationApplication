@@ -46,7 +46,8 @@ export default function VendorDetails() {
 				margin: '25px',
 				backgroundColor: '#F5F5F5',
 				height: '100%',
-			}}>
+			}}
+		>
 			<div
 				style={{
 					backgroundColor: '##ffffff00',
@@ -54,7 +55,8 @@ export default function VendorDetails() {
 					borderRadius: '5px',
 					width: '100%',
 					textAlign: 'center',
-				}}>
+				}}
+			>
 				<div style={{ marginBottom: '10px' }}>
 					<Typography variant='h4' gutterBottom style={{ marginTop: '3%', color: 'black', fontWeight: 'bold' }}>
 						{vendor.name}
@@ -73,7 +75,7 @@ export default function VendorDetails() {
 				</div>
 					*/}
 			</div>
-			<PaymentTermsBasicInfo vendorName={vendor.name} />
+			<PaymentTermsBasicInfo vendorName={vendor.name} vendorId={params.id} />
 			<VendorLocationPanel />
 		</Paper>
 	);

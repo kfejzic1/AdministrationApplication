@@ -19,6 +19,13 @@ namespace AdministrationAPI.Services
         {
             if (currencyRequest != null)
             {
+                Currency existingCurrency = await _context.Currencies.FirstOrDefaultAsync(c => c.Country == currencyRequest.Country && c.Name == currencyRequest.Name);
+
+                if (existingCurrency != null)
+                {
+                    return;
+                }
+
                 Currency currency = new Currency
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -41,6 +48,17 @@ namespace AdministrationAPI.Services
                 Currency inputCurrency = await _context.Currencies.FirstOrDefaultAsync(c => c.Name == inputCurrencyName);
                 Currency outputCurrency = await _context.Currencies.FirstOrDefaultAsync(c => c.Name == outputCurrencyName);
 
+                ExchangeRate existingExchangeRate = await _context
+                    .ExchangeRates
+                    .Include(er => er.InputCurrency)
+                    .Include(er => er.OutputCurrency)
+                    .FirstOrDefaultAsync(er => er.InputCurrency.Equals(inputCurrency) && er.OutputCurrency.Equals(outputCurrency));
+
+                if (existingExchangeRate != null)
+                {
+                    return;
+                }
+
                 ExchangeRate exchangeRate = new ExchangeRate
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -51,7 +69,18 @@ namespace AdministrationAPI.Services
                     Rate = exchangeRateRequest.Rate
                 };
 
+                ExchangeRate exchangeRateReciprocal = new ExchangeRate
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    InputCurrency = outputCurrency,
+                    OutputCurrency = inputCurrency,
+                    StartDate = exchangeRateRequest.StartDate,
+                    EndDate = exchangeRateRequest.EndDate,
+                    Rate = 1 / exchangeRate.Rate
+                };
+
                 await _context.AddAsync(exchangeRate);
+                await _context.AddAsync(exchangeRateReciprocal);
                 await _context.SaveChangesAsync();
             }
         }

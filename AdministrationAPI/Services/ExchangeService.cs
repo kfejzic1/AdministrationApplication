@@ -19,7 +19,7 @@ namespace AdministrationAPI.Services
         {
             _context = context;
         }
-        public async Task<(string message, CurrencyAccount? obj)> CreateAccount(ExchangeAccountRequest request, string token)
+        public async Task<(string message,CurrencyAccount?obj)> CreateAccount(ExchangeAccountRequest request, string token)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace AdministrationAPI.Services
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var userTransfer = await response.Content.ReadFromJsonAsync<CurrencyAccount>();
-                    return ("", userTransfer);
+                    return ("",userTransfer);
                 }
                 else
                 {
@@ -44,11 +44,11 @@ namespace AdministrationAPI.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return (ex.Message, null);
+                return (ex.Message,null);
             }
 
         }
-        public async Task<(string message, List<CurrencyAccount>? obj)> GetUserAccounts(string token)
+        public async Task<(string message,List<CurrencyAccount>? obj)> GetUserAccounts(string token)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace AdministrationAPI.Services
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var userTransfer = await response.Content.ReadFromJsonAsync<List<CurrencyAccount>>();
-                    return ("", userTransfer);
+                    return ("",userTransfer);
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace AdministrationAPI.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return (ex.Message, null);
+                return (ex.Message,null);
             }
 
         }
@@ -102,7 +102,7 @@ namespace AdministrationAPI.Services
             }
 
         }
-        public async Task<(string message, TransactionResponse? obj)> MakeTransaction(TransactionRequest transactionRequest, string token)
+        public async Task<(string message,TransactionResponse? obj)> MakeTransaction(TransactionRequest transactionRequest, string token)
         {
             try
             {
@@ -119,8 +119,8 @@ namespace AdministrationAPI.Services
                 }
                 else
                 {
-                    var g = await response.Content.ReadAsStringAsync();
-                    return (g.Substring(12, g.Length - 14), null);
+                    var g=await response.Content.ReadAsStringAsync();
+                    return (g.Substring(12, g.Length - 14),null);
                 }
             }
             catch (Exception ex)

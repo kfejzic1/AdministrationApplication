@@ -15,6 +15,7 @@ namespace AdministrationAPI.Contracts.Requests.Vendors
         public string? CreatedBy { get; set; }
         public DateTime? Modified { get; set; }
         public string? ModifiedBy { get; set; }
+        public int VendorId { get; set; }
 
         public PaymentTermRequest() 
         {

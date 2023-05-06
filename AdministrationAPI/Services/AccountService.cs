@@ -20,9 +20,9 @@ namespace AdministrationAPI.Services
         {
             _context = context;
         }
-        public List<Account> GetUserAccounts(string userId)
+        public List<AccountCreationRequest> GetUserAccountCreationRequests (string userId)
         {
-            var accounts = _context.Accounts.Where(a => a.UserId == userId).ToList();
+            var accounts = _context.AccountCreationRequests.Where(a => a.UserId == userId).ToList();
             accounts.ForEach(a =>
             {
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
@@ -32,25 +32,56 @@ namespace AdministrationAPI.Services
             return accounts;
         }
 
-        public async Task<Account> CreateUserAccount(UserAccountCreateRequest request)
+        public List<Account> GetRequests()
         {
-            var newAccount = new Account
+            var accounts = _context.Accounts.Where(a => a.Approved == null).ToList();
+            return accounts;
+        }
+
+        public List<Account> GetHistory()
+        {
+            var accounts = _context.Accounts.Where(a => a.Approved != null).ToList();
+            return accounts;
+        }
+
+        public async Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request)
+        {
+            var newAccountCreationRequest = new AccountCreationRequest
             {
                 UserId = request.UserId,
-                AccountNumber = request.AccountNumber,
                 CurrencyId = request.CurrencyId,
                 Description = request.Description,
                 RequestDocumentPath = request.RequestDocumentPath,
                 Approved = request.Approved
             };
 
-            _context.Accounts.Add(newAccount);
+            _context.AccountCreationRequests.Add(newAccountCreationRequest);
 
             await _context.SaveChangesAsync();
 
-            newAccount.Currency = _context.Currencies.FirstOrDefault(c => c.Id == newAccount.CurrencyId);
+            newAccountCreationRequest.Currency = _context.Currencies.FirstOrDefault(c => c.Id == newAccountCreationRequest.CurrencyId);
 
-            return newAccount;
+            return newAccountCreationRequest;
+        }
+
+        public async Task<int> ApproveRequest(int id)
+        {
+           
+           var account = _context.Accounts.First(a => a.Id == id);
+           account.Approved = true;
+           var result = await _context.SaveChangesAsync();
+
+            return result;
+        }
+
+        public async Task<int> DeclineRequest(int id)
+        {
+
+            var account = _context.Accounts.First(a => a.Id == id);
+            account.Approved = false;
+            var result = await _context.SaveChangesAsync();
+
+            return result;
         }
     }
 }

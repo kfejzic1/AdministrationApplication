@@ -1,7 +1,10 @@
 version: "3.9"
 services:
   si:
-    image: evlahovlja1/siprojekat:latest
+    build: 
+      context: ./
+      dockerfile: Dockerfile.prod
+    image: siprojekat:latest
     container_name: siprojekat
     ports:
       - "3000:3000"
