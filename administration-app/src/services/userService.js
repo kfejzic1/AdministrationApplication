@@ -101,7 +101,7 @@ export function getAllAccounts(id) {
 	});
 }
 
-export function createAccount(data) {
+export function createAccountCreationRequest(data) {
 	return axios(env.API_ENV.url + '/api/Account/user-account-create', {
 		method: 'POST',
 		data: JSON.stringify(data),

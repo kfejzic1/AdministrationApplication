@@ -227,10 +227,9 @@ const AccountCreationRequestsPanel = () => {
 				currencyId: currency_id,
 				description: description,
 				requestDocumentPath: files ? '/user-requests/' : null,
-				approved: false,
 			};
 
-			createAccount(objectData).then(res => {
+			createAccountCreationRequest(objectData).then(res => {
 				setAccounts([...accounts, res.data]);
 				setSelectedCurrency(currencies[0].name);
 				setDescription(null);
