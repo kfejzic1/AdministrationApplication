@@ -6,6 +6,7 @@ using AdministrationAPI.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Data;
 
 
@@ -14,12 +15,12 @@ namespace AdministrationAPI.Services
     public class AccountService : IAccountService
     {
         private readonly AppDbContext _context;
-
         public AccountService(
             AppDbContext context
         )
         {
             _context = context;
+            
         }
         public List<AccountCreationRequest> GetUserAccountCreationRequests (string userId)
         {
@@ -93,17 +94,27 @@ namespace AdministrationAPI.Services
         public async Task<Account?> ApproveRequest(int id)
         {
            
-           var request = _context.AccountCreationRequests.First(a => a.Id == id);
+            var request = _context.AccountCreationRequests.First(a => a.Id == id);
             if (request.Approved == true) return null;
-           request.Approved = true;
-           await _context.SaveChangesAsync();
+            request.Approved = true;
+            await _context.SaveChangesAsync();
+            Guid guid = Guid.NewGuid();
+            string accNumber = guid.ToString();
+            while (true)
+            {
+                if (_context.Accounts.FirstOrDefault(a => a.AccountNumber == accNumber) == null)
+                    break;
+                guid = Guid.NewGuid();
+                accNumber = guid.ToString();
+            }
 
             var account = new Account
             {
                 UserId = request.UserId,
                 CurrencyId = request.CurrencyId,
                 Description = request.Description,
-                RequestId = request.Id
+                RequestId = request.Id,
+                AccountNumber = accNumber
                
             };
           
