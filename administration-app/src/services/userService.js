@@ -111,3 +111,14 @@ export function createAccount(data) {
 		},
 	});
 }
+
+
+export function getValidateToken(data) {
+	return axios(env.API_ENV.url + '/api/User/validate-token?token=' + data, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

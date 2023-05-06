@@ -38,6 +38,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import EditIcon from '@mui/icons-material/Edit';
 import SellIcon from '@mui/icons-material/Sell';
+import { TablePagination } from '@mui/material';
+
 
 const theme = createTheme({
 	components: {
@@ -152,12 +154,15 @@ const Voucher = () => {
 	const [currencys, setCurrecys] = useState([]);
 	const [openCreateDialog, setOpenCreateDialog] = useState(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-	const [selectedUser, setSelectedUser] = useState({});
+	const [selectedVoucher, setSelectedVoucher] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openSnackbarVoucher, setOpenSnackbarVoucher] = useState(false);
 	const [openSnackbarVoucherVoid, setOpenSnackbarVoucherVoid] = useState(false);
 	const [change, setChange] = useState(false);
 	const [dense, setDense] = useState(false);
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(5);
+
 
 	useEffect(() => {
 		getAllVouchers().then(response => {
@@ -190,7 +195,6 @@ const Voucher = () => {
 	};
 
 	const handleCreateVoucher = event => {
-
 		event.preventDefault();
 		const form = event.target;
 		var noVoucher1 = form.NumberOfVouchers.value;
@@ -198,6 +202,7 @@ const Voucher = () => {
 		var amou = form.amount.value;
 		var amountNumber = amou* 1;
 		var string1 = form.currency.value;
+
 		var b = currencys.filter(v => v.name == string1)[0];
 		console.log("bbb ", b.id);
 		createVoucher(noVoucherNumber,amountNumber,b.id).then(response => {
@@ -210,9 +215,14 @@ const Voucher = () => {
 
 
 
-	const handleUpdateDialogOpen = user => {
-		setSelectedUser(user);
+	const handleUpdateDialogOpen = voucher => {
+		setSelectedVoucher(voucher);
 		setOpenUpdateDialog(true);
+	};
+
+	const handleUpdateDialogClose = () => {
+		setSelectedVoucher({});
+		setOpenUpdateDialog(false);
 	};
 
 	const handleSnackbarVoucherClose = () => {
@@ -262,6 +272,7 @@ const Voucher = () => {
 	}
 
 	const statusV = (a) => {
+		//this functions returs witch status is a voucher
 		/*new VoucherStatus { Id = "1", Status = "ISSUED" },
                    new VoucherStatus { Id = "2", Status = "ACTIVE" },
                    new VoucherStatus { Id = "3", Status = "REDEEMED" },
@@ -273,21 +284,33 @@ const Voucher = () => {
 		return "INVALID STATUS";
 	} 
 	const currencyV = (a) => {
+		//
 		var b=currencys.filter(v => v.id===a)[0]
 		if(b)
 		return b.name;
-		else return "BAM";	
+		else return "NOT DEFINED";	
 	}
 
 	const isTrueSt = (a) => {
-		if(a === "REDEEMED" || a === "ISSUED" || a ==="VOID") return true;
+		if(a === "REDEEMED" || a ==="VOID") return true;
 		else return false
 	} 
 	const is1or2 = (a) => {
+		//it return if a status is redeemed active or issued on a nubmer that returns get and it 
+		//
 		if( a === "1" || a === "2") return true;
 		return false;
-
 	}
+
+	  
+		const handleChangePage = (event, newPage) => {
+		  setPage(newPage);
+		};
+	  
+		const handleChangeRowsPerPage = (event) => {
+		  setRowsPerPage(+event.target.value);
+		  setPage(0);
+		};
 	
 	return (
 		<div>
@@ -319,7 +342,7 @@ const Voucher = () => {
 							>
 								<VoucherTableHead onClick={handleCreateDialogOpen} />
 								<TableBody>
-									{vouchers.map(voucher => (
+									{vouchers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(voucher => (
 										<TableRow
 											key={voucher.id}
 											classes={{
@@ -350,7 +373,8 @@ const Voucher = () => {
 														<EditIcon></EditIcon>
 													</Button>
 													{isTrueSt(statusV(voucher.voucherStatusId))?(
-															<Button
+															<Button 
+															disabled
 															size='small'
 															variant='outline'
 															className={`${classes.button}`}															
@@ -358,17 +382,17 @@ const Voucher = () => {
 														<RedeemIcon style={{ visibility: 'hidden' }} />
 														</Button>
 													):(
-													<Button
-														size='small'
-														title='Redeem code'
-														className={`${classes.button}`}
-														variant='outline'
-														onClick={() => {
-															handleRedeemVoucher(voucher);
-														}}
-													>
-														<RedeemIcon></RedeemIcon>
-													</Button>
+														<Button
+															size='small'
+															title='Redeem code'
+															className={`${classes.button}`}
+															variant='outline'
+															onClick={() => {
+																handleRedeemVoucher(voucher);
+															}}
+														>
+															<RedeemIcon></RedeemIcon>
+														</Button>
 													)}
 													{is1or2(voucher.voucherStatusId)?(
 													<Button
@@ -385,6 +409,7 @@ const Voucher = () => {
 													):(
 														<Button
 														size='small'
+														disabled
 														className={`${classes.button}`}
 														variant='outline'														
 													>
@@ -398,6 +423,15 @@ const Voucher = () => {
 								</TableBody>
 							</Table>
 						</TableContainer>
+						<TablePagination
+							rowsPerPageOptions={[5, 10, 25]}
+							component='div'
+							count={vouchers.length}
+							rowsPerPage={rowsPerPage}
+							page={page}
+							onPageChange={handleChangePage}
+							onRowsPerPageChange={handleChangeRowsPerPage}
+						/>
 					</ThemeProvider>
 				</Paper>
 				<ThemeProvider theme={theme}>

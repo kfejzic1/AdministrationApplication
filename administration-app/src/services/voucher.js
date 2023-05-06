@@ -4,7 +4,7 @@ import { env } from '../config/env';
 
 
 export function getAllCurrencies() {
-	return axios(env.API_ENV.testUrl + '/api/exchangerate/currency', {
+	return axios(env.API_ENV.url + '/api/exchangerate/currency', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -14,8 +14,7 @@ export function getAllCurrencies() {
 }
 
 export function getAllVouchers() {
-	console.log("Da li se poziva ova funkcija");
-	return axios(env.API_ENV.testUrl + '/api/Voucher/get-vouchers', {
+	return axios(env.API_ENV.url + '/api/Voucher/get-vouchers', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -32,8 +31,7 @@ export function createVoucher(no, am, cu) {
 		"currencyId": cu
 	
 	}
-	console.log("Data ovdje " + JSON.stringify(data));
-	return axios(env.API_ENV.testUrl + '/api/Voucher/create-voucher', {
+	return axios(env.API_ENV.url + '/api/Voucher/create-voucher', {
 		method: 'POST',
 		data: JSON.stringify(data),
 		headers: {
@@ -44,8 +42,7 @@ export function createVoucher(no, am, cu) {
 }
 
 export function changeVoucherStatus(data) {
-	console.log("data unutar funkcije " + JSON.stringify(data));
-	return axios(env.API_ENV.testUrl + '/api/Voucher/change-voucher-status', {
+	return axios(env.API_ENV.url + '/api/Voucher/change-voucher-status', {
 		method: 'POST',
 		data: JSON.stringify(data),
 		headers: {
