@@ -21,6 +21,7 @@ import ClaimTableHead from './ClaimTableHead'
 import Loader from '../loaderDialog/Loader';
 import ClaimTableToolbar from './ClaimTableToolbar';
 import ClaimModal from './claimModal/ClaimModal';
+import { getUserClaims } from '../../services/transactionClaimService';
 
 const theme = createTheme({
 	components: {
@@ -143,9 +144,12 @@ export default function ClaimTable() {
 	const handleCloseClaim = () => setOpenClaim(false);
 	
 	const fetchData = async () => {
-		// TO CONNECT WITH BE 
+		getUserClaims().then(res => {
+			console.log(res.data);
+			setClaims(res.data);
+		});
 		// MOCK:
-		setClaims([{id: 1, status:'OPEN', modified: 'Juce', subject: 'Nije proso cener'},{id: 2, status:'OPEN', modified: 'Danas', subject: 'Nije prosla cvaja'}])
+		//setClaims([{transactionId: 1, status:'OPEN', modified: 'Juce', subject: 'Nije proso cener'},{id: 2, status:'OPEN', modified: 'Danas', subject: 'Nije prosla cvaja'}])
 	}
 
 	useEffect(() => {
@@ -230,7 +234,7 @@ export default function ClaimTable() {
 									{stableSort(claims, getComparator(order, orderBy))
 										.slice(page * rowsPerPage, (page + 1) * rowsPerPage * rowsPerPage)
 										.map((row, index) => {
-											const isItemSelected = isSelected(row.id);
+											const isItemSelected = isSelected(row.transactionId);
 											const labelId = `enhanced-table-checkbox-${index}`;
 
 											return (
@@ -240,17 +244,17 @@ export default function ClaimTable() {
 														selected: classes.tableRowSelected,
 													}}
 													hover
-													onClick={event => handleClick(event, row.id)}
+													onClick={event => handleClick(event, row.transactionId)}
 													//role='checkbox'
 													aria-checked={isItemSelected}
 													tabIndex={-1}
-													key={row.id}
+													key={row.transactionId}
 													selected={isItemSelected}
 													sx={{ cursor: 'pointer' }}>
-													<TableCell component='th' id={labelId} scope='row'>{row.id}</TableCell>
+													<TableCell component='th' id={labelId} scope='row'>{row.transactionId}</TableCell>
 													<TableCell align='left'>{row.subject}</TableCell>
-													<TableCell align='left'>{row.modified}</TableCell>
-													<TableCell align='left'>{row.status}</TableCell>
+													<TableCell align='left'>{row.modified===null?row.created.split("T")[0]:row.modified.split("T")[0]}</TableCell>
+													<TableCell align='left'>{row.status===0?'Open':'Closed'}</TableCell>
 												</TableRow>
 											);
 										})}
