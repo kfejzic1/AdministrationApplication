@@ -85,16 +85,24 @@ const useStyles = makeStyles((theme) => ({
   },
   chatModalMessageUser: {
     alignSelf: "flex-end",
-    backgroundColor: "#eee",
+    backgroundColor: "#0084ff",
+    color: "white",
   },
   chatModalMessageAgent: {
     alignSelf: "flex-start",
-    backgroundColor: "#0084ff",
-    color: "white",
+    backgroundColor: "#eee",
   },
   chatModalMessageText: {
     fontSize: "14px",
   },
+  agentLink: {
+    color: "black"
+  },
+  
+  userLink: {
+    color: "white"
+  }
+  
 }));
 
 
@@ -130,13 +138,13 @@ export default function ClaimModal(props) {
   };
   const [messages, setMessages] = useState([
     {
-      text: "Zdravo, imam problem sa transakcijom koju sam napravila danas. Broj transakcije je : 123123123. Status transakcije je poslano, ali pare nisu stigle.",
+      text: "Dobar dan, molimo vas da opišete detaljno problem koji imate.",
       isUser: false,
-      name: "Ines",
+      name: "Admin",
       file:null
-    },{text: "Ova transakcija mi je hitna pa bi trebala biti poslana što prije.",
+    },{text: "Nakon što opišete problem agent će vam se javiti u najkraćem mogućem roku.",
     isUser:false,
-    name:"Ines",
+    name:"Admin",
     file:null
   }
    ]);
@@ -259,12 +267,10 @@ export default function ClaimModal(props) {
            <div
            key={index}
            className={`${classes.chatModalMessage} ${
-             message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent
-           }`}
-         >
-  <a href={URL.createObjectURL(message.file)} download>
+             message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent}`}>
+ <b><a className={message.isUser ? classes.userLink : classes.agentLink} href={URL.createObjectURL(message.file)} download>
     {message.file.name}
-  </a></div>
+  </a></b></div>
 )}
         </div>
       </div>
