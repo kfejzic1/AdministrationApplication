@@ -90,10 +90,11 @@ namespace AdministrationAPI.Services
             return newAccountCreationRequest;
         }
 
-        public async Task<Account> ApproveRequest(int id)
+        public async Task<Account?> ApproveRequest(int id)
         {
            
            var request = _context.AccountCreationRequests.First(a => a.Id == id);
+            if (request.Approved == true) return null;
            request.Approved = true;
            await _context.SaveChangesAsync();
 
