@@ -95,6 +95,50 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [HttpGet("user/claims")]
+        public IActionResult GetTransactionClaimsForUser()
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.GetTransactionClaims(userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("claim/message")]
+        public IActionResult AddMessageForTransactionClaim([FromBody] ClaimMessageCreateRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.CreateTransactionClaimMessage(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("claim/{id}")]
+        public IActionResult GetTransactionClaim(int id)
+        {
+            try
+            {
+                return Ok(_transactionService.GetTransactionClaim(id));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("group/type")]
         public async Task<ActionResult<List<TransactionTransfer>>> GetGroupedTransactionsByType()
         {
