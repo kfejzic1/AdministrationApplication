@@ -35,13 +35,13 @@ namespace AdministrationAPI.Services
 
         public List<AccountCreationRequest> GetAllRequests()
         {
-            var requests = _context.AccountCreationRequests.Where(a => a.Approved == null).ToList();
+            var requests = _context.AccountCreationRequests.Where(a => a.Approved == false).ToList();
             return requests;
         }
 
         public List<AccountCreationRequest> GetRequestHistory()
         {
-            var requests = _context.AccountCreationRequests.Where(a => a.Approved != null).ToList();
+            var requests = _context.AccountCreationRequests.Where(a => a.Approved == true).ToList();
             return requests;
         }
 
