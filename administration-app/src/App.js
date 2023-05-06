@@ -18,7 +18,6 @@ import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
-import ClaimTable from './components/claims/ClaimTable';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -38,15 +37,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/transaction/claims'
-							element={
-								<ProtectedRoute>
-									<ClaimTable />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount/:category'
 							element={
 								<ProtectedRoute>
 									<Payment />
