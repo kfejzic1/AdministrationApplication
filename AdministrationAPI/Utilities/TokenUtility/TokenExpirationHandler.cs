@@ -1,4 +1,5 @@
-﻿using AdministrationAPI.Models;
+﻿using AdministrationAPI.Data;
+using AdministrationAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,6 +12,7 @@ namespace AdministrationAPI.Utilities.TokenUtility
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _config;
+        private readonly AppDbContext _context;
         //private readonly UserManager<User> _userManager;
 
 
@@ -50,9 +52,9 @@ namespace AdministrationAPI.Utilities.TokenUtility
                     {
                         var authClaims = await TokenUtilities.GetAuthClaimsAsync(user, userManager);
 
-                        var token = TokenUtilities.CreateToken(authClaims, _config);
+                        var token = await TokenUtilities.CreateTokenAsync(authClaims, _config, _context);
 
-                        context.Response.Headers.Append("Bearer", new JwtSecurityTokenHandler().WriteToken(token));
+                        context.Response.Headers.Append("Bearer", token);
                     }
                 }
                 catch (Exception)
