@@ -223,9 +223,9 @@ namespace AdministrationAPI.Data
             // Seed Accounts
             List<Account> accounts = new List<Account>()
             {
-                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3", Approved = true, RequestDocumentPath = "/"}
+                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1"},
+                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2"},
+                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3"}
             };
             builder.Entity<Account>().HasData(accounts);
 
