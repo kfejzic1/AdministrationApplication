@@ -53,7 +53,7 @@ namespace AdministrationAPI.Services
                 CurrencyId = request.CurrencyId,
                 Description = request.Description,
                 RequestDocumentPath = request.RequestDocumentPath,
-                Approved = request.Approved
+                Approved = false
             };
 
             _context.AccountCreationRequests.Add(newAccountCreationRequest);
