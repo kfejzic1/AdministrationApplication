@@ -28,6 +28,11 @@ namespace AdministrationAPI.Services
             {
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
                 a.Currency = new Currency() { Name = name };
+                var user = _context.Users.FirstOrDefault(u => u.Id == a.UserId);
+                if (user != null)
+                {
+                    a.User = user;
+                }
             });
 
             return requests;
@@ -40,6 +45,11 @@ namespace AdministrationAPI.Services
             {
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
                 a.Currency = new Currency() { Name = name };
+                var user = _context.Users.FirstOrDefault(u => u.Id == a.UserId);
+                if (user != null)
+                {
+                    a.User = user;
+                }
             });
             return requests;
         }
@@ -51,6 +61,11 @@ namespace AdministrationAPI.Services
             {
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
                 a.Currency = new Currency() { Name = name };
+                var user = _context.Users.FirstOrDefault(u => u.Id == a.UserId);
+                if (user != null)
+                {
+                    a.User = user;
+                }
             });
             return requests;
         }
