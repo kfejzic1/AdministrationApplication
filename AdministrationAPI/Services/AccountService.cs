@@ -36,12 +36,22 @@ namespace AdministrationAPI.Services
         public List<AccountCreationRequest> GetAllRequests()
         {
             var requests = _context.AccountCreationRequests.Where(a => a.Approved == false).ToList();
+            requests.ForEach(a =>
+            {
+                string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
+                a.Currency = new Currency() { Name = name };
+            });
             return requests;
         }
 
         public List<AccountCreationRequest> GetRequestHistory()
         {
             var requests = _context.AccountCreationRequests.Where(a => a.Approved == true).ToList();
+            requests.ForEach(a =>
+            {
+                string name = _context.Currencies.FirstOrDefault(c => c.Id == a.CurrencyId).Name;
+                a.Currency = new Currency() { Name = name };
+            });
             return requests;
         }
 
