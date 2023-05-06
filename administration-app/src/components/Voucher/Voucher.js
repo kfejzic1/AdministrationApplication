@@ -280,7 +280,7 @@ const Voucher = () => {
 	}
 
 	const isTrueSt = (a) => {
-		if(a === "REDEEMED" || a === "ISSUED") return true;
+		if(a === "REDEEMED" || a === "ISSUED" || a ==="VOID") return true;
 		else return false
 	} 
 	const is1or2 = (a) => {
