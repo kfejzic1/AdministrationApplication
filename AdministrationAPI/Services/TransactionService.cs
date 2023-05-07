@@ -118,9 +118,7 @@ namespace AdministrationAPI.Services
                 Description = request.Description,
                 Created = DateTime.UtcNow,
                 CreatedBy = userId,
-                Status = TransactionClaimStatus.Open
-                CreatedBy = userId,
-                Status = TransactionClaimStatus.Open
+                Status = TransactionClaimStatus.Open,
             };
 
             _appContext.TransactionClaims.Add(transactionClaim);
@@ -135,14 +133,6 @@ namespace AdministrationAPI.Services
             _appContext.TransactionClaimUsers.Add(transactionClaimUser);
             _appContext.SaveChanges();
 
-            var transactionClaimUser = new TransactionClaimUser
-            {
-                TransactionClaimId = transactionClaim.Id,
-                UserId = userId
-            };
-
-            _appContext.TransactionClaimUsers.Add(transactionClaimUser);
-            _appContext.SaveChanges();
 
             //Create bond between contracts and payment terms
             foreach (var documentId in request.DocumentIds)
