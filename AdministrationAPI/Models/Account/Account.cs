@@ -15,7 +15,7 @@ namespace AdministrationAPI.Models
         public Currency Currency { get; set; }
         public string CurrencyId { get; set; }
         public string Description { get; set; }
-        public string RequestDocumentPath { get; set; }
-        public bool? Approved { get; set; }
+        [ForeignKey("AccountCreationRequest")]
+        public int RequestId { get; set; }
     }
 }

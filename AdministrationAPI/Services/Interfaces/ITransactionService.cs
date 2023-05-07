@@ -1,5 +1,6 @@
 using AdministrationAPI.DTOs;
 using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models;
@@ -15,6 +16,9 @@ namespace AdministrationAPI.Services.Interfaces
         Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req);
         int CreateTransactionClaim(ClaimCreateRequest request, string userId);
         Task<List<TransactionTransfer>> GetGroupedTransactionsByCurrency(string token);
+        List<TransactionClaim> GetTransactionClaims(string userId);
+
+        int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId);
         List<TransactionClaim> GetTransactionClaims(string userId);
 
         int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId);

@@ -10,6 +10,7 @@ using System.Security.Authentication;
 using AdministrationAPI.Contracts.Requests.Transactions;
 using System.Globalization;
 using AdministrationAPI.Contracts.Responses;
+using AdministrationAPI.Contracts.Responses;
 
 namespace AdministrationAPI.Services
 {
@@ -118,9 +119,20 @@ namespace AdministrationAPI.Services
                 Created = DateTime.UtcNow,
                 CreatedBy = userId,
                 Status = TransactionClaimStatus.Open
+                CreatedBy = userId,
+                Status = TransactionClaimStatus.Open
             };
 
             _appContext.TransactionClaims.Add(transactionClaim);
+            _appContext.SaveChanges();
+
+            var transactionClaimUser = new TransactionClaimUser
+            {
+                TransactionClaimId = transactionClaim.Id,
+                UserId = userId
+            };
+
+            _appContext.TransactionClaimUsers.Add(transactionClaimUser);
             _appContext.SaveChanges();
 
             var transactionClaimUser = new TransactionClaimUser
@@ -146,6 +158,7 @@ namespace AdministrationAPI.Services
 
             return transactionClaim.Id;
         }
+
 
         #endregion
 
