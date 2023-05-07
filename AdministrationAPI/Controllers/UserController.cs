@@ -684,12 +684,12 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPatch("logout")]
-        public IActionResult Logout([FromQuery] string token)
+        public async Task<IActionResult> LogoutAsync()
         {
             try
             {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-                _userService.InvalidateToken(token);
+                var token = ControlExtensions.GetToken(HttpContext);
+                await _userService.InvalidateToken(token);
 
                 return Ok();
             }
