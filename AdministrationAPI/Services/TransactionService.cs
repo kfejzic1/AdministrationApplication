@@ -185,7 +185,7 @@ namespace AdministrationAPI.Services
         {
             var transactionClaim = _appContext.TransactionClaims.First(trc => trc.Id == id);
             var transactionClaimDocumentsIds = _appContext.TransactionClaimDocuments.Where(trcd => trcd.ClaimId == id).Select(doc => doc.DocumentId).ToList();
-            var transactionClaimDocuments = _appContext.Documents.Where(doc => transactionClaimDocumentsIds.Contains(doc.Id)).Select(doc => doc.UNC).ToList();
+            var transactionClaimDocuments = _appContext.Documents.Where(doc => transactionClaimDocumentsIds.Contains(doc.Id)).ToList();
             var transactionClaimMessages = _appContext.TransactionClaimMessages.Where(trcm => trcm.TransactionClaimId == id).ToList();
             List<TransactionClaimMessageResponse> messageReponses = new List<TransactionClaimMessageResponse>();
             foreach (var message in transactionClaimMessages)
@@ -197,7 +197,7 @@ namespace AdministrationAPI.Services
                     UserId = message.UserId,
                     Message = message.Message,
                     UserName = _appContext.Users.First(user => user.Id == message.UserId).NormalizedUserName,
-                    Documents = _appContext.Documents.Where(doc => documentIds.Contains(doc.Id)).Select(doc => doc.UNC).ToList()
+                    Documents = _appContext.Documents.Where(doc => documentIds.Contains(doc.Id)).ToList()
                 };
                 messageReponses.Add(msgResp);
             }
