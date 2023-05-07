@@ -16,10 +16,10 @@ import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
-import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
-import Claims from './components/Claims/Claims'
+import AdminClaims from './components/AdminClaims/AdminClaims';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -118,7 +118,7 @@ function App() {
 							path='/claims'
 							element={
 								<ProtectedRoute>
-									<Claims />
+									<AdminClaims />
 								</ProtectedRoute>
 							}
 						/>
