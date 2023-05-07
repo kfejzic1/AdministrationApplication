@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
-import { getAllAccounts, getUser, getUserId, createAccount } from '../../services/userService';
+import { getAllAccounts, getUser, getUserId, createAccountCreationRequest } from '../../services/userService';
 import {
 	Button,
 	Dialog,
@@ -270,7 +270,8 @@ const AccountCreationRequestsPanel = () => {
 											size='small'
 											variant='text'
 											endIcon={<CreateIcon />}
-											onClick={handleCreateDialogOpen}>
+											onClick={handleCreateDialogOpen}
+										>
 											Request Account Creation
 										</Button>
 									</Tooltip>
@@ -280,7 +281,8 @@ const AccountCreationRequestsPanel = () => {
 								className={classes.root}
 								sx={{ minWidth: '100%' }}
 								aria-labelledby='tableTitle'
-								size={dense ? 'small' : 'medium'}>
+								size={dense ? 'small' : 'medium'}
+							>
 								<AccountCreationRequestTableHeader onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{accounts.map(account => (
@@ -293,7 +295,8 @@ const AccountCreationRequestsPanel = () => {
 											hover
 											role='checkbox'
 											tabIndex={-1}
-											sx={{ cursor: 'pointer' }}>
+											sx={{ cursor: 'pointer' }}
+										>
 											<TableCell align='left'>{account.id}</TableCell>
 											<TableCell align='left'>{account.description}</TableCell>
 											<TableCell align='left'>{account.currency.name}</TableCell>
@@ -342,7 +345,8 @@ const AccountCreationRequestsPanel = () => {
 								defaultValue={currencies[0].name}
 								onChange={e => {
 									setSelectedCurrency(e.target.value);
-								}}>
+								}}
+							>
 								{currencies.map(currency => {
 									return (
 										<MenuItem value={currency.name} key={currency.name}>
