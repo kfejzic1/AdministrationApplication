@@ -2,6 +2,7 @@
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Models.Voucher;
+using AdministrationAPI.Models.Voucher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,9 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
+
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
         public DbSet<Voucher> Vouchers { get; set; }
