@@ -37,6 +37,9 @@ namespace AdministrationAPI.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
+
         public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
         public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
         public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
@@ -70,7 +73,8 @@ namespace AdministrationAPI.Data
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
             builder.Entity<Voucher>(entity => { entity.ToTable("vou_vouchers"); });
-            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
+            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });         
+            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
             builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
             builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
 
