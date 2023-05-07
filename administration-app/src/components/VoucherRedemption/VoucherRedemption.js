@@ -60,7 +60,7 @@ export default function VoucherRedemption() {
             <div className={styles.flex_column}>
                 {isValid == true && <h1 className={styles.valid_voucher}>Voucher redeemed successfully!</h1>}
                 {isValid == false && <h1 className={styles.invalid_voucher}>Voucher is not valid!</h1>}
-                <Box sx={{ minWidth: 120 }}>
+                <Box sx={{ minWidth: 120 }} className={styles.box}>
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Select account</InputLabel>
                                     <Select
