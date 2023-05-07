@@ -56,7 +56,7 @@ export function createExchangeTransaction(request) {
 }
 
 export function getAccounts(){
-	return axios('http://siprojekat.duckdns.org:5051/api/Account/user-accounts', {
+	return axios('http://siprojekat.duckdns.org:5051/api/Exchange/GetUserAccounts', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -89,6 +89,18 @@ export function getAllAcounts(){
 export function getUserTransactions(){
 	return axios('https://processingserver.herokuapp.com/api/Transaction/GetTransactionsForUser?token=' + localStorage.getItem('token'), {
 		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+
+export function redeemVoucher(request) {
+	return axios(env.API_ENV.url + '/api/VoucherRedemption/RedeemVoucher', {
+		method: 'POST',
+		data: request,
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),

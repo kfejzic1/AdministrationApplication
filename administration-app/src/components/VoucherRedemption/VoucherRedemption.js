@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import styles from '../VoucherRedemption/VoucherRedemption.module.css'
 import { useState, useEffect } from 'react';
-import { getAccounts } from '../../services/currencyService';
+import { getAccounts, redeemVoucher } from '../../services/currencyService';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -20,8 +20,16 @@ export default function VoucherRedemption() {
         setVoucher(event.target.value);
     }
     const onRedeemVoucher = () => {
-        // Pozvati rutu iz backenda za provjeru je li validan voucher
-
+         // Pozvati rutu iz backenda za provjeru je li validan voucher
+        //console.log("account: ", selectedAccount.accountNumber);
+        console.log("vaucer: ", voucher);
+        redeemVoucher({AccountNumber:selectedAccount.accountNumber, Code:voucher}) 
+        .then(res => {
+            console.log("nestooooo",res);
+        })
+        .catch(error => {
+            console.log('error', error);
+        });
         //Promijeniti ovo ispod kada se doda backend
         if(voucher == 'validan'){
             setIsValid(true);
@@ -63,7 +71,7 @@ export default function VoucherRedemption() {
                                         onChange={handleAccountSelected}
                                     >
                                         {accounts.map((account) => (
-                                            <MenuItem value={account}>{account.accountNumber}({account.currency.name})</MenuItem>
+                                            <MenuItem value={account}>{account.accountNumber} ({account.currency} {account.bankName})</MenuItem>
                                         ))}
 
                                     </Select>
@@ -77,7 +85,7 @@ export default function VoucherRedemption() {
                                 "&:hover": {
                                     backgroundColor: '#ea8c00'
                                 },
-                            }} >Redeem!</Button>
+                            }} >Redeem</Button>
             </div>
         </div>
     );
