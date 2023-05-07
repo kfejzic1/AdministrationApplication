@@ -34,6 +34,12 @@ export default function Transaction(arg) {
 						Details
 					</Button>
 				</TableCell>
+				<TableCell align='center'>
+					<Button
+					onClick={handleOpenClaimForm}>
+					 Claim
+					 </Button>
+					 </TableCell>
 			</TableRow>
 		);
 	else
