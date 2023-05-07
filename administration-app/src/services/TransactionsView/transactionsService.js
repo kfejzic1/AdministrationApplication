@@ -311,7 +311,7 @@ export async function uploadFile(file, folder, transactionId) {
 	data.append('Folder', folder);
 	data.append('NodeName', transactionId);
 
-	return axios.post(env.API_ENV.testUrl + '/api/Document/UploadDocument', data, {
+	return axios.post(env.API_ENV.url + '/api/Document/UploadDocument', data, {
 		headers: {
 			'Content-Type': 'multipart/form-data',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -320,7 +320,7 @@ export async function uploadFile(file, folder, transactionId) {
 }
 
 export function fileTransactionClaim(request) {
-	return axios(env.API_ENV.testUrl + '/api/transactions/claim', {
+	return axios(env.API_ENV.url + '/api/transactions/claim', {
 		method: 'POST',
 		data: request,
 		headers: {
