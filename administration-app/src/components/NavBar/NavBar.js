@@ -69,6 +69,9 @@ export const NavBar = props => {
 					<Button component={Link} to='/currencies' color='primary'>
 						Currencies
 					</Button>
+					<Button component={Link} to='/redeem-voucher' color='primary'>
+						Redeem Voucher
+					</Button>
 					<LogoutButton />
 				</Toolbar>
 			) : (
