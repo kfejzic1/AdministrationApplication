@@ -36,6 +36,10 @@ namespace AdministrationAPI.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
+        public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
+        public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
+        public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -64,6 +68,9 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
+            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
+            builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
+            builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
 
 
             ApplySnakeCaseNames(builder);
