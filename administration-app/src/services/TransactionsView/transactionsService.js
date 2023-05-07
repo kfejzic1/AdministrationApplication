@@ -310,6 +310,7 @@ export async function uploadFile(file, folder, transactionId) {
 	data.append('file', file, file.name);
 	data.append('Folder', folder);
 	data.append('NodeName', transactionId);
+
 	return axios.post(env.API_ENV.url + '/api/Document/UploadDocument', data, {
 		headers: {
 			'Content-Type': 'multipart/form-data',

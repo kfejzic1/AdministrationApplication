@@ -108,7 +108,7 @@ const ProfilePage = props => {
 		setShowTooltipMail(false);
 	}
 
-	function openUserTable() {
+	function redirectAccountCreationRequest() {
 		navigate('/myaccounts');
 	}
 
@@ -223,7 +223,11 @@ const ProfilePage = props => {
 					</TableContainer>
 
 					<Box className='user-commands'>
-						<Button variant='contained' sx={{ color: 'black' }} className='user-commands-btn' onClick={openUserTable}>
+						<Button
+							variant='contained'
+							sx={{ color: 'black' }}
+							className='user-commands-btn'
+							onClick={redirectAccountCreationRequest}>
 							My Accounts
 						</Button>
 						<Button variant='contained' sx={{ color: 'black' }} className='user-commands-btn' onClick={handleShowModal}>

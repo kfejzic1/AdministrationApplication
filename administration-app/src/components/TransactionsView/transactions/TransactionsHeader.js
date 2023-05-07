@@ -17,7 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 export default function TransactionsListHeader(arg) {
 	const [sortingColumn, setSortingColumn] = useState('createdat');
-	const [sortingDirection, setSortingDirection] = useState('asc');
+	const [sortingDirection, setSortingDirection] = useState('desc');
 	const [dateStartFilter, setDateStartFilter] = useState(null);
 	const [dateEndFilter, setDateEndFilter] = useState(null);
 	const [recipientFilter, setRecipientFilter] = useState('');
@@ -47,18 +47,19 @@ export default function TransactionsListHeader(arg) {
 		});
 	};
 
-	const [sortDirectionDate, setSortDirectionDate] = useState('asc');
-	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('asc');
-	const [sortDirectionAmount, setSortDirectionAmount] = useState('asc');
-	const [sortDirectionType, setSortDirectionType] = useState('asc');
-	const [sortDirectionCurrency, setSortDirectionCurrency] = useState('asc');
+	const [sortDirectionDate, setSortDirectionDate] = useState('desc');
+	const [sortDirectionRecipient, setSortDirectionRecipient] = useState('desc');
+	const [sortDirectionAmount, setSortDirectionAmount] = useState('desc');
+	const [sortDirectionType, setSortDirectionType] = useState('desc');
+	const [sortDirectionCurrency, setSortDirectionCurrency] = useState('desc');
 
 	const handleSortDirectionDateChange = () => {
+		console.log('datum semjenja i voava22222');
 		const newSortDirection = sortDirectionDate === 'asc' ? 'desc' : 'asc';
 		setSortDirectionDate(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('createdat');
-		updateFilterOptions();
+		//	updateFilterOptions();
 	};
 
 	const handleSortDirectionRecipientChange = () => {
@@ -70,7 +71,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionRecipient(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Recipient');
-		updateFilterOptions();
+		//	updateFilterOptions();
 	};
 
 	const handleSortDirectionAmountChange = () => {
@@ -78,7 +79,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionAmount(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Amount');
-		updateFilterOptions();
+		//updateFilterOptions();
 	};
 
 	const handleSortDirectionCurrencyChange = () => {
@@ -86,7 +87,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionCurrency(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Currency');
-		updateFilterOptions();
+		//updateFilterOptions();
 	};
 
 	const handleSortDirectionTypeChange = () => {
@@ -94,7 +95,7 @@ export default function TransactionsListHeader(arg) {
 		setSortDirectionType(newSortDirection);
 		setSortingDirection(newSortDirection);
 		setSortingColumn('Type');
-		updateFilterOptions();
+		//updateFilterOptions();
 	};
 
 	//end of min max slider
@@ -111,6 +112,7 @@ export default function TransactionsListHeader(arg) {
 							<SwapVertSharpIcon
 								sx={{ verticalAlign: 'center', marginBottom: 'auto', marginTop: 'auto' }}
 								onClick={() => {
+									console.log('datum semjenja i voava');
 									setSortingColumn('createdat');
 									setSortingDirection('asc');
 								}}
@@ -268,7 +270,7 @@ export default function TransactionsListHeader(arg) {
 								setAmountMax('');
 								setTypeFilter('');
 								setCurrencyFilter('');
-								setSortingDirection('asc');
+								setSortingDirection('desc');
 								setSortingColumn('createdat');
 								arg.setFilterOptions({
 									CreatedAtStartFilter: '',
@@ -278,7 +280,7 @@ export default function TransactionsListHeader(arg) {
 									CurrencyFilter: '',
 									TransactionTypeFilter: '',
 									RecipientNameFilter: '',
-									sortingOrder: 'createdatasc',
+									sortingOrder: 'createdatdesc',
 								});
 							}}
 						>
@@ -436,7 +438,7 @@ export default function TransactionsListHeader(arg) {
 								setAmountMax('');
 								setTypeFilter('');
 								setCurrencyFilter('');
-								setSortingDirection('asc');
+								setSortingDirection('desc');
 								setSortingColumn('createdat');
 								arg.setFilterOptions({
 									CreatedAtStartFilter: '',
@@ -446,7 +448,7 @@ export default function TransactionsListHeader(arg) {
 									CurrencyFilter: '',
 									TransactionTypeFilter: '',
 									RecipientNameFilter: '',
-									sortingOrder: 'createdatasc',
+									sortingOrder: 'createdatdesc',
 								});
 								arg.setGroupBy('');
 								setGroupByValue('');

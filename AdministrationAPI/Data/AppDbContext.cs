@@ -34,6 +34,13 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
+
+        public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
+        public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
+        public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,6 +57,7 @@ namespace AdministrationAPI.Data
             builder.Entity<SMSActivationCode>(entity => { entity.ToTable("usr_sms_activation_codes"); });
             builder.Entity<TokenValidity>(entity => { entity.ToTable("usr_token_validities"); });
             builder.Entity<Account>(entity => { entity.ToTable("usr_accounts"); });
+            builder.Entity<AccountCreationRequest>(entity => { entity.ToTable("usr_account_creation_requests"); });
             builder.Entity<Vendor>(entity => { entity.ToTable("ven_vendors"); });
             builder.Entity<VendorUser>(entity => { entity.ToTable("ven_vendor_user"); });
             builder.Entity<VendorUserRole>(entity => { entity.ToTable("ven_vendor_user_roles"); });
@@ -62,6 +70,9 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
+            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
+            builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
+            builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
 
 
             ApplySnakeCaseNames(builder);
@@ -123,10 +134,16 @@ namespace AdministrationAPI.Data
                 new User() { FirstName = "Dzenis", LastName = "Muhic", UserName = "dmuhic1", NormalizedUserName = "DMUHIC1", ConcurrencyStamp = "1", Email = "dmuhic1@etf.unsa.ba", NormalizedEmail = "DMUHIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Ema", LastName = "Mekic", UserName = "emekic2", NormalizedUserName = "EMEKIC2", ConcurrencyStamp = "1", Email = "emekic2@etf.unsa.ba", NormalizedEmail = "EMEKIC2@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
-                new User() { FirstName = "Facebook", LastName = "User", UserName = "fbuser", NormalizedUserName = "FBUSER", ConcurrencyStamp = "1", Email = "elvedin_09@hotmail.com", NormalizedEmail = "ELVEDIN_09@HOTMAIL.COM", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false }
+                new User() { FirstName = "Facebook", LastName = "User", UserName = "fbuser", NormalizedUserName = "FBUSER", ConcurrencyStamp = "1", Email = "elvedin_09@hotmail.com", NormalizedEmail = "ELVEDIN_09@HOTMAIL.COM", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
+                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "evlahovlja1@etf.unsa.ba", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
                 );
 
-
+            builder.Entity<Currency>().HasData(
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "BIH", Name = "BAM" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "USA", Name = "USD" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "DEU", Name = "EUR" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "SWI", Name = "CHF" }
+                );
         }
 
         private void ApplySnakeCaseNames(ModelBuilder modelBuilder)
@@ -169,7 +186,8 @@ namespace AdministrationAPI.Data
                 new User() { FirstName = "Merjem", LastName = "Becirovic", UserName = "mbecirovic3", NormalizedUserName = "MBECIROVIC3", ConcurrencyStamp = "1", Email = "mbecirovic3@etf.unsa.ba", NormalizedEmail = "MBECIROVIC3@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Dzenis", LastName = "Muhic", UserName = "dmuhic1", NormalizedUserName = "DMUHIC1", ConcurrencyStamp = "1", Email = "dmuhic1@etf.unsa.ba", NormalizedEmail = "DMUHIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Ema", LastName = "Mekic", UserName = "emekic2", NormalizedUserName = "EMEKIC2", ConcurrencyStamp = "1", Email = "emekic2@etf.unsa.ba", NormalizedEmail = "EMEKIC2@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
-                new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false }
+                new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
+                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "ev@gmail.com", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
 
             };
 
@@ -213,9 +231,12 @@ namespace AdministrationAPI.Data
             // Seed Currencies
             List<Currency> currencies = new List<Currency>()
             {
-                new Currency() { Id = "1", Country = "Bosnia and Herzegovina", Name = "BAM"},
-                new Currency() { Id = "2", Country = "United States of America", Name = "USD"}
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "BIH", Name = "BAM" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "USA", Name = "USD" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "DEU", Name = "EUR" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "SWI", Name = "CHF" }
             };
+
             builder.Entity<Currency>().HasData(currencies);
 
             // Seed Accounts
