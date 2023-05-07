@@ -36,9 +36,10 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
-        public DbSet<Voucher> Vouchers { get; set; }
-        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
 
+        public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
+        public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
+        public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -69,7 +70,10 @@ namespace AdministrationAPI.Data
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
             builder.Entity<Voucher>(entity => { entity.ToTable("vou_vouchers"); });
-            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });
+            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
+            builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
+            builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
+
 
             ApplySnakeCaseNames(builder);
 
@@ -222,7 +226,7 @@ namespace AdministrationAPI.Data
                 new User() { FirstName = "Dzenis", LastName = "Muhic", UserName = "dmuhic1", NormalizedUserName = "DMUHIC1", ConcurrencyStamp = "1", Email = "dmuhic1@etf.unsa.ba", NormalizedEmail = "DMUHIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Ema", LastName = "Mekic", UserName = "emekic2", NormalizedUserName = "EMEKIC2", ConcurrencyStamp = "1", Email = "emekic2@etf.unsa.ba", NormalizedEmail = "EMEKIC2@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
-                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "ev@gmail.com", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
+                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "evlahovlja1@etf.unsa.ba", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "061904086", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
 
             };
 
@@ -286,9 +290,9 @@ namespace AdministrationAPI.Data
             // Seed Accounts
             List<Account> accounts = new List<Account>()
             {
-                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3", Approved = true, RequestDocumentPath = "/"}
+                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1"},
+                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2"},
+                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3"}
             };
             builder.Entity<Account>().HasData(accounts);
 
