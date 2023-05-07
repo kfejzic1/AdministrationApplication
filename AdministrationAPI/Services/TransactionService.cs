@@ -209,5 +209,48 @@ namespace AdministrationAPI.Services
             };
             return transactionClaimResponse;
         }
+
+
+        public string AcceptTransactionClaim(ClaimAcceptRequest request, string userId)
+        {
+            var transactionClaimUser = _appContext.TransactionClaimUsers.FirstOrDefault(tc => tc.TransactionClaimId == request.TransactionClaimId);
+            transactionClaimUser.AdminId = userId;
+
+            _appContext.SaveChanges();
+
+            var transactionClaim = _appContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
+            transactionClaim.Status = TransactionClaimStatus.Under_Investigation;
+            _appContext.SaveChanges();
+
+            return transactionClaim.Status.ToString();
+        }
+
+        public TransactionClaim UpdateTransactionClaim(ClaimUpdateRequest request, string userId)
+        {
+            var transactionClaim = _appContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
+            transactionClaim.Status = request.ClaimStatus;
+            _appContext.SaveChanges();
+
+            return transactionClaim;
+        }
+
+        public List<TransactionClaim> GetTransactionClaimsForAdmin(string userId)
+        {
+            var adminClaimsId = _appContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == userId).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
+            var transactionClaims = _appContext.TransactionClaims.Where(trc => adminClaimsId.Contains(trc.Id)).ToList();
+
+            return transactionClaims;
+        }
+
+        public List<TransactionClaim> GetTransactionClaimsOpen(string userId)
+        {
+            var adminClaimsId = _appContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == userId).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
+            var transactionClaims = _appContext.TransactionClaims.Where(trc => !adminClaimsId.Contains(trc.Id)).ToList();
+
+            return transactionClaims;
+        }
+
+
+
     }
 }

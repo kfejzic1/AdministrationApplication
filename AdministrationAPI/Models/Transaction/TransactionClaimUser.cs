@@ -14,10 +14,13 @@ namespace AdministrationAPI.Models.Transaction
 
         public string UserId { get; set; }
 
+        public string AdminId { get; set; }
+
         public TransactionClaimUser()
         {
             TransactionClaimId = -1;
             UserId = string.Empty;
+            AdminId = string.Empty;
         }
     }
 }
