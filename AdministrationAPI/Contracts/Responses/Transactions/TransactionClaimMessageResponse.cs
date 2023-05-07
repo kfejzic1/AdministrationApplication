@@ -9,6 +9,6 @@ namespace AdministrationAPI.Contracts.Responses
         public string Message { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public List<int> DocumentIds { get; set; }
+        public List<Document> Documents { get; set; }
     }
 }

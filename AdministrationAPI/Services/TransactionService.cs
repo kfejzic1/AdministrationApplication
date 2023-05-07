@@ -184,25 +184,27 @@ namespace AdministrationAPI.Services
         public TransactionClaimResponse GetTransactionClaim(int id)
         {
             var transactionClaim = _appContext.TransactionClaims.First(trc => trc.Id == id);
-            var transactionClaimDocuments = _appContext.TransactionClaimDocuments.Where(trcd => trcd.ClaimId == id).Select(doc => doc.Id).ToList();
+            var transactionClaimDocumentsIds = _appContext.TransactionClaimDocuments.Where(trcd => trcd.ClaimId == id).Select(doc => doc.DocumentId).ToList();
+            var transactionClaimDocuments = _appContext.Documents.Where(doc => transactionClaimDocumentsIds.Contains(doc.Id)).ToList();
             var transactionClaimMessages = _appContext.TransactionClaimMessages.Where(trcm => trcm.TransactionClaimId == id).ToList();
             List<TransactionClaimMessageResponse> messageReponses = new List<TransactionClaimMessageResponse>();
             foreach (var message in transactionClaimMessages)
             {
+                var documentIds = _appContext.ClaimsMessagesDocuments.Where(cmd => cmd.MessageId == message.Id).Select(doc => doc.DocumentId).ToList();
                 var msgResp = new TransactionClaimMessageResponse
                 {
                     TransactionClaimId = message.TransactionClaimId,
                     UserId = message.UserId,
                     Message = message.Message,
                     UserName = _appContext.Users.First(user => user.Id == message.UserId).NormalizedUserName,
-                    DocumentIds = _appContext.ClaimsMessagesDocuments.Where(cmd => cmd.MessageId == message.Id).Select(doc => doc.DocumentId).ToList()
+                    Documents = _appContext.Documents.Where(doc => documentIds.Contains(doc.Id)).ToList()
                 };
                 messageReponses.Add(msgResp);
             }
             var transactionClaimResponse = new TransactionClaimResponse
             {
                 Claim = transactionClaim,
-                DocumentIds = transactionClaimDocuments,
+                Documents = transactionClaimDocuments,
                 Messages = messageReponses
             };
             return transactionClaimResponse;
