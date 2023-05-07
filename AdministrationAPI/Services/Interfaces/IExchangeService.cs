@@ -11,7 +11,5 @@ namespace AdministrationAPI.Services.Interfaces
 
         public Task<(string message, List<CurrencyAccount>? obj)> GetAllAccounts(string token);
         public Task<(string message, List<CurrencyAccount>? obj)> GetUserAccounts(string token);
-        public Task<(string message, List<CurrencyAccount>? obj)> GetAllAccounts(string token);
-        public Task<(string message,List<CurrencyAccount>? obj)> GetUserAccounts(string token);
     }
 }

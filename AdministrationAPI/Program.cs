@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
