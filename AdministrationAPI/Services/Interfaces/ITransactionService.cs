@@ -19,7 +19,6 @@ namespace AdministrationAPI.Services.Interfaces
         List<TransactionClaim> GetTransactionClaims(string userId);
 
         int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId);
-
         Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token);
 
         TransactionClaimResponse GetTransactionClaim(int id);
