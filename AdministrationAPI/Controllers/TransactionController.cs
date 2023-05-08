@@ -155,7 +155,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                LoggerUtility.Logger.LogException(ex, "TransactionController.AcceptTransactionClaim");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -176,7 +176,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                LoggerUtility.Logger.LogException(ex, "TransactionController.UpdateTransactionClaim");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -192,7 +192,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                LoggerUtility.Logger.LogException(ex, "TransactionController.GetTransactionClaimsForAdmin");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -207,7 +207,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
             catch (Exception ex)
             {
-                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                LoggerUtility.Logger.LogException(ex, "TransactionController.GetTransactionClaimsOpen");
                 return StatusCode(500, ex.Message);
             }
         }

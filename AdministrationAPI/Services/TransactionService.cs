@@ -161,9 +161,13 @@ namespace AdministrationAPI.Services
 
         public int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId)
         {
+            var transactionClaimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(tc => tc.TransactionClaimId == request.TransactionClaimId);
+            //check validity of the request + authorization
+            if (transactionClaimUser == default(TransactionClaimUser))
+                throw new Exception("The specified transaction claim does not exist.");
 
-            var claimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == request.TransactionClaimId);
-            if (claimUser == null || (claimUser.AdminId != userId && claimUser.UserId != userId)) { return -1; }
+            if (transactionClaimUser.UserId != userId && transactionClaimUser.AdminId != userId)
+                throw new Exception("No permission to add messages to the specified claim.");
 
             var transactionClaimMessage = new TransactionClaimMessage
             {
@@ -190,6 +194,7 @@ namespace AdministrationAPI.Services
 
         public TransactionClaimResponse GetTransactionClaim(int id)
         {
+
             var transactionClaim = _appDbContext.TransactionClaims.First(trc => trc.Id == id);
             var transactionClaimDocumentsIds = _appDbContext.TransactionClaimDocuments.Where(trcd => trcd.ClaimId == id).Select(doc => doc.DocumentId).ToList();
             var transactionClaimDocuments = _appDbContext.Documents.Where(doc => transactionClaimDocumentsIds.Contains(doc.Id)).ToList();
@@ -220,12 +225,22 @@ namespace AdministrationAPI.Services
 
         public string AcceptTransactionClaim(ClaimAcceptRequest request, string userId)
         {
-            var transactionClaimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(tc => tc.TransactionClaimId == request.TransactionClaimId);
+            var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
+            if (transactionClaim == default(TransactionClaim))
+                throw new Exception("The specified transaction claim does not exist.");
+
+            var transactionClaimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == transactionClaim.Id);
+
+            if (transactionClaimUser == default(TransactionClaimUser))
+                throw new Exception("Ovaj claim je kreiran prije implementacije sprinta 6.");
+
+            if (transactionClaimUser.AdminId != string.Empty)
+                throw new Exception("The specified transaction claim is not open.");
+
             transactionClaimUser.AdminId = userId;
 
             _appDbContext.SaveChanges();
 
-            var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
             transactionClaim.Status = TransactionClaimStatus.Under_Investigation;
             _appDbContext.SaveChanges();
 
@@ -235,9 +250,39 @@ namespace AdministrationAPI.Services
         public TransactionClaim? UpdateTransactionClaim(ClaimUpdateRequest request, string userId)
         {
 
+
             var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
-            if (_appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.Id == transactionClaim.Id).AdminId != userId) return null;
-            transactionClaim.Status = request.ClaimStatus;
+            if (transactionClaim == default(TransactionClaim))
+                throw new Exception("The specified transaction claim does not exist.");
+
+            var transactionClaimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == transactionClaim.Id);
+
+            if (transactionClaimUser == default(TransactionClaimUser))
+                throw new Exception("Ovaj claim je kreiran prije implementacije sprinta 6.");
+
+            if (transactionClaimUser.AdminId != userId)
+                throw new Exception("Permission denied to modify specified transaction.");
+
+            bool status_ok = true;
+
+            var currentStatus = transactionClaim.Status;
+            var newStatus = request.ClaimStatus;
+
+            if (newStatus == currentStatus)
+                return transactionClaim;
+
+
+            if (currentStatus == TransactionClaimStatus.Open || currentStatus == TransactionClaimStatus.Solved_Confirmed)
+                status_ok = false;
+            else if (newStatus == TransactionClaimStatus.Open)
+                status_ok = false;
+            else if (currentStatus == TransactionClaimStatus.Under_Investigation && newStatus != TransactionClaimStatus.Solved)
+                status_ok = false;
+
+            if (!status_ok)
+                throw new Exception("Illegal status value.");
+
+            transactionClaim.Status = newStatus;
             _appDbContext.SaveChanges();
 
             return transactionClaim;
@@ -253,8 +298,7 @@ namespace AdministrationAPI.Services
 
         public List<TransactionClaim> GetTransactionClaimsOpen()
         {
-            //var adminClaimsId = _appDbContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == string.Empty).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
-            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => trc.Status.Equals(TransactionClaimStatus.Open)).ToList();
+            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => trc.Status == TransactionClaimStatus.Open).ToList();
 
             return transactionClaims;
         }
