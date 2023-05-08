@@ -53,7 +53,8 @@ function App() {
 									<Payment />
 								</ProtectedRoute>
 							}
-						/>
+						/>	 
+					
 
 						<Route
 							path='/user'
