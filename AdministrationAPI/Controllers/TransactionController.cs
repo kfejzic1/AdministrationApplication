@@ -125,7 +125,6 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("claim/{id}")]
         public IActionResult GetTransactionClaim(int id)
         {
