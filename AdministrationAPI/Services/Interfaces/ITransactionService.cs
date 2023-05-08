@@ -19,13 +19,12 @@ namespace AdministrationAPI.Services.Interfaces
         List<TransactionClaim> GetTransactionClaims(string userId);
 
         int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId);
-
         Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token);
 
         TransactionClaimResponse GetTransactionClaim(int id);
         string AcceptTransactionClaim(ClaimAcceptRequest request, string userId);
-        TransactionClaim UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
+        TransactionClaim? UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
         List<TransactionClaim> GetTransactionClaimsForAdmin(string userId);
-        List<TransactionClaim> GetTransactionClaimsOpen(string userId);
+        List<TransactionClaim> GetTransactionClaimsOpen();
     }
 }
