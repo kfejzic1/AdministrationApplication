@@ -228,9 +228,11 @@ namespace AdministrationAPI.Services
             return transactionClaim.Status.ToString();
         }
 
-        public TransactionClaim UpdateTransactionClaim(ClaimUpdateRequest request, string userId)
+        public TransactionClaim? UpdateTransactionClaim(ClaimUpdateRequest request, string userId)
         {
+
             var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
+            if(_appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.Id == transactionClaim.Id).AdminId!=userId) return null;
             transactionClaim.Status = request.ClaimStatus;
             _appDbContext.SaveChanges();
 

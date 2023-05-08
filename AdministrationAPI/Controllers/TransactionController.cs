@@ -116,7 +116,12 @@ namespace AdministrationAPI.Controllers.Transaction
             try
             {
                 string userId = ControlExtensions.GetId(HttpContext);
-                return Ok(_transactionService.CreateTransactionClaimMessage(request, userId));
+                var result = _transactionService.CreateTransactionClaimMessage(request, userId);
+                if (result != -1)
+                {
+                    return Ok();
+                }
+                else return BadRequest("You don't have access to this claim.");
             }
             catch (Exception ex)
             {
