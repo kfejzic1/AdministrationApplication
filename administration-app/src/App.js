@@ -10,16 +10,16 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
 import Voucher from './components/Voucher/Voucher';
 import AccountCreationRequestsPanel from './components/AccountManagement/AccountCreationRequestsPanel';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Currencies from './components/Currencies/Currencies';
-import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
+import AdminClaims from './components/AdminClaims/AdminClaims';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -120,6 +120,15 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Voucher />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/claims'
+							element={
+								<ProtectedRoute>
+									<AdminClaims />
 								</ProtectedRoute>
 							}
 						/>

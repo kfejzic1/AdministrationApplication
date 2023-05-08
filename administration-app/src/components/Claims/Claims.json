@@ -1,0 +1,32 @@
+[
+    {
+        "claim": {
+            "TransactionID": "1",
+            "Subject": "ERROR1",
+            "Description": "jhflaegflg",
+            "Created": "3/5/2023",
+            "CreatedBy": "1",
+            "Status": "Under investigation"
+        }
+    },
+    {
+        "claim": {
+            "TransactionID": "2",
+            "Subject": "ERROR2",
+            "Description": "fahfhailfh",
+            "Created": "3/5/2023",
+            "CreatedBy": "1",
+            "Status": "Open"
+        }
+    },
+    {
+        "claim": {
+            "TransactionID": "3",
+            "Subject": "ERROR2",
+            "Description": "fahfhailfh",
+            "Created": "3/5/2023",
+            "CreatedBy": "1",
+            "Status": "Solved"
+        }
+    }
+]
