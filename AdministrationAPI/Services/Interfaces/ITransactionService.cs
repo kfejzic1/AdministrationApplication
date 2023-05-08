@@ -1,6 +1,5 @@
 using AdministrationAPI.DTOs;
 using AdministrationAPI.Contracts.Responses;
-using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models;
@@ -22,9 +21,5 @@ namespace AdministrationAPI.Services.Interfaces
         Task<List<TransactionTransfer>> GetGroupedTransactionsByType(string token);
 
         TransactionClaimResponse GetTransactionClaim(int id);
-        string AcceptTransactionClaim(ClaimAcceptRequest request, string userId);
-        TransactionClaim? UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
-        List<TransactionClaim> GetTransactionClaimsForAdmin(string userId);
-        List<TransactionClaim> GetTransactionClaimsOpen();
     }
 }

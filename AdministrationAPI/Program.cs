@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -82,8 +82,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
-builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()

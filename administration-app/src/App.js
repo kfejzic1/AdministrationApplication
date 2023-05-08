@@ -16,10 +16,9 @@ import AccountCreationRequestsPanel from './components/AccountManagement/Account
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Currencies from './components/Currencies/Currencies';
-import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption';
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
-import AdminClaims from './components/AdminClaims/AdminClaims';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -119,15 +118,6 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Voucher />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path='/claims'
-							element={
-								<ProtectedRoute>
-									<AdminClaims />
 								</ProtectedRoute>
 							}
 						/>
