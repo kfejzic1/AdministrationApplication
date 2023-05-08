@@ -17,7 +17,7 @@ export const NavBar = props => {
 				response.data
 			);
 		});
-	});
+	},[]);
 
 
 	const userAdmin = () => {
