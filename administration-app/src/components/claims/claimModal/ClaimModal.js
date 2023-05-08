@@ -122,7 +122,6 @@ export default function ClaimModal(props) {
   };
   const handleFileUpload = event => {
     const file = event.target.files[0];
-    console.log(file);
     setFile(file);
     setEvent(event);
   };
@@ -137,9 +136,7 @@ export default function ClaimModal(props) {
         modified: res.data.claim.modified == null ? res.data.claim.created.split('T')[0] : res.data.claim.modified.split('T')[0],
         status: res.data.claim.status,
       });
-      console.log(res.data);
       let user = getUserId();
-      console.log(user);
       let beMessages = [];
       let docs = [];
       res.data.documents.forEach(doc=>{
@@ -153,7 +150,6 @@ export default function ClaimModal(props) {
           // file: '\\siprojekat.duckdns.org'+mess.documents[0].unc,
         };
         beMessages.push(message);
-        console.log(message); 
       }); 
       setMessages(beMessages); 
     });
