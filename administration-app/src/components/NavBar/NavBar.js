@@ -5,32 +5,28 @@ import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { getValidateToken } from '../../services/userService';
 
 export const NavBar = props => {
-	const [user, setUser] = useState("");
+	const [user, setUser] = useState('');
 	useEffect(() => {
 		props.setToken(localStorage.getItem('token'));
 	}, []);
 
-
 	useEffect(() => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
-			setUser(
-				response.data
-			);
+			setUser(response.data);
 		});
 	});
 
-
 	const userAdmin = () => {
-		if(user.roles){
-			var b = user.roles.filter(v => v==='Admin')[0];
-			if(b=== "Admin"){
-				console.log("Uslo u ovu funkciju");
+		if (user.roles) {
+			var b = user.roles.filter(v => v === 'Admin')[0];
+			if (b === 'Admin') {
+				//console.log("Uslo u ovu funkciju");
 				return true;
 			}
 			return false;
 		}
 		return false;
-	}
+	};
 
 	return (
 		<AppBar position='static' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
@@ -42,14 +38,14 @@ export const NavBar = props => {
 					<Button component={Link} to='/' color='primary'>
 						Home
 					</Button>
-					
-					{userAdmin()?(
-					<Button component={Link} to='/voucher' color='primary'>
-						Voucher
-					</Button>
-					):
-					(<h1>s</h1>)}
 
+					{userAdmin() ? (
+						<Button component={Link} to='/voucher' color='primary'>
+							Voucher
+						</Button>
+					) : (
+						<h1>s</h1>
+					)}
 
 					<Button component={Link} to='/transactions' color='primary'>
 						Transactions

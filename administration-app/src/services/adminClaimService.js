@@ -31,3 +31,14 @@ export function assignClaim(data) {
 		},
 	});
 }
+
+export function updateClaim(data) {
+	return axios(env.API_ENV.url + '/api/transactions/admin/claim/update', {
+		method: 'PUT',
+		data: data,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

@@ -2,17 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Box, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CheckIcon from '@mui/icons-material/Check';
-import { getAllOpenClaims, getAssignedClaims, assignClaim } from '../../services/adminClaimService';
+import { getAllOpenClaims, getAssignedClaims, assignClaim, updateClaim } from '../../services/adminClaimService';
 const AdminClaims = () => {
 	const [value, setValue] = useState(0);
 	const [unassignedClaims, setUnassignedClaims] = useState([]);
 	const [assignedClaims, setAssignedClaims] = useState([]);
+	const [change, setChange] = useState(false);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
 	const assignClaimToAdmin = id => {
 		assignClaim({ transcationClaimId: id }).then(console.log('Assigned')).catch(console.error('Not assigned'));
+	};
+
+	const updateStatus = claim => {
+		if (claim.status !== 'Solved_Confirmed') {
+			let newStatus = claim.status === 'Solved' ? 'Solved_Confirmed' : 'Solved';
+			updateClaim({ transcationClaimId: claim.id, claimStatus: newStatus })
+				.then(response => setChange(!change))
+				.catch(console.error('Error while changing claim status!'));
+		}
 	};
 	useEffect(() => {
 		getAllOpenClaims().then(response =>
@@ -28,7 +38,7 @@ const AdminClaims = () => {
 				})
 			)
 		);
-	}, []);
+	});
 
 	useEffect(() => {
 		getAssignedClaims().then(response =>
@@ -44,7 +54,7 @@ const AdminClaims = () => {
 				})
 			)
 		);
-	}, []);
+	});
 
 	return (
 		<Box sx={{ width: '100%', typography: 'body1' }}>
@@ -71,7 +81,11 @@ const AdminClaims = () => {
 								<TableCell>{claim.description}</TableCell>
 								<TableCell>{claim.status}</TableCell>
 								<TableCell>
-									<Button onClick={() => {}}>
+									<Button
+										onClick={() => {
+											updateStatus(claim);
+										}}
+									>
 										<CheckIcon />
 									</Button>
 								</TableCell>
