@@ -139,6 +139,67 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [HttpPut("admin/claim/accept")]
+        public IActionResult AcceptTransactionClaim([FromBody] ClaimAcceptRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.AcceptTransactionClaim(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("admin/claim/update")]
+        public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.UpdateTransactionClaim(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet("admin/claims")]
+        public IActionResult GetTransactionClaimsForAdmin()
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.GetTransactionClaimsForAdmin(userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("admin/claims/open")]
+        public IActionResult GetTransactionClaimsOpen()
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.GetTransactionClaimsOpen(userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("group/type")]
         public async Task<ActionResult<List<TransactionTransfer>>> GetGroupedTransactionsByType()
         {
