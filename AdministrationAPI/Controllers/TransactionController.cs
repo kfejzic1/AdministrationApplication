@@ -167,12 +167,7 @@ namespace AdministrationAPI.Controllers.Transaction
             try
             {
                 string userId = ControlExtensions.GetId(HttpContext);
-                var result = _transactionService.UpdateTransactionClaim(request, userId);
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-                else return BadRequest("Claim not found.");
+                return Ok(_transactionService.UpdateTransactionClaim(request, userId));
             }
             catch (Exception ex)
             {
