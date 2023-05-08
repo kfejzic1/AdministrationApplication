@@ -20,3 +20,14 @@ export function getUserClaim(claimId) {
 		},
 	});
 }
+
+export function createClaimMessage(request) {
+	return axios(env.API_ENV.url + '/api/transactions/claim/message', {
+		method: 'POST',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

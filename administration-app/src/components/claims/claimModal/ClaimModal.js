@@ -7,6 +7,7 @@ import Loader from '../../loaderDialog/Loader';
 import sendIcon from '../../../../src/sencIcon.png';
 import { replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import { getUserClaim } from '../../../services/transactionClaimService';
+import { getUserId } from '../../../services/userService';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -125,20 +126,7 @@ export default function ClaimModal(props) {
     setFile(file);
     setEvent(event);
   };
-  const [messages, setMessages] = useState([
-    {
-      text: 'Dobar dan, molimo vas da opišete detaljno problem koji imate.',
-      isUser: false,
-      name: 'Admin',
-      file: null,
-    },
-    {
-      text: 'Nakon što opišete problem agent će vam se javiti u najkraćem mogućem roku.',
-      isUser: false,
-      name: 'Admin',
-      file: null,
-    },
-  ]);
+  const [messages, setMessages] = useState([ ]);
   const fetchData = async () => {
     getUserClaim(props.claimId).then(res => {
       setClaim({id:res.data.claim.id, 
@@ -149,14 +137,35 @@ export default function ClaimModal(props) {
         modified: res.data.claim.modified == null ? res.data.claim.created.split('T')[0] : res.data.claim.modified.split('T')[0],
         status: res.data.claim.status,
       });
+      console.log(res.data);
+      let user = getUserId();
+      console.log(user);
+      let beMessages = [];
+      let docs = [];
+      res.data.documents.forEach(doc=>{
+        docs.push(doc.unc);
+      });
+      res.data.messages.forEach(mess => {
+        let message = {
+          text: mess.message,
+          isUser: mess.userId === user,
+          name: mess.userName,
+          // file: '\\siprojekat.duckdns.org'+mess.documents[0].unc,
+        };
+        beMessages.push(message);
+        console.log(message); 
+      }); 
+      setMessages(beMessages); 
     });
   };
   const chatListRef = useRef(null);
   useEffect(() => {
     const card = chatListRef.current;
     card.scrollTop = card.scrollHeight;
-    fetchData();
   }, [messages]);
+  useEffect(() => {
+    fetchData();
+  },[]);
 
   const handleSubmit = () => {
     // Handle form submit here
@@ -167,10 +176,12 @@ export default function ClaimModal(props) {
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       getUser().then(res => {
-        setMessages([...messages, { text: newMessage, isUser: true, name: res.data.firstName, file: file }]);
+        let message = { text: newMessage, isUser: true, name: res.data.firstName, file: file }
+        setMessages([...messages, message ]);
         setNewMessage('');
         setFile(null);
         event.target.value = '';
+
       });
     }
   };
@@ -229,7 +240,7 @@ export default function ClaimModal(props) {
                         </Grid>
                         <Grid item xs={2}>
                           <Typography sx={{ fontSize: '14px', color: setStatusFlag(claim.status) }}>
-                            {claim.status === 0 ? 'Open' : 'Closed'}
+                            {claim.status}
                           </Typography>
                         </Grid>
                       </Grid>

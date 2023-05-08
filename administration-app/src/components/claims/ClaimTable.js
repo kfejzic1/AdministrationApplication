@@ -228,7 +228,7 @@ export default function ClaimTable() {
 													<TableCell component='th' id={labelId} scope='row'>{row.id}</TableCell>
 													<TableCell align='left'>{row.subject}</TableCell>
 													<TableCell align='left'>{row.modified===null?row.created.split("T")[0]:row.modified.split("T")[0]}</TableCell>
-													<TableCell align='left'>{row.status===0?'Open':'Closed'}</TableCell>
+													<TableCell align='left'>{row.status}</TableCell>
 												</TableRow>
 											);
 										})}
