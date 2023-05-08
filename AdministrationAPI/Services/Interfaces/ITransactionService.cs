@@ -23,7 +23,7 @@ namespace AdministrationAPI.Services.Interfaces
 
         TransactionClaimResponse GetTransactionClaim(int id);
         string AcceptTransactionClaim(ClaimAcceptRequest request, string userId);
-        TransactionClaim UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
+        TransactionClaim? UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
         List<TransactionClaim> GetTransactionClaimsForAdmin(string userId);
         List<TransactionClaim> GetTransactionClaimsOpen();
     }
