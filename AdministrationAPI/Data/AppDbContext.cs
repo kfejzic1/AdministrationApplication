@@ -41,9 +41,6 @@ namespace AdministrationAPI.Data
 
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
-        public DbSet<Voucher> Vouchers { get; set; }
-        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
-
         public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
         public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
         public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
