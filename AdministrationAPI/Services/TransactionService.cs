@@ -245,10 +245,10 @@ namespace AdministrationAPI.Services
             return transactionClaims;
         }
 
-        public List<TransactionClaim> GetTransactionClaimsOpen(string userId)
+        public List<TransactionClaim> GetTransactionClaimsOpen()
         {
-            var adminClaimsId = _appDbContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == userId).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
-            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => !adminClaimsId.Contains(trc.Id)).ToList();
+            var adminClaimsId = _appDbContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == string.Empty).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
+            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => adminClaimsId.Contains(trc.Id)).ToList();
 
             return transactionClaims;
         }

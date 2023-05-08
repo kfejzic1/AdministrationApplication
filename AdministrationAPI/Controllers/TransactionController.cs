@@ -190,8 +190,7 @@ namespace AdministrationAPI.Controllers.Transaction
         {
             try
             {
-                string userId = ControlExtensions.GetId(HttpContext);
-                return Ok(_transactionService.GetTransactionClaimsOpen(userId));
+                return Ok(_transactionService.GetTransactionClaimsOpen());
             }
             catch (Exception ex)
             {

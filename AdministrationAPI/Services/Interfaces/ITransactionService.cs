@@ -26,6 +26,6 @@ namespace AdministrationAPI.Services.Interfaces
         string AcceptTransactionClaim(ClaimAcceptRequest request, string userId);
         TransactionClaim UpdateTransactionClaim(ClaimUpdateRequest request, string userId);
         List<TransactionClaim> GetTransactionClaimsForAdmin(string userId);
-        List<TransactionClaim> GetTransactionClaimsOpen(string userId);
+        List<TransactionClaim> GetTransactionClaimsOpen();
     }
 }
