@@ -145,7 +145,6 @@ export default function ClaimTable() {
 	
 	const fetchData = async () => {
 		getUserClaims().then(res => {
-			console.log(res.data);
 			setClaims(res.data);
 		});
 		// MOCK:
@@ -165,19 +164,6 @@ export default function ClaimTable() {
 	const handleClick = (event, id) => {
 		setSelectedId(id);
 		handleOpenClaim();
-		// const selectedIndex = selected.indexOf(id);
-		// let newSelected = [];
-
-		// if (selectedIndex === -1) {
-		// 	newSelected = newSelected.concat(selected, id);
-		// } else if (selectedIndex === 0) {
-		// 	newSelected = newSelected.concat(selected.slice(1));
-		// } else if (selectedIndex === selected.length - 1) {
-		// 	newSelected = newSelected.concat(selected.slice(0, -1));
-		// } else if (selectedIndex > 0) {
-		// 	newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-		// }
-		// setSelected(newSelected);
 	};
 
 	const handleChangePage = (event, newPage) => {
@@ -193,18 +179,6 @@ export default function ClaimTable() {
 		setDense(event.target.checked);
 	};
 
-	/*
-	const handleSelectAllClick = event => {
-		if (event.target.checked) {
-			const newSelected = claims.map(n => n.id);
-			setSelected(newSelected);
-			return;
-		}
-		setSelected([]);
-	};
-
-	*/
-	
 	const isSelected = id => selected.indexOf(id) !== -1;
 	const classes = useStyles();
 	// Avoid a layout jump when reaching the last page with empty rows.
@@ -244,14 +218,14 @@ export default function ClaimTable() {
 														selected: classes.tableRowSelected,
 													}}
 													hover
-													onClick={event => handleClick(event, row.transactionId)}
+													onClick={event => handleClick(event, row.id)}
 													//role='checkbox'
 													aria-checked={isItemSelected}
 													tabIndex={-1}
 													key={row.transactionId}
 													selected={isItemSelected}
 													sx={{ cursor: 'pointer' }}>
-													<TableCell component='th' id={labelId} scope='row'>{row.transactionId}</TableCell>
+													<TableCell component='th' id={labelId} scope='row'>{row.id}</TableCell>
 													<TableCell align='left'>{row.subject}</TableCell>
 													<TableCell align='left'>{row.modified===null?row.created.split("T")[0]:row.modified.split("T")[0]}</TableCell>
 													<TableCell align='left'>{row.status===0?'Open':'Closed'}</TableCell>

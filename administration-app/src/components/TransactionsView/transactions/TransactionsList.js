@@ -138,7 +138,7 @@ export const TransactionsList = (arg) => {
     },
   });
   function openClaims() {
-    window.open(`/transaction/claims`);
+    window.location.assign(`/transaction/claims`);
   }
   console.log("transactionLise ", groupBy);
   return (
