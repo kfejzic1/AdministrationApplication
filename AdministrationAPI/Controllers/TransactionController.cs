@@ -116,7 +116,12 @@ namespace AdministrationAPI.Controllers.Transaction
             try
             {
                 string userId = ControlExtensions.GetId(HttpContext);
-                return Ok(_transactionService.CreateTransactionClaimMessage(request, userId));
+                var result = _transactionService.CreateTransactionClaimMessage(request, userId);
+                if (result != -1)
+                {
+                    return Ok();
+                }
+                else return BadRequest("You don't have access to this claim.");
             }
             catch (Exception ex)
             {
@@ -139,6 +144,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/accept")]
         public IActionResult AcceptTransactionClaim([FromBody] ClaimAcceptRequest request)
         {
@@ -154,13 +160,19 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/update")]
         public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
         {
             try
             {
                 string userId = ControlExtensions.GetId(HttpContext);
-                return Ok(_transactionService.UpdateTransactionClaim(request, userId));
+                var result = _transactionService.UpdateTransactionClaim(request, userId);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else return BadRequest("Claim not found.");
             }
             catch (Exception ex)
             {
@@ -169,7 +181,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims")]
         public IActionResult GetTransactionClaimsForAdmin()
         {
@@ -185,13 +197,13 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims/open")]
         public IActionResult GetTransactionClaimsOpen()
         {
             try
             {
-                string userId = ControlExtensions.GetId(HttpContext);
-                return Ok(_transactionService.GetTransactionClaimsOpen(userId));
+                return Ok(_transactionService.GetTransactionClaimsOpen());
             }
             catch (Exception ex)
             {

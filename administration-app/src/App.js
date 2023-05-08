@@ -10,7 +10,6 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
 import Voucher from './components/Voucher/Voucher';
 import AccountCreationRequestsPanel from './components/AccountManagement/AccountCreationRequestsPanel';
 
@@ -54,8 +53,7 @@ function App() {
 									<Payment />
 								</ProtectedRoute>
 							}
-						/>	 
-					
+						/>
 
 						<Route
 							path='/user'
