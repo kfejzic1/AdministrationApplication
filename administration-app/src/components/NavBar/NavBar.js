@@ -36,6 +36,9 @@ export const NavBar = props => {
 					<Button component={Link} to='/currencies' color='primary'>
 						Currencies
 					</Button>
+					<Button component={Link} to='/redeem-voucher' color='primary'>
+						Redeem Voucher
+					</Button>
 					<Button component={Link} to='/claims' color='primary'>
 						Claims
 					</Button>
@@ -46,7 +49,6 @@ export const NavBar = props => {
 					<Typography variant='h6' sx={{ flexGrow: 1, color: '#000' }}>
 						Payment App
 					</Typography>
-
 
 					<Button component={Link} to='/' color='primary'>
 						Home

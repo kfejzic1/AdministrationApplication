@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("SqliteMain");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -28,6 +28,8 @@ builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IExchangeService, ExchangeService>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
+builder.Services.AddScoped<IRedeemVoucherService, RedeemVoucherService>();
 builder.Services.AddScoped<TokenUtilities>();
 
 
@@ -35,35 +37,35 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(options =>
 {
-  options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-  options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-  options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-  options.SaveToken = true;
-  options.RequireHttpsMetadata = false;
-  options.TokenValidationParameters = new TokenValidationParameters()
-  {
-    ValidateIssuer = true,
-    ValidateAudience = true,
-    ValidAudience = configuration["Token:ValidAudience"],
-    ValidIssuer = configuration["Token:ValidIssuer"],
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]))
-  };
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = configuration["Token:ValidAudience"],
+        ValidIssuer = configuration["Token:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]))
+    };
 });
 builder.Services.AddSwaggerGen(options =>
 {
-  options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-  {
-    In = ParameterLocation.Header,
-    Description = "Please enter a valid token",
-    Name = "Authorization",
-    Type = SecuritySchemeType.Http,
-    BearerFormat = "JWT",
-    Scheme = "Bearer"
-  });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
 
-  options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -80,8 +82,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
-builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()
@@ -91,13 +93,13 @@ var provider = builder.Services.BuildServiceProvider();
 
 builder.Services.AddCors(options =>
 {
-  var frontendURL = configuration.GetValue<String>("frontend_url");
+    var frontendURL = configuration.GetValue<String>("frontend_url");
 
-  options.AddDefaultPolicy(builder =>
-  {
-    // builder.WithOrigins(frontendURL!).AllowAnyMethod().AllowAnyHeader();
-    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-  });
+    options.AddDefaultPolicy(builder =>
+    {
+        // builder.WithOrigins(frontendURL!).AllowAnyMethod().AllowAnyHeader();
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();
@@ -109,17 +111,17 @@ var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityR
 
 if (!await roleManager.RoleExistsAsync("Admin"))
 {
-  await roleManager.CreateAsync(new IdentityRole("Admin"));
+    await roleManager.CreateAsync(new IdentityRole("Admin"));
 }
 
 if (!await roleManager.RoleExistsAsync("User"))
 {
-  await roleManager.CreateAsync(new IdentityRole("User"));
+    await roleManager.CreateAsync(new IdentityRole("User"));
 }
 
 if (!await roleManager.RoleExistsAsync("Restricted"))
 {
-  await roleManager.CreateAsync(new IdentityRole("Restricted"));
+    await roleManager.CreateAsync(new IdentityRole("Restricted"));
 }
 
 // Configure the HTTP request pipeline.
@@ -127,8 +129,8 @@ if (!await roleManager.RoleExistsAsync("Restricted"))
 app.UseMiddleware<TokenExpirationHandler>();
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseCors();

@@ -5,7 +5,10 @@ namespace AdministrationAPI.Services.Interfaces
 {
     public interface IAccountService
     {
-        List<Account> GetUserAccounts(string userId);
-        Task<Account> CreateUserAccount(UserAccountCreateRequest request);
+        List<AccountCreationRequest> GetUserAccountCreationRequests (string userId);
+        Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request);
+        List<AccountCreationRequest> GetAllRequests();
+        Task<Account?> ApproveRequest(int id);
+        List<AccountCreationRequest> GetRequestHistory();
     }
 }

@@ -10,15 +10,16 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
-import B2CAccManagement from './components/AccountManagement/B2CAccountManagement';
+import AccountCreationRequestsPanel from './components/AccountManagement/AccountCreationRequestsPanel';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
-import Claims from './components/Claims/Claims'
+import AdminClaims from './components/AdminClaims/AdminClaims';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -38,7 +39,7 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount/:category'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -91,10 +92,10 @@ function App() {
 							path='/myaccounts'
 							element={
 								<ProtectedRoute>
-									<B2CAccManagement />
+									<AccountCreationRequestsPanel />
 								</ProtectedRoute>
 							}
-						/>	
+						/>
 
 						<Route
 							path='/currencies'
@@ -104,12 +105,20 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+						<Route
+							path='/redeem-voucher'
+							element={
+								<ProtectedRoute>
+									<VoucherRedemption />
+								</ProtectedRoute>
+							}
+						/>
 
 						<Route
 							path='/claims'
 							element={
 								<ProtectedRoute>
-									<Claims />
+									<AdminClaims />
 								</ProtectedRoute>
 							}
 						/>

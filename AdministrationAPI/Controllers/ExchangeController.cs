@@ -6,13 +6,15 @@ using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System;
 using System.Collections.Generic;
 
 namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExchangeController : ControllerBase
     {
 
@@ -35,10 +37,11 @@ namespace AdministrationAPI.Controllers
                         token = header.Value;
                 }
                 var response = await _exchangeService.CreateAccount(request, token);
-                if (response != null)
-                    return Ok(response);
-                else
-                    return BadRequest("Failed");
+                if (response.obj != null)
+                    return Ok(response.obj);
+                else if (response.message != "")
+                    return BadRequest(response.message);
+                else return BadRequest("Failed");
             }
             catch (Exception ex)
             {
@@ -58,11 +61,12 @@ namespace AdministrationAPI.Controllers
                     if (header.Key.CompareTo("Authorization") == 0)
                         token = header.Value;
                 }
-                var response = await _exchangeService.GetUserAccounts( token);
-                if (response != null)
-                    return Ok(response);
-                else
-                    return BadRequest("Failed");
+                var response = await _exchangeService.GetUserAccounts(token);
+                if (response.obj != null)
+                    return Ok(response.obj);
+                else if(response.message!="")
+                    return BadRequest(response.message);
+                else return BadRequest("Failed");
             }
             catch (Exception ex)
             {
@@ -83,10 +87,11 @@ namespace AdministrationAPI.Controllers
                         token = header.Value;
                 }
                 var response = await _exchangeService.GetAllAccounts(token);
-                if (response != null)
-                    return Ok(response);
-                else
-                    return BadRequest("Failed");
+                if (response.obj != null)
+                    return Ok(response.obj);
+                else if (response.message != "")
+                    return BadRequest(response.message);
+                else return BadRequest("Failed");
             }
             catch (Exception ex)
             {
@@ -107,13 +112,14 @@ namespace AdministrationAPI.Controllers
                 foreach (var header in Request.Headers)
                 {
                     if (header.Key.CompareTo("Authorization") == 0)
-                        token=header.Value;
+                        token = header.Value;
                 }
               var response=  await _exchangeService.MakeTransaction(transactionRequest,token);
-             if(response != null)
-                return Ok(response);
-            else
-                    return BadRequest("Failed");
+                if (response.obj != null)
+                    return Ok(response.obj);
+                else if (response.message != "")
+                    return BadRequest(response.message);
+                else return BadRequest("Failed");
             }
             catch (Exception ex)
             {

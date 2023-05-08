@@ -17,11 +17,14 @@ namespace AdministrationAPI.Models.Transaction
         public DateTime? Modified { get; set; }
         public string? ModifiedBy { get; set; }
 
-        public TransactionClaim() 
+        public TransactionClaimStatus Status { get; set; }
+
+        public TransactionClaim()
         {
             TransactionId = -1;
             Subject = string.Empty;
             Description = string.Empty;
+            Status = TransactionClaimStatus.Open;
         }
     }
 }
