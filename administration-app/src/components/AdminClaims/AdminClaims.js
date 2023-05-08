@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CheckIcon from '@mui/icons-material/Check';
-import { getAllOpenClaims, getAssignedClaims } from '../../services/adminClaimService';
+import { getAllOpenClaims, getAssignedClaims, assignClaim } from '../../services/adminClaimService';
 const AdminClaims = () => {
 	const [value, setValue] = useState(0);
 	const [unassignedClaims, setUnassignedClaims] = useState([]);
@@ -11,6 +11,9 @@ const AdminClaims = () => {
 		setValue(newValue);
 	};
 
+	const assignClaimToAdmin = id => {
+		assignClaim({ transcationClaimId: id }).then(console.log('Assigned')).catch(console.error('Not assigned'));
+	};
 	useEffect(() => {
 		getAllOpenClaims().then(response =>
 			setUnassignedClaims(
@@ -96,7 +99,11 @@ const AdminClaims = () => {
 								<TableCell>{claim.description}</TableCell>
 								<TableCell>{claim.status}</TableCell>
 								<TableCell>
-									<Button onClick={() => {}}>
+									<Button
+										onClick={() => {
+											assignClaimToAdmin(claim.id);
+										}}
+									>
 										<PlaylistAddIcon />
 									</Button>
 								</TableCell>

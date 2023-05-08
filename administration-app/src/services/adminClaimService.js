@@ -20,3 +20,14 @@ export function getAssignedClaims() {
 		},
 	});
 }
+
+export function assignClaim(data) {
+	return axios(env.API_ENV.url + '/api/transactions/admin/claim/accept', {
+		method: 'PUT',
+		data: data,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
