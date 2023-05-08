@@ -10,3 +10,13 @@ export function getAllOpenClaims() {
 		},
 	});
 }
+
+export function getAssignedClaims() {
+	return axios(env.API_ENV.url + '/api/transactions/admin/claims', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
