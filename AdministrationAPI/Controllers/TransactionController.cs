@@ -144,6 +144,74 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin/claim/accept")]
+        public IActionResult AcceptTransactionClaim([FromBody] ClaimAcceptRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.AcceptTransactionClaim(request, userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin/claim/update")]
+        public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                var result = _transactionService.UpdateTransactionClaim(request, userId);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else return BadRequest("Claim not found.");
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/claims")]
+        public IActionResult GetTransactionClaimsForAdmin()
+        {
+            try
+            {
+                string userId = ControlExtensions.GetId(HttpContext);
+                return Ok(_transactionService.GetTransactionClaimsForAdmin(userId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/claims/open")]
+        public IActionResult GetTransactionClaimsOpen()
+        {
+            try
+            {
+                return Ok(_transactionService.GetTransactionClaimsOpen());
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("group/type")]
         public async Task<ActionResult<List<TransactionTransfer>>> GetGroupedTransactionsByType()
         {
