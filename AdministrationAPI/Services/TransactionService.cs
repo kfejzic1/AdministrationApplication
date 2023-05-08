@@ -161,6 +161,10 @@ namespace AdministrationAPI.Services
 
         public int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId)
         {
+            
+            var claimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == request.TransactionClaimId);
+            if(claimUser == null || (claimUser.AdminId!=userId && claimUser.UserId!=userId)) { return -1; }
+
             var transactionClaimMessage = new TransactionClaimMessage
             {
                 TransactionClaimId = request.TransactionClaimId,
