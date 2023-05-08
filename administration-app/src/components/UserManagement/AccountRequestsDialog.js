@@ -6,6 +6,7 @@ import { getAllRequests, approveRequest } from '../../services/currencyAccountCr
 
 function AccountRequestsDialog(props) {
 	const [accountRequests, setAccountRequests] = useState([]);
+	const [change, setChange] = useState(false);
 	const { open, onClose } = props;
 
 	useEffect(() => {
@@ -23,9 +24,13 @@ function AccountRequestsDialog(props) {
 				})
 			);
 		});
-	}, []);
+	}, [change]);
 	const handleApprove = id => {
-		approveRequest(id).then().catch(console.error('Error while approving request!'));
+		approveRequest(id)
+			.then(response => {
+				setChange(!change);
+			})
+			.catch(console.error('Error while approving request!'));
 	};
 	const handleDecline = id => {
 		setAccountRequests(accountRequests.filter(r => r.id !== id));
