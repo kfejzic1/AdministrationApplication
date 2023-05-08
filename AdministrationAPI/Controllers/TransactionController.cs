@@ -125,6 +125,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("claim/{id}")]
         public IActionResult GetTransactionClaim(int id)
         {
@@ -139,6 +140,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/accept")]
         public IActionResult AcceptTransactionClaim([FromBody] ClaimAcceptRequest request)
         {
@@ -154,6 +156,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/update")]
         public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
         {
@@ -169,7 +172,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims")]
         public IActionResult GetTransactionClaimsForAdmin()
         {
@@ -185,6 +188,7 @@ namespace AdministrationAPI.Controllers.Transaction
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims/open")]
         public IActionResult GetTransactionClaimsOpen()
         {
