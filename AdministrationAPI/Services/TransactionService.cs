@@ -161,9 +161,9 @@ namespace AdministrationAPI.Services
 
         public int CreateTransactionClaimMessage(ClaimMessageCreateRequest request, string userId)
         {
-            
+
             var claimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == request.TransactionClaimId);
-            if(claimUser == null || (claimUser.AdminId!=userId && claimUser.UserId!=userId)) { return -1; }
+            if (claimUser == null || (claimUser.AdminId != userId && claimUser.UserId != userId)) { return -1; }
 
             var transactionClaimMessage = new TransactionClaimMessage
             {
@@ -236,7 +236,7 @@ namespace AdministrationAPI.Services
         {
 
             var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
-            if(_appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.Id == transactionClaim.Id).AdminId!=userId) return null;
+            if (_appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.Id == transactionClaim.Id).AdminId != userId) return null;
             transactionClaim.Status = request.ClaimStatus;
             _appDbContext.SaveChanges();
 
@@ -253,8 +253,8 @@ namespace AdministrationAPI.Services
 
         public List<TransactionClaim> GetTransactionClaimsOpen()
         {
-            var adminClaimsId = _appDbContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == string.Empty).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
-            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => adminClaimsId.Contains(trc.Id)).ToList();
+            //var adminClaimsId = _appDbContext.TransactionClaimUsers.Where(claimAdmin => claimAdmin.AdminId == string.Empty).Select(claimAdmin => claimAdmin.TransactionClaimId).ToList();
+            var transactionClaims = _appDbContext.TransactionClaims.Where(trc => trc.Status.Equals(TransactionClaimStatus.Open)).ToList();
 
             return transactionClaims;
         }
