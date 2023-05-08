@@ -32,9 +32,6 @@ function AccountRequestsDialog(props) {
 			})
 			.catch(console.error('Error while approving request!'));
 	};
-	const handleDecline = id => {
-		setAccountRequests(accountRequests.filter(r => r.id !== id));
-	};
 
 	const handleDownload = request => {};
 	return (
