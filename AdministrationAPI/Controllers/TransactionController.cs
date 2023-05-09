@@ -159,7 +159,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/update")]
         public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
@@ -180,7 +179,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims")]
         public IActionResult GetTransactionClaimsForAdmin()
@@ -196,7 +194,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims/open")]
         public IActionResult GetTransactionClaimsOpen()
