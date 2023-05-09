@@ -14,11 +14,7 @@ export const NavBar = props => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			setUser(response.data);
 		});
-<<<<<<< HEAD
-	});
-=======
-	},[]);
->>>>>>> 42236cb289f6f0ffca74e6e618c3d4da26d4ea70
+	}, []);
 
 	const userAdmin = () => {
 		if (user.roles) {
