@@ -14,6 +14,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using AdministrationAPI.Contracts.Requests.Users;
+using System.Diagnostics.Eventing.Reader;
 
 namespace AdministrationAPI.Controllers
 {
@@ -88,10 +89,28 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
-                request.UserId = userId;
+                request.UserId = "ID";
                 request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
 
                 var result = await _accountService.CreateUserAccountCreationRequest(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.CreateUserAccount");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("accounts")]
+        public IActionResult ListAccounts()
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+
+                var result = _accountService.GetAllAccounts();
 
                 return Ok(result);
             }
@@ -121,15 +140,21 @@ namespace AdministrationAPI.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost("approve")]
-        public IActionResult ApproveRequest([FromQuery] int id)
+        public async Task<IActionResult> ApproveRequest([FromQuery] int id)
         {
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
-                var result = _accountService.ApproveRequest(id);
-
-                return Ok(result);
+                var result = await _accountService.ApproveRequest(id);
+                if (result != null)
+                {
+                    return Ok("Account created.");
+                }
+                
+                return BadRequest("Erorr");
+                
+                
             }
             catch (Exception ex)
             {
@@ -139,7 +164,7 @@ namespace AdministrationAPI.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpGet("history")]
-        public IActionResult RequestHistory([FromQuery] int id)
+        public IActionResult RequestHistory()
         {
             try
             {
