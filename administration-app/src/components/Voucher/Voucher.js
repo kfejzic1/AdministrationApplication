@@ -39,6 +39,7 @@ import RedeemIcon from '@mui/icons-material/Redeem';
 import EditIcon from '@mui/icons-material/Edit';
 import SellIcon from '@mui/icons-material/Sell';
 import { TablePagination } from '@mui/material';
+import { getValidateToken } from '../../services/userService';
 
 
 const theme = createTheme({
@@ -161,7 +162,29 @@ const Voucher = () => {
 	const [change, setChange] = useState(false);
 	const [dense, setDense] = useState(false);
 	const [page, setPage] = useState(0);
+	const [user, setUser] = useState("");
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+
+	useEffect(() => {
+		getValidateToken(localStorage.getItem('token')).then(response => {
+			setUser(
+				response.data
+			);
+		});
+	},[]);
+
+
+	const userAdmin = () => {
+		if(user.roles){
+			var b = user.roles.filter(v => v==='Admin')[0];
+			if(b=== "Admin"){
+				console.log("Uslo u ovu funkciju");
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
 
 
 	useEffect(() => {
@@ -322,15 +345,19 @@ const Voucher = () => {
 								<div></div>
 								<Stack direction='row'>
 									<Tooltip title='Create Voucher'>
-										<Button
-											className={classes.button}
-											size='small'
-											variant='text'
-											endIcon={<CreateIcon />}
-											onClick={handleCreateDialogOpen}
-										>
-											Create Voucher
-										</Button>
+										{userAdmin()?(
+											<Button
+												className={classes.button}
+												size='small'
+												variant='text'
+												endIcon={<CreateIcon />}
+												onClick={handleCreateDialogOpen}
+											>
+												Create Voucher
+											</Button>
+										):(
+											<h1></h1>
+										)}
 									</Tooltip>
 								</Stack>
 							</Toolbar>

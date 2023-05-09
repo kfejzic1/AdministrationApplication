@@ -1,50 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CheckIcon from '@mui/icons-material/Check';
+import { getAllOpenClaims, getAssignedClaims, assignClaim, updateClaim } from '../../services/adminClaimService';
 const AdminClaims = () => {
 	const [value, setValue] = useState(0);
-
+	const [unassignedClaims, setUnassignedClaims] = useState([]);
+	const [assignedClaims, setAssignedClaims] = useState([]);
+	const [change, setChange] = useState(false);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
-	const acceptedClaims = [
-		{ id: 1, transactionId: '123456', subject: 'Subject', status: 'Under investigation' },
-		{ id: 2, transactionId: '789012', subject: 'Subject', status: 'Under investigation' },
-		{ id: 3, transactionId: '345678', subject: 'Subject', status: 'Under investigation' },
-	];
+	const assignClaimToAdmin = id => {
+		assignClaim({ transcationClaimId: id }).then(console.log('Assigned')).catch(console.error('Not assigned'));
+	};
 
-	const unacceptedClaims = [
-		{ id: 4, transactionId: '901234', status: 'Open' },
-		{ id: 5, transactionId: '567890', status: 'Open' },
-		{ id: 6, transactionId: '234567', status: 'Open' },
-	];
+	const updateStatus = claim => {
+		if (claim.status !== 'Solved_Confirmed') {
+			let newStatus = claim.status === 'Solved' ? 'Solved_Confirmed' : 'Solved';
+			updateClaim({ transcationClaimId: claim.id, claimStatus: newStatus })
+				.then(response => setChange(!change))
+				.catch(console.error('Error while changing claim status!'));
+		}
+	};
+	useEffect(() => {
+		getAllOpenClaims().then(response =>
+			setUnassignedClaims(
+				response.data.map(c => {
+					return {
+						id: c.id,
+						transactionId: c.transactionId,
+						subject: c.subject,
+						description: c.description,
+						status: c.status,
+					};
+				})
+			)
+		);
+	});
+
+	useEffect(() => {
+		getAssignedClaims().then(response =>
+			setAssignedClaims(
+				response.data.map(c => {
+					return {
+						id: c.id,
+						transactionId: c.transactionId,
+						subject: c.subject,
+						description: c.description,
+						status: c.status,
+					};
+				})
+			)
+		);
+	});
 
 	return (
 		<Box sx={{ width: '100%', typography: 'body1' }}>
 			<Tabs value={value} onChange={handleChange} aria-label='Claims Tabs'>
-				<Tab label='Accepted Claims' />
-				<Tab label='Unaccepted Claims' />
+				<Tab label='Your Claims' />
+				<Tab label='Unassigned Claims' />
 			</Tabs>
 			<Box hidden={value !== 0}>
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>ID</TableCell>
 							<TableCell>Transaction ID</TableCell>
+							<TableCell>Subject</TableCell>
+							<TableCell>Description</TableCell>
 							<TableCell>Status</TableCell>
 							<TableCell>Action</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{acceptedClaims.map(claim => (
+						{assignedClaims.map(claim => (
 							<TableRow key={claim.id}>
-								<TableCell>{claim.id}</TableCell>
 								<TableCell>{claim.transactionId}</TableCell>
+								<TableCell>{claim.subject}</TableCell>
+								<TableCell>{claim.description}</TableCell>
 								<TableCell>{claim.status}</TableCell>
 								<TableCell>
-									<Button onClick={() => {}}>
+									<Button
+										onClick={() => {
+											updateStatus(claim);
+										}}
+									>
 										<CheckIcon />
 									</Button>
 								</TableCell>
@@ -57,20 +98,26 @@ const AdminClaims = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>ID</TableCell>
 							<TableCell>Transaction ID</TableCell>
+							<TableCell>Subject</TableCell>
+							<TableCell>Description</TableCell>
 							<TableCell>Status</TableCell>
 							<TableCell>Action</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{unacceptedClaims.map(claim => (
+						{unassignedClaims.map(claim => (
 							<TableRow key={claim.id}>
-								<TableCell>{claim.id}</TableCell>
 								<TableCell>{claim.transactionId}</TableCell>
+								<TableCell>{claim.subject}</TableCell>
+								<TableCell>{claim.description}</TableCell>
 								<TableCell>{claim.status}</TableCell>
 								<TableCell>
-									<Button onClick={() => {}}>
+									<Button
+										onClick={() => {
+											assignClaimToAdmin(claim.id);
+										}}
+									>
 										<PlaylistAddIcon />
 									</Button>
 								</TableCell>
