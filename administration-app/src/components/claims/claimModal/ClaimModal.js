@@ -311,7 +311,7 @@ export default function ClaimModal(props) {
                             <b>
                               <a
                                 className={message.isUser ? classes.userLink : classes.agentLink}
-                                href={`file:${message.file}`}
+                                href={`file://siprojekat.duckdns.org${message.file}`}
                                 download
                           >
                                 {message.fileName}
