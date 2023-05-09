@@ -89,7 +89,7 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
-                request.UserId = "ID";
+                request.UserId = userId;
                 request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
 
                 var result = await _accountService.CreateUserAccountCreationRequest(request);
