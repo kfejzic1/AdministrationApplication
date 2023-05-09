@@ -7,7 +7,9 @@ import Loader from '../../loaderDialog/Loader';
 import sendIcon from '../../../../src/sencIcon.png';
 import { replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import { getUserClaim } from '../../../services/transactionClaimService';
+import { addClaimMessage,getDocumentById } from '../../../services/claimService';
 import { getUserId } from '../../../services/userService';
+import {uploadFile} from '../../../services/TransactionsView/transactionsService';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -127,7 +129,7 @@ export default function ClaimModal(props) {
     setEvent(event);
   };
   const [messages, setMessages] = useState([ ]);
-  const fetchData = async () => {
+  const fetchData =  () => {
     getUserClaim(props.claimId).then(res => {
       setClaim({id:res.data.claim.id, 
         transactionId: res.data.claim.transactionId, 
@@ -144,16 +146,32 @@ export default function ClaimModal(props) {
       let docs = [];
       res.data.documents.forEach(doc=>{
         docs.push(doc.unc);
+        console.log(doc);
       });
       res.data.messages.forEach(mess => {
+        console.log(mess);
+        if(mess.documents.length!=0){
+          console.log("!1111111111!"+mess.documents[0].unc);
         let message = {
           text: mess.message,
           isUser: mess.userId === user,
           name: mess.userName,
-          // file: '\\siprojekat.duckdns.org'+mess.documents[0].unc,
+           file: mess.documents[0].unc,
+           fileName: mess.documents[0].fileName
         };
         beMessages.push(message);
-        console.log(message); 
+        }
+        else{
+          let message = {
+            text: mess.message,
+            isUser: mess.userId === user,
+            name: mess.userName,
+             file: null,
+             fileName:null
+          };
+          beMessages.push(message);
+          console.log(message);
+        }
       }); 
       setMessages(beMessages); 
     });
@@ -172,19 +190,40 @@ export default function ClaimModal(props) {
     setChatMessages([...chatMessages, newMessage]);
     setNewMessage('');
   };
-
+  const [docId, setDocId] = useState([]);
   const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
+    setDocId(null);
+    if (newMessage.trim() !== ''||file!=null) {
       getUser().then(res => {
-        let message = { text: newMessage, isUser: true, name: res.data.firstName, file: file }
-        setMessages([...messages, message ]);
+        if(file!=null){
+       uploadFile(file,'transactions/claims', claim.transactionId).then(res1=>{
+        setDocId([]);
+        console.log(res1.data);
+        docId.push(res1.data);
+        let mess1={ transactionClaimId:claim.id, message: newMessage, documentIds:docId };
+        addClaimMessage(mess1).then(res2=>{console.log(res2.data);
+         fetchData();
+       // setMessages([...messages, message ]);
+        });
+       });
+        }
+      else{
+        let mess1={ transactionClaimId:claim.id, message: newMessage, documentIds:[] };
+        addClaimMessage(mess1).then(res2=>{console.log(res2.data);
+          fetchData();
+        });}
+       
         setNewMessage('');
+        setDocId(null);
         setFile(null);
+        if(event!=null)
         event.target.value = '';
-
+        
       });
     }
   };
+  
+  
   return (
     <div>
       <div className='container'>
@@ -255,7 +294,7 @@ export default function ClaimModal(props) {
                   style={{ height: '300px', overflowY: 'auto', margin: '0 70px', display: 'flex' }}
                   ref={chatListRef}
                 >
-                  {messages.map((message, index) => (
+                  {messages.map( (message, index) => (
                     <div
                       key={index}
                       className={`${classes.chatModalMessage} ${message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent
@@ -275,10 +314,10 @@ export default function ClaimModal(props) {
                             <b>
                               <a
                                 className={message.isUser ? classes.userLink : classes.agentLink}
-                                href={URL.createObjectURL(message.file)}
+                                href={`file:${message.file}`}
                                 download
-                              >
-                                {message.file.name}
+                          >
+                                {message.fileName}
                               </a>
                             </b>
                           </div>
