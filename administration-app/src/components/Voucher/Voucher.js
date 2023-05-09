@@ -171,7 +171,7 @@ const Voucher = () => {
 				response.data
 			);
 		});
-	});
+	},[]);
 
 
 	const userAdmin = () => {

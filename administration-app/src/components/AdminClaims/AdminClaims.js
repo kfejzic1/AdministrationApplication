@@ -13,7 +13,9 @@ const AdminClaims = () => {
 	};
 
 	const assignClaimToAdmin = id => {
-		assignClaim({ transcationClaimId: id }).then(console.log('Assigned')).catch(console.error('Not assigned'));
+		assignClaim({ transactionClaimId: id })
+			.then(response => console.log('Assigned'))
+			.catch(error => console.error('Not assigned', error));
 	};
 
 	const updateStatus = claim => {
@@ -21,7 +23,7 @@ const AdminClaims = () => {
 			let newStatus = claim.status === 'Solved' ? 'Solved_Confirmed' : 'Solved';
 			updateClaim({ transcationClaimId: claim.id, claimStatus: newStatus })
 				.then(response => setChange(!change))
-				.catch(console.error('Error while changing claim status!'));
+				.catch(error => console.error('Error while changing claim status', error));
 		}
 	};
 	useEffect(() => {
@@ -38,7 +40,7 @@ const AdminClaims = () => {
 				})
 			)
 		);
-	});
+	}, []);
 
 	useEffect(() => {
 		getAssignedClaims().then(response =>
@@ -54,7 +56,7 @@ const AdminClaims = () => {
 				})
 			)
 		);
-	});
+	}, []);
 
 	return (
 		<Box sx={{ width: '100%', typography: 'body1' }}>
@@ -115,6 +117,7 @@ const AdminClaims = () => {
 								<TableCell>
 									<Button
 										onClick={() => {
+											console.log(claim.id);
 											assignClaimToAdmin(claim.id);
 										}}
 									>
