@@ -94,7 +94,20 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [HttpGet("documents/{docId}")]
+        public IActionResult GetDocumentById([FromRoute]int docId)
+        {
+            try
+            {
+                
+                return Ok(_transactionService.GetDocument(docId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpGet("user/claims")]
         public IActionResult GetTransactionClaimsForUser()
         {
