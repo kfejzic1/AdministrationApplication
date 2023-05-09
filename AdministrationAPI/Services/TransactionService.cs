@@ -29,7 +29,18 @@ namespace AdministrationAPI.Services
             _appDbContext = appContext;
         }
 
+        public TransactionClaimMessageDocumentResponse GetDocument(int id)
+        {
+           var doc= _appDbContext.Documents.FirstOrDefault(d => d.Id == id);
+            return new TransactionClaimMessageDocumentResponse
+            {
+                CreatedBy = doc.CreatedBy,
+                FileName= doc.FileName,
+                TransactionClaimMessageDocumentId=doc.Id,
+                Unc=doc.UNC
 
+            };
+        }
         public async Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options)
         {
             string query = "?token=" + token;
