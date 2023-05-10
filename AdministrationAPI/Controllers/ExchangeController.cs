@@ -19,7 +19,7 @@ namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExchangeController : ControllerBase
     {
 
@@ -168,30 +168,21 @@ namespace AdministrationAPI.Controllers
                             {
                                 if (response.obj[r].Owner.UserId == user.Id && response.obj[r].Currency == transactionRequest.RecipientCurrnecy)
                                 {
-                                    Console.WriteLine("ma nemojjjjjjj");
                                     var transaction = new TransactionRequest();
-
-                                    Console.WriteLine("ma nemojjjjjjj1");
                                     transaction.Amount = transactionRequest.Amount;
                                     transaction.TransactionPurpose = transactionRequest.TransactionPurpose;
                                     transaction.Currency = transactionRequest.SenderCurrency;
 
-                                    Console.WriteLine("ma nemojjjjjjj2");
                                     var sender = new SenderRequest();
                                     sender.AccountNumber= response.obj[j].AccountNumber;
-                                    transaction.Sender = sender;// response.obj[j].AccountNumber;
+                                    transaction.Sender = sender;
                                     var recipient = new RecipientRequest();
                                     recipient.AccountNumber= response.obj[r].AccountNumber;
                                     recipient.Name = response.obj[r].Owner.Name;
                                     transaction.Recipient = recipient;
-                                   
-                                    //transaction.Recipient.AccountNumber= response.obj[r].AccountNumber;
-
-                                    Console.WriteLine("ma nemojjjjjjj3");
                                     transaction.Recipient.Name = response.obj[r].Owner.Name;
                                     transaction.Category = "Exchange";
                                     transaction.TransactionType = "C2C";
-                                    Console.WriteLine("moja adsjgadgagaga");
                                     var response2 = await _exchangeService.MakeTransaction(transaction, token);
                                     if (response2.obj != null)
                                         return Ok(response2.obj);
