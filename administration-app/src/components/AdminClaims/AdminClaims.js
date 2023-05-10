@@ -21,7 +21,7 @@ const AdminClaims = () => {
 	const updateStatus = claim => {
 		if (claim.status !== 'Solved_Confirmed') {
 			let newStatus = claim.status === 'Solved' ? 'Solved_Confirmed' : 'Solved';
-			updateClaim({ transcationClaimId: claim.id, claimStatus: newStatus })
+			updateClaim({ transactionClaimId: claim.id, claimStatus: newStatus })
 				.then(response => setChange(!change))
 				.catch(error => console.error('Error while changing claim status', error));
 		}
