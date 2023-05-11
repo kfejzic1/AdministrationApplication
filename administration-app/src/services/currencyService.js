@@ -45,7 +45,7 @@ export function createCurrency(request) {
 }
 
 export function createExchangeTransaction(request) {
-	return axios(env.API_ENV.url + "/api/exchange/createtransaction", {
+	return axios(env.API_ENV.url + "/api/exchange/createexchangetransaction", {
 		method: 'POST',
 		data: request,
 		headers: {
