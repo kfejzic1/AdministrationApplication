@@ -7,9 +7,10 @@ import Loader from '../../loaderDialog/Loader';
 import sendIcon from '../../../../src/sencIcon.png';
 import { replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import { getUserClaim } from '../../../services/transactionClaimService';
-import { addClaimMessage,getDocumentById } from '../../../services/claimService';
+import { addClaimMessage, getDocumentById } from '../../../services/claimService';
 import { getUserId } from '../../../services/userService';
-import {uploadFile} from '../../../services/TransactionsView/transactionsService';
+import { uploadFile } from '../../../services/TransactionsView/transactionsService';
+import ClaimDocumentTable from './ClaimDocumentTable';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -100,6 +101,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ClaimModal(props) {
+  const [documents, setDocuments] = useState([]);
   const [claim, setClaim] = useState({});
   const [open, setOpen] = useState(false);
   const [loaderState, setLoaderState] = useState({
@@ -127,50 +129,48 @@ export default function ClaimModal(props) {
     setFile(file);
     setEvent(event);
   };
-  const [messages, setMessages] = useState([ ]);
-  const fetchData =  () => {
+  const [messages, setMessages] = useState([]);
+  const fetchData = () => {
     getUserClaim(props.claimId).then(res => {
-      setClaim({id:res.data.claim.id, 
-        transactionId: res.data.claim.transactionId, 
-        subject: res.data.claim.subject, 
+      setClaim({
+        id: res.data.claim.id,
+        transactionId: res.data.claim.transactionId,
+        subject: res.data.claim.subject,
         description: res.data.claim.description,
         created: res.data.claim.created.split('T')[0],
         modified: res.data.claim.modified == null ? res.data.claim.created.split('T')[0] : res.data.claim.modified.split('T')[0],
         status: res.data.claim.status,
       });
+      setDocuments(res.data.documents);
       let user = getUserId();
       let beMessages = [];
       let docs = [];
-      res.data.documents.forEach(doc=>{
+      res.data.documents.forEach(doc => {
         docs.push(doc.unc);
-        console.log(doc);
       });
       res.data.messages.forEach(mess => {
-        console.log(mess);
-        if(mess.documents.length!=0){
-          console.log("!1111111111!"+mess.documents[0].unc);
-        let message = {
-          text: mess.message,
-          isUser: mess.userId === user,
-          name: mess.userName,
-           file: mess.documents[0].unc,
-           fileName: mess.documents[0].fileName
-        };
-        beMessages.push(message);
-        }
-        else{
+        if (mess.documents.length != 0) {
           let message = {
             text: mess.message,
             isUser: mess.userId === user,
             name: mess.userName,
-             file: null,
-             fileName:null
+            file: mess.documents[0].unc.slice(8),
+            fileName: mess.documents[0].fileName
           };
           beMessages.push(message);
-          console.log(message);
         }
-      }); 
-      setMessages(beMessages); 
+        else {
+          let message = {
+            text: mess.message,
+            isUser: mess.userId === user,
+            name: mess.userName,
+            file: null,
+            fileName: null
+          };
+          beMessages.push(message);
+        }
+      });
+      setMessages(beMessages);
     });
   };
   const chatListRef = useRef(null);
@@ -180,7 +180,7 @@ export default function ClaimModal(props) {
   }, [messages]);
   useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
   const handleSubmit = () => {
     // Handle form submit here
@@ -190,37 +190,37 @@ export default function ClaimModal(props) {
   const [docId, setDocId] = useState([]);
   const handleSendMessage = () => {
     setDocId(null);
-    if (newMessage.trim() !== ''||file!=null) {
+    if (newMessage.trim() !== '' || file != null) {
       getUser().then(res => {
-        if(file!=null){
-       uploadFile(file,'transactions/claims', claim.transactionId).then(res1=>{
-        setDocId([]);
-        console.log(res1.data);
-        docId.push(res1.data);
-        let mess1={ transactionClaimId:claim.id, message: newMessage, documentIds:docId };
-        addClaimMessage(mess1).then(res2=>{console.log(res2.data);
-         fetchData();
-       // setMessages([...messages, message ]);
-        });
-       });
+        if (file != null) {
+          uploadFile(file, 'transactions/claims', claim.transactionId).then(res1 => {
+            setDocId([]);
+            docId.push(res1.data);
+            let mess1 = { transactionClaimId: claim.id, message: newMessage, documentIds: docId };
+            addClaimMessage(mess1).then(res2 => {
+              fetchData();
+              // setMessages([...messages, message ]);
+            });
+          });
         }
-      else{
-        let mess1={ transactionClaimId:claim.id, message: newMessage, documentIds:[] };
-        addClaimMessage(mess1).then(res2=>{console.log(res2.data);
-          fetchData();
-        });}
-       
+        else {
+          let mess1 = { transactionClaimId: claim.id, message: newMessage, documentIds: [] };
+          addClaimMessage(mess1).then(res2 => {
+            fetchData();
+          });
+        }
+
         setNewMessage('');
         setDocId(null);
         setFile(null);
-        if(event!=null)
-        event.target.value = '';
-        
+        if (event != null)
+          event.target.value = '';
+
       });
     }
   };
-  
-  
+
+
   return (
     <div>
       <div className='container'>
@@ -285,13 +285,17 @@ export default function ClaimModal(props) {
                 </Grid>
               </Box>
 
+              <Box>
+                <ClaimDocumentTable documents={documents} />
+              </Box>
+
               <div className={classes.chatModal}>
                 <div
                   className={classes.chatModalMessages}
                   style={{ height: '300px', overflowY: 'auto', margin: '0 70px', display: 'flex' }}
                   ref={chatListRef}
                 >
-                  {messages.map( (message, index) => (
+                  {messages.map((message, index) => (
                     <div
                       key={index}
                       className={`${classes.chatModalMessage} ${message.isUser ? classes.chatModalMessageUser : classes.chatModalMessageAgent
@@ -311,9 +315,9 @@ export default function ClaimModal(props) {
                             <b>
                               <a
                                 className={message.isUser ? classes.userLink : classes.agentLink}
-                                href={`file://siprojekat.duckdns.org${message.file}`}
+                                href={`http://siprojekat.duckdns.org:8081${message.file}`}
                                 download
-                          >
+                              >
                                 {message.fileName}
                               </a>
                             </b>
