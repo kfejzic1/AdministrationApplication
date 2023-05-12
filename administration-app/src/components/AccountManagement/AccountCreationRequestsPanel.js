@@ -205,24 +205,6 @@ const AccountCreationRequestsPanel = () => {
 		if (currency_id && description && description != '') {
 			setErrorMessage('');
 
-			if (files) {
-				console.log(files);
-				for (var i = 0; i < files.length; i++) {
-					let formdata = new FormData();
-					formdata.append('ContentType', 'application/pdf');
-					formdata.append('Folder', '/user-requests/' + getUserId() + '/' + currency_id);
-					formdata.append('file', files[i]);
-
-					for (var pair of formdata.entries()) {
-						console.log(pair[0]);
-						console.log(pair[1]);
-					}
-					uploadDocument(formdata).then(res => {
-						console.log(res);
-					});
-				}
-			}
-
 			let objectData = {
 				currencyId: currency_id,
 				description: description,
@@ -230,11 +212,33 @@ const AccountCreationRequestsPanel = () => {
 			};
 
 			createAccountCreationRequest(objectData).then(res => {
+				if (files) {
+					console.log(files);
+					for (var i = 0; i < files.length; i++) {
+						let formdata = new FormData();
+						formdata.append('ContentType', 'application/pdf');
+						formdata.append('Folder', '/user-requests/' + getUserId() + '/' + currency_id);
+						formdata.append('file', files[i]);
+	
+						for (var pair of formdata.entries()) {
+							console.log(pair[0]);
+							console.log(pair[1]);
+						}
+						uploadDocument(formdata).then(res => {
+							console.log(res);
+						});
+					}
+				}
+				
 				setAccounts([...accounts, res.data]);
 				setSelectedCurrency(currencies[0].name);
 				setDescription(null);
 				handleCreateDialogClose();
-			});
+			})
+			.catch(err => {
+					setErrorMessage(err.response.data);
+				}
+			);
 		} else {
 			setErrorMessage('Invalid input data!');
 		}
