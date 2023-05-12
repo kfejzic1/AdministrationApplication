@@ -89,11 +89,19 @@ namespace AdministrationAPI.Controllers
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
                 request.UserId = userId;
-                request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId; 
+                request.RequestDocumentPath = request.RequestDocumentPath + userId + "/" + request.CurrencyId;
 
-                var result = await _accountService.CreateUserAccountCreationRequest(request);
+                try
+                {
+                    var result = await _accountService.CreateUserAccountCreationRequest(request);
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Account request with this currency already exists.");
+                }
 
-                return Ok(result);
+
             }
             catch (Exception ex)
             {
@@ -108,7 +116,7 @@ namespace AdministrationAPI.Controllers
             try
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-               
+
                 var result = _accountService.GetAllRequests();
 
                 return Ok(result);
