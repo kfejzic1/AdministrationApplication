@@ -21,6 +21,9 @@ import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
 
+
+import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
+
 function App() {
 	const [token, setToken] = useState(null);
 	return (
@@ -135,6 +138,7 @@ function App() {
 						<Route path='/login' element={<LoginForm setToken={setToken} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />
+						<Route path='/register-eInvoice' element={<ElectronicInvoiceTemplate />} />
 					</Routes>
 				</Router>
 			</div>
