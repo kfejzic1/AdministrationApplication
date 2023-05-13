@@ -1,3 +1,4 @@
+using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.Vendors;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models.Vendor;
@@ -29,27 +30,46 @@ namespace AdministrationAPI.Controllers
     }
 
 
-  [HttpGet("{b2bID}/e-invoices/requests/")]
-  public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID) {
+    [HttpGet("{b2bID}/e-invoices/requests/")]
+    public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
+    {
 
-    var result = await _adminEInvoiceService.GetInvoiceRequestsByID(b2bID);
-    return result;
-    
-  }
+      var result = await _adminEInvoiceService.GetInvoiceRequestsByID(b2bID);
+      return result;
 
-  [HttpPost("{requestID}/e-invoices/approve/")]
-   public async Task<IActionResult> HandleRequestStatus([FromQuery] bool approve, int requestID) 
-   {  
-    try {
-      var result = await _adminEInvoiceService.HandleRequestStatus(approve, requestID);
-      return Ok(result);
     }
 
-    catch(Exception e) {
-      LoggerUtility.Logger.LogException(e, "AdminEInvoiceController.HandleRequestStatus");
-       return StatusCode(500, e.Message);
+    [HttpPost("{requestID}/e-invoices/approve/")]
+    public async Task<IActionResult> HandleRequestStatus([FromQuery] bool approve, int requestID)
+    {
+      try
+      {
+        var result = await _adminEInvoiceService.HandleRequestStatus(approve, requestID);
+        return Ok(result);
+      }
+
+      catch (Exception e)
+      {
+        LoggerUtility.Logger.LogException(e, "AdminEInvoiceController.HandleRequestStatus");
+        return StatusCode(500, e.Message);
+      }
     }
-   }
+
+    [HttpPost("{b2bID}/e-invoices/create")]
+    public async Task<IActionResult> DefineRequiredDataForVendor(int b2bID, [FromBody] RequiredData data)
+    {
+      try
+      {
+        var result = await _adminEInvoiceService.DefineRequiredDataForVendor(b2bID, data);
+        return Ok(result);
+      }
+
+      catch (Exception e)
+      {
+        LoggerUtility.Logger.LogException(e, "AdminEInvoiceController.DefineRequiredDataForVendor");
+        return StatusCode(500, e.Message);
+      }
+    }
 
 
 

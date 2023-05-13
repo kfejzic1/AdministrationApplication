@@ -1,3 +1,4 @@
+using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
@@ -23,39 +24,63 @@ namespace AdministrationAPI.Services
       return await _context.EInvoiceRequests.Include("User").Include("Vendor").ToListAsync();
     }
 
-        //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
+    //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
 
-     public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
-     {
-        var eInvoiceRequests = await _context.EInvoiceRequests.Include("User").Include("Vendor").Where(ereq => ereq.VendorId == b2bID).ToListAsync();
-        return eInvoiceRequests;
-     }
-
-
-     public async Task<EInvoiceRequest> HandleRequestStatus(bool approve, int requestID) {
-
-      var request =  await _context.EInvoiceRequests.Include("User").Include("Vendor").FirstOrDefaultAsync(r => r.EInvoiceRequestId == requestID);
-
-    // If the request is not found, return a 404 Not Found response
-    if (request == null)
+    public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
     {
+      var eInvoiceRequests = await _context.EInvoiceRequests.Include("User").Include("Vendor").Where(ereq => ereq.VendorId == b2bID).ToListAsync();
+      return eInvoiceRequests;
+    }
+
+
+    public async Task<EInvoiceRequest> HandleRequestStatus(bool approve, int requestID)
+    {
+
+      var request = await _context.EInvoiceRequests.Include("User").Include("Vendor").FirstOrDefaultAsync(r => r.EInvoiceRequestId == requestID);
+
+      // If the request is not found, return a 404 Not Found response
+      if (request == null)
+      {
         throw new Exception("Request not found");
+      }
+
+      if (request.Status != 1)
+      {
+        throw new Exception("The request has already been handled");
+
+      }
+
+
+      request.Status = approve ? 2 : 0;
+      await _context.SaveChangesAsync();
+
+      // Return the Request object with the "approved" variable set
+      return request;
+
+
     }
 
-    if (request.Status != 1) {
-      throw new Exception("The request has already been handled");
+    public async Task<Vendor> DefineRequiredDataForVendor(int vendorId, RequiredData data)
+    {
+      var vendor = await _context.Vendors.FirstOrDefaultAsync(vendor => vendor.Id == vendorId);
+      if (vendor == null)
+      {
+        throw new Exception("Vendor not found");
+      }
 
+      vendor.Param1 = data.Param1;
+
+      vendor.Param2 = data.Param2;
+
+      vendor.Param3 = data.Param3;
+
+      vendor.Param4 = data.Param4;
+
+      await _context.SaveChangesAsync();
+      return vendor;
     }
 
-
-    request.Status=approve ? 2 : 0;
-    await _context.SaveChangesAsync();
-
-    // Return the Request object with the "approved" variable set
-    return request;
+  }
 
 
-     }
-
-    }
 }
