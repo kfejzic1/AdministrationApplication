@@ -24,9 +24,9 @@ namespace AdministrationAPI.Services
 
         //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
 
-     public List<EInvoiceRequest> GetInvoiceRequestsByID(int id)
+     public List<EInvoiceRequest> GetInvoiceRequestsByID(int b2bID)
      {
-        var eInvoiceRequests = _context.EInvoiceRequests.Where(ereq => ereq.VendorId == id).ToList();
+        var eInvoiceRequests = _context.EInvoiceRequests.Where(ereq => ereq.VendorId == b2bID).ToList();
         return eInvoiceRequests;
      }
     }

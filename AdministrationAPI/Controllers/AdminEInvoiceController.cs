@@ -30,9 +30,9 @@ namespace AdministrationAPI.Controllers
 
 
   [HttpGet("{b2bID}/e-invoices/requests/")]
-  public  List<EInvoiceRequest> GetInvoiceRequestsByID(int id) {
+  public  List<EInvoiceRequest> GetInvoiceRequestsByID(int b2bID) {
 
-   var result = _adminEInvoiceService.GetInvoiceRequestsByID(id);
+    var result = _adminEInvoiceService.GetInvoiceRequestsByID(b2bID);
     return result;
     
   }
