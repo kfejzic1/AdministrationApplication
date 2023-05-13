@@ -30,12 +30,28 @@ namespace AdministrationAPI.Controllers
 
 
   [HttpGet("{b2bID}/e-invoices/requests/")]
-  public  List<EInvoiceRequest> GetInvoiceRequestsByID(int b2bID) {
+  public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID) {
 
-    var result = _adminEInvoiceService.GetInvoiceRequestsByID(b2bID);
+    var result = await _adminEInvoiceService.GetInvoiceRequestsByID(b2bID);
     return result;
     
   }
+
+  [HttpPost("{requestID}/e-invoices/approve/")]
+   public async Task<IActionResult> HandleRequestStatus([FromQuery] bool approve, int requestID) 
+   {  
+    try {
+      var result = await _adminEInvoiceService.HandleRequestStatus(approve, requestID);
+      return Ok(result);
+    }
+
+    catch(Exception e) {
+      LoggerUtility.Logger.LogException(e, "AdminEInvoiceController.HandleRequestStatus");
+       return StatusCode(500, e.Message);
+    }
+   }
+
+
 
   }
 }

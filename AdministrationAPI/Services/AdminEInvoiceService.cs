@@ -2,6 +2,7 @@ using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdministrationAPI.Services
@@ -19,15 +20,43 @@ namespace AdministrationAPI.Services
 
     public async Task<List<EInvoiceRequest>> GetAllInvoiceRequests()
     {
-      return await _context.EInvoiceRequests.ToListAsync();
+      return await _context.EInvoiceRequests.Include("User").Include("Vendor").ToListAsync();
     }
 
         //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
 
-     public List<EInvoiceRequest> GetInvoiceRequestsByID(int b2bID)
+     public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
      {
-        var eInvoiceRequests = _context.EInvoiceRequests.Where(ereq => ereq.VendorId == b2bID).ToList();
+        var eInvoiceRequests = await _context.EInvoiceRequests.Include("User").Include("Vendor").Where(ereq => ereq.VendorId == b2bID).ToListAsync();
         return eInvoiceRequests;
      }
+
+
+     public async Task<EInvoiceRequest> HandleRequestStatus(bool approve, int requestID) {
+
+      var request =  await _context.EInvoiceRequests.Include("User").Include("Vendor").FirstOrDefaultAsync(r => r.EInvoiceRequestId == requestID);
+
+    // If the request is not found, return a 404 Not Found response
+    if (request == null)
+    {
+        throw new Exception("Request not found");
+    }
+
+    if (request.Status != 1) {
+      Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+      throw new Exception("The request has already been handled");
+
+    }
+
+
+    request.Status=approve ? 2 : 0;
+    await _context.SaveChangesAsync();
+
+    // Return the Request object with the "approved" variable set
+    return request;
+
+
+     }
+
     }
 }

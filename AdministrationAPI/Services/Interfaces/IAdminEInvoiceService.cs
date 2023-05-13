@@ -6,6 +6,10 @@ namespace AdministrationAPI.Services.Interfaces
   {
     public Task<List<EInvoiceRequest>> GetAllInvoiceRequests();
 
-    public List<EInvoiceRequest> GetInvoiceRequestsByID(int b2bID);
+    public Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID);
+
+    public Task<EInvoiceRequest> HandleRequestStatus(bool approve, int requestID);
   }
+
+  
 }
