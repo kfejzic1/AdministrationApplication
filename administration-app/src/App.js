@@ -134,15 +134,16 @@ function App() {
 							}
 						/>
 
-						<Route
-							path='/voucher'
-							element={
-								<ProtectedRoute>
-									<Voucher />
-								</ProtectedRoute>
-							}
-						/>
-
+						{isAdmin ? (
+							<Route
+								path='/voucher'
+								element={
+									<ProtectedRoute>
+										<Voucher />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
 						<Route
 							path='/claims'
 							element={
@@ -151,14 +152,16 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-						<Route
-							path='/einovicedata'
-							element={
-								<ProtectedRoute>
-									<EinoviceRequiredData />
-								</ProtectedRoute>
-							}
-						/>
+						{isAdmin ? (
+							<Route
+								path='/einovicedata'
+								element={
+									<ProtectedRoute>
+										<EinoviceRequiredData />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
 
 						<Route path='/login' element={<LoginForm setToken={setToken} setIsAdmin={setIsAdmin} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
