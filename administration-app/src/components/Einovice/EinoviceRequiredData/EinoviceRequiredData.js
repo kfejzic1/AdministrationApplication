@@ -11,6 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MenuItem from '@mui/material/MenuItem';
 import { getAllVendors } from '../../../services/vendorService';
+import { specifyData } from '../../../services/Einovice/requiredDataServices';
 const EinoviceRequiredData = props => {
 	const [data1, setData] = useState(['sad']);
 	const [refresh, setRefresh] = useState(false);
@@ -103,7 +104,17 @@ const EinoviceRequiredData = props => {
 						variant='contained'
 						style={{ display: 'flex' }}
 						onClick={() => {
-							console.log('dafdaf=', id);
+							var k = data1.map((item, index) => {
+								return '"param' + (index + 1) + '":"' + item + '",';
+							});
+							var t = '';
+							for (var i = 0; i < k.length; i++) {
+								console.log('k=', k[i]);
+								t += k[i];
+							}
+							t = t.slice(0, t.length - 1);
+							t = '{' + t + '}';
+							specifyData(id, JSON.parse(t));
 						}}
 					>
 						Define
