@@ -74,7 +74,7 @@ namespace AdministrationAPI.Services
         public async Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request)
         {
             var accRequest = _context.AccountCreationRequests.FirstOrDefault(acr => acr.UserId == request.UserId && acr.CurrencyId == request.CurrencyId);
-            if (accRequest != null)
+            if (_context.AccountCreationRequests.Count() != 0 && accRequest != null)
             {
                 throw new Exception("Account request with this currency already exists.");
 
@@ -87,6 +87,7 @@ namespace AdministrationAPI.Services
                 RequestDocumentPath = request.RequestDocumentPath,
                 Approved = false
             };
+            Console.WriteLine("ac::: " + request.UserId + " " + request.CurrencyId);
 
             _context.AccountCreationRequests.Add(newAccountCreationRequest);
 
