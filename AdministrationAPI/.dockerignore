@@ -1,0 +1,6 @@
+Migrations
+.config
+.vscode
+bin
+obj
+libman.json

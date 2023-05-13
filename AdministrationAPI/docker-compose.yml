@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+    backend:
+        image: evlahovlja1/siprojekat-backend
+        container_name: siprojekat-backend
+        ports:
+            - '5051:80'
+        networks:
+            - siprojekat-backend-mreza
+        volumes:
+          - /sifiles:/app/sifiles
+
+networks:
+  siprojekat-backend-mreza:
+    name: siprojekat-backend-mreza
