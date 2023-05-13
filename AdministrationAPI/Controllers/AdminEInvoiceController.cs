@@ -28,5 +28,14 @@ namespace AdministrationAPI.Controllers
       return Ok(result);
     }
 
+
+  [HttpGet("{b2bID}/e-invoices/requests/")]
+  public  List<EInvoiceRequest> GetInvoiceRequestsByID(int id) {
+
+   var result = _adminEInvoiceService.GetInvoiceRequestsByID(id);
+    return result;
+    
+  }
+
   }
 }

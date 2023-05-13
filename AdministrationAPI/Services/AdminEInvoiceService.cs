@@ -21,5 +21,13 @@ namespace AdministrationAPI.Services
     {
       return await _context.EInvoiceRequests.ToListAsync();
     }
-  }
+
+        //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
+
+     public List<EInvoiceRequest> GetInvoiceRequestsByID(int id)
+     {
+        var eInvoiceRequests = _context.EInvoiceRequests.Where(ereq => ereq.VendorId == id).ToList();
+        return eInvoiceRequests;
+     }
+    }
 }
