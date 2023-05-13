@@ -43,7 +43,6 @@ namespace AdministrationAPI.Services
     }
 
     if (request.Status != 1) {
-      Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
       throw new Exception("The request has already been handled");
 
     }
