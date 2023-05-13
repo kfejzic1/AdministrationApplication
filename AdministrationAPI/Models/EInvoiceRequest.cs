@@ -10,6 +10,7 @@ public class EInvoiceRequest
   [ForeignKey("Vendor")]
   public int VendorId { get; set; }
   public Vendor Vendor { get; set; }
+  public int Status { get; set; }
   public string? Param1 { get; set; }
   public string? Param2 { get; set; }
   public string? Param3 { get; set; }
