@@ -33,7 +33,7 @@ namespace AdministrationAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("createEInvoice")]
-        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceRequest eInvoiceRequest)
+        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceCreateRequest eInvoiceRequest)
         {
             try
             {
