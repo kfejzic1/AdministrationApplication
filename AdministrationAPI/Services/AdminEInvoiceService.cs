@@ -1,10 +1,12 @@
 using AdministrationAPI.Contracts.Requests;
+using AdministrationAPI.Contracts.Requests.EInvoiceRegistration;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AdministrationAPI.Services
 {
@@ -12,14 +14,18 @@ namespace AdministrationAPI.Services
   {
     private readonly IConfiguration _configuration;
     private readonly AppDbContext _context;
+        private readonly IVendorService _vendorService;
+        private readonly IUserService _userService;
 
-    public AdminEInvoiceService(IConfiguration configuration, AppDbContext context)
-    {
-      _configuration = configuration;
-      _context = context;
-    }
+        public AdminEInvoiceService(IConfiguration configuration, AppDbContext context, IVendorService vendorService, IUserService userService)
+        {
+            _configuration = configuration;
+            _context = context;
+            _vendorService = vendorService;
+            _userService = userService;
+        }
 
-    public async Task<List<EInvoiceRequest>> GetAllInvoiceRequests()
+        public async Task<List<EInvoiceRequest>> GetAllInvoiceRequests()
     {
       return await _context.EInvoiceRequests.Include("User").Include("Vendor").ToListAsync();
     }
@@ -80,7 +86,34 @@ namespace AdministrationAPI.Services
       return vendor;
     }
 
-  }
+        public async Task<EInvoiceRequest> AddEInvoiceRequest(EInvoiceRegistrationData eInvoiceRegistrationData, string userId)
+        {
+            var vendor = _vendorService.GetByName(eInvoiceRegistrationData.B2BName);
+
+            if (vendor == null)
+            {
+                throw new DataException("Vendor doesn't exist");
+            }
+
+            var user = await _userService.GetUser(userId);
+
+            var eInvoiceRequest = new EInvoiceRequest
+            {
+                User = await _userService.GetUserByEmailPhone(user.Email, null),
+                Vendor = vendor,
+                Status = 1,
+                Param1 = eInvoiceRegistrationData.Field1,
+                Param2 = eInvoiceRegistrationData.Field2,
+                Param3 = eInvoiceRegistrationData.Field3,
+                Param4 = eInvoiceRegistrationData.Field4,
+            };
+
+            await _context.EInvoiceRequests.AddAsync(eInvoiceRequest);
+            await _context.SaveChangesAsync();
+
+            return eInvoiceRequest;
+        }
+    }
 
 
 }
