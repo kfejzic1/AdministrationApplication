@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AccountRequestsDialog from './AccountRequestsDialog';
+import PaymentModal from '../PaymentInfoModal/paymentmodal';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
 import {
 	Button,
@@ -255,6 +256,8 @@ const UserManagement = () => {
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -282,11 +285,11 @@ const UserManagement = () => {
 											size='small'
 											variant='text'
 											endIcon={<CreateIcon />}
-											
+										   
 										>
 											Pay
 										</Button>
-									</Tooltip>
+									    </Tooltip>
 
 
 									<Tooltip title='Pending requests'>

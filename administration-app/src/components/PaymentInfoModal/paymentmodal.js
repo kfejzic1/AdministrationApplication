@@ -9,6 +9,7 @@ function PaymentModal({
   payeeName,
   payeeAddress,
   amount,
+  isOpen,
   onClose,
   onPay,
 }) {
@@ -20,7 +21,7 @@ function PaymentModal({
   };
 
   return (
-    <div className="modal">
+    <div className={`modal ${isOpen ? 'open' : ''}`}>
       <div className="modal-content">
         <h2>Payment Details</h2>
         <div>
