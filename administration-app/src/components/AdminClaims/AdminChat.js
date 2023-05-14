@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField, Typography } from '@mui/material';
-import { getMessages } from '../../services/adminClaimService';
+import { getMessages, sendMessage } from '../../services/adminClaimService';
 import { getUserId } from '../../services/userService';
-
-const initialMessages = [
-	{ text: 'Hello there!', username: 'Obi-Wan Kenobi', sentByMe: false },
-	{ text: 'Hi!', username: 'You', sentByMe: true },
-];
 
 const Message = ({ text, username, sentByMe }) => (
 	<div
@@ -36,9 +31,10 @@ const Message = ({ text, username, sentByMe }) => (
 );
 
 const MessagingDialog = ({ open, onClose, claimId }) => {
-	const [messages, setMessages] = useState(initialMessages);
+	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState('');
 	const [file, setFile] = useState(null);
+	const [change, setChange] = useState(false);
 	let userId = getUserId();
 
 	useEffect(() => {
@@ -47,20 +43,24 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 				setMessages(response.data.messages);
 			});
 		}
-	});
+	}, [change]);
 	const handleNewMessageChange = event => {
 		setNewMessage(event.target.value);
 	};
 
 	const handleSendMessage = () => {
 		if (newMessage.trim() !== '') {
-			setMessages([...messages, { text: newMessage.trim(), username: 'You', sentByMe: true }]);
-			setNewMessage('');
+			let message = { transactionClaimId: claimId, message: newMessage, documentIds: [] };
+			sendMessage(message)
+				.then(response => {
+					setChange(!change);
+					setNewMessage('');
+				})
+				.catch(error => console.error('Error sending message', error));
 		}
 	};
 
 	const handleClose = () => {
-		setMessages(initialMessages);
 		setNewMessage('');
 		setFile(null);
 		onClose();

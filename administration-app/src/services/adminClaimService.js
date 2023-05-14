@@ -52,3 +52,14 @@ export function getMessages(id) {
 		},
 	});
 }
+
+export function sendMessage(data) {
+	return axios(env.API_ENV.url + '/api/transactions/claim/message', {
+		method: 'POST',
+		data: data,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
