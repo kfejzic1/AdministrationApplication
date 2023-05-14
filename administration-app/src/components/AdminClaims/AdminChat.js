@@ -42,21 +42,10 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 		setNewMessage(event.target.value);
 	};
 
-	const handleFileChange = event => {
-		setFile(event.target.files[0]);
-	};
-
 	const handleSendMessage = () => {
 		if (newMessage.trim() !== '') {
 			setMessages([...messages, { text: newMessage.trim(), username: 'You', sentByMe: true }]);
 			setNewMessage('');
-		}
-	};
-
-	const handleSendFile = () => {
-		if (file !== null) {
-			// Do something with the file here
-			setFile(null);
 		}
 	};
 
@@ -91,9 +80,6 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={handleClose}>Cancel</Button>
-				<Button variant='contained' onClick={handleSendFile}>
-					Send File
-				</Button>
 				<Button variant='contained' onClick={handleSendMessage}>
 					Send Message
 				</Button>
