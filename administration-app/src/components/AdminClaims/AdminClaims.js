@@ -2,12 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Box, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CheckIcon from '@mui/icons-material/Check';
+import ForumIcon from '@mui/icons-material/Forum';
 import { getAllOpenClaims, getAssignedClaims, assignClaim, updateClaim } from '../../services/adminClaimService';
+import MessagingDialog from './AdminChat';
 const AdminClaims = () => {
 	const [value, setValue] = useState(0);
 	const [unassignedClaims, setUnassignedClaims] = useState([]);
 	const [assignedClaims, setAssignedClaims] = useState([]);
 	const [change, setChange] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const [currentClaim, setCurrentClaim] = useState(-1);
+
+	const onDialogClose = () => {
+		setOpenDialog(false);
+		setCurrentClaim(-1);
+	};
+
+	const onDialogOpen = id => {
+		setOpenDialog(true);
+		setCurrentClaim(id);
+	};
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
@@ -90,6 +104,13 @@ const AdminClaims = () => {
 									>
 										<CheckIcon />
 									</Button>
+									<Button
+										onClick={() => {
+											onDialogOpen(claim.id);
+										}}
+									>
+										<ForumIcon></ForumIcon>
+									</Button>
 								</TableCell>
 							</TableRow>
 						))}
@@ -117,7 +138,6 @@ const AdminClaims = () => {
 								<TableCell>
 									<Button
 										onClick={() => {
-											console.log(claim.id);
 											assignClaimToAdmin(claim.id);
 										}}
 									>
@@ -129,6 +149,7 @@ const AdminClaims = () => {
 					</TableBody>
 				</Table>
 			</Box>
+			<MessagingDialog open={openDialog} onClose={onDialogClose} claimId={currentClaim}></MessagingDialog>
 		</Box>
 	);
 };

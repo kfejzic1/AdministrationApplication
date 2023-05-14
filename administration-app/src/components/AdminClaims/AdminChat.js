@@ -1,0 +1,105 @@
+import React, { useEffect, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField, Typography } from '@mui/material';
+
+const initialMessages = [
+	{ text: 'Hello there!', username: 'Obi-Wan Kenobi', sentByMe: false },
+	{ text: 'Hi!', username: 'You', sentByMe: true },
+];
+
+const Message = ({ text, username, sentByMe }) => (
+	<div
+		style={{
+			display: 'flex',
+			flexDirection: sentByMe ? 'row-reverse' : 'row',
+			alignItems: 'center',
+			marginBottom: 8,
+		}}
+	>
+		<Typography
+			variant='body1'
+			sx={{
+				p: 1,
+				borderRadius: 1,
+				bgcolor: sentByMe ? 'primary.main' : 'grey.200',
+				color: sentByMe ? 'white' : 'inherit',
+			}}
+			align={sentByMe ? 'right' : 'left'}
+		>
+			{text}
+		</Typography>
+		<Typography variant='caption' sx={{ ml: 1, mr: 1 }}>
+			{username}
+		</Typography>
+	</div>
+);
+
+const MessagingDialog = ({ open, onClose, claimId }) => {
+	const [messages, setMessages] = useState(initialMessages);
+	const [newMessage, setNewMessage] = useState('');
+	const [file, setFile] = useState(null);
+
+	const handleNewMessageChange = event => {
+		setNewMessage(event.target.value);
+	};
+
+	const handleFileChange = event => {
+		setFile(event.target.files[0]);
+	};
+
+	const handleSendMessage = () => {
+		if (newMessage.trim() !== '') {
+			setMessages([...messages, { text: newMessage.trim(), username: 'You', sentByMe: true }]);
+			setNewMessage('');
+		}
+	};
+
+	const handleSendFile = () => {
+		if (file !== null) {
+			// Do something with the file here
+			setFile(null);
+		}
+	};
+
+	const handleClose = () => {
+		setMessages(initialMessages);
+		setNewMessage('');
+		setFile(null);
+		onClose();
+	};
+
+	return (
+		<Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+			<DialogTitle>Messages</DialogTitle>
+			<DialogContent sx={{ pb: 3 }}>
+				{messages.map((message, index) => (
+					<Message key={index} text={message.text} username={message.username} sentByMe={message.sentByMe} />
+				))}
+				<TextField
+					label='New message'
+					variant='outlined'
+					fullWidth
+					value={newMessage}
+					onChange={handleNewMessageChange}
+					onKeyPress={event => {
+						if (event.key === 'Enter') {
+							handleSendMessage();
+						}
+					}}
+					sx={{ mt: 2 }}
+				/>
+				<Input type='file' onChange={handleFileChange} sx={{ mt: 2 }} />
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={handleClose}>Cancel</Button>
+				<Button variant='contained' onClick={handleSendFile}>
+					Send File
+				</Button>
+				<Button variant='contained' onClick={handleSendMessage}>
+					Send Message
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
+
+export default MessagingDialog;
