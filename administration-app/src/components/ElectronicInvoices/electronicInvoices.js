@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getAllCurrencies, getAllVouchers, createVoucher, changeVoucherStatus } from '../../services/voucher';
 import {
 	Button,
 	Dialog,
@@ -8,79 +7,18 @@ import {
 	DialogContentText,
 	DialogTitle,
 	TextField,
-	TableContainer,
-	Table,
-	TableRow,
-	TableCell,
-	TableBody,
 	Snackbar,
 	FormControl,
 	InputLabel,
 	Select,
 	MenuItem,
-	Box,
-	FormControlLabel,
-	Switch,
-	Paper,
-	Tooltip,
-	Toolbar,
-	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import RedeemIcon from '@mui/icons-material/Redeem';
-import EditIcon from '@mui/icons-material/Edit';
-import SellIcon from '@mui/icons-material/Sell';
-import { TablePagination } from '@mui/material';
-import { getValidateToken } from '../../services/userService';
-import { addPositionPropertiesToSections } from '@mui/x-date-pickers/internals';
 import { getAllVendors } from '../../services/vendorService';
+import { requiredData, registrationRequest } from '../../services/eInvoicesServices'
 
 
-const theme = createTheme({
-	components: {
-		MuiSwitch: {
-			styleOverrides: {
-				switchBase: {
-					// Controls default (unchecked) color for the thumb
-					color: '#ccc',
-				},
-				colorPrimary: {
-					'&.Mui-checked': {
-						// Controls checked color for the thumb
-						color: '#ffaf36',
-					},
-				},
-				track: {
-					// Controls default (unchecked) color for the track
-					opacity: 0.2,
-					backgroundColor: '#c1bfbf',
-					'.Mui-checked.Mui-checked + &': {
-						// Controls checked color for the track
-						opacity: 0.7,
-						backgroundColor: '#ffc976',
-					},
-				},
-			},
-		},
-	},
-});
-
-
-const tableTheme = createTheme({
-	palette: {
-		primary: {
-			main: '#E7EBF0',
-		},
-		secondary: {
-			main: '#ffe2b6',
-		},
-		secondary2: {
-			main: '#ffaf36',
-		},
-	},
-});
 
 const useStyles = makeStyles({
 	root: {
@@ -145,21 +83,13 @@ const useStyles = makeStyles({
 	},
 });
 
-const Voucher = () => {
+const EInvoices = () => {
 	const classes = useStyles();
-	const [vouchers, setVouchers] = useState([]);
-	const [currencys, setCurrecys] = useState([]);
-	const [openCreateDialog, setOpenCreateDialog] = useState(false);
-	const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-	const [selectedVoucher, setSelectedVoucher] = useState({});
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [openSnackbarVoucher, setOpenSnackbarVoucher] = useState(false);
-	const [openSnackbarVoucherVoid, setOpenSnackbarVoucherVoid] = useState(false);
-	const [change, setChange] = useState(false);
-	const [dense, setDense] = useState(false);
 	const [b2b, setB2b] = useState([]);
 	const [isRequired, setIsRequired] = useState(false);
-	const [requiredData, setRequiredData] = useState([]);
+	const [requiredDataPost, setRequiredData] = useState([]);
+	const [selectedB2b, setSelectedB2b] = useState('');
 
 
 	useEffect(() => {
@@ -168,66 +98,40 @@ const Voucher = () => {
 		})
 	}, [])
 
-	const handleCreateDialogClose = () => {
-		setOpenCreateDialog(false);
-	};
+	const setTrueRequired= (event) => {
+		//this function is checking if user selected b2b name and then from get method we collect text field for him to create a request
+		setSelectedB2b(event.target.value)
+		//console.log("Uslo u ovu funkciju: a pritisnuo " + event.target.value);
+		requiredData(event.target.value).then(response => {
+			//console.log("Data koju vraca je " +  JSON.stringify(response.data));
+			setRequiredData(response.data);
+			setIsRequired(true);
+		}).catch(error => console.log(error));
+	}
 
 	const handleRegister = event => {
+		//this function takes info from text field that user inputed and send them to back for request to finish rout
 		event.preventDefault();
 		const form = event.target;
-		var noVoucher1 = form.NumberOfVouchers.value;
-		var noVoucherNumber = noVoucher1 * 1;
-		var amou = form.amount.value;
-		var amountNumber = amou* 1;
-		var string1 = form.currency.value;
-
-		var b = currencys.filter(v => v.name == string1)[0];
-		console.log("bbb ", b.id);
-		createVoucher(noVoucherNumber,amountNumber,b.id).then(response => {
-			setOpenCreateDialog(false);
+		var b2bName = selectedB2b;
+		//console.log("B2b name " + b2bName + "a njegov tip " + typeof b2bName);
+		var field1 = form.field1.value;  
+		//console.log("Filed 1 " + field1 + "a njegov tip " + typeof field1);
+		var field2 = form.field2.value; 
+		var field3 = form.field3.value; 
+		var field4 = form.field4.value;  
+		var data = { "b2BName": b2bName, "field1": field1, "field2": field2, "field3": field3, "field4" : field4}
+		//console.log("JSON ovdje" + JSON.stringify(data));
+		registrationRequest(data).then(response => {
 			setOpenSnackbar(true);
-			setChange(!change);
-		})
-		.catch(error => console.error(error));
+			setIsRequired(false);
+		}).catch(error => console.error(error));
 	};
-
-
-
-	const handleUpdateDialogOpen = voucher => {
-		setSelectedVoucher(voucher);
-		setOpenUpdateDialog(true);
-	};
-
-	const handleUpdateDialogClose = () => {
-		setSelectedVoucher({});
-		setOpenUpdateDialog(false);
-	};
-
-	const handleSnackbarVoucherClose = () => {
-		setOpenSnackbarVoucher(false);
-	};
-
-	const handleSnackbarVoucherVoidClose = () => {
-		setOpenSnackbarVoucherVoid(false);
-	};
-
-
-
-
 
 	const handleSnackbarClose = () => {
 		setOpenSnackbar(false);
 	};
 
-	const handleChangeDense = event => {
-		setDense(event.target.checked);
-	};
-
-
-
-
-	console.log("B2b users " + JSON.stringify(b2b));
-	
 	return (
 		<div>				
 			
@@ -237,24 +141,24 @@ const Voucher = () => {
 					<form onSubmit={handleRegister}>
                         <FormControl fullWidth margin='dense'>
 							<InputLabel>B2B name</InputLabel>
-							<Select label='Currency' name='currency'>
+							<Select label='Currency' name='currency' value={selectedB2b} onChange={setTrueRequired}>
 								{b2b.map(curr => (
-									<MenuItem value={curr.name}>{curr.name}</MenuItem>
+									<MenuItem  value={curr.name}>{curr.name}</MenuItem>
 								)
 								)}
 							</Select>
-						</FormControl>
+						</FormControl>						
 						{isRequired? (
-							requiredData.map(data => {
-								<TextField autoFocus margin='dense' name='NumberOfVouchers' label='Number of vouchers' fullWidth />
-							})					
+							<div>
+								<TextField autoFocus margin='dense' name='field1' label={requiredDataPost.field1} fullWidth />
+								<TextField autoFocus margin='dense' name='field2' label={requiredDataPost.field2} fullWidth />
+								<TextField autoFocus margin='dense' name='field3' label={requiredDataPost.field3} fullWidth />
+								<TextField autoFocus margin='dense' name='field4' label={requiredDataPost.field4} fullWidth />
+							</div>											
 						): (
 							<h1></h1>
 						)}
 						<DialogActions>
-							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
-								Cancel
-							</Button>
 							<Button type='submit' className={`${classes.button}`} variant='contained'>
 								Register
 							</Button>
@@ -266,23 +170,11 @@ const Voucher = () => {
 
 			<Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleSnackbarClose}>
 				<Alert onClose={handleSnackbarClose} severity='success'>
-					Voucher created successfully!
-				</Alert>
-			</Snackbar>
-
-			<Snackbar open={openSnackbarVoucher} autoHideDuration={3000} onClose={handleSnackbarVoucherClose}>
-				<Alert onClose={handleSnackbarVoucherClose} severity='success'>
-					Voucher has been redeemed!
-				</Alert>
-			</Snackbar>
-
-			<Snackbar open={openSnackbarVoucherVoid} autoHideDuration={3000} onClose={handleSnackbarVoucherVoidClose}>
-				<Alert onClose={handleSnackbarVoucherVoidClose} severity='success'>
-					Voucher is changed to void!
+					Registered for electronic invoices!
 				</Alert>
 			</Snackbar>
 		</div>
 	);
 };
 
-export default Voucher;
+export default EInvoices;
