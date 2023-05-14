@@ -52,7 +52,8 @@ namespace AdministrationAPI.Services
 
         public List<EInvoice> ListEInvoices(string userId)
         {
-            throw new NotImplementedException();
+            var eInvoices = _context.EInvoices.Where(e => e.PayerId==userId).ToList();
+            return eInvoices;
         }
     }
 }
