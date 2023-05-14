@@ -2,6 +2,7 @@ using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.EInvoiceRegistration;
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
+using AdministrationAPI.Models.EInvoice;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

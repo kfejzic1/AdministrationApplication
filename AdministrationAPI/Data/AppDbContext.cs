@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models.EInvoice;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Models.Voucher;
@@ -11,7 +12,7 @@ using System.Reflection.Emit;
 
 namespace AdministrationAPI.Data
 {
-  public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<User>
   {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
