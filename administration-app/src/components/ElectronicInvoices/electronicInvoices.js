@@ -90,6 +90,8 @@ const EInvoices = () => {
 	const [isRequired, setIsRequired] = useState(false);
 	const [requiredDataPost, setRequiredData] = useState([]);
 	const [selectedB2b, setSelectedB2b] = useState('');
+	const [err, setErr] = useState('');
+	const [errTrue, setErrTrue] = useState(false);
 
 
 	useEffect(() => {
@@ -109,6 +111,11 @@ const EInvoices = () => {
 		}).catch(error => console.log(error));
 	}
 
+	const setError = (err1) => {
+		setErrTrue(true);
+		setErr(err1);
+	}
+
 	const handleRegister = event => {
 		//this function takes info from text field that user inputed and send them to back for request to finish rout
 		event.preventDefault();
@@ -125,7 +132,7 @@ const EInvoices = () => {
 		registrationRequest(data).then(response => {
 			setOpenSnackbar(true);
 			setIsRequired(false);
-		}).catch(error => console.error(error));
+		}).catch(error => setError(error));
 	};
 
 	const handleSnackbarClose = () => {
@@ -139,7 +146,7 @@ const EInvoices = () => {
 				<DialogContent>
 					<DialogContentText>Please fill out the form below to register for electronic invoices.</DialogContentText>
 					<form onSubmit={handleRegister}>
-                        <FormControl fullWidth margin='dense'>
+                        <FormControl fullWidth style={{ width: '50%', marginLeft: '24%' }} margin='dense'>
 							<InputLabel>B2B name</InputLabel>
 							<Select label='Currency' name='currency' value={selectedB2b} onChange={setTrueRequired}>
 								{b2b.map(curr => (
@@ -150,21 +157,27 @@ const EInvoices = () => {
 						</FormControl>						
 						{isRequired? (
 							<div>
-								<TextField autoFocus margin='dense' name='field1' label={requiredDataPost.field1} fullWidth />
-								<TextField autoFocus margin='dense' name='field2' label={requiredDataPost.field2} fullWidth />
-								<TextField autoFocus margin='dense' name='field3' label={requiredDataPost.field3} fullWidth />
-								<TextField autoFocus margin='dense' name='field4' label={requiredDataPost.field4} fullWidth />
+								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field1' label={requiredDataPost.field1} fullWidth />
+								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field2' label={requiredDataPost.field2} fullWidth />
+								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field3' label={requiredDataPost.field3} fullWidth />
+								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field4' label={requiredDataPost.field4} fullWidth />
 							</div>											
 						): (
 							<h1></h1>
 						)}
+						{errTrue ? (
+							<Alert style={{ width: '50%', marginLeft: '24%'}} severity='error' variant='filled'>
+								Podatci nisu validni!!
+							</Alert>
+						): null}
 						<DialogActions>
-							<Button type='submit' className={`${classes.button}`} variant='contained'>
+							<Button type='submit' style={{marginRight: '26%'}} className={`${classes.button}`} variant='contained'>
 								Register
 							</Button>
 						</DialogActions>
 					</form>
 				</DialogContent>
+				
 			
 
 
