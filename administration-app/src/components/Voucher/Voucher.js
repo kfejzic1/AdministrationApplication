@@ -307,7 +307,7 @@ const Voucher = () => {
 		return "INVALID STATUS";
 	} 
 	const currencyV = (a) => {
-		//
+		//return what currency is in databse saved
 		var b=currencys.filter(v => v.id===a)[0]
 		if(b)
 		return b.name;
@@ -315,7 +315,7 @@ const Voucher = () => {
 	}
 
 	const isTrueSt = (a) => {
-		if(a === "REDEEMED" || a ==="VOID") return true;
+		if(a === "REDEEMED" || a ==="VOID" || a === "ACTIVE") return true;
 		else return false
 	} 
 	const is1or2 = (a) => {

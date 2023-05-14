@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCurrencies, getAllVouchers, createVoucher, changeVoucherStatus } from '../../services/voucher';
-
+import { getAllVendors } from '../../services/eInvoicesServices'
 import {
 	Button,
 	Dialog,
@@ -28,8 +28,6 @@ import {
 	ButtonGroup,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { Stack } from '@mui/system';
-import CreateIcon from '@mui/icons-material/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RedeemIcon from '@mui/icons-material/Redeem';
@@ -159,11 +157,16 @@ const Voucher = () => {
 	const [openSnackbarVoucherVoid, setOpenSnackbarVoucherVoid] = useState(false);
 	const [change, setChange] = useState(false);
 	const [dense, setDense] = useState(false);
-	const [page, setPage] = useState(0);
-	const [user, setUser] = useState("");
-	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [b2b, setB2b] = useState([]);
+	const [isRequired, setIsRequired] = useState(false);
+	const [requiredData, setRequiredData] = useState([]);
 
 
+	useEffect(() => {
+		getAllVendors().then(response => {
+			setB2b(response.data);
+		})
+	}, [])
 
 	const handleCreateDialogClose = () => {
 		setOpenCreateDialog(false);
@@ -220,18 +223,10 @@ const Voucher = () => {
 		setDense(event.target.checked);
 	};
 
-	const returnStatus = (a) => {
-		if (a === "1")
-		 	return "2";
-		else if (a === "2")
-		 	return "3";
-		else if (a === "3")
-			return "4";
-		return "1";
-	}
 
 
-	
+
+	console.log("B2b users " + JSON.stringify(b2b));
 	
 	return (
 		<div>				
@@ -240,33 +235,28 @@ const Voucher = () => {
 				<DialogContent>
 					<DialogContentText>Please fill out the form below to register for electronic invoices.</DialogContentText>
 					<form onSubmit={handleRegister}>
-						<TextField autoFocus margin='dense' name='NumberOfVouchers' label='Number of vouchers' fullWidth />
-						<FormControl fullWidth margin='dense'>
-							<InputLabel>Amount</InputLabel>
-							<Select label='Amount' name='amount' defaultValue={10}>
-								<MenuItem value='10'>10</MenuItem>
-								<MenuItem value='20'>20</MenuItem>
-								<MenuItem value='50'>50</MenuItem>
-                                <MenuItem value='100'>100</MenuItem>
-                                <MenuItem value='200'>200</MenuItem>
-							</Select>
-						</FormControl>
                         <FormControl fullWidth margin='dense'>
-							<InputLabel>Currency</InputLabel>
-							<Select label='Currency' name='currency' defaultValue={'BAM'}>
-								{currencys.map(curr => (
+							<InputLabel>B2B name</InputLabel>
+							<Select label='Currency' name='currency'>
+								{b2b.map(curr => (
 									<MenuItem value={curr.name}>{curr.name}</MenuItem>
 								)
 								)}
-
 							</Select>
 						</FormControl>
+						{isRequired? (
+							requiredData.map(data => {
+								<TextField autoFocus margin='dense' name='NumberOfVouchers' label='Number of vouchers' fullWidth />
+							})					
+						): (
+							<h1></h1>
+						)}
 						<DialogActions>
 							<Button onClick={handleCreateDialogClose} className={`${classes.button}`} variant='outline'>
 								Cancel
 							</Button>
 							<Button type='submit' className={`${classes.button}`} variant='contained'>
-								Create
+								Register
 							</Button>
 						</DialogActions>
 					</form>
