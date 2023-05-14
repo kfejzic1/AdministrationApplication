@@ -275,6 +275,20 @@ const UserManagement = () => {
 											Create User
 										</Button>
 									</Tooltip>
+
+									<Tooltip title='Pay'>
+										<Button
+											className={classes.button}
+											size='small'
+											variant='text'
+											endIcon={<CreateIcon />}
+											
+										>
+											Pay
+										</Button>
+									</Tooltip>
+
+
 									<Tooltip title='Pending requests'>
 										<Button
 											className={classes.button}
