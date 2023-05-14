@@ -2,6 +2,7 @@
 using AdministrationAPI.Data;
 using AdministrationAPI.Models;
 using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
 
 namespace AdministrationAPI.Services
@@ -53,6 +54,11 @@ namespace AdministrationAPI.Services
         public List<EInvoice> ListEInvoices(string userId)
         {
             var eInvoices = _context.EInvoices.Where(e => e.PayerId==userId).ToList();
+            eInvoices.ForEach(eInvoice =>
+            {
+                string name = _context.Currencies.FirstOrDefault(c => c.Id == eInvoice.CurrencyId).Name;
+                eInvoice.Currency = new Currency() { Name = name };
+            });
             return eInvoices;
         }
     }
