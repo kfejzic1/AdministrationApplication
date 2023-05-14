@@ -167,7 +167,7 @@ const EInvoices = () => {
 						)}
 						{errTrue ? (
 							<Alert style={{ width: '50%', marginLeft: '24%'}} severity='error' variant='filled'>
-								Podatci nisu validni!!
+								Data you entered is not valid!!
 							</Alert>
 						): null}
 						<DialogActions>
