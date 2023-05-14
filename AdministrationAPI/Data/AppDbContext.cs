@@ -47,7 +47,9 @@ namespace AdministrationAPI.Data
     public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
     public DbSet<EInvoiceRequest> EInvoiceRequests { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    public DbSet<EInvoice> EInvoices { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
 

@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\AdministrationAPI"
+    "\\AdministrationAPI",
+    "\\AdministrationAPI\\Contracts",
+    "\\AdministrationAPI\\Contracts\\Requests",
+    "\\AdministrationAPI\\Controllers",
+    "\\AdministrationAPI\\Models"
   ],
   "SelectedNode": "\\AdministrationAPI\\AdministrationAPI.sln",
   "PreviewInSolutionExplorer": false
