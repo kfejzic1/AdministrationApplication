@@ -19,8 +19,8 @@ export const NavBar = props => {
 						Home
 					</Button>
 					{props.isAdmin ? (
-						<Button component={Link} to='/einovicedata' color='primary'>
-							Einovice data
+						<Button component={Link} to='/einoviceapprove' color='primary'>
+							Einovice approve
 						</Button>
 					) : null}
 					{props.isAdmin ? (
@@ -30,7 +30,11 @@ export const NavBar = props => {
 					) : (
 						<h1>s</h1>
 					)}
-
+					{props.isAdmin ? (
+						<Button component={Link} to='/einovicedata' color='primary'>
+							Einovice data
+						</Button>
+					) : null}
 					<Button component={Link} to='/transactions' color='primary'>
 						Transactions
 					</Button>

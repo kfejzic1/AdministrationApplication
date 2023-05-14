@@ -23,6 +23,7 @@ import AdminClaims from './components/AdminClaims/AdminClaims';
 import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/EinoviceRequiredData';
 import { useEffect } from 'react';
 import { getValidateToken } from './services/userService';
+import EinoviceApprove from './components/Einovice/EinoviceRequiredData/EinoviceApprove';
 function App() {
 	const [token, setToken] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
@@ -154,6 +155,16 @@ function App() {
 						/>
 						{isAdmin ? (
 							<Route
+								path='/einoviceapprove'
+								element={
+									<ProtectedRoute>
+										<EinoviceApprove />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
+						{isAdmin ? (
+							<Route
 								path='/einovicedata'
 								element={
 									<ProtectedRoute>
@@ -162,7 +173,6 @@ function App() {
 								}
 							/>
 						) : null}
-
 						<Route path='/login' element={<LoginForm setToken={setToken} setIsAdmin={setIsAdmin} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />

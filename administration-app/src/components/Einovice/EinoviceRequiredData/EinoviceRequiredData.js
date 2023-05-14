@@ -109,7 +109,6 @@ const EinoviceRequiredData = props => {
 							});
 							var t = '';
 							for (var i = 0; i < k.length; i++) {
-								console.log('k=', k[i]);
 								t += k[i];
 							}
 							t = t.slice(0, t.length - 1);

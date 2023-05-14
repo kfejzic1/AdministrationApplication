@@ -1,6 +1,6 @@
+import axios from 'axios';
+import { env } from '../../config/env';
 export function specifyData(id, data) {
-	console.log('dl====', data, JSON.stringify(data));
-	return 0;
 	return axios(env.API_ENV.url + '/api/AdminEInvoice/' + id + '/e-invoices/create', {
 		method: 'POST',
 		body: data,
@@ -21,6 +21,16 @@ export function approve(id, data) {
 }
 
 export function getRequests() {
+	/*
+	return new Promise((resolve, reject) => {
+		resolve({
+			data: [
+				{ user: { userName: 'adfa' }, vendor: { name: 'sdfsd' } },
+				{ user: { userName: 'adfa' }, vendor: { name: 'sdfsd' } },
+			],
+		});
+	});
+	*/
 	return axios(env.API_ENV.url + '/api/AdminEInvoice/b2b/e-invoices/requests', {
 		method: 'GET',
 		headers: {
