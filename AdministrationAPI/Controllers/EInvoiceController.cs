@@ -37,7 +37,8 @@ namespace AdministrationAPI.Controllers
         {
             try
             {
-                return Ok();
+                var eInvoice = _eInvoiceService.CreateEInvoice(eInvoiceRequest);
+                return Ok(eInvoice);
             }
             catch (Exception ex)
             {
@@ -54,10 +55,8 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
                 var userId = ControlExtensions.GetId(HttpContext);
-
-                
-
-                return Ok();
+                var eInvoices = _eInvoiceService.ListEInvoices(userId);
+                return Ok(eInvoices);
             }
             catch (Exception ex)
             {
