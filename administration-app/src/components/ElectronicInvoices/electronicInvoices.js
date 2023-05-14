@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCurrencies, getAllVouchers, createVoucher, changeVoucherStatus } from '../../services/voucher';
-import { getAllVendors } from '../../services/eInvoicesServices'
 import {
 	Button,
 	Dialog,
@@ -36,6 +35,7 @@ import SellIcon from '@mui/icons-material/Sell';
 import { TablePagination } from '@mui/material';
 import { getValidateToken } from '../../services/userService';
 import { addPositionPropertiesToSections } from '@mui/x-date-pickers/internals';
+import { getAllVendors } from '../../services/vendorService';
 
 
 const theme = createTheme({
