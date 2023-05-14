@@ -44,7 +44,7 @@ const EinoviceApprove = props => {
 										approve(v.eInvoiceRequestId, 'false');
 									}}
 								>
-									Denay
+									Reject
 								</Button>
 							</TableCell>
 						</TableRow>
