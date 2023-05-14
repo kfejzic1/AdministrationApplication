@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField, Typography } from '@mui/material';
 import { getMessages } from '../../services/adminClaimService';
+import { getUserId } from '../../services/userService';
 
 const initialMessages = [
 	{ text: 'Hello there!', username: 'Obi-Wan Kenobi', sentByMe: false },
@@ -38,6 +39,7 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 	const [messages, setMessages] = useState(initialMessages);
 	const [newMessage, setNewMessage] = useState('');
 	const [file, setFile] = useState(null);
+	let userId = getUserId();
 
 	useEffect(() => {
 		if (claimId != -1) {
@@ -69,7 +71,7 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 			<DialogTitle>Messages</DialogTitle>
 			<DialogContent sx={{ pb: 3 }}>
 				{messages.map((message, index) => (
-					<Message key={index} text={message.message} username={message.userName} sentByMe={message.sentByMe} />
+					<Message key={index} text={message.message} username={message.userName} sentByMe={message.userId == userId} />
 				))}
 				<TextField
 					label='New message'
