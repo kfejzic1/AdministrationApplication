@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField, Typography } from '@mui/material';
+import { getMessages } from '../../services/adminClaimService';
 
 const initialMessages = [
 	{ text: 'Hello there!', username: 'Obi-Wan Kenobi', sentByMe: false },
@@ -38,6 +39,13 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 	const [newMessage, setNewMessage] = useState('');
 	const [file, setFile] = useState(null);
 
+	useEffect(() => {
+		if (claimId != -1) {
+			getMessages(claimId).then(response => {
+				setMessages(response.data.messages);
+			});
+		}
+	});
 	const handleNewMessageChange = event => {
 		setNewMessage(event.target.value);
 	};
@@ -61,7 +69,7 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 			<DialogTitle>Messages</DialogTitle>
 			<DialogContent sx={{ pb: 3 }}>
 				{messages.map((message, index) => (
-					<Message key={index} text={message.text} username={message.username} sentByMe={message.sentByMe} />
+					<Message key={index} text={message.message} username={message.userName} sentByMe={message.sentByMe} />
 				))}
 				<TextField
 					label='New message'
@@ -76,7 +84,6 @@ const MessagingDialog = ({ open, onClose, claimId }) => {
 					}}
 					sx={{ mt: 2 }}
 				/>
-				<Input type='file' onChange={handleFileChange} sx={{ mt: 2 }} />
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={handleClose}>Cancel</Button>

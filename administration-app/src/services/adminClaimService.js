@@ -42,3 +42,13 @@ export function updateClaim(data) {
 		},
 	});
 }
+
+export function getMessages(id) {
+	return axios(env.API_ENV.url + '/api/transactions/claim/' + id, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
