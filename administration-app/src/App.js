@@ -112,15 +112,16 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-						<Route
-							path='/user-management'
-							element={
-								<ProtectedRoute>
-									<UserManagement />
-								</ProtectedRoute>
-							}
-						/>
-
+						{isAdmin && (
+							<Route
+								path='/user-management'
+								element={
+									<ProtectedRoute>
+										<UserManagement />
+									</ProtectedRoute>
+								}
+							/>
+						)}
 						<Route
 							path='/myaccounts'
 							element={
@@ -157,14 +158,16 @@ function App() {
 								}
 							/>
 						) : null}
-						<Route
-							path='/claims'
-							element={
-								<ProtectedRoute>
-									<AdminClaims />
-								</ProtectedRoute>
-							}
-						/>
+						{isAdmin && (
+							<Route
+								path='/claims'
+								element={
+									<ProtectedRoute>
+										<AdminClaims />
+									</ProtectedRoute>
+								}
+							/>
+						)}
 						{isAdmin ? (
 							<Route
 								path='/einoviceapprove'

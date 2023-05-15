@@ -66,18 +66,22 @@ export const NavBar = props => {
 					<Button component={Link} to='/vendor-management' color='primary'>
 						Vendor management
 					</Button>
-					<Button component={Link} to='/user-management' color='primary'>
-						User management
-					</Button>
+					{props.isAdmin && (
+						<Button component={Link} to='/user-management' color='primary'>
+							User management
+						</Button>
+					)}
 					<Button component={Link} to='/currencies' color='primary'>
 						Currencies
 					</Button>
 					<Button component={Link} to='/redeem-voucher' color='primary'>
 						Redeem Voucher
 					</Button>
-					<Button component={Link} to='/claims' color='primary'>
-						Claims
-					</Button>
+					{props.isAdmin && (
+						<Button component={Link} to='/claims' color='primary'>
+							Claims
+						</Button>
+					)}
 					<Button component={Link} to='/register-eInvoice' color='primary' style={{ border: '0.5px solid blue' }}>
 						Registering for e-invoice
 					</Button>
