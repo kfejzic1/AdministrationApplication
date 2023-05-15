@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+    backend:
+        image: evlahovlja1/siprojekat-backend
+        container_name: siprojekat-backend
+        ports:
+            - '5051:80'
+        networks:
+            - siprojekat-backend-mreza
+        volumes:
+          - /sifiles:/app/sifiles
+        environment:
+          OUTLOOK_PASSWORD: "${OUTLOOK_PASSWORD}"
+          GMAIL_CODE: "${GMAIL_CODE}"
+          TWILIO_TOKEN: "${TWILIO_TOKEN}"
+
+networks:
+  siprojekat-backend-mreza:
+    name: siprojekat-backend-mreza

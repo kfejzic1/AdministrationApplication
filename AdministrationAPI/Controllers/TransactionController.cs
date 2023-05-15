@@ -94,7 +94,20 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [HttpGet("documents/{docId}")]
+        public IActionResult GetDocumentById([FromRoute]int docId)
+        {
+            try
+            {
+                
+                return Ok(_transactionService.GetDocument(docId));
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "TransactionController.CreateTransaction");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpGet("user/claims")]
         public IActionResult GetTransactionClaimsForUser()
         {
@@ -159,7 +172,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpPut("admin/claim/update")]
         public IActionResult UpdateTransactionClaim([FromBody] ClaimUpdateRequest request)
@@ -180,7 +192,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims")]
         public IActionResult GetTransactionClaimsForAdmin()
@@ -196,7 +207,6 @@ namespace AdministrationAPI.Controllers.Transaction
                 return StatusCode(500, ex.Message);
             }
         }
-
         [Authorize(Roles = "Admin")]
         [HttpGet("admin/claims/open")]
         public IActionResult GetTransactionClaimsOpen()

@@ -14,7 +14,7 @@ public class SMSSender
         {
             // IN PROD, SAVE THESE SECRETS IN SOME SECRET MANAGER OR .env FILE
             string accountSid = "AC3d1624658e0b068286de8622eecff9b3";
-            string authToken = _config["SI-Projekat:TwilioAuthToken"];
+            string authToken = Environment.GetEnvironmentVariable("TWILIO_TOKEN");
             // string authToken = "955da57aa49192f0f431bdf0f12a151c";
 
             TwilioClient.Init(accountSid, authToken);

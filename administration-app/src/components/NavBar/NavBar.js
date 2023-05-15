@@ -8,6 +8,24 @@ export const NavBar = props => {
 		props.setToken(localStorage.getItem('token'));
 	}, []);
 
+	useEffect(() => {
+		getValidateToken(localStorage.getItem('token')).then(response => {
+			setUser(response.data);
+		});
+	}, []);
+
+	const userAdmin = () => {
+		if (user.roles) {
+			var b = user.roles.filter(v => v === 'Admin')[0];
+			if (b === 'Admin') {
+				//console.log("Uslo u ovu funkciju");
+				return true;
+			}
+			return false;
+		}
+		return false;
+	};
+
 	return (
 		<AppBar position='static' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
 			{props.token ? (

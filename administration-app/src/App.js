@@ -20,6 +20,7 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
+import ClaimTable from './components/claims/ClaimTable';
 import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/EinoviceRequiredData';
 import { useEffect } from 'react';
 import { getValidateToken } from './services/userService';
@@ -56,6 +57,14 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<TransactionsList />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/transaction/claims'
+							element={
+								<ProtectedRoute>
+									<ClaimTable />
 								</ProtectedRoute>
 							}
 						/>
