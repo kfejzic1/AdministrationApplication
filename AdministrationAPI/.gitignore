@@ -479,3 +479,4 @@ $RECYCLE.BIN/
 *.db*
 Migrations
 JSON
+.env

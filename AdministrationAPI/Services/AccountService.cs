@@ -20,9 +20,9 @@ namespace AdministrationAPI.Services
         )
         {
             _context = context;
-            
+
         }
-        public List<AccountCreationRequest> GetUserAccountCreationRequests (string userId)
+        public List<AccountCreationRequest> GetUserAccountCreationRequests(string userId)
         {
             var requests = _context.AccountCreationRequests.Where(a => a.UserId == userId).ToList();
             requests.ForEach(a =>
@@ -37,6 +37,11 @@ namespace AdministrationAPI.Services
             });
 
             return requests;
+        }
+        public List<Account> GetAllAccounts()
+        {
+            var accounts = _context.Accounts.ToList();
+            return accounts;
         }
 
         public List<AccountCreationRequest> GetAllRequests()
@@ -73,6 +78,12 @@ namespace AdministrationAPI.Services
 
         public async Task<AccountCreationRequest> CreateUserAccountCreationRequest(AccountCreationRequestCreateRequest request)
         {
+            var accRequest = _context.AccountCreationRequests.FirstOrDefault(acr => acr.UserId == request.UserId && acr.CurrencyId == request.CurrencyId);
+            if (_context.AccountCreationRequests.Count() != 0 && accRequest != null)
+            {
+                throw new Exception("Account request with this currency already exists.");
+
+            }
             var newAccountCreationRequest = new AccountCreationRequest
             {
                 UserId = request.UserId,
@@ -81,6 +92,7 @@ namespace AdministrationAPI.Services
                 RequestDocumentPath = request.RequestDocumentPath,
                 Approved = false
             };
+            Console.WriteLine("ac::: " + request.UserId + " " + request.CurrencyId);
 
             _context.AccountCreationRequests.Add(newAccountCreationRequest);
 
@@ -93,7 +105,7 @@ namespace AdministrationAPI.Services
 
         public async Task<Account?> ApproveRequest(int id)
         {
-           
+
             var request = _context.AccountCreationRequests.First(a => a.Id == id);
             if (request.Approved == true) return null;
             request.Approved = true;
@@ -115,9 +127,9 @@ namespace AdministrationAPI.Services
                 Description = request.Description,
                 RequestId = request.Id,
                 AccountNumber = accNumber
-               
+
             };
-          
+
             _context.Accounts.Add(account);
             var result = await _context.SaveChangesAsync();
             account.Currency = _context.Currencies.FirstOrDefault(c => c.Id == request.CurrencyId);

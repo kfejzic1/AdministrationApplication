@@ -2,7 +2,8 @@
 {
     public class ExchangeAccountRequest
     {
-        public string currency { get; set; }
-        public string bankName { get; set; }
+        public string Currency { get; set; }
+        public string BankName { get; set; }
+        public string Description { get; set; }
     }
 }

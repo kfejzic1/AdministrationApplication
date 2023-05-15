@@ -14,7 +14,7 @@ namespace AdministrationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExchangeController : ControllerBase
     {
 

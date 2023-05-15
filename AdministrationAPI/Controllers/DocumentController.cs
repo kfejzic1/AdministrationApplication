@@ -23,7 +23,7 @@ namespace AdministrationAPI.Controllers
             _userService = userService;
             _documentService = documentService;
         }
-
+        
         [HttpPost("UploadDocument")]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         public IActionResult UploadDocument([FromForm] IFormFile file)
