@@ -38,6 +38,11 @@ namespace AdministrationAPI.Services
 
             return requests;
         }
+        public List<Account> GetAllAccounts()
+        {
+            var accounts = _context.Accounts.ToList();
+            return accounts;
+        }
 
         public List<AccountCreationRequest> GetAllRequests()
         {
