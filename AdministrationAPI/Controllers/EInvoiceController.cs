@@ -65,8 +65,8 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpGet("payEinvoice/{id}")]
-        public async Task<IActionResult> PayEinvoice([FromQuery] int id)
+        [HttpPost("payEinvoice/{id}")]
+        public async Task<IActionResult> PayEinvoice([FromRoute] int id)
         {
             try
             {
@@ -80,6 +80,5 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }
