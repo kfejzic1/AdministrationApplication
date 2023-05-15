@@ -48,7 +48,7 @@ namespace AdministrationAPI.Services
 
             if (request != null)
             {
-                var currencyId = _context.Currencies.FirstOrDefault(c => c.Name == eInvoiceRequest.CurrencyName).Name;
+                var currencyId = _context.Currencies.FirstOrDefault(c => c.Name == eInvoiceRequest.CurrencyName).Id;
                 if(currencyId == null) 
                 {
                     throw new Exception("Currency not found.");
