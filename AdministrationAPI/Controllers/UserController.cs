@@ -461,7 +461,7 @@ namespace AdministrationAPI.Controllers
             var user = _userService.GetUserById(request.Id);
             if (user == null)
             {
-               return BadRequest("User doesn't exist");
+                return BadRequest("User doesn't exist");
             }
             var result = await _userService.EditUser(request);
             if (result.Succeeded)
@@ -470,11 +470,11 @@ namespace AdministrationAPI.Controllers
             }
             else
             {
-               return BadRequest("Error while updating user");
+                return BadRequest("Error while updating user");
             }
         }
 
-       
+
 
 
 
@@ -620,6 +620,7 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPatch("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
