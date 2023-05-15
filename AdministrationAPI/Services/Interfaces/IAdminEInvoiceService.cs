@@ -1,7 +1,7 @@
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.EInvoiceRegistration;
 using AdministrationAPI.Models;
-using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.EInvoiceForms;
 
 using AdministrationAPI.Models.Vendor;
 

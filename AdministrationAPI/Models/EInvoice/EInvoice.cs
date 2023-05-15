@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace AdministrationAPI.Models.EInvoice
+namespace AdministrationAPI.Models.EInvoiceForms
 {
     public class EInvoice
     {

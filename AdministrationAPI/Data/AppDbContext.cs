@@ -1,5 +1,5 @@
 using AdministrationAPI.Models;
-using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.EInvoiceForms;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Models.Voucher;

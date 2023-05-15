@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using AdministrationAPI.Models.Vendor;
 namespace AdministrationAPI.Models.EInvoiceForms
 {
     public class EInvoiceRequest
