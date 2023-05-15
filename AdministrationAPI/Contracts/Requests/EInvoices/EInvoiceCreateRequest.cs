@@ -7,7 +7,7 @@
         public string Reference { get; set; }
         public string Description { get; set; }
         public string PayeeName { get; set; }
-        public int PayeeAccountNumber { get; set; }
+        public string PayeeAccountNumber { get; set; }
         public string PayeeAddress { get; set; }
         public double Amount { get; set; }
         public string CurrencyName { get; set; }

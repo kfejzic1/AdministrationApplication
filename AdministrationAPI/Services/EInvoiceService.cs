@@ -28,7 +28,7 @@ namespace AdministrationAPI.Services
                 Reference = values[2],
                 Description = values[3],
                 PayeeName = values[4],
-                PayeeAccountNumber = int.Parse(values[5]),
+                PayeeAccountNumber = values[5],
                 PayeeAddress = values[6],
                 Amount = double.Parse(money[0]),
                 CurrencyName = money[1],
