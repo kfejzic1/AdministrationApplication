@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -32,6 +32,7 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IRedeemVoucherService, RedeemVoucherService>();
 builder.Services.AddScoped<TokenUtilities>();
 builder.Services.AddScoped<IAdminEInvoiceService, AdminEInvoiceService>();
+builder.Services.AddScoped<IEInvoiceService, EInvoiceService>();
 
 
 builder.Services.AddControllers();
