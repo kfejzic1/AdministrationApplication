@@ -20,14 +20,13 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
-import ClaimTable from './components/claims/ClaimTable';
+import ClaimTable from './components/Claims/ClaimTable';
 import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/EinoviceRequiredData';
 import { useEffect } from 'react';
 import { getValidateToken } from './services/userService';
 import EinoviceApprove from './components/Einovice/EinoviceRequiredData/EinoviceApprove';
 
 import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
-import ClaimTable from './components/claims/ClaimTable';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -113,15 +112,16 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-						<Route
-							path='/user-management'
-							element={
-								<ProtectedRoute>
-									<UserManagement />
-								</ProtectedRoute>
-							}
-						/>
-
+						{isAdmin && (
+							<Route
+								path='/user-management'
+								element={
+									<ProtectedRoute>
+										<UserManagement />
+									</ProtectedRoute>
+								}
+							/>
+						)}
 						<Route
 							path='/myaccounts'
 							element={
@@ -158,14 +158,16 @@ function App() {
 								}
 							/>
 						) : null}
-						<Route
-							path='/claims'
-							element={
-								<ProtectedRoute>
-									<AdminClaims />
-								</ProtectedRoute>
-							}
-						/>
+						{isAdmin && (
+							<Route
+								path='/claims'
+								element={
+									<ProtectedRoute>
+										<AdminClaims />
+									</ProtectedRoute>
+								}
+							/>
+						)}
 						{isAdmin ? (
 							<Route
 								path='/einoviceapprove'
