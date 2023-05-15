@@ -1,4 +1,12 @@
 import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 
 function PaymentModal({
   payerName,
@@ -9,7 +17,6 @@ function PaymentModal({
   payeeName,
   payeeAddress,
   amount,
-  isOpen,
   onClose,
   onPay,
 }) {
@@ -21,49 +28,43 @@ function PaymentModal({
   };
 
   return (
-    <div className={`modal ${isOpen ? 'open' : ''}`}>
-      <div className="modal-content">
-        <h2>Payment Details</h2>
-        <div>
-          <label>Payer Name:</label>
-          <span>{payerName}</span>
-        </div>
-        <div>
-          <label>Payer Address:</label>
-          <span>{payerAddress}</span>
-        </div>
-        <div>
-          <label>Reference Number:</label>
-          <span>{referenceNumber}</span>
-        </div>
-        <div>
-          <label>Description:</label>
-          <span>{description}</span>
-        </div>
-        <div>
-          <label>Payee Account Number:</label>
-          <span>{payeeAccountNumber}</span>
-        </div>
-        <div>
-          <label>Payee Name:</label>
-          <span>{payeeName}</span>
-        </div>
-        <div>
-          <label>Payee Address:</label>
-          <span>{payeeAddress}</span>
-        </div>
-        <div>
-          <label>Amount:</label>
-          <span>{amount}</span>
-        </div>
-        <button className="pay-button" onClick={handlePay} disabled={isPaying}>
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Payment Details</DialogTitle>
+      <DialogContent>
+        <Typography variant="body1">
+          <strong>Payer Name:</strong> {payerName}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Payer Address:</strong> {payerAddress}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Reference Number:</strong> {referenceNumber}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Description:</strong> {description}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Payee Account Number:</strong> {payeeAccountNumber}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Payee Name:</strong> {payeeName}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Payee Address:</strong> {payeeAddress}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Amount:</strong> {amount}
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" onClick={handlePay} disabled={isPaying}>
           {isPaying ? "Paying..." : "Pay"}
-        </button>
-        <button className="close-button" onClick={onClose}>
+        </Button>
+        <Button variant="outlined" onClick={onClose}>
           Close
-        </button>
-      </div>
-    </div>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
