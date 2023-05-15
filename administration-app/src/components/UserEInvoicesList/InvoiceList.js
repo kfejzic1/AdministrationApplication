@@ -8,6 +8,7 @@ function InvoiceList() {
 		getAllUserInvoices()
 			.then(response => {
 				setInvoices(response.data);
+				console.log(response.data);
 			})
 			.catch(error => console.error(error));
 	}, []);
@@ -26,7 +27,6 @@ function InvoiceList() {
 						<TableCell>Payee Account Number</TableCell>
 						<TableCell>Payee Address</TableCell>
 						<TableCell>Amount</TableCell>
-						<TableCell>Currency</TableCell>
 						<TableCell>Paid</TableCell>
 					</TableRow>
 				</TableHead>
@@ -42,7 +42,6 @@ function InvoiceList() {
 							<TableCell>{invoice.payeeAccountNumber}</TableCell>
 							<TableCell>{invoice.payeeAdress}</TableCell>
 							<TableCell>{invoice.amount}</TableCell>
-							<TableCell>{invoice.currency.name}</TableCell>
 							<TableCell>{invoice.paid ? 'Yes' : 'No'}</TableCell>
 						</TableRow>
 					))}
