@@ -1,6 +1,5 @@
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.EInvoiceRegistration;
-using AdministrationAPI.Models.EInvoice;
 using AdministrationAPI.Models.Vendor;
 
 namespace AdministrationAPI.Services.Interfaces

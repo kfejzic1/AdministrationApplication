@@ -2,10 +2,8 @@ import { Link } from 'react-router-dom';
 import LogoutButton from '../Login/Logout';
 import { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { getValidateToken } from '../../services/userService';
 
 export const NavBar = props => {
-	const [user, setUser] = useState('');
 	useEffect(() => {
 		props.setToken(localStorage.getItem('token'));
 	}, []);
@@ -14,7 +12,7 @@ export const NavBar = props => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			setUser(response.data);
 		});
-	},[]);
+	}, []);
 
 	const userAdmin = () => {
 		if (user.roles) {
@@ -38,15 +36,23 @@ export const NavBar = props => {
 					<Button component={Link} to='/' color='primary'>
 						Home
 					</Button>
-
-					{userAdmin() ? (
+					{props.isAdmin ? (
+						<Button component={Link} to='/einoviceapprove' color='primary'>
+							Einovice approve
+						</Button>
+					) : null}
+					{props.isAdmin ? (
 						<Button component={Link} to='/voucher' color='primary'>
 							Voucher
 						</Button>
 					) : (
-						<h1>s</h1>
+						<h1></h1>
 					)}
-
+					{props.isAdmin ? (
+						<Button component={Link} to='/einovicedata' color='primary'>
+							Einovice data
+						</Button>
+					) : null}
 					<Button component={Link} to='/transactions' color='primary'>
 						Transactions
 					</Button>
@@ -70,6 +76,9 @@ export const NavBar = props => {
 					</Button>
 					<Button component={Link} to='/claims' color='primary'>
 						Claims
+					</Button>
+					<Button component={Link} to='/register-eInvoice' color='primary'  style={{border: "0.5px solid blue" } }>
+						Registering for e-invoice
 					</Button>
 					<LogoutButton />
 				</Toolbar>

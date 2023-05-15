@@ -129,11 +129,10 @@ if (!await roleManager.RoleExistsAsync("Restricted"))
 // Configure the HTTP request pipeline.
 
 app.UseMiddleware<TokenExpirationHandler>();
-if (app.Environment.IsDevelopment())
-{
-  app.UseSwagger();
-  app.UseSwaggerUI();
-}
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 
 app.UseCors();
 

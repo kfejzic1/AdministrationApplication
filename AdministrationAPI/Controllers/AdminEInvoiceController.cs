@@ -1,7 +1,7 @@
 using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.Vendors;
 using AdministrationAPI.Extensions;
-using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,7 +11,7 @@ using System.Data;
 
 namespace AdministrationAPI.Controllers
 {
-    [ApiController]
+  [ApiController]
   [Route("api/[controller]")]
   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class AdminEInvoiceController : Controller
