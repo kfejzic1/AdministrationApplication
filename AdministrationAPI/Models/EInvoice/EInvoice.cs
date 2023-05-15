@@ -19,6 +19,7 @@ namespace AdministrationAPI.Models.EInvoice
         public int PayeeAccountNumber { get; set; }
         public string PayeeAdress { get; set; }
         public int Amount { get; set; }
+        [ForeignKey("Currency")]
         public string CurrencyId { get; set; }
         public Currency Currency { get; set; }
         public bool Paid { get; set; }
