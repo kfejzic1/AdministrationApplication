@@ -3,7 +3,6 @@ import LogoutButton from '../Login/Logout';
 import { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { getValidateToken } from '../../services/userService';
-
 export const NavBar = props => {
 	const [user, setUser] = useState('');
 	useEffect(() => {
@@ -38,15 +37,23 @@ export const NavBar = props => {
 					<Button component={Link} to='/' color='primary'>
 						Home
 					</Button>
-
-					{userAdmin() ? (
+					{props.isAdmin ? (
+						<Button component={Link} to='/einoviceapprove' color='primary'>
+							Einovice approve
+						</Button>
+					) : null}
+					{props.isAdmin ? (
 						<Button component={Link} to='/voucher' color='primary'>
 							Voucher
 						</Button>
 					) : (
-						<h1>s</h1>
+						<h1></h1>
 					)}
-
+					{props.isAdmin ? (
+						<Button component={Link} to='/einovicedata' color='primary'>
+							Einovice data
+						</Button>
+					) : null}
 					<Button component={Link} to='/transactions' color='primary'>
 						Transactions
 					</Button>
@@ -59,17 +66,24 @@ export const NavBar = props => {
 					<Button component={Link} to='/vendor-management' color='primary'>
 						Vendor management
 					</Button>
-					<Button component={Link} to='/user-management' color='primary'>
-						User management
-					</Button>
+					{props.isAdmin && (
+						<Button component={Link} to='/user-management' color='primary'>
+							User management
+						</Button>
+					)}
 					<Button component={Link} to='/currencies' color='primary'>
 						Currencies
 					</Button>
 					<Button component={Link} to='/redeem-voucher' color='primary'>
 						Redeem Voucher
 					</Button>
-					<Button component={Link} to='/claims' color='primary'>
-						Claims
+					{props.isAdmin && (
+						<Button component={Link} to='/claims' color='primary'>
+							Claims
+						</Button>
+					)}
+					<Button component={Link} to='/register-eInvoice' color='primary' style={{ border: '0.5px solid blue' }}>
+						Registering for e-invoice
 					</Button>
 					<Button component={Link} to='/myinvoices' color='primary'>
 						My invoices

@@ -454,25 +454,6 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        //[HttpPatch("edit")]
-        //public async Task<IActionResult> EditUser([FromBody] EditRequest request)
-        //{
-        //    var user = _userService.GetUserById(request.Id);
-        //    if (user == null)
-        //    {
-        //        return BadRequest("User doesn't exist");
-        //    }
-        //    var result = await _userService.EditUser(request);
-        //    if (result.Succeeded)
-        //    {
-        //        return Ok("User successfully updated");
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("Error while updating user");
-        //    }
-        //}
-
         [HttpPatch("edit")]
         public async Task<IActionResult> EditUser([FromBody] EditRequest request)
         {
@@ -482,7 +463,7 @@ namespace AdministrationAPI.Controllers
             {
                 return BadRequest("User doesn't exist");
             }
-            var result = await _userService.EditUserAdmin(request);
+            var result = await _userService.EditUser(request);
             if (result.Succeeded)
             {
                 return Ok("User successfully updated");
@@ -493,32 +474,8 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpPatch("editUser")]
-        public async Task<IActionResult> EditUserAdmin([FromBody] EditRequest request) 
-        {
-            
-            var user = _userService.GetUserById(request.Id);
-            if (user == null)
-            {
-                return BadRequest("User doesn't exist");
-            }
-            try
-            {
-                var result = await _userService.EditUserAdmin(request);
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest(result.Errors);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+
+
 
 
         [HttpGet("allWithRoles")]
@@ -553,26 +510,6 @@ namespace AdministrationAPI.Controllers
             }
         }
 
-        [HttpGet("allAdmin")]
-        public IActionResult GetAllUsersAdmin()
-        {
-            try
-            {
-                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
-
-                var users = _userService.GetAllUsersByAdmin();
-                return Ok(users);
-            }
-            catch (DataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                LoggerUtility.Logger.LogException(ex, "UserController.Login");
-                return StatusCode(500, ex.Message);
-            }
-        }
         [HttpGet("roles")]
         public IEnumerable<IdentityRole> GetRoles()
         {
@@ -683,6 +620,7 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPatch("logout")]
         public async Task<IActionResult> LogoutAsync()
         {

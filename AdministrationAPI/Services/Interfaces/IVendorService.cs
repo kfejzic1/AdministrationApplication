@@ -8,8 +8,8 @@ namespace AdministrationAPI.Services.Interfaces
     public interface IVendorService
     {
         bool Create(VendorCreateRequest vendorCreateRequest);
-        Vendor? Get(int id);
-        Vendor? GetByName(string name);
+        Vendors? Get(int id);
+        Vendors? GetByName(string name);
         List<VendorsResponse> GetAll();
         bool Delete(int id);
         bool CreatePOS(POSCreateRequest pOSCreateRequest);

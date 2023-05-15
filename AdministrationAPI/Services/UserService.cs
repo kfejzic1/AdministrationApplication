@@ -246,7 +246,7 @@ namespace AdministrationAPI.Services
                     return new AuthenticationResult
                     {
                         Success = true,
-                        Token = token
+                        Token = jwtToken
                     };
                 }
             }
@@ -299,7 +299,7 @@ namespace AdministrationAPI.Services
                         return new AuthenticationResult
                         {
                             Success = true,
-                            Token = token
+                            Token = jwtToken
                         };
                     }
                 }
@@ -316,9 +316,9 @@ namespace AdministrationAPI.Services
 
         public List<User> GetAssignedUsersForVendor(int vendorId)
         {
-                var userIds = _context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
-                var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
-                return users;
+            var userIds = _context.VendorUsers.Where(v => v.VendorId == vendorId).Select(u => u.UserId).ToList();
+            var users = _userManager.Users.Where(user => userIds.Contains(user.Id)).ToList();
+            return users;
         }
 
         public async Task<AuthenticationResult> Login2FA(Login2FARequest loginRequest)
@@ -441,7 +441,7 @@ namespace AdministrationAPI.Services
             }
 
             User newUser = _mapper.Map<User>(model);
-           
+
             if (newUser.Type == null)
             {
                 newUser.Type = "Person";
@@ -592,14 +592,14 @@ namespace AdministrationAPI.Services
         public async Task<IEnumerable<User>> GetUsersForVendor(int adminId)
         {
             var vendorUsers = await _vendorService.GetVendorUsersForAdmin(adminId);
-            if(vendorUsers == null)
+            if (vendorUsers == null)
             {
                 return null;
             }
 
             List<User> users = new List<User>();
 
-            foreach(var vu in vendorUsers)
+            foreach (var vu in vendorUsers)
             {
                 users.Add(GetUserById(vu.UserId));
             }
@@ -610,7 +610,7 @@ namespace AdministrationAPI.Services
         public async Task<IdentityResult> EditVendorUser(EditRequest request, int adminId)
         {
             var result = await _vendorService.IsVendorUserAdmin(adminId);
-            if(result==false)
+            if (result == false)
             {
                 throw new Exception("User is not authorized to edit vendor user.");
             }

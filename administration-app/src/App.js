@@ -20,15 +20,40 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
+import ClaimTable from './components/Claims/ClaimTable';
+import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/EinoviceRequiredData';
+import { useEffect } from 'react';
+import { getValidateToken } from './services/userService';
+import EinoviceApprove from './components/Einovice/EinoviceRequiredData/EinoviceApprove';
+
+import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
 import InvoiceList from './components/UserEInvoicesList/InvoiceList';
 
 function App() {
 	const [token, setToken] = useState(null);
+	const [isAdmin, setIsAdmin] = useState(false);
+	useEffect(() => {
+		setToken(localStorage.getItem('token'));
+		getValidateToken(localStorage.getItem('token')).then(response => {
+			setIsAdmin(userAdmin(response.data));
+		});
+	}, []);
+
+	const userAdmin = user => {
+		if (user.roles) {
+			var b = user.roles.filter(v => v === 'Admin')[0];
+			if (b === 'Admin') {
+				return true;
+			}
+			return false;
+		}
+		return false;
+	};
 	return (
 		<GoogleOAuthProvider clientId='296207493341-aatp57afp9du4ujhiohuc14oqp78jmb8.apps.googleusercontent.com'>
 			<div className='App'>
 				<Router>
-					<NavBar token={token} setToken={setToken} />
+					<NavBar token={token} isAdmin={isAdmin} setToken={setToken} />
 					<Routes>
 						<Route path='/' element={<h1 style={{ textAlign: 'center' }}>SI projekat</h1>} />
 						<Route
@@ -36,6 +61,14 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<TransactionsList />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/transaction/claims'
+							element={
+								<ProtectedRoute>
+									<ClaimTable />
 								</ProtectedRoute>
 							}
 						/>
@@ -80,15 +113,16 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-						<Route
-							path='/user-management'
-							element={
-								<ProtectedRoute>
-									<UserManagement />
-								</ProtectedRoute>
-							}
-						/>
-
+						{isAdmin && (
+							<Route
+								path='/user-management'
+								element={
+									<ProtectedRoute>
+										<UserManagement />
+									</ProtectedRoute>
+								}
+							/>
+						)}
 						<Route
 							path='/myaccounts'
 							element={
@@ -142,8 +176,50 @@ function App() {
 							}
 						/>
 						<Route path='/login' element={<LoginForm setToken={setToken} />} />
+						{isAdmin ? (
+							<Route
+								path='/voucher'
+								element={
+									<ProtectedRoute>
+										<Voucher />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
+						{isAdmin && (
+							<Route
+								path='/claims'
+								element={
+									<ProtectedRoute>
+										<AdminClaims />
+									</ProtectedRoute>
+								}
+							/>
+						)}
+						{isAdmin ? (
+							<Route
+								path='/einoviceapprove'
+								element={
+									<ProtectedRoute>
+										<EinoviceApprove />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
+						{isAdmin ? (
+							<Route
+								path='/einovicedata'
+								element={
+									<ProtectedRoute>
+										<EinoviceRequiredData />
+									</ProtectedRoute>
+								}
+							/>
+						) : null}
+						<Route path='/login' element={<LoginForm setToken={setToken} setIsAdmin={setIsAdmin} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />
+						<Route path='/register-eInvoice' element={<ElectronicInvoiceTemplate />} />
 					</Routes>
 				</Router>
 			</div>

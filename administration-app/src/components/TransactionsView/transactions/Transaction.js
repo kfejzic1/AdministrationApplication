@@ -9,6 +9,15 @@ export default function Transaction(arg) {
 	const handleCloseForm = () => setOpenClaimForm(false);
 	if (arg.variant && arg.variant == 'group')
 		return (
+			<>
+			<Modal
+			open={openClaimForm}
+			onClose={handleCloseForm}
+			aria-labelledby="modal-modal-title"
+			aria-describedby="modal-modal-description"
+	>
+<ClaimForm id={arg.prop.transactionId} onClose={handleCloseForm}></ClaimForm>
+	</Modal>
 			<TableRow sx={{ bgcolor: '#fff' }}>
 				<TableCell sx={{ width: '11%' }}></TableCell>
 				<TableCell sx={{ width: '20%' }} align='center'>
@@ -34,7 +43,14 @@ export default function Transaction(arg) {
 						Details
 					</Button>
 				</TableCell>
+				<TableCell align='center'>
+					<Button
+					onClick={handleOpenClaimForm}>
+					 Claim
+					 </Button>
+					 </TableCell>
 			</TableRow>
+			</>
 		);
 	else
 		return (

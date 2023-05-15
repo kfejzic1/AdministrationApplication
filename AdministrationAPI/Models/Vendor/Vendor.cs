@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdministrationAPI.Models.Vendor
 {
-  public class Vendor
-  {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key, Column(Order = 0)]
-    public int Id { get; set; }
+    public class Vendors
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)]
+        public int Id { get; set; }
 
     [Required(ErrorMessage = "Name field is required.")]
     public string Name { get; set; }
@@ -23,27 +23,27 @@ namespace AdministrationAPI.Models.Vendor
 
     public string? CreatedBy { get; set; }
 
-    public DateTime? Modified { get; set; }
-    public int? ModifiedBy { get; set; }
-    [DisplayFormat(ConvertEmptyStringToNull = true)]
-    public string? Param1 { get; set; }
+        public DateTime? Modified { get; set; }
+        public int? ModifiedBy { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = true)]
+        public string? Param1 { get; set; }
 
-    [DisplayFormat(ConvertEmptyStringToNull = true)]
-    public string? Param2 { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = true)]
+        public string? Param2 { get; set; }
 
-    [DisplayFormat(ConvertEmptyStringToNull = true)]
-    public string? Param3 { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = true)]
+        public string? Param3 { get; set; }
 
-    [DisplayFormat(ConvertEmptyStringToNull = true)]
-    public string? Param4 { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = true)]
+        public string? Param4 { get; set; }
 
-    public Vendor()
-    {
-      Name = string.Empty;
-      Address = string.Empty;
-      CompanyDetails = string.Empty;
-      Phone = string.Empty;
-      CreatedBy = string.Empty;
+        public Vendors()
+        {
+            Name = string.Empty;
+            Address = string.Empty;
+            CompanyDetails = string.Empty;
+            Phone = string.Empty;
+            CreatedBy = string.Empty;
+        }
     }
-  }
 }
