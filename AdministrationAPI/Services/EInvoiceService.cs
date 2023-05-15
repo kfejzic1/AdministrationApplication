@@ -16,8 +16,30 @@ namespace AdministrationAPI.Services
             _context = context;
         }
 
-        public async Task<EInvoice> CreateEInvoice(EInvoiceCreateRequest eInvoiceRequest)
+        public async Task<EInvoice> CreateEInvoice(EInvoiceCreateRequestOneLiner eInvoiceRequestOneLiner)
         {
+
+            string[] values = eInvoiceRequestOneLiner.Invoice.Split(';');
+            string[] money = values[7].Split(' ');
+            EInvoiceCreateRequest eInvoiceRequest = new EInvoiceCreateRequest()
+            {
+                PayerName = values[0],
+                PayerAddress = values[1],
+                Reference = values[2],
+                Description = values[3],
+                PayeeName = values[4],
+                PayeeAccountNumber = int.Parse(values[5]),
+                PayeeAddress = values[6],
+                Amount = double.Parse(money[0]),
+                CurrencyName = money[1],
+                Param1 = values[8],
+                Param2 = values.Length > 9 ? values[9] : null,
+                Param3 = values.Length > 10 ? values[10] : null,
+                Param4 = values.Length > 11 ? values[11] : null,
+            };
+
+            
+
             var request = _context.EInvoiceRequests.FirstOrDefault(e =>
             e.Param1 == eInvoiceRequest.Param1 &&
             e.Param2 == eInvoiceRequest.Param2 &&
@@ -26,19 +48,23 @@ namespace AdministrationAPI.Services
 
             if (request != null)
             {
-
+                var currencyId = _context.Currencies.FirstOrDefault(c => c.Name == eInvoiceRequest.CurrencyName).Name;
+                if(currencyId == null) 
+                {
+                    throw new Exception("Currency not found.");
+                }
                 var eInvoice = new EInvoice
                 {
                     PayerId = request.UserId,
                     PayerName = eInvoiceRequest.PayerName,
-                    PayerAdress = eInvoiceRequest.PayeeAdress,
+                    PayerAddress = eInvoiceRequest.PayeeAddress,
                     Reference = eInvoiceRequest.Reference,
                     Description = eInvoiceRequest.Description,
                     PayeeName = eInvoiceRequest.PayerName,
                     PayeeAccountNumber = eInvoiceRequest.PayeeAccountNumber,
-                    PayeeAdress = eInvoiceRequest.PayeeAdress,
+                    PayeeAddress = eInvoiceRequest.PayeeAddress,
                     Amount = eInvoiceRequest.Amount,
-                    CurrencyId = eInvoiceRequest.CurrencyId,
+                    CurrencyId = currencyId,
                     Paid = false,
                     Param1 = eInvoiceRequest.Param1,
                     Param2 = eInvoiceRequest.Param2,
@@ -48,7 +74,7 @@ namespace AdministrationAPI.Services
 
                 _context.EInvoices.Add(eInvoice);
                 await _context.SaveChangesAsync();
-                string name = _context.Currencies.FirstOrDefault(c => c.Id == eInvoiceRequest.CurrencyId).Name;
+                string name = _context.Currencies.FirstOrDefault(c => c.Id == currencyId).Name;
                 eInvoice.Currency = new Currency() { Name = name };
 
                 return eInvoice;

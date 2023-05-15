@@ -33,11 +33,11 @@ namespace AdministrationAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("createEInvoice")]
-        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceCreateRequest eInvoiceRequest)
+        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceCreateRequestOneLiner eInvoiceRequestOneLiner)
         {
             try
             {
-                var eInvoice = _eInvoiceService.CreateEInvoice(eInvoiceRequest);
+                var eInvoice = _eInvoiceService.CreateEInvoice(eInvoiceRequestOneLiner);
                 return Ok(eInvoice);
             }
             catch (Exception ex)

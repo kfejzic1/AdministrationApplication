@@ -6,7 +6,7 @@ namespace AdministrationAPI.Services.Interfaces
 {
     public interface IEInvoiceService
     {
-        Task<EInvoice> CreateEInvoice(EInvoiceCreateRequest eInvoiceRequest);
+        Task<EInvoice> CreateEInvoice(EInvoiceCreateRequestOneLiner eInvoiceRequestOneLiner);
         List<EInvoiceList> ListEInvoices(string userId);
         Task<EInvoice> PayEnvoice(int id);
     }
