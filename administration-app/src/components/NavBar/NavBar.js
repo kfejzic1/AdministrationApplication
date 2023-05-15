@@ -44,7 +44,7 @@ export const NavBar = props => {
 							Voucher
 						</Button>
 					) : (
-						<h1>s</h1>
+						<h1></h1>
 					)}
 
 					<Button component={Link} to='/transactions' color='primary'>
@@ -70,6 +70,9 @@ export const NavBar = props => {
 					</Button>
 					<Button component={Link} to='/claims' color='primary'>
 						Claims
+					</Button>
+					<Button component={Link} to='/register-eInvoice' color='primary'  style={{border: "0.5px solid blue" } }>
+						Registering for e-invoice
 					</Button>
 					<LogoutButton />
 				</Toolbar>
