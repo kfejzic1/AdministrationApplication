@@ -3,16 +3,17 @@ import { env } from '../config/env';
 
 export function getAllInvoices() {
     return [{id: 1, 
-    PayerName: 'Kemal', 
+    PayerName: 'Matija Kokor', 
     PayerAccountNumber: '1234', 
-    PayerAddress: 'Adresa', 
-    Reference: '0001', 
-    PayeeName: 'Bingo', 
-    PayeeAccountNumber: '2345', 
-    PayeeAddress: 'Adresa 2', 
-    Amount: 100, 
+    PayerAddress: 'ADRESA', 
+    Reference: 'REFERENCE', 
+    PayeeName: 'Test Company', 
+    PayeeAccountNumber: '8hae7i1', 
+    PayeeAddress: 'ADDRESS', 
+    Description: 'Bill Payment',
+    Amount: 37, 
     CurrencyId: 7, 
-    Currency: 'BAM'}];
+    Currency: {Name:'bam'}}];
 	// return axios(env.API_ENV.url + '/api/EInvoice/listEInvoices', {
 	// 	method: 'GET',
 	// 	headers: {
@@ -33,7 +34,7 @@ export function setPaidInvoice(id){
 }
 
 export function createEInvoiceTransaction(request){
-    return axios(env.ANDROID_API_ENV + 'api/EInvoicePayment/ExecuteInvoicePayment',{
+    return axios('https://processingserver.herokuapp.com/api/EInvoicePayment/ExecuteInvoicePayment?token='+localStorage.getItem('token'),{
         method: 'POST',
         data: request,
         headers: {
