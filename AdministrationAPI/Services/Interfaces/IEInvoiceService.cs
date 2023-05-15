@@ -8,5 +8,6 @@ namespace AdministrationAPI.Services.Interfaces
     {
         Task<EInvoice> CreateEInvoice(EInvoiceCreateRequest eInvoiceRequest);
         List<EInvoiceList> ListEInvoices(string userId);
+        Task<EInvoice> PayEnvoice(int id);
     }
 }
