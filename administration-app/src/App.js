@@ -25,6 +25,8 @@ import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/Ein
 import { useEffect } from 'react';
 import { getValidateToken } from './services/userService';
 import EinoviceApprove from './components/Einovice/EinoviceRequiredData/EinoviceApprove';
+import ClaimTable from './components/claims/ClaimTable';
+
 function App() {
 	const [token, setToken] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);

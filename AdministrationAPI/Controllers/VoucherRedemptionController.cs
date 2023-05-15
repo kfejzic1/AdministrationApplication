@@ -59,23 +59,26 @@ namespace AdministrationAPI.Controllers
                 if (voucher.VoucherStatusId != "2")
                     return BadRequest("Voucher is not active!");
                 var currencyList = await _exchangeRateService.GetCurrencies();
+                var temp = "";
                 for (var i = 0; i < currencyList.Count; i++)
                 {
                     if (currencyList.ElementAt(i).Id == voucher.CurrencyId)
                     {
-                   //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
+                        temp = currencyList.ElementAt(i).Name;
+                        break;
+                    }
+                }
+                        //ovdje ispod ide tokenForPS umejsto token1 i bearer izbrisati,
                         var response = await _exchangeService.GetAllAccounts(tokenForPS);
-                        if (response.obj != null)
-                        {
-                            for(var j=0; j < response.obj.Count;j++)
+                 if (response.obj != null)
+                {
+                    for (var j=0; j < response.obj.Count;j++)
                             {
-                                if (response.obj[j].AccountNumber==request.AccountNumber)
+                                if (response.obj[j].Owner.UserId == user.Id && response.obj[j].Currency==temp)
                                 {
-                                    if (response.obj[j].Currency==currencyList.ElementAt(i).Name)
-                                    {
                                         //all ok, now we redeem 
                                         RedeemVoucherResponse data = new RedeemVoucherResponse();
-                                        data.AccountNumber = request.AccountNumber;
+                                        data.AccountNumber = response.obj[j].AccountNumber;
                                         data.Amount = voucher.Amount;
                                         //zamjeniti token1 sa tokenForPs
                                         var psRespone = await _redeemVoucherService.MakeTransaction(data,tokenForPS);
@@ -85,24 +88,13 @@ namespace AdministrationAPI.Controllers
                                             return Ok(voucher);
                                         }
                                         else
-                                            return BadRequest(
-                                                psRespone.message);
-                                    }
-                                    else
-                                    return BadRequest("This account isn't in same currency as voucher!");
-                                    break;
+                                            return BadRequest(psRespone.message);   
                                 }
-                                
                             }
-                                return BadRequest("This account doesn't exist!");
+                                return BadRequest("User doesn't have an account in this currency!");
                         }
-                        else if (response.message != "")
-                            return BadRequest(response.message);
-                        else return BadRequest("User doesn't have an account!");
-                    }
-                }
-                ////////////////////////////
-                    return BadRequest("Failed!");
+                        else
+                         return BadRequest("User doesn't have an account!");
             }
             catch (Exception ex)
             {
