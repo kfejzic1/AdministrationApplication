@@ -66,7 +66,7 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("payEinvoice/{id}")]
-        public async Task<IActionResult> PayEinvoice([FromQuery] int id)
+        public async Task<IActionResult> PayEinvoice([FromRoute] int id)
         {
             try
             {
