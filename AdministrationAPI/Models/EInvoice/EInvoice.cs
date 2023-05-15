@@ -20,6 +20,11 @@ namespace AdministrationAPI.Models.EInvoice
         public int Amount { get; set; }
         public string CurrencyId { get; set; }
         public Currency Currency { get; set; }
+        public bool Paid { get; set; }
+        public string Param1 { get; set; }
+        public string? Param2 { get; set; }
+        public string? Param3 { get; set; }
+        public string? Param4 { get; set; }
 
     }
 }
