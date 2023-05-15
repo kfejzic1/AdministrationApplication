@@ -22,8 +22,8 @@ import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
 import ClaimTable from './components/claims/ClaimTable';
 
-
 import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
+import ClaimTable from './components/claims/ClaimTable';
 
 function App() {
 	const [token, setToken] = useState(null);
