@@ -13,8 +13,9 @@ namespace AdministrationAPI.Services.Interfaces
     public Task<EInvoiceRequest> HandleRequestStatus(bool approve, int requestID);
 
     public Task<Vendor> DefineRequiredDataForVendor(int vendorId, RequiredData data);
-
+    
     public Task<EInvoiceRequest> AddEInvoiceRequest(EInvoiceRegistrationData eInvoiceRegistrationData, string userId);
+
   }
 
 

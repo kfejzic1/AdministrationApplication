@@ -14,6 +14,8 @@ namespace AdministrationAPI.Services
   {
     private readonly IConfiguration _configuration;
     private readonly AppDbContext _context;
+
+    public async Task<List<EInvoiceRequest>> GetAllInvoiceRequests()
         private readonly IVendorService _vendorService;
         private readonly IUserService _userService;
 
@@ -30,7 +32,6 @@ namespace AdministrationAPI.Services
       return await _context.EInvoiceRequests.Include("User").Include("Vendor").ToListAsync();
     }
 
-    //    public List<EInvoiceRequest> GetInvoiceRequestsByID(int id);
 
     public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
     {
@@ -86,6 +87,7 @@ namespace AdministrationAPI.Services
       return vendor;
     }
 
+  }
         public async Task<EInvoiceRequest> AddEInvoiceRequest(EInvoiceRegistrationData eInvoiceRegistrationData, string userId)
         {
             var vendor = _vendorService.GetByName(eInvoiceRegistrationData.B2BName);
@@ -114,6 +116,5 @@ namespace AdministrationAPI.Services
             return eInvoiceRequest;
         }
     }
-
 
 }
