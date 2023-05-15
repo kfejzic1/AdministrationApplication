@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Typography, Grid, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { getAllInvoices } from '../../services/einvoicePaymentService.js'
+import { getAllInvoices, setPaidInvoice, createEInvoiceTransaction } from '../../services/einvoicePaymentService.js'
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -118,8 +120,29 @@ function PaymentModal(props) {
   }, []);
 
   const handlePay = () => {
-    
-    
+    let data = {
+      payer:{
+        name: einvoice.PayerName,
+        address: einvoice.PayerAddress
+      },
+      payee:{
+        name: einvoice.PayeeName,
+        address: einvoice.PayeeAddress,
+        bankAccountNumber: einvoice.PayeeAccountNumber
+      },
+      description: einvoice.Description,
+      reference: einvoice.Reference,
+      currency: einvoice.Currency.Name,
+      amount: einvoice.Amount
+    };
+    createEInvoiceTransaction(data).then(res=>{
+      setPaidInvoice(einvoice.id).then(res =>{
+        props.fetchData();
+        props.handleClose();
+      });
+    }).catch(error =>{
+      console.log('error', error);
+    });
   };
 
   return (
@@ -165,7 +188,7 @@ function PaymentModal(props) {
                 </Button>
               </Grid>
               <Grid item xs={2}>
-                <Button disabled={disabledPay} variant='contained' className={classes.button} onClick={props.handlePay}>
+                <Button disabled={disabledPay} variant='contained' className={classes.button} onClick={handlePay}>
                   Pay
                 </Button>
               </Grid>
