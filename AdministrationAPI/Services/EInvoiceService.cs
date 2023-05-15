@@ -100,6 +100,8 @@ namespace AdministrationAPI.Services
                 throw new Exception("EInvoice is already paid.");
             eInvoice.Paid = true;
             await _context.SaveChangesAsync();
+            string name = _context.Currencies.FirstOrDefault(c => c.Id == eInvoice.CurrencyId).Name;
+            eInvoice.Currency = new Currency() { Name = name };
             return eInvoice;
         }
     }
