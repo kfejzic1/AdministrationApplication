@@ -20,6 +20,7 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
+import InvoiceList from './components/UserEInvoicesList/InvoiceList';
 
 
 import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
@@ -135,6 +136,14 @@ function App() {
 							}
 						/>
 
+						<Route
+							path='/myinvoices'
+							element={
+								<ProtectedRoute>
+									<InvoiceList />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path='/login' element={<LoginForm setToken={setToken} />} />
 						<Route path='/user/setpassword' element={<SetUserPassword reset={false} />} />
 						<Route path='/user/resetpassword' element={<SetUserPassword reset={true} />} />

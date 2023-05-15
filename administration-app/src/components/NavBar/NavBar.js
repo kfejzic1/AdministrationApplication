@@ -14,7 +14,7 @@ export const NavBar = props => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			setUser(response.data);
 		});
-	},[]);
+	}, []);
 
 	const userAdmin = () => {
 		if (user.roles) {
@@ -71,8 +71,8 @@ export const NavBar = props => {
 					<Button component={Link} to='/claims' color='primary'>
 						Claims
 					</Button>
-					<Button component={Link} to='/register-eInvoice' color='primary'  style={{border: "0.5px solid blue" } }>
-						Registering for e-invoice
+					<Button component={Link} to='/myinvoices' color='primary'>
+						My invoices
 					</Button>
 					<LogoutButton />
 				</Toolbar>

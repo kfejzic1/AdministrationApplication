@@ -33,11 +33,11 @@ namespace AdministrationAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("createEInvoice")]
-        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceCreateRequest eInvoiceRequest)
+        public async Task<IActionResult> CreateEInvoice([FromBody] EInvoiceCreateRequestOneLiner eInvoiceRequestOneLiner)
         {
             try
             {
-                var eInvoice = _eInvoiceService.CreateEInvoice(eInvoiceRequest);
+                var eInvoice = _eInvoiceService.CreateEInvoice(eInvoiceRequestOneLiner);
                 return Ok(eInvoice);
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace AdministrationAPI.Controllers
         }
 
         [HttpPost("payEinvoice/{id}")]
-        public async Task<IActionResult> PayEinvoice([FromRoute] int id)
+        public async Task<IActionResult> PayEinvoice(int id)
         {
             try
             {
@@ -80,5 +80,6 @@ namespace AdministrationAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
     }
 }
