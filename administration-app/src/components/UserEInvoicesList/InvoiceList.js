@@ -7,8 +7,23 @@ function InvoiceList() {
 	useEffect(() => {
 		getAllUserInvoices()
 			.then(response => {
-				setInvoices(response.data);
-				console.log(response.data);
+				setInvoices(
+					response.data.map(invoice => {
+						return {
+							id: invoice.eInvoice.id,
+							payerName: invoice.eInvoice.payerName,
+							payerAdress: invoice.eInvoice.payerAdress,
+							reference: invoice.eInvoice.reference,
+							description: invoice.eInvoice.description,
+							payeeName: invoice.eInvoice.payeeName,
+							payeeAccountNumber: invoice.eInvoice.payeeAccountNumber,
+							payeeAdress: invoice.eInvoice.payeeAdress,
+							amount: invoice.eInvoice.amount,
+							paid: invoice.eInvoice.paind,
+						};
+					})
+				);
+				console.log(invoices);
 			})
 			.catch(error => console.error(error));
 	}, []);
@@ -32,17 +47,17 @@ function InvoiceList() {
 				</TableHead>
 				<TableBody>
 					{invoices.map(invoice => (
-						<TableRow key={invoice.eInvoice.id}>
-							<TableCell>{invoice.eInvoice.id}</TableCell>
-							<TableCell>{invoice.eInvoice.payerName}</TableCell>
-							<TableCell>{invoice.eInvoice.payerAdress}</TableCell>
-							<TableCell>{invoice.eInvoice.reference}</TableCell>
-							<TableCell>{invoice.eInvoice.description}</TableCell>
-							<TableCell>{invoice.eInvoice.payeeName}</TableCell>
-							<TableCell>{invoice.eInvoice.payeeAccountNumber}</TableCell>
-							<TableCell>{invoice.eInvoice.payeeAdress}</TableCell>
-							<TableCell>{invoice.eInvoice.amount}</TableCell>
-							<TableCell>{invoice.eInvoice.paid ? 'Yes' : 'No'}</TableCell>
+						<TableRow key={invoice.id}>
+							<TableCell>{invoice.id}</TableCell>
+							<TableCell>{invoice.payerName}</TableCell>
+							<TableCell>{invoice.payerAdress}</TableCell>
+							<TableCell>{invoice.reference}</TableCell>
+							<TableCell>{invoice.description}</TableCell>
+							<TableCell>{invoice.payeeName}</TableCell>
+							<TableCell>{invoice.payeeAccountNumber}</TableCell>
+							<TableCell>{invoice.payeeAdress}</TableCell>
+							<TableCell>{invoice.amount}</TableCell>
+							<TableCell>{invoice.paid ? 'Yes' : 'No'}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
