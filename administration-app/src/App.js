@@ -20,6 +20,7 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
+import ClaimTable from './components/claims/ClaimTable';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -35,6 +36,14 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<TransactionsList />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/transaction/claims'
+							element={
+								<ProtectedRoute>
+									<ClaimTable />
 								</ProtectedRoute>
 							}
 						/>
