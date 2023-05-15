@@ -27,6 +27,7 @@ import {
 	Tooltip,
 	Toolbar,
 	ButtonGroup,
+	Modal,
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
@@ -257,6 +258,9 @@ const UserManagement = () => {
 		setDense(event.target.checked);
 	};
 
+	const [open, setOpen] = useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
 
 	return (
 		<div>
@@ -285,11 +289,11 @@ const UserManagement = () => {
 											size='small'
 											variant='text'
 											endIcon={<CreateIcon />}
-										   
+											onClick={handleOpen}
 										>
 											Pay
 										</Button>
-									    </Tooltip>
+									</Tooltip>
 
 
 									<Tooltip title='Pending requests'>
@@ -452,6 +456,14 @@ const UserManagement = () => {
 					Email to reset password has been sent!
 				</Alert>
 			</Snackbar>
+			<Modal
+				open={open}
+				onClose={handleClose}
+				aria-labelledby='modal-modal-title'
+				aria-describedby='modal-modal-description'
+			>
+				<PaymentModal handleClose={handleClose} />
+			</Modal>
 		</div>
 	);
 };
