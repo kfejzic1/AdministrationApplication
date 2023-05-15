@@ -2,6 +2,7 @@ using AdministrationAPI.Contracts.Requests;
 using AdministrationAPI.Contracts.Requests.Vendors;
 using AdministrationAPI.Extensions;
 using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
