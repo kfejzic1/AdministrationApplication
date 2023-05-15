@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import AccountRequestsDialog from './AccountRequestsDialog';
-import PaymentModal from '../PaymentInfoModal/paymentmodal';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
 import {
 	Button,
@@ -27,7 +26,6 @@ import {
 	Tooltip,
 	Toolbar,
 	ButtonGroup,
-	Modal,
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import UsersTableHead from './UsersTableHead';
@@ -283,19 +281,6 @@ const UserManagement = () => {
 										</Button>
 									</Tooltip>
 
-									<Tooltip title='Pay'>
-										<Button
-											className={classes.button}
-											size='small'
-											variant='text'
-											endIcon={<CreateIcon />}
-											onClick={handleOpen}
-										>
-											Pay
-										</Button>
-									</Tooltip>
-
-
 									<Tooltip title='Pending requests'>
 										<Button
 											className={classes.button}
@@ -456,14 +441,6 @@ const UserManagement = () => {
 					Email to reset password has been sent!
 				</Alert>
 			</Snackbar>
-			<Modal
-				open={open}
-				onClose={handleClose}
-				aria-labelledby='modal-modal-title'
-				aria-describedby='modal-modal-description'
-			>
-				<PaymentModal handleClose={handleClose} />
-			</Modal>
 		</div>
 	);
 };
