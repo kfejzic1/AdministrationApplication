@@ -32,7 +32,7 @@ function InvoiceList() {
 				</TableHead>
 				<TableBody>
 					{invoices.map(invoice => (
-						<TableRow key={invoice.Id}>
+						<TableRow key={invoice.id}>
 							<TableCell>{invoice.id}</TableCell>
 							<TableCell>{invoice.payerName}</TableCell>
 							<TableCell>{invoice.payerAdress}</TableCell>
