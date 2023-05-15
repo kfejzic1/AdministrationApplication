@@ -2,7 +2,6 @@ import axios from 'axios';
 import { env } from '../config/env';
 import jwtDecode from 'jwt-decode';
 
-
 export function getAllUsers() {
 	return axios(env.API_ENV.url + '/api/User/all', {
 		method: 'GET',
@@ -48,18 +47,23 @@ export function login(data) {
 	});
 }
 
-export function google(data){
-	return axios.post(
-		env.API_ENV.url + '/api/User/login/google?token=' + data, {
+export function logout() {
+	return axios(env.API_ENV.url + '/api/User/logout', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
 	});
-} 
+}
 
-export function facebook(data){
-	return axios.post(
-		env.API_ENV.url + '/api/User/login/facebook?token=' + data, {
-	});
-} 
+export function google(data) {
+	return axios.post(env.API_ENV.url + '/api/User/login/google?token=' + data, {});
+}
 
+export function facebook(data) {
+	return axios.post(env.API_ENV.url + '/api/User/login/facebook?token=' + data, {});
+}
 
 export function twoFactorAuthentication(data) {
 	return axios(env.API_ENV.url + '/api/User/login2FA', {
@@ -101,13 +105,24 @@ export function getAllAccounts(id) {
 	});
 }
 
-export function createAccount(data) {
+export function createAccountCreationRequest(data) {
 	return axios(env.API_ENV.url + '/api/Account/user-account-create', {
 		method: 'POST',
 		data: JSON.stringify(data),
 		headers: {
 			'Content-Type': 'application/json',
-			 Authorization: 'Bearer ' + localStorage.getItem('token'),
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+
+
+export function getValidateToken(data) {
+	return axios(env.API_ENV.url + '/api/User/validate-token?token=' + data, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		},
 	});
 }

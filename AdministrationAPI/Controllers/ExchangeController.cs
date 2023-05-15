@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System;
 using System.Collections.Generic;
 
 namespace AdministrationAPI.Controllers
@@ -111,7 +112,7 @@ namespace AdministrationAPI.Controllers
                 foreach (var header in Request.Headers)
                 {
                     if (header.Key.CompareTo("Authorization") == 0)
-                        token=header.Value;
+                        token = header.Value;
                 }
               var response=  await _exchangeService.MakeTransaction(transactionRequest,token);
                 if (response.obj != null)

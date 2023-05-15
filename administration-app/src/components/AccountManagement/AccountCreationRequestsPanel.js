@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createUser, editUser, getAllUsers, requestPasswordReset } from '../../services/userManagementService';
-import { getAllAccounts, getUser, getUserId, createAccount } from '../../services/userService';
+import { getAllAccounts, getUser, getUserId, createAccountCreationRequest } from '../../services/userService';
 import {
 	Button,
 	Dialog,
@@ -205,37 +205,40 @@ const AccountCreationRequestsPanel = () => {
 		if (currency_id && description && description != '') {
 			setErrorMessage('');
 
-			if (files) {
-				console.log(files);
-				for (var i = 0; i < files.length; i++) {
-					let formdata = new FormData();
-					formdata.append('ContentType', 'application/pdf');
-					formdata.append('Folder', '/user-requests/' + getUserId() + '/' + currency_id);
-					formdata.append('file', files[i]);
-
-					for (var pair of formdata.entries()) {
-						console.log(pair[0]);
-						console.log(pair[1]);
-					}
-					uploadDocument(formdata).then(res => {
-						console.log(res);
-					});
-				}
-			}
-
 			let objectData = {
 				currencyId: currency_id,
 				description: description,
 				requestDocumentPath: files ? '/user-requests/' : null,
-				approved: false,
 			};
 
-			createAccount(objectData).then(res => {
+			createAccountCreationRequest(objectData).then(res => {
+				if (files) {
+					console.log(files);
+					for (var i = 0; i < files.length; i++) {
+						let formdata = new FormData();
+						formdata.append('ContentType', 'application/pdf');
+						formdata.append('Folder', '/user-requests/' + getUserId() + '/' + currency_id);
+						formdata.append('file', files[i]);
+	
+						for (var pair of formdata.entries()) {
+							console.log(pair[0]);
+							console.log(pair[1]);
+						}
+						uploadDocument(formdata).then(res => {
+							console.log(res);
+						});
+					}
+				}
+				
 				setAccounts([...accounts, res.data]);
 				setSelectedCurrency(currencies[0].name);
 				setDescription(null);
 				handleCreateDialogClose();
-			});
+			})
+			.catch(err => {
+					setErrorMessage(err.response.data);
+				}
+			);
 		} else {
 			setErrorMessage('Invalid input data!');
 		}
@@ -271,7 +274,8 @@ const AccountCreationRequestsPanel = () => {
 											size='small'
 											variant='text'
 											endIcon={<CreateIcon />}
-											onClick={handleCreateDialogOpen}>
+											onClick={handleCreateDialogOpen}
+										>
 											Request Account Creation
 										</Button>
 									</Tooltip>
@@ -281,7 +285,8 @@ const AccountCreationRequestsPanel = () => {
 								className={classes.root}
 								sx={{ minWidth: '100%' }}
 								aria-labelledby='tableTitle'
-								size={dense ? 'small' : 'medium'}>
+								size={dense ? 'small' : 'medium'}
+							>
 								<AccountCreationRequestTableHeader onClick={handleCreateDialogOpen} />
 								<TableBody>
 									{accounts.map(account => (
@@ -294,7 +299,8 @@ const AccountCreationRequestsPanel = () => {
 											hover
 											role='checkbox'
 											tabIndex={-1}
-											sx={{ cursor: 'pointer' }}>
+											sx={{ cursor: 'pointer' }}
+										>
 											<TableCell align='left'>{account.id}</TableCell>
 											<TableCell align='left'>{account.description}</TableCell>
 											<TableCell align='left'>{account.currency.name}</TableCell>
@@ -343,7 +349,8 @@ const AccountCreationRequestsPanel = () => {
 								defaultValue={currencies[0].name}
 								onChange={e => {
 									setSelectedCurrency(e.target.value);
-								}}>
+								}}
+							>
 								{currencies.map(currency => {
 									return (
 										<MenuItem value={currency.name} key={currency.name}>

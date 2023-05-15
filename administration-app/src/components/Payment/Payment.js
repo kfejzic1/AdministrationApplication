@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { getCurrencys, sendPaymentInfoAccount, sendPaymentInfoPhone } from '../../services/Payment/PaymentServices';
+import {
+	getAccounts,
+	getCurrencys,
+	sendPaymentInfoAccount,
+	sendPaymentInfoPhone,
+} from '../../services/Payment/PaymentServices';
 import { useLocation } from 'react-router-dom';
 import { sendNotification } from '../../services/utilityService';
 import { TextField, Button, FormGroup, Select, MenuItem, Menu, Typography, Box, InputLabel } from '@mui/material';
@@ -17,6 +22,7 @@ export const Payment = props => {
 		transactionAmount,
 		transactionPurpose,
 		senderAccount,
+		category,
 	} = useParams();
 	const [transactionAmountState, setTransactionAmount] = useState(
 		transactionAmount != undefined && transactionAmount != -1 ? transactionAmount : '0'
@@ -34,12 +40,13 @@ export const Payment = props => {
 	const [transactionTypeState, setTransactionType] = useState(
 		transactionType != undefined && transactionType != -1 ? transactionType : 'C2C'
 	);
-	const [categoryState, setCategory] = useState('');
+	const [categoryState, setCategory] = useState(category != undefined && category !== -1 ? category : '');
 	const [interestingGroupState, setInterestingGroup] = useState('Person');
 	const [transactionPurposeState, setTransactionPurpose] = useState(
 		transactionPurpose != undefined && transactionPurpose != -1 ? transactionPurpose : 'Payment'
 	);
 	const [currencysList, setCurrencysList] = useState(null);
+	const [accList, setAccList] = useState(null);
 	useEffect(() => {
 		getCurrencys()
 			.then(items => {
@@ -60,11 +67,32 @@ export const Payment = props => {
 						}
 					})
 				);
-				setOpen(false);
+				getAccounts()
+					.then(accounts => {
+						setAccList(
+							accounts.data.map(item => {
+								{
+									return (
+										<MenuItem key={item.accountNumber} value={item.accountNumber}>
+											{item.accountNumber}
+										</MenuItem>
+									);
+								}
+							})
+						);
+						if (accounts.data.length > 0) setSenderAccountNumber(accounts.data[0].accountNumber);
+						setOpen(false);
+					})
+					.catch(err => {
+						console.error(err);
+						setOpen(false);
+						alert('Something went wrong, try refreshing1');
+					});
 			})
 			.catch(err => {
 				console.error(err);
 				setOpen(false);
+				alert('Something went wrong, try refreshing');
 			});
 	}, []);
 	useEffect(() => {
@@ -250,6 +278,7 @@ export const Payment = props => {
 								<MenuItem value='Gift'>Gift</MenuItem>
 							</Select>
 						</Box>
+
 						<br />
 						<Box
 							sx={{
@@ -340,7 +369,46 @@ export const Payment = props => {
 								{currencysList}
 							</Select>
 						</Box>
-
+						<br />
+						<Box
+							sx={{
+								display: 'flex',
+								width: '70%',
+								justifyContent: 'center',
+								gap: 2,
+								flexDirection: 'row',
+							}}
+						>
+							<Box
+								sx={{
+									justifyContent: 'center',
+									alignItems: 'center',
+									display: 'flex',
+								}}
+							>
+								<Box
+									sx={{
+										color: 'var(--babyblue)',
+									}}
+								>
+									Sender account number:
+								</Box>
+							</Box>
+							<Select
+								sx={{
+									color: '#fff',
+									backgroundColor: '#1976D2',
+									alignSelf: 'flex-end',
+									borderRadius: '5px',
+									padding: 0,
+									lineHeight: 1,
+								}}
+								value={senderAccountNumber}
+								onChange={event => setSenderAccountNumber(event.target.value)}
+							>
+								{accList}
+							</Select>
+						</Box>
 						<br />
 
 						<TextField
@@ -374,21 +442,7 @@ export const Payment = props => {
 							onChange={event => setRecipientAccountNumber(event.target.value)}
 							required
 						/>
-						<TextField
-							label='Sender account number'
-							sx={{
-								padding: 'var(--inputPadding)',
-								borderRadius: '5px',
-								border: '0px',
-								width: '70%',
-								fontSize: 'var(--text-size)',
-							}}
-							type='text'
-							placeholder='Write sender account number'
-							value={senderAccountNumber}
-							onChange={event => setSenderAccountNumber(event.target.value)}
-							required
-						/>
+
 						<TextField
 							label='Category'
 							sx={{
@@ -438,7 +492,7 @@ export const Payment = props => {
 									})
 									.catch(e => {
 										setOpen(false);
-										alert('Failed! ' + e.response.data.message, JSON.stringify(e));
+										alert('Failed! ' + e.response.data, JSON.stringify(e));
 										sendNotification('Transaction payment failed.');
 									});
 								//}

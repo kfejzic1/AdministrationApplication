@@ -10,14 +10,17 @@ import { TransactionsList } from './components/TransactionsView/transactions/Tra
 import { Payment } from './components/Payment/Payment';
 import { useState } from 'react';
 import UserManagement from './components/UserManagement/UserManagement';
+import Voucher from './components/Voucher/Voucher';
 import AccountCreationRequestsPanel from './components/AccountManagement/AccountCreationRequestsPanel';
 
 import { SetUserPassword } from './components/UserManagement/SetUserPassword';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { LoginSocialFacebook } from 'reactjs-social-login';
 import Currencies from './components/Currencies/Currencies';
+import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption';
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
+import AdminClaims from './components/AdminClaims/AdminClaims';
+import ClaimTable from './components/claims/ClaimTable';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -37,7 +40,15 @@ function App() {
 							}
 						/>
 						<Route
-							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount'
+							path='/transaction/claims'
+							element={
+								<ProtectedRoute>
+									<ClaimTable />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/payment/:currency/:transactionPurpose/:recipientName/:transactionType/:transactionAmount/:recipientAccountNumber/:senderAccount/:category'
 							element={
 								<ProtectedRoute>
 									<Payment />
@@ -100,6 +111,32 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Currencies />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/redeem-voucher'
+							element={
+								<ProtectedRoute>
+									<VoucherRedemption />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/voucher'
+							element={
+								<ProtectedRoute>
+									<Voucher />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/claims'
+							element={
+								<ProtectedRoute>
+									<AdminClaims />
 								</ProtectedRoute>
 							}
 						/>

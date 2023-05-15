@@ -1,6 +1,8 @@
 ﻿using AdministrationAPI.Models;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
+using AdministrationAPI.Models.Voucher;
+using AdministrationAPI.Models.Voucher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +36,14 @@ namespace AdministrationAPI.Data
         public DbSet<TransactionClaim> TransactionClaims { get; set; }
         public DbSet<TransactionClaimDocument> TransactionClaimDocuments { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherStatus> VoucherStatuses { get; set; }
+
         public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
+
+        public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
+        public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
+        public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -64,6 +73,11 @@ namespace AdministrationAPI.Data
             builder.Entity<InvoiceFrequency>(entity => { entity.ToTable("ven_invoice_frequency"); });
             builder.Entity<TransactionClaim>(entity => { entity.ToTable("trn_claim"); });
             builder.Entity<TransactionClaimDocument>(entity => { entity.ToTable("trn_claim_document"); });
+            builder.Entity<Voucher>(entity => { entity.ToTable("vou_vouchers"); });
+            builder.Entity<VoucherStatus>(entity => { entity.ToTable("vou_voucher_stasuses"); });
+            builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
+            builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
+            builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
 
 
             ApplySnakeCaseNames(builder);
@@ -101,7 +115,34 @@ namespace AdministrationAPI.Data
                 .HasOne<Currency>(er => er.OutputCurrency)
                 .WithMany(c => c.ExchangeRatesAsOutput)
                 .HasForeignKey(er => er.OutputCurrencyId);
+
+
+            builder.Entity<Voucher>()
+               .HasIndex(e => e.Code)
+               .IsUnique();
+
+
+            builder.Entity<Voucher>()
+                .HasOne(v => v.Admin)
+                .WithMany()
+                .HasForeignKey(v => v.CreatedBy);
+
+            builder.Entity<Voucher>()
+                .HasOne(v => v.User)
+                .WithMany()
+                .HasForeignKey(v => v.RedeemedBy);
+
+            builder.Entity<Voucher>().
+                HasOne(v => v.Currency)
+                .WithMany()
+                .HasForeignKey(v => v.CurrencyId);
+
+            builder.Entity<Voucher>()
+                .HasOne(v => v.VoucherStatus)
+                .WithMany()
+                .HasForeignKey(v => v.VoucherStatusId);
         }
+
 
         private static void SeedRoles(ModelBuilder builder)
         {
@@ -125,11 +166,19 @@ namespace AdministrationAPI.Data
                 new User() { FirstName = "Dzenis", LastName = "Muhic", UserName = "dmuhic1", NormalizedUserName = "DMUHIC1", ConcurrencyStamp = "1", Email = "dmuhic1@etf.unsa.ba", NormalizedEmail = "DMUHIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Ema", LastName = "Mekic", UserName = "emekic2", NormalizedUserName = "EMEKIC2", ConcurrencyStamp = "1", Email = "emekic2@etf.unsa.ba", NormalizedEmail = "EMEKIC2@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
-                new User() { FirstName = "Facebook", LastName = "User", UserName = "fbuser", NormalizedUserName = "FBUSER", ConcurrencyStamp = "1", Email = "elvedin_09@hotmail.com", NormalizedEmail = "ELVEDIN_09@HOTMAIL.COM", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false }
+                new User() { FirstName = "Facebook", LastName = "User", UserName = "fbuser", NormalizedUserName = "FBUSER", ConcurrencyStamp = "1", Email = "elvedin_09@hotmail.com", NormalizedEmail = "ELVEDIN_09@HOTMAIL.COM", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
+                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "evlahovlja1@etf.unsa.ba", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
                 );
 
-
+            builder.Entity<Currency>().HasData(
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "BIH", Name = "BAM" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "USA", Name = "USD" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "DEU", Name = "EUR" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "SWI", Name = "CHF" }
+                );
         }
+
+
 
         private void ApplySnakeCaseNames(ModelBuilder modelBuilder)
         {
@@ -160,6 +209,16 @@ namespace AdministrationAPI.Data
             builder.Entity<IdentityRole>().HasData(roles);
 
 
+            List<VoucherStatus> voucherStatuses = new List<VoucherStatus>() {
+                   new VoucherStatus { Id = "1", Status = "ISSUED" },
+                   new VoucherStatus { Id = "2", Status = "ACTIVE" },
+                   new VoucherStatus { Id = "3", Status = "REDEEMED" },
+                   new VoucherStatus { Id = "4", Status = "VOID" }
+                   };
+
+            builder.Entity<VoucherStatus>().HasData(voucherStatuses);
+
+
             // Seed Users
 
             List<User> users = new List<User>()
@@ -171,7 +230,9 @@ namespace AdministrationAPI.Data
                 new User() { FirstName = "Merjem", LastName = "Becirovic", UserName = "mbecirovic3", NormalizedUserName = "MBECIROVIC3", ConcurrencyStamp = "1", Email = "mbecirovic3@etf.unsa.ba", NormalizedEmail = "MBECIROVIC3@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Dzenis", LastName = "Muhic", UserName = "dmuhic1", NormalizedUserName = "DMUHIC1", ConcurrencyStamp = "1", Email = "dmuhic1@etf.unsa.ba", NormalizedEmail = "DMUHIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
                 new User() { FirstName = "Ema", LastName = "Mekic", UserName = "emekic2", NormalizedUserName = "EMEKIC2", ConcurrencyStamp = "1", Email = "emekic2@etf.unsa.ba", NormalizedEmail = "EMEKIC2@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
-                new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false }
+                new User() { FirstName = "Almina", LastName = "Brulic", UserName = "abrulic1", NormalizedUserName = "ABRULIC1", ConcurrencyStamp = "1", Email = "abrulic1@etf.unsa.ba", NormalizedEmail = "ABRULIC1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAENao66CqvIXroh/6aTaoJ/uThFfjLemBtjLfuiJpP/NoWXkhJO/G8wspnWhjLJx9WQ==", PhoneNumber = "11111", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = true, LockoutEnabled = false },
+                new User() { FirstName = "Elvir", LastName = "Vlahovljak", UserName = "evlahovlja1", NormalizedUserName = "EVLAHOVLJA1", ConcurrencyStamp = "1", Email = "evlahovlja1@etf.unsa.ba", NormalizedEmail = "EVLAHOVLJA1@ETF.UNSA.BA", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "061904086", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false },
+		new User() { Id = "ID", FirstName = "Test", LastName = "Test", UserName = "test", NormalizedUserName = "TEST", ConcurrencyStamp = "1", Email = "test@gmail.com", NormalizedEmail = "TEST@GMAIL.COM", EmailConfirmed = true, PasswordHash = "AQAAAAIAAYagAAAAEL+9sxZQaY0F4wxS0N24IGTB+z6oIeFEX8wQgqdzsskd4XC/oE+2YWgxc/LwTsx+dw==", PhoneNumber = "12345", PhoneNumberConfirmed = true, Address = "Tamo negdje 1", TwoFactorEnabled = false, LockoutEnabled = false }
 
             };
 
@@ -182,12 +243,21 @@ namespace AdministrationAPI.Data
             // Seed UserRoles
             List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
 
-
-            users.ForEach(u => userRoles.Add(new IdentityUserRole<string>
+            foreach (var user in users)
             {
-                UserId = u.Id,
-                RoleId = roles.First(q => q.Name == "User").Id
-            }));
+                if (user.UserName != "abrulic1")
+                    userRoles.Add(new IdentityUserRole<string>
+                    {
+                        UserId = user.Id,
+                        RoleId = roles.First(q => q.Name == "User").Id
+                    });
+                else
+                    userRoles.Add(new IdentityUserRole<string>
+                    {
+                        UserId = user.Id,
+                        RoleId = roles.First(q => q.Name == "Admin").Id
+                    });
+            }
 
 
             builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
@@ -215,19 +285,34 @@ namespace AdministrationAPI.Data
             // Seed Currencies
             List<Currency> currencies = new List<Currency>()
             {
-                new Currency() { Id = "1", Country = "Bosnia and Herzegovina", Name = "BAM"},
-                new Currency() { Id = "2", Country = "United States of America", Name = "USD"}
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "BIH", Name = "BAM" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "USA", Name = "USD" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "DEU", Name = "EUR" },
+                new Currency() { Id = Guid.NewGuid().ToString(), Country = "SWI", Name = "CHF" }
             };
+
             builder.Entity<Currency>().HasData(currencies);
 
             // Seed Accounts
             List<Account> accounts = new List<Account>()
             {
-                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2", Approved = true, RequestDocumentPath = "/"},
-                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3", Approved = true, RequestDocumentPath = "/"}
+                new Account(){Id = -1, UserId = users[0].Id, CurrencyId = currencies[0].Id, AccountNumber = "1", Description = "Acc1"},
+                new Account(){Id = -2, UserId = users[0].Id, CurrencyId = currencies[1].Id, AccountNumber = "2", Description = "Acc2"},
+                new Account(){Id = -3, UserId = users[1].Id, CurrencyId = currencies[0].Id, AccountNumber = "3", Description = "Acc3"}
             };
             builder.Entity<Account>().HasData(accounts);
+
+
+            //Seed Vouchers
+            List<Voucher> vouchers = new List<Voucher>()
+            {
+                new Voucher() { Id = 1, Amount = 50, CurrencyId = currencies[0].Id, Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 2, Amount = 20, CurrencyId = currencies[0].Id, Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 3, Amount = 50, CurrencyId = currencies[0].Id, Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "2", CreatedBy = users[7].Id},
+                new Voucher() { Id = 4, Amount = 50, CurrencyId = currencies[0].Id, Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id}
+            };
+
+            builder.Entity<Voucher>().HasData(vouchers);
 
         }
 

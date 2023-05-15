@@ -1,0 +1,44 @@
+.voucher_container{
+    display: flex;
+    width: 98vw;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden !important;
+}
+
+.centered_input{
+    width: 10rem !important;
+    font-size: 5rem;
+}
+.flex_column{
+    display: flex;
+    flex-direction: column;
+}
+
+.valid_voucher{
+    color: green;
+    padding: 5px;
+    margin-bottom: 25px;
+}
+.invalid_voucher{
+    color: crimson;
+    padding: 5px;
+    margin-bottom: 25px;
+}
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 16px;
+    height: 350px; 
+  }
+  
+  
+  .box:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  }
+  
