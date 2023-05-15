@@ -57,10 +57,10 @@ namespace AdministrationAPI.Services
                 {
                     PayerId = request.UserId,
                     PayerName = eInvoiceRequest.PayerName,
-                    PayerAddress = eInvoiceRequest.PayeeAddress,
+                    PayerAddress = eInvoiceRequest.PayerAddress,
                     Reference = eInvoiceRequest.Reference,
                     Description = eInvoiceRequest.Description,
-                    PayeeName = eInvoiceRequest.PayerName,
+                    PayeeName = eInvoiceRequest.PayeeName,
                     PayeeAccountNumber = eInvoiceRequest.PayeeAccountNumber,
                     PayeeAddress = eInvoiceRequest.PayeeAddress,
                     Amount = eInvoiceRequest.Amount,

@@ -7,23 +7,12 @@ function InvoiceList() {
 	useEffect(() => {
 		getAllUserInvoices()
 			.then(response => {
-				setInvoices(
-					response.data.map(invoice => {
-						return {
-							id: invoice.eInvoice.id,
-							payerName: invoice.eInvoice.payerName,
-							payerAdress: invoice.eInvoice.payerAdress,
-							reference: invoice.eInvoice.reference,
-							description: invoice.eInvoice.description,
-							payeeName: invoice.eInvoice.payeeName,
-							payeeAccountNumber: invoice.eInvoice.payeeAccountNumber,
-							payeeAdress: invoice.eInvoice.payeeAdress,
-							amount: invoice.eInvoice.amount,
-							paid: invoice.eInvoice.paind,
-						};
-					})
+				setInvoices(response.data.map(invoice => invoice.eInvoice));
+				console.log(response.data.map(invoice => invoice.eInvoice));
+				/*setInvoices(
+					response.data.map(invoice => {;return invoice.eInvoice;})
 				);
-				console.log(invoices);
+				*/
 			})
 			.catch(error => console.error(error));
 	}, []);
@@ -33,7 +22,6 @@ function InvoiceList() {
 			<Table>
 				<TableHead>
 					<TableRow>
-						<TableCell>Invoice ID</TableCell>
 						<TableCell>Payer Name</TableCell>
 						<TableCell>Payer Address</TableCell>
 						<TableCell>Reference</TableCell>
@@ -48,15 +36,14 @@ function InvoiceList() {
 				<TableBody>
 					{invoices.map(invoice => (
 						<TableRow key={invoice.id}>
-							<TableCell>{invoice.id}</TableCell>
 							<TableCell>{invoice.payerName}</TableCell>
-							<TableCell>{invoice.payerAdress}</TableCell>
+							<TableCell>{invoice.payerAddress}</TableCell>
 							<TableCell>{invoice.reference}</TableCell>
 							<TableCell>{invoice.description}</TableCell>
 							<TableCell>{invoice.payeeName}</TableCell>
 							<TableCell>{invoice.payeeAccountNumber}</TableCell>
-							<TableCell>{invoice.payeeAdress}</TableCell>
-							<TableCell>{invoice.amount}</TableCell>
+							<TableCell>{invoice.payeeAddress}</TableCell>
+							<TableCell>{invoice.amount+' '+invoice.currency.name}</TableCell>
 							<TableCell>{invoice.paid ? 'Yes' : 'No'}</TableCell>
 						</TableRow>
 					))}
