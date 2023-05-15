@@ -12,7 +12,7 @@ namespace AdministrationAPI.Services.Interfaces
     {
         Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options);
         Task<TransactionDTO> GetTransactionByID(int id, string token);
-
+        TransactionClaimMessageDocumentResponse GetDocument(int id);
         Task<TransactionDetailsDTO> CreateTransaction(TransactionCreateRequest req);
         int CreateTransactionClaim(ClaimCreateRequest request, string userId);
         Task<List<TransactionTransfer>> GetGroupedTransactionsByCurrency(string token);

@@ -29,7 +29,18 @@ namespace AdministrationAPI.Services
             _appDbContext = appContext;
         }
 
+        public TransactionClaimMessageDocumentResponse GetDocument(int id)
+        {
+           var doc= _appDbContext.Documents.FirstOrDefault(d => d.Id == id);
+            return new TransactionClaimMessageDocumentResponse
+            {
+                CreatedBy = doc.CreatedBy,
+                FileName= doc.FileName,
+                TransactionClaimMessageDocumentId=doc.Id,
+                Unc=doc.UNC
 
+            };
+        }
         public async Task<List<TransactionDTO>> GetTransactions(string token, TransactionQueryOptions options)
         {
             string query = "?token=" + token;
@@ -226,7 +237,8 @@ namespace AdministrationAPI.Services
         public string AcceptTransactionClaim(ClaimAcceptRequest request, string userId)
         {
             var transactionClaim = _appDbContext.TransactionClaims.FirstOrDefault(tc => tc.Id == request.TransactionClaimId);
-            if (transactionClaim == default(TransactionClaim))
+            Console.WriteLine(transactionClaim);
+            if (transactionClaim == null)
                 throw new Exception("The specified transaction claim does not exist.");
 
             var transactionClaimUser = _appDbContext.TransactionClaimUsers.FirstOrDefault(t => t.TransactionClaimId == transactionClaim.Id);

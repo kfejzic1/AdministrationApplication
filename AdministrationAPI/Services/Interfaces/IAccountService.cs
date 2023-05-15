@@ -10,5 +10,6 @@ namespace AdministrationAPI.Services.Interfaces
         List<AccountCreationRequest> GetAllRequests();
         Task<Account?> ApproveRequest(int id);
         List<AccountCreationRequest> GetRequestHistory();
+        List<Account> GetAllAccounts();
     }
 }
