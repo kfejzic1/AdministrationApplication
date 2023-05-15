@@ -32,6 +32,7 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IRedeemVoucherService, RedeemVoucherService>();
 builder.Services.AddScoped<TokenUtilities>();
 builder.Services.AddScoped<IAdminEInvoiceService, AdminEInvoiceService>();
+builder.Services.AddScoped<IEInvoiceService, EInvoiceService>();
 
 
 builder.Services.AddControllers();
