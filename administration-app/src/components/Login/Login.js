@@ -6,17 +6,16 @@ import { google } from '../../services/userService';
 import { facebook } from '../../services/userService';
 import { LinearProgress, Typography, Input, Alert, Box, Button, accordionSummaryClasses } from '@mui/material';
 import TwoFactorView from './TwoFactor';
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+import { FacebookLoginButton, GoogleLoginButton } from 'react-social-login-buttons';
 import { useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { env } from '../../config/env';
 import axios, { formToJSON } from 'axios';
 import { responsiveProperty } from '@mui/material/styles/cssUtils';
-
-
+import { getValidateToken } from '../../services/userService';
 
 const LoginForm = props => {
-    const [phoneMail, setPhoneMail] = useState('');
+	const [phoneMail, setPhoneMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(null);
@@ -26,7 +25,23 @@ const LoginForm = props => {
 
 	useEffect(() => {
 		props.setToken(localStorage.getItem('token'));
+		getValidateToken(localStorage.getItem('token')).then(response => {
+			props.setIsAdmin(userAdmin(response.data));
+		});
 	}, []);
+
+	const userAdmin = user => {
+		console.log('user---=', JSON.stringify(user));
+		if (user.roles) {
+			var b = user.roles.filter(v => v === 'Admin')[0];
+			if (b === 'Admin') {
+				console.log('Uslo u ovu funkciju');
+				return true;
+			}
+			return false;
+		}
+		return false;
+	};
 
 	const checkData = input => {
 		const regex = new RegExp('^[0-9]+$');
@@ -35,38 +50,32 @@ const LoginForm = props => {
 	};
 
 	const googleLogin = useGoogleLogin({
-		onSuccess: async (codeResponse) => {
-			try{
+		onSuccess: async codeResponse => {
+			try {
 				const tokens = await google(codeResponse.access_token);
 				localStorage.setItem('token', tokens.data.token);
 				navigate('/user');
-			}catch(error) {
+			} catch (error) {
 				setErrorMessage(error.response.data.errors[0]);
 			}
 		},
-		onError: errorResponse => setErrorMessage("Error on backend!" + errorResponse),
+		onError: errorResponse => setErrorMessage('Error on backend!' + errorResponse),
 	});
 
-	
-	
-		const onSuccess = async (response) => {
-		  console.log('Login success:', response.accessToken);
-		  try{
-		  	const tokens = await facebook(response.accessToken);
-		  	console.log("TOken koji smo dobili je " +JSON.stringify(tokens));
+	const onSuccess = async response => {
+		console.log('Login success:', response.accessToken);
+		try {
+			const tokens = await facebook(response.accessToken);
+			console.log('TOken koji smo dobili je ' + JSON.stringify(tokens));
 			localStorage.setItem('token', tokens.data.token);
 			navigate('/user');
-		  }catch(err){
+		} catch (err) {
 			setErrorMessage(JSON.stringify(err.response.data.errors[0]));
-		  }
-
-		};
-		const onFailure = (error) => {
-			setErrorMessage("Error on backend!" + error)
-		};
-	
-
-
+		}
+	};
+	const onFailure = error => {
+		setErrorMessage('Error on backend!' + error);
+	};
 
 	const handleButtonClick = () => {
 		setIsLoading(true);
@@ -89,7 +98,10 @@ const LoginForm = props => {
 
 				localStorage.setItem('token', token);
 				localStorage.setItem('userId', userId);
-				props.setToken(token);
+				getValidateToken(localStorage.getItem('token')).then(response => {
+					props.setIsAdmin(userAdmin(response.data));
+				});
+
 				navigate('/user');
 			})
 			.catch(err => {
@@ -135,17 +147,14 @@ const LoginForm = props => {
 							setPassword(e.target.value);
 						}}
 					/>
-					
-					<GoogleLoginButton 
-						onClick={googleLogin} 
-						style={{width: '80%'}} 
-					/>
+
+					<GoogleLoginButton onClick={googleLogin} style={{ width: '80%' }} />
 					<FacebookLogin
 						appId='620744499469183'
 						callback={onSuccess}
 						onFailure={onFailure}
-						render={(renderProps) => (
-							<FacebookLoginButton onClick={renderProps.onClick} style={{width: '80%'}}></FacebookLoginButton>
+						render={renderProps => (
+							<FacebookLoginButton onClick={renderProps.onClick} style={{ width: '80%' }}></FacebookLoginButton>
 						)}
 					/>
 
