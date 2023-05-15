@@ -4,15 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 function InvoiceList() {
 	const [invoices, setInvoices] = useState([]);
 
-	useEffect(() => {
-		const fetchInvoices = async () => {
-			const response = await fetch('/api/invoices');
-			const data = await response.json();
-			setInvoices(data);
-		};
-
-		fetchInvoices();
-	}, []);
+	useEffect(() => {}, []);
 
 	return (
 		<TableContainer component={Paper}>
