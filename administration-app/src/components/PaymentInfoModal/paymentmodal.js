@@ -102,7 +102,9 @@ function PaymentModal(props) {
     const invoices = getAllInvoices();
     invoices.find( value => {
       if(value.id === 1) {
+        value.CurrencyName = value.Currency.Name;
         setEInvoice(value);
+        console.log(value);
       }
     });
     //After implementation of service
@@ -132,7 +134,7 @@ function PaymentModal(props) {
       },
       description: einvoice.Description,
       reference: einvoice.Reference,
-      currency: einvoice.Currency.Name,
+      currency: einvoice.CurrencyName,
       amount: einvoice.Amount
     };
     createEInvoiceTransaction(data).then(res=>{
@@ -176,7 +178,7 @@ function PaymentModal(props) {
               <strong>Amount:</strong> {einvoice.Amount}
             </Typography>
             <Typography variant="body1">
-              <strong>Currency:</strong> {einvoice.Currency}
+              <strong>Currency:</strong> {einvoice.CurrencyName}
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
