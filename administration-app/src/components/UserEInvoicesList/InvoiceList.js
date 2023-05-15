@@ -2,7 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal } from '@mui/material';
 import { getAllUserInvoices } from '../../services/einvoiceListingService';
 import PaymentModal from '../PaymentInfoModal/paymentmodal';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+	root: {
+		'& .MuiTableBody-root .Mui-selectedUserIds:hover': {
+			backgroundColor: '#ffc976',
+		},
+	},
+});
+
 function InvoiceList() {
+	const classes = useStyles();
 	const [invoices, setInvoices] = useState([]);
 	const [selectedInvoice, setSelectedInvoice] = useState(0);
 	const fetchData = async () => {
@@ -47,7 +58,8 @@ function InvoiceList() {
 				</TableHead>
 				<TableBody>
 					{invoices.map(invoice => (
-						<TableRow key={invoice.id} onClick={event => handleClick(event, invoice)} >
+						<TableRow key={invoice.id} onClick={event => handleClick(event, invoice)} hover 
+						classes={{root: classes.tableRowRoot,selected: classes.tableRowSelected,}}>
 							<TableCell>{invoice.payerName}</TableCell>
 							<TableCell>{invoice.payerAddress}</TableCell>
 							<TableCell>{invoice.reference}</TableCell>
