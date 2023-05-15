@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -129,11 +129,11 @@ if (!await roleManager.RoleExistsAsync("Restricted"))
 // Configure the HTTP request pipeline.
 
 app.UseMiddleware<TokenExpirationHandler>();
-if (app.Environment.IsDevelopment())
-{
-  app.UseSwagger();
-  app.UseSwaggerUI();
-}
+
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 
 app.UseCors();
 

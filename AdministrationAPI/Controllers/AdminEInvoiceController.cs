@@ -22,8 +22,7 @@ namespace AdministrationAPI.Controllers
     {
       _adminEInvoiceService = invoiceService;
     }
-
-
+    
     [Authorize(Roles = "Admin")]
     [HttpGet("b2b/e-invoices/requests")]
     public async Task<ActionResult<List<EInvoiceRequest>>> GetInvoiceRequests()
@@ -58,6 +57,7 @@ namespace AdministrationAPI.Controllers
         return StatusCode(500, e.Message);
       }
     }
+
 
     [Authorize(Roles = "Admin")]
     [HttpPost("{b2bID}/e-invoices/create")]

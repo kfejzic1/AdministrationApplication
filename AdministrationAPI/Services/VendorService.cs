@@ -76,6 +76,12 @@ namespace AdministrationAPI.Services
                 });
                 return response;
         }
+
+        public Vendor? GetByName(string name)
+        {
+            return _context.Vendors.FirstOrDefault(v => v.Name == name);
+        }
+
         public bool Delete(int id)
         {
                 var vendor = _context.Vendors.FirstOrDefault(v => v.Id == id);
@@ -498,6 +504,8 @@ namespace AdministrationAPI.Services
             }
             return null;
         }
+
+
         #endregion
     }
 }
