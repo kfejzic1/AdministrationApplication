@@ -1,4 +1,4 @@
-﻿using AdministrationAPI.Models;
+using AdministrationAPI.Models;
 using AdministrationAPI.Models.EInvoice;
 using AdministrationAPI.Models.Transaction;
 using AdministrationAPI.Models.Vendor;
@@ -81,6 +81,7 @@ namespace AdministrationAPI.Data
       builder.Entity<TransactionClaimUser>(entity => { entity.ToTable("trn_claim_user"); });
       builder.Entity<TransactionClaimMessage>(entity => { entity.ToTable("trn_claim_message"); });
       builder.Entity<ClaimsMessagesDocuments>(entity => { entity.ToTable("trn_claim_messages_documents"); });
+      builder.Entity<EInvoiceRequest>(entity => { entity.ToTable("einvoicerequests"); });
 
 
       ApplySnakeCaseNames(builder);
