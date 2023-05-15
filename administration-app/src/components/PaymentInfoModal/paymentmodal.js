@@ -106,7 +106,6 @@ function PaymentModal(props) {
   };
 
   useEffect(() => {
-    console.log(props);
     fetchData();
   }, []);
 
