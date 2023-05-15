@@ -90,7 +90,6 @@ const EInvoices = () => {
 	const [isRequired, setIsRequired] = useState(false);
 	const [requiredDataPost, setRequiredData] = useState([]);
 	const [selectedB2b, setSelectedB2b] = useState('');
-	const [err, setErr] = useState('');
 	const [errTrue, setErrTrue] = useState(false);
 
 
@@ -113,22 +112,33 @@ const EInvoices = () => {
 
 	const setError = (err1) => {
 		setErrTrue(true);
-		setErr(err1);
 	}
-
+	
 	const handleRegister = event => {
 		//this function takes info from text field that user inputed and send them to back for request to finish rout
 		event.preventDefault();
 		const form = event.target;
 		var b2bName = selectedB2b;
 		//console.log("B2b name " + b2bName + "a njegov tip " + typeof b2bName);
-		var field1 = form.field1.value;  
-		//console.log("Filed 1 " + field1 + "a njegov tip " + typeof field1);
-		var field2 = form.field2.value; 
-		var field3 = form.field3.value; 
-		var field4 = form.field4.value;  
+		var field1 = "null";
+		var field2 = "null"; 
+		var field3 = "null";
+		var field4 = "null";
+		if(form.field1){
+			field1 = form.field1.value;
+		} 
+		console.log("Filed 1 " + field1 + "a njegov tip " + typeof field1);
+		if(form.field2){
+			field2 = form.field2.value;
+		} 
+		if(form.field3){
+			field3 = form.field3.value; 
+		}
+		if(form.field4){
+			field4 = form.field4.value;
+		}  
 		var data = { "b2BName": b2bName, "field1": field1, "field2": field2, "field3": field3, "field4" : field4}
-		//console.log("JSON ovdje" + JSON.stringify(data));
+		console.log("JSON ovdje" + JSON.stringify(data));
 		registrationRequest(data).then(response => {
 			setOpenSnackbar(true);
 			setIsRequired(false);
@@ -157,10 +167,22 @@ const EInvoices = () => {
 						</FormControl>						
 						{isRequired? (
 							<div>
+								{
+								requiredDataPost.field1? (
 								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field1' label={requiredDataPost.field1} fullWidth />
-								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field2' label={requiredDataPost.field2} fullWidth />
-								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field3' label={requiredDataPost.field3} fullWidth />
-								<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field4' label={requiredDataPost.field4} fullWidth />
+								) : null}
+								{
+								requiredDataPost.field2? (
+									<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field2' label={requiredDataPost.field2} fullWidth />
+								) : null}
+								{
+								requiredDataPost.field3? (
+									<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field3' label={requiredDataPost.field3} fullWidth />
+								) : null}
+								{
+								requiredDataPost.field4? (
+									<TextField autoFocus style={{ width: '50%', marginLeft: '24%'}} margin='dense' name='field4' label={requiredDataPost.field4} fullWidth />
+								) : null}										
 							</div>											
 						): (
 							<h1></h1>
