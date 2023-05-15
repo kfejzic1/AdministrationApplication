@@ -65,5 +65,21 @@ namespace AdministrationAPI.Controllers
             }
         }
 
+        [HttpGet("payEinvoice/{id}")]
+        public async Task<IActionResult> PayEinvoice([FromQuery] int id)
+        {
+            try
+            {
+                _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
+                var eInvoice = _eInvoiceService.PayEnvoice(id);
+                return Ok(eInvoice);
+            }
+            catch (Exception ex)
+            {
+                LoggerUtility.Logger.LogException(ex, "AccountController.getAccountsWithId");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

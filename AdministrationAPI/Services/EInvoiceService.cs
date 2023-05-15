@@ -90,5 +90,17 @@ namespace AdministrationAPI.Services
             }
             return eInvoicesList;
         }
+
+        public async Task<EInvoice> PayEnvoice(int id)
+        {
+            var eInvoice = _context.EInvoices.FirstOrDefault(x => x.Id == id);
+            if (eInvoice == null)
+                throw new Exception("EInvoice not found.");
+            if (eInvoice.Paid == true)
+                throw new Exception("EInvoice is already paid.");
+            eInvoice.Paid = true;
+            await _context.SaveChangesAsync();
+            return eInvoice;
+        }
     }
 }
