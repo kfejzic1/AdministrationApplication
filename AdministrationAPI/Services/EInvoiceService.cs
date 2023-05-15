@@ -33,6 +33,7 @@ namespace AdministrationAPI.Services
                     PayerName = eInvoiceRequest.PayerName,
                     PayerAdress = eInvoiceRequest.PayeeAdress,
                     Reference = eInvoiceRequest.Reference,
+                    Description = eInvoiceRequest.Description,
                     PayeeName = eInvoiceRequest.PayerName,
                     PayeeAccountNumber = eInvoiceRequest.PayeeAccountNumber,
                     PayeeAdress = eInvoiceRequest.PayeeAdress,

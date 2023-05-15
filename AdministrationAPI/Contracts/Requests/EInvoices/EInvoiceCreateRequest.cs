@@ -5,6 +5,7 @@
         public string PayerName { get; set; }
         public string PayerAdress { get; set; }
         public string Reference { get; set; }
+        public string Description { get; set; }
         public string PayeeName { get; set; }
         public int PayeeAccountNumber { get; set; }
         public string PayeeAdress { get; set; }
