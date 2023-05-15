@@ -14,7 +14,7 @@ export const NavBar = props => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			setUser(response.data);
 		});
-	},[]);
+	}, []);
 
 	const userAdmin = () => {
 		if (user.roles) {
