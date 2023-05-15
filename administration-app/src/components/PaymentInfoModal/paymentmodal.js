@@ -99,50 +99,39 @@ function PaymentModal(props) {
   const classes = useStyles();
 
   const fetchData = async () => {
-    const invoices = getAllInvoices();
-    invoices.find( value => {
-      if(value.id === 1) {
-        value.CurrencyName = value.Currency.Name;
-        setEInvoice(value);
-        console.log(value);
-      }
-    });
-    //After implementation of service
-    // getAllInvoices().then(res=>{
-    //   res.find(value => {
-    //     if(value.id === props.id) {
-    //       setEInvoice(value);
-    //     }
-    //   }); 
-    // });
+    let currency = props.invoice.currency;
+    props.invoice.currencyName = currency.name;
+    setEInvoice(props.invoice);
+    setDisabledPay(props.invoice.paid);
   };
 
   useEffect(() => {
+    console.log(props);
     fetchData();
   }, []);
 
   const handlePay = () => {
     let data = {
-      payer:{
-        name: einvoice.PayerName,
-        address: einvoice.PayerAddress
+      payer: {
+        name: einvoice.payerName,
+        address: einvoice.payerAddress
       },
-      payee:{
-        name: einvoice.PayeeName,
-        address: einvoice.PayeeAddress,
-        bankAccountNumber: einvoice.PayeeAccountNumber
+      payee: {
+        name: einvoice.payeeName,
+        address: einvoice.payeeAddress,
+        bankAccountNumber: einvoice.payeeAccountNumber
       },
-      description: einvoice.Description,
-      reference: einvoice.Reference,
-      currency: einvoice.CurrencyName,
-      amount: einvoice.Amount
+      description: einvoice.description,
+      reference: einvoice.reference,
+      currency: einvoice.currencyName,
+      amount: einvoice.amount
     };
-    createEInvoiceTransaction(data).then(res=>{
-      setPaidInvoice(einvoice.id).then(res =>{
+    createEInvoiceTransaction(data).then(res => {
+      setPaidInvoice(einvoice.id).then(res => {
         props.fetchData();
         props.handleClose();
       });
-    }).catch(error =>{
+    }).catch(error => {
       console.log('error', error);
     });
   };
@@ -154,31 +143,31 @@ function PaymentModal(props) {
           <CardHeader align='left' title={'Payment Details'}></CardHeader>
           <CardContent>
             <Typography variant="body1">
-              <strong>Payer Name:</strong> {einvoice.PayerName}
+              <strong>Payer Name:</strong> {einvoice.payerName}
             </Typography>
             <Typography variant="body1">
-              <strong>Payer Address:</strong> {einvoice.PayerAddress}
+              <strong>Payer Address:</strong> {einvoice.payerAddress}
             </Typography>
             <Typography variant="body1">
-              <strong>Reference Number:</strong> {einvoice.Reference}
+              <strong>Reference Number:</strong> {einvoice.reference}
             </Typography>
             <Typography variant="body1">
-              <strong>Description:</strong> {einvoice.Description}
+              <strong>Description:</strong> {einvoice.description}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Name:</strong> {einvoice.PayeeName}
+              <strong>Payee Name:</strong> {einvoice.payeeName}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Account Number:</strong> {einvoice.PayeeAccountNumber}
+              <strong>Payee Account Number:</strong> {einvoice.payeeAccountNumber}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Address:</strong> {einvoice.PayeeAddress}
+              <strong>Payee Address:</strong> {einvoice.payeeAddress}
             </Typography>
             <Typography variant="body1">
-              <strong>Amount:</strong> {einvoice.Amount}
+              <strong>Amount:</strong> {einvoice.amount}
             </Typography>
             <Typography variant="body1">
-              <strong>Currency:</strong> {einvoice.CurrencyName}
+              <strong>Currency:</strong> {einvoice.currencyName}
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
