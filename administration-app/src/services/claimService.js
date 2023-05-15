@@ -32,3 +32,22 @@ export function sloveClaim(claim) {
 		},
 	});
 }
+export function addClaimMessage(request) {
+	return axios(env.API_ENV.url + '/api/transactions/claim/message', {
+		method: 'POST',
+		data: request,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}
+export function getDocumentById(docId) {
+	return axios(env.API_ENV.url + '/api/transactions/documents/' + docId, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		},
+	});
+}

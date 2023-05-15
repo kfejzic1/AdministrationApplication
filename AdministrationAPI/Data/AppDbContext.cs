@@ -308,9 +308,9 @@ namespace AdministrationAPI.Data
       List<Voucher> vouchers = new List<Voucher>()
             {
                 new Voucher() { Id = 1, Amount = 50, CurrencyId = currencies[0].Id, Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "1", CreatedBy = users[7].Id},
-                new Voucher() { Id = 2, Amount = 20, CurrencyId = currencies[1].Id, Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
-                new Voucher() { Id = 3, Amount = 50, CurrencyId = currencies[2].Id, Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "2", CreatedBy = users[7].Id},
-                new Voucher() { Id = 4, Amount = 50, CurrencyId = currencies[3].Id, Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id}
+                new Voucher() { Id = 2, Amount = 20, CurrencyId = currencies[0].Id, Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
+                new Voucher() { Id = 3, Amount = 50, CurrencyId = currencies[0].Id, Code = "LLL4-GTA3-g4st-35h5", VoucherStatusId = "2", CreatedBy = users[7].Id},
+                new Voucher() { Id = 4, Amount = 50, CurrencyId = currencies[0].Id, Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id}
             };
 
       builder.Entity<Voucher>().HasData(vouchers);

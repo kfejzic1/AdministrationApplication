@@ -28,7 +28,7 @@ public class EmailSender
 
             // save credentials somewhere safe in future
             //client.AuthenticationMechanisms.Remove("NTLM");
-            client.Credentials = new NetworkCredential("siprojekat@outlook.com", _configuration["SI-Projekat:OutlookPassword"]);
+            client.Credentials = new NetworkCredential("siprojekat@outlook.com", Environment.GetEnvironmentVariable("OUTLOOK_PASSWORD"));
             client.Host = "smtp.office365.com";
             client.Port = 587;
             client.EnableSsl = true;
@@ -52,7 +52,7 @@ public class EmailSender
                 client.UseDefaultCredentials = false;
 
                 // save credentials somewhere safe in future
-                client.Credentials = new NetworkCredential("lifeplannerdemo@gmail.com", _configuration["SI-Projekat:GmailCode"]);
+                client.Credentials = new NetworkCredential("lifeplannerdemo@gmail.com", Environment.GetEnvironmentVariable("GMAIL_CODE"));
                 client.Host = "smtp.gmail.com";
                 client.Port = 587;
                 client.EnableSsl = true;
@@ -85,7 +85,7 @@ public class EmailSender
 
             // save credentials somewhere safe in future
             //client.AuthenticationMechanisms.Remove("NTLM");
-            client.Credentials = new System.Net.NetworkCredential("siprojekat@outlook.com", "ProjekatZvaniSI");
+            client.Credentials = new System.Net.NetworkCredential("siprojekat@outlook.com", Environment.GetEnvironmentVariable("OUTLOOK_PASSWORD"));
             client.Host = "smtp.office365.com";
             client.Port = 587;
             client.EnableSsl = true;
@@ -109,7 +109,7 @@ public class EmailSender
                 client.UseDefaultCredentials = false;
 
                 // save credentials somewhere safe in future
-                client.Credentials = new System.Net.NetworkCredential("lifeplannerdemo@gmail.com", "ktiwhjwhzmhppnuw");
+                client.Credentials = new System.Net.NetworkCredential("lifeplannerdemo@gmail.com", Environment.GetEnvironmentVariable("GMAIL_CODE"));
                 client.Host = "smtp.gmail.com";
                 client.Port = 587;
                 client.EnableSsl = true;
@@ -144,7 +144,7 @@ public class EmailSender
 
             // save credentials somewhere safe in future
             //client.AuthenticationMechanisms.Remove("NTLM");
-            client.Credentials = new System.Net.NetworkCredential("siprojekat@outlook.com", "ProjekatZvaniSI");
+            client.Credentials = new System.Net.NetworkCredential("siprojekat@outlook.com", Environment.GetEnvironmentVariable("OUTLOOK_PASSWORD"));
             client.Host = "smtp.office365.com";
             client.Port = 587;
             client.EnableSsl = true;
@@ -168,7 +168,7 @@ public class EmailSender
                 client.UseDefaultCredentials = false;
 
                 // save credentials somewhere safe in future
-                client.Credentials = new System.Net.NetworkCredential("lifeplannerdemo@gmail.com", "ktiwhjwhzmhppnuw");
+                client.Credentials = new System.Net.NetworkCredential("lifeplannerdemo@gmail.com", Environment.GetEnvironmentVariable("GMAIL_CODE"));
                 client.Host = "smtp.gmail.com";
                 client.Port = 587;
                 client.EnableSsl = true;

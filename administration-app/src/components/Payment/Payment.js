@@ -492,7 +492,7 @@ export const Payment = props => {
 									})
 									.catch(e => {
 										setOpen(false);
-										alert('Failed! ' + e.response.data.message, JSON.stringify(e));
+										alert('Failed! ' + e.response.data, JSON.stringify(e));
 										sendNotification('Transaction payment failed.');
 									});
 								//}
