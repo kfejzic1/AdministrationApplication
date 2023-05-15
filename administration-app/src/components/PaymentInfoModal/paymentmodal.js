@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Typography, Grid, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { getAllInvoices } from '../../services/einvoicePaymentService.js'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -92,12 +92,34 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function PaymentModal(props) {
-  const [isPaying, setIsPaying] = useState(false);
+  const [einvoice, setEInvoice] = useState([]);
   const classes = useStyles();
-  const handlePay = () => {
-    setIsPaying(true);
-    props.onPay();
+
+  const fetchData = async () => {
+    const invoices = getAllInvoices();
+    invoices.find( value => {
+      if(value.id === 1) {
+        setEInvoice(value);
+      }
+    });
+    //After implementation of service
+    // getAllInvoices().then(res=>{
+    //   res.find(value => {
+    //     if(value.id === props.id) {
+    //       setEInvoice(value);
+    //     }
+    //   }); 
+    // });
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handlePay = () => {
+    
+  };
+
   return (
     <div>
       <div className='container'>
@@ -105,28 +127,31 @@ function PaymentModal(props) {
           <CardHeader align='left' title={'Payment Details'}></CardHeader>
           <CardContent>
             <Typography variant="body1">
-              <strong>Payer Name:</strong> {props.payerName}
+              <strong>Payer Name:</strong> {einvoice.PayerName}
             </Typography>
             <Typography variant="body1">
-              <strong>Payer Address:</strong> {props.payerAddress}
+              <strong>Payer Address:</strong> {einvoice.PayerAddress}
             </Typography>
             <Typography variant="body1">
-              <strong>Reference Number:</strong> {props.referenceNumber}
+              <strong>Reference Number:</strong> {einvoice.Reference}
             </Typography>
             <Typography variant="body1">
-              <strong>Description:</strong> {props.description}
+              <strong>Description:</strong> {einvoice.Description}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Account Number:</strong> {props.payeeAccountNumber}
+              <strong>Payee Name:</strong> {einvoice.PayeeName}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Name:</strong> {props.payeeName}
+              <strong>Payee Account Number:</strong> {einvoice.PayeeAccountNumber}
             </Typography>
             <Typography variant="body1">
-              <strong>Payee Address:</strong> {props.payeeAddress}
+              <strong>Payee Address:</strong> {einvoice.PayeeAddress}
             </Typography>
             <Typography variant="body1">
-              <strong>Amount:</strong> {props.amount}
+              <strong>Amount:</strong> {einvoice.Amount}
+            </Typography>
+            <Typography variant="body1">
+              <strong>Currency:</strong> {einvoice.Currency}
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
@@ -147,8 +172,6 @@ function PaymentModal(props) {
         </Card>
       </div>
     </div>
-
-
   );
 }
 
