@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-
+import { getAllUserInvoices } from '../../services/einvoiceListingService';
 function InvoiceList() {
 	const [invoices, setInvoices] = useState([]);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		getAllUserInvoices()
+			.then(response => {
+				setInvoices(response.data);
+			})
+			.catch(error => console.error(error));
+	}, []);
 
 	return (
 		<TableContainer component={Paper}>
@@ -27,17 +33,17 @@ function InvoiceList() {
 				<TableBody>
 					{invoices.map(invoice => (
 						<TableRow key={invoice.Id}>
-							<TableCell>{invoice.Id}</TableCell>
-							<TableCell>{invoice.PayerName}</TableCell>
-							<TableCell>{invoice.PayerAdress}</TableCell>
-							<TableCell>{invoice.Reference}</TableCell>
-							<TableCell>{invoice.Description}</TableCell>
-							<TableCell>{invoice.PayeeName}</TableCell>
-							<TableCell>{invoice.PayeeAccountNumber}</TableCell>
-							<TableCell>{invoice.PayeeAdress}</TableCell>
-							<TableCell>{invoice.Amount}</TableCell>
-							<TableCell>{invoice.CurrencyId}</TableCell>
-							<TableCell>{invoice.Paid ? 'Yes' : 'No'}</TableCell>
+							<TableCell>{invoice.id}</TableCell>
+							<TableCell>{invoice.payerName}</TableCell>
+							<TableCell>{invoice.payerAdress}</TableCell>
+							<TableCell>{invoice.reference}</TableCell>
+							<TableCell>{invoice.description}</TableCell>
+							<TableCell>{invoice.payeeName}</TableCell>
+							<TableCell>{invoice.payeeAccountNumber}</TableCell>
+							<TableCell>{invoice.payeeAdress}</TableCell>
+							<TableCell>{invoice.amount}</TableCell>
+							<TableCell>{invoice.currency.name}</TableCell>
+							<TableCell>{invoice.paid ? 'Yes' : 'No'}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>

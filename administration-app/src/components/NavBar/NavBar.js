@@ -14,7 +14,7 @@ export const NavBar = props => {
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			setUser(response.data);
 		});
-	},[]);
+	}, []);
 
 	const userAdmin = () => {
 		if (user.roles) {
@@ -70,6 +70,9 @@ export const NavBar = props => {
 					</Button>
 					<Button component={Link} to='/claims' color='primary'>
 						Claims
+					</Button>
+					<Button component={Link} to='/myinvoices' color='primary'>
+						My invoices
 					</Button>
 					<LogoutButton />
 				</Toolbar>
