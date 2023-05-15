@@ -5,6 +5,7 @@ using AdministrationAPI.Models;
 using AdministrationAPI.Models.Vendor;
 using AdministrationAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AdministrationAPI.Models.EInvoice;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -14,8 +15,6 @@ namespace AdministrationAPI.Services
   {
     private readonly IConfiguration _configuration;
     private readonly AppDbContext _context;
-
-    public async Task<List<EInvoiceRequest>> GetAllInvoiceRequests()
         private readonly IVendorService _vendorService;
         private readonly IUserService _userService;
 
@@ -87,7 +86,6 @@ namespace AdministrationAPI.Services
       return vendor;
     }
 
-  }
         public async Task<EInvoiceRequest> AddEInvoiceRequest(EInvoiceRegistrationData eInvoiceRegistrationData, string userId)
         {
             var vendor = _vendorService.GetByName(eInvoiceRegistrationData.B2BName);
@@ -117,4 +115,8 @@ namespace AdministrationAPI.Services
         }
     }
 
-}
+
+  }
+
+
+
