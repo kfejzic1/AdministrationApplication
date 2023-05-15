@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { getAllVendors } from '../../../services/vendorService';
 import { specifyData } from '../../../services/Einovice/requiredDataServices';
 const EinoviceRequiredData = props => {
-	const [data1, setData] = useState(['sad']);
+	const [data1, setData] = useState(['']);
 	const [refresh, setRefresh] = useState(false);
 	const [vendors, setVendors] = useState([]);
 	const [id, setId] = useState('');
