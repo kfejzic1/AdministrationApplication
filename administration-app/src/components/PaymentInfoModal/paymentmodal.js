@@ -93,6 +93,7 @@ const useStyles = makeStyles(theme => ({
 
 function PaymentModal(props) {
   const [einvoice, setEInvoice] = useState([]);
+  const [disabledPay, setDisabledPay] = useState(false);
   const classes = useStyles();
 
   const fetchData = async () => {
@@ -117,6 +118,7 @@ function PaymentModal(props) {
   }, []);
 
   const handlePay = () => {
+    
     
   };
 
@@ -163,7 +165,7 @@ function PaymentModal(props) {
                 </Button>
               </Grid>
               <Grid item xs={2}>
-                <Button variant='contained' className={classes.button} onClick={props.handlePay}>
+                <Button disabled={disabledPay} variant='contained' className={classes.button} onClick={props.handlePay}>
                   Pay
                 </Button>
               </Grid>
