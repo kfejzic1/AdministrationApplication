@@ -29,6 +29,9 @@ import EinoviceApprove from './components/Einovice/EinoviceRequiredData/Einovice
 import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
 import InvoiceList from './components/UserEInvoicesList/InvoiceList';
 
+
+import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
+
 function App() {
 	const [token, setToken] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
