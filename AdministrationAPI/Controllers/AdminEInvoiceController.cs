@@ -26,7 +26,7 @@ namespace AdministrationAPI.Controllers
       _adminEInvoiceService = invoiceService;
     }
     
-    [Authorize(Roles = "Admin")]
+
     [HttpGet("b2b/e-invoices/requests")]
     public async Task<ActionResult<List<EInvoiceRequest>>> GetInvoiceRequests()
     {
@@ -34,7 +34,6 @@ namespace AdministrationAPI.Controllers
       return Ok(result);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet("{b2bID}/e-invoices/requests/")]
     public async Task<List<EInvoiceRequest>> GetInvoiceRequestsByID(int b2bID)
     {
@@ -44,7 +43,7 @@ namespace AdministrationAPI.Controllers
 
     }
 
-    [Authorize(Roles = "Admin")]
+   
     [HttpPost("{requestID}/e-invoices/approve/")]
     public async Task<IActionResult> HandleRequestStatus([FromQuery] bool approve, int requestID)
     {
@@ -62,7 +61,6 @@ namespace AdministrationAPI.Controllers
     }
 
 
-    [Authorize(Roles = "Admin")]
     [HttpPost("{b2bID}/e-invoices/create")]
     public async Task<IActionResult> DefineRequiredDataForVendor(int b2bID, [FromBody] RequiredData data)
     {
