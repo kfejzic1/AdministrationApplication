@@ -48,6 +48,7 @@ namespace AdministrationAPI.Data
     public DbSet<EInvoiceRequest> EInvoiceRequests { get; set; }
 
     public DbSet<EInvoice> EInvoices { get; set; }
+    public DbSet<EInvoiceLog> EInvoiceLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
     {

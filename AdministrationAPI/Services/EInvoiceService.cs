@@ -35,10 +35,25 @@ namespace AdministrationAPI.Services
                 Param1 = values[8],
                 Param2 = values.Length > 9 ? values[9] : null,
                 Param3 = values.Length > 10 ? values[10] : null,
-                Param4 = values.Length > 11 ? values[11] : null,
+                Param4 = values.Length > 11 ? values[11] : null
             };
 
-            
+            EInvoiceLog eInvoiceLog = new EInvoiceLog()
+            {
+                PayerName = values[0],
+                PayerAddress = values[1],
+                Reference = values[2],
+                Description = values[3],
+                PayeeName = values[4],
+                PayeeAccountNumber = int.Parse(values[5]),
+                PayeeAddress = values[6],
+                Amount = double.Parse(money[0]),
+                CurrencyName = money[1],
+                Param1 = values[8],
+                Param2 = values.Length > 9 ? values[9] : null,
+                Param3 = values.Length > 10 ? values[10] : null,
+                Param4 = values.Length > 11 ? values[11] : null
+            };
 
             var request = _context.EInvoiceRequests.FirstOrDefault(e =>
             e.Param1 == eInvoiceRequest.Param1 &&
@@ -48,6 +63,7 @@ namespace AdministrationAPI.Services
 
             if (request != null)
             {
+                eInvoiceLog.Successful = true;
                 var currencyId = _context.Currencies.FirstOrDefault(c => c.Name == eInvoiceRequest.CurrencyName).Id;
                 if(currencyId == null) 
                 {
@@ -74,13 +90,17 @@ namespace AdministrationAPI.Services
 
                 _context.EInvoices.Add(eInvoice);
                 await _context.SaveChangesAsync();
+                _context.EInvoiceLogs.Add(eInvoiceLog);
+                await _context.SaveChangesAsync();
                 string name = _context.Currencies.FirstOrDefault(c => c.Id == currencyId).Name;
                 eInvoice.Currency = new Currency() { Name = name };
 
                 return eInvoice;
 
             }
-
+            eInvoiceLog.Successful = false;
+            _context.EInvoiceLogs.Add(eInvoiceLog);
+            await _context.SaveChangesAsync();
             throw new Exception("Mapping not found.");
         }
 
