@@ -14,6 +14,9 @@ services:
           OUTLOOK_PASSWORD: "${OUTLOOK_PASSWORD}"
           GMAIL_CODE: "${GMAIL_CODE}"
           TWILIO_TOKEN: "${TWILIO_TOKEN}"
+          CONNECTION_STRING: "${CONNECTION_STRING}"
+          LOGGER_FILE_PATH: "${LOGGER_FILE_PATH}"
+          UPLOAD_DOCUMENT_PATH: "${UPLOAD_DOCUMENT_PATH}"
 
 networks:
   siprojekat-backend-mreza:
