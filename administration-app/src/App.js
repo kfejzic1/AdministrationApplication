@@ -20,13 +20,14 @@ import VoucherRedemption from './components/VoucherRedemption/VoucherRedemption'
 import './App.css';
 import ExchangeRates from './components/Currencies/ExchangeRates/ExchangeRates';
 import AdminClaims from './components/AdminClaims/AdminClaims';
-import ClaimTable from './components/Claims/ClaimTable';
+import ClaimTable from './components/claims/ClaimTable';
 import EinoviceRequiredData from './components/Einovice/EinoviceRequiredData/EinoviceRequiredData';
 import { useEffect } from 'react';
 import { getValidateToken } from './services/userService';
 import EinoviceApprove from './components/Einovice/EinoviceRequiredData/EinoviceApprove';
 
 import ElectronicInvoiceTemplate from './components/ElectronicInvoices/electronicInvoices';
+import InvoiceList from './components/UserEInvoicesList/InvoiceList';
 
 function App() {
 	const [token, setToken] = useState(null);
@@ -148,6 +149,33 @@ function App() {
 							}
 						/>
 
+						<Route
+							path='/voucher'
+							element={
+								<ProtectedRoute>
+									<Voucher />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/claims'
+							element={
+								<ProtectedRoute>
+									<AdminClaims />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path='/myinvoices'
+							element={
+								<ProtectedRoute>
+									<InvoiceList />
+								</ProtectedRoute>
+							}
+						/>
+						<Route path='/login' element={<LoginForm setToken={setToken} />} />
 						{isAdmin ? (
 							<Route
 								path='/voucher'

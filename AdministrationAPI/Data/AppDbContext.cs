@@ -12,10 +12,10 @@ using System.Reflection.Emit;
 namespace AdministrationAPI.Data
 {
     public class AppDbContext : IdentityDbContext<User>
+  {
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
+    }
 
         // Seed Roles
 
@@ -40,16 +40,19 @@ namespace AdministrationAPI.Data
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<VoucherStatus> VoucherStatuses { get; set; }
 
-        public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
+    public DbSet<AccountCreationRequest> AccountCreationRequests { get; set; }
 
-        public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
-        public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
-        public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
-        public DbSet<EInvoiceRequest> EInvoiceRequests { get; set; }
+    public DbSet<TransactionClaimUser> TransactionClaimUsers { get; set; }
+    public DbSet<TransactionClaimMessage> TransactionClaimMessages { get; set; }
+    public DbSet<ClaimsMessagesDocuments> ClaimsMessagesDocuments { get; set; }
+    public DbSet<EInvoiceRequest> EInvoiceRequests { get; set; }
+
+    public DbSet<EInvoice> EInvoices { get; set; }
+    public DbSet<EInvoiceLog> EInvoiceLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+    {
+      base.OnModelCreating(builder);
 
             builder.Entity<User>(entity => { entity.ToTable(name: "usr_users"); });
             builder.Entity<IdentityRole>(entity => { entity.ToTable(name: "usr_roles"); });
@@ -83,58 +86,58 @@ namespace AdministrationAPI.Data
             builder.Entity<EInvoiceRequest>(entity => { entity.ToTable("einvoicerequests"); });
 
 
-            ApplySnakeCaseNames(builder);
+      ApplySnakeCaseNames(builder);
 
             builder.Entity<User>()
                 .HasMany(u => u.Accounts)
                 .WithOne(a => a.User)
                 .HasForeignKey(a => a.UserId);
 
-            /*builder.Entity<Account>()
-                .HasMany(u => u.Documents)
-                //.WithOne(d => d.Id)
-                .HasForeignKey(a => a.AccountId);*/
+      /*builder.Entity<Account>()
+          .HasMany(u => u.Documents)
+          //.WithOne(d => d.Id)
+          .HasForeignKey(a => a.AccountId);*/
 
-            builder.Entity<EmailActivationCode>()
-                .HasOne(rc => rc.User)
-                .WithOne(u => u.EmailActivationCode)
-                .HasForeignKey<EmailActivationCode>(rc => rc.UserId);
+      builder.Entity<EmailActivationCode>()
+          .HasOne(rc => rc.User)
+          .WithOne(u => u.EmailActivationCode)
+          .HasForeignKey<EmailActivationCode>(rc => rc.UserId);
 
-            builder.Entity<SMSActivationCode>()
-                .HasOne(rc => rc.User)
-                .WithOne(u => u.SMSActivationCode)
-                .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
+      builder.Entity<SMSActivationCode>()
+          .HasOne(rc => rc.User)
+          .WithOne(u => u.SMSActivationCode)
+          .HasForeignKey<SMSActivationCode>(rc => rc.UserId);
 
-            builder.Entity<ExchangeRate>()
-                .HasOne<Currency>(er => er.InputCurrency)
-                .WithMany(c => c.ExchangeRatesAsInput)
-                .HasForeignKey(er => er.InputCurrencyId);
+      builder.Entity<ExchangeRate>()
+          .HasOne<Currency>(er => er.InputCurrency)
+          .WithMany(c => c.ExchangeRatesAsInput)
+          .HasForeignKey(er => er.InputCurrencyId);
 
-            builder.Entity<ExchangeRate>()
-                .HasOne<Currency>(er => er.OutputCurrency)
-                .WithMany(c => c.ExchangeRatesAsOutput)
-                .HasForeignKey(er => er.OutputCurrencyId);
-
-
-            builder.Entity<Voucher>()
-               .HasIndex(e => e.Code)
-               .IsUnique();
+      builder.Entity<ExchangeRate>()
+          .HasOne<Currency>(er => er.OutputCurrency)
+          .WithMany(c => c.ExchangeRatesAsOutput)
+          .HasForeignKey(er => er.OutputCurrencyId);
 
 
-            builder.Entity<Voucher>()
-                .HasOne(v => v.Admin)
-                .WithMany()
-                .HasForeignKey(v => v.CreatedBy);
+      builder.Entity<Voucher>()
+         .HasIndex(e => e.Code)
+         .IsUnique();
 
-            builder.Entity<Voucher>()
-                .HasOne(v => v.User)
-                .WithMany()
-                .HasForeignKey(v => v.RedeemedBy);
 
-            builder.Entity<Voucher>().
-                HasOne(v => v.Currency)
-                .WithMany()
-                .HasForeignKey(v => v.CurrencyId);
+      builder.Entity<Voucher>()
+          .HasOne(v => v.Admin)
+          .WithMany()
+          .HasForeignKey(v => v.CreatedBy);
+
+      builder.Entity<Voucher>()
+          .HasOne(v => v.User)
+          .WithMany()
+          .HasForeignKey(v => v.RedeemedBy);
+
+      builder.Entity<Voucher>().
+          HasOne(v => v.Currency)
+          .WithMany()
+          .HasForeignKey(v => v.CurrencyId);
 
             builder.Entity<Voucher>()
                 .HasOne(v => v.VoucherStatus)
@@ -151,20 +154,20 @@ namespace AdministrationAPI.Data
         {
             var mapper = new NpgsqlSnakeCaseNameTranslator();
 
-            foreach (var entity in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach (var property in entity.GetProperties())
-                {
-                    var npgsqlColumnName = mapper.TranslateMemberName(property.GetColumnName());
-
-                    property.SetColumnName(npgsqlColumnName);
-                }
-            }
-        }
-        public static void Seed(ModelBuilder builder)
+      foreach (var entity in modelBuilder.Model.GetEntityTypes())
+      {
+        foreach (var property in entity.GetProperties())
         {
+          var npgsqlColumnName = mapper.TranslateMemberName(property.GetColumnName());
 
-            // Seed Roles
+          property.SetColumnName(npgsqlColumnName);
+        }
+      }
+    }
+    public static void Seed(ModelBuilder builder)
+    {
+
+      // Seed Roles
 
             List<IdentityRole> roles = new List<IdentityRole>()
                 {
@@ -173,7 +176,7 @@ namespace AdministrationAPI.Data
                     new IdentityRole() { Name = "Restricted", ConcurrencyStamp = "3", NormalizedName = "RESTRICTED" }
                 };
 
-            builder.Entity<IdentityRole>().HasData(roles);
+      builder.Entity<IdentityRole>().HasData(roles);
 
 
             List<VoucherStatus> voucherStatuses = new List<VoucherStatus>() {
@@ -183,10 +186,10 @@ namespace AdministrationAPI.Data
                        new VoucherStatus { Id = "4", Status = "VOID" }
                        };
 
-            builder.Entity<VoucherStatus>().HasData(voucherStatuses);
+      builder.Entity<VoucherStatus>().HasData(voucherStatuses);
 
 
-            // Seed Users
+      // Seed Users
 
             List<User> users = new List<User>()
                 {
@@ -204,30 +207,30 @@ namespace AdministrationAPI.Data
                 };
 
 
-            builder.Entity<User>().HasData(users);
+      builder.Entity<User>().HasData(users);
 
 
-            // Seed UserRoles
-            List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
+      // Seed UserRoles
+      List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>();
 
-            foreach (var user in users)
-            {
-                if (user.UserName != "abrulic1")
-                    userRoles.Add(new IdentityUserRole<string>
-                    {
-                        UserId = user.Id,
-                        RoleId = roles.First(q => q.Name == "User").Id
-                    });
-                else
-                    userRoles.Add(new IdentityUserRole<string>
-                    {
-                        UserId = user.Id,
-                        RoleId = roles.First(q => q.Name == "Admin").Id
-                    });
-            }
+      foreach (var user in users)
+      {
+        if (user.UserName != "abrulic1")
+          userRoles.Add(new IdentityUserRole<string>
+          {
+            UserId = user.Id,
+            RoleId = roles.First(q => q.Name == "User").Id
+          });
+        else
+          userRoles.Add(new IdentityUserRole<string>
+          {
+            UserId = user.Id,
+            RoleId = roles.First(q => q.Name == "Admin").Id
+          });
+      }
 
 
-            builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+      builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
 
 
             //Seed InvoiceFrequency
@@ -238,15 +241,15 @@ namespace AdministrationAPI.Data
                     new InvoiceFrequency() { Id = 3, Name = "Biweekly", FrequencyDays = 14 },
                 };
 
-            builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
+      builder.Entity<InvoiceFrequency>().HasData(invoiceFrequencies);
 
-            //Seed VendorRoles
+      //Seed VendorRoles
 
-            builder.Entity<VendorRoles>().HasData(
-              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorAdmin", NormalizedName = "VENDORADMIN", ConcurrencyStamp = "1" },
-              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorUser", NormalizedName = "VENDORUSER", ConcurrencyStamp = "2" },
-              new VendorRoles { Id = Guid.NewGuid(), Name = "VendorRestricted", NormalizedName = "VENDORRESTRICTED", ConcurrencyStamp = "3" }
-          );
+      builder.Entity<VendorRoles>().HasData(
+        new VendorRoles { Id = Guid.NewGuid(), Name = "VendorAdmin", NormalizedName = "VENDORADMIN", ConcurrencyStamp = "1" },
+        new VendorRoles { Id = Guid.NewGuid(), Name = "VendorUser", NormalizedName = "VENDORUSER", ConcurrencyStamp = "2" },
+        new VendorRoles { Id = Guid.NewGuid(), Name = "VendorRestricted", NormalizedName = "VENDORRESTRICTED", ConcurrencyStamp = "3" }
+    );
 
 
             // Seed Currencies
@@ -258,7 +261,7 @@ namespace AdministrationAPI.Data
                     new Currency() { Id = Guid.NewGuid().ToString(), Country = "SWI", Name = "CHF" }
                 };
 
-            builder.Entity<Currency>().HasData(currencies);
+      builder.Entity<Currency>().HasData(currencies);
 
             // Seed Accounts
             List<Account> accounts = new List<Account>()
@@ -270,8 +273,8 @@ namespace AdministrationAPI.Data
             builder.Entity<Account>().HasData(accounts);
 
 
-            //Seed Vouchers
-            List<Voucher> vouchers = new List<Voucher>()
+      //Seed Vouchers
+      List<Voucher> vouchers = new List<Voucher>()
             {
                 new Voucher() { Id = 1, Amount = 50, CurrencyId = currencies[0].Id, Code = "12fg-4g2z-4gs2-gs35", VoucherStatusId = "1", CreatedBy = users[7].Id},
                 new Voucher() { Id = 2, Amount = 20, CurrencyId = currencies[1].Id, Code = "FDg4-DG4A-HS5A-HA36", VoucherStatusId = "1", CreatedBy = users[7].Id},
@@ -279,9 +282,9 @@ namespace AdministrationAPI.Data
                 new Voucher() { Id = 4, Amount = 50, CurrencyId = currencies[3].Id, Code = "kg45-fkai-3k5f-ek1f", VoucherStatusId = "3", CreatedBy = users[7].Id, RedeemedBy = users[6].Id}
             };
 
-            builder.Entity<Voucher>().HasData(vouchers);
-
-        }
+      builder.Entity<Voucher>().HasData(vouchers);
 
     }
+
+  }
 }

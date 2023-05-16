@@ -16,7 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+var connectionString = configuration.GetConnectionString("DefaultConnectionString");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -32,41 +32,42 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IRedeemVoucherService, RedeemVoucherService>();
 builder.Services.AddScoped<TokenUtilities>();
 builder.Services.AddScoped<IAdminEInvoiceService, AdminEInvoiceService>();
+builder.Services.AddScoped<IEInvoiceService, EInvoiceService>();
 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = configuration["Token:ValidAudience"],
-        ValidIssuer = configuration["Token:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]))
-    };
+  options.SaveToken = true;
+  options.RequireHttpsMetadata = false;
+  options.TokenValidationParameters = new TokenValidationParameters()
+  {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidAudience = configuration["Token:ValidAudience"],
+    ValidIssuer = configuration["Token:ValidIssuer"],
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Secret"]))
+  };
 });
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
+  options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    In = ParameterLocation.Header,
+    Description = "Please enter a valid token",
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    BearerFormat = "JWT",
+    Scheme = "Bearer"
+  });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+  options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -95,13 +96,13 @@ var provider = builder.Services.BuildServiceProvider();
 
 builder.Services.AddCors(options =>
 {
-    var frontendURL = configuration.GetValue<String>("frontend_url");
+  var frontendURL = configuration.GetValue<String>("frontend_url");
 
-    options.AddDefaultPolicy(builder =>
-    {
-        // builder.WithOrigins(frontendURL!).AllowAnyMethod().AllowAnyHeader();
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
+  options.AddDefaultPolicy(builder =>
+  {
+    // builder.WithOrigins(frontendURL!).AllowAnyMethod().AllowAnyHeader();
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+  });
 });
 
 var app = builder.Build();
@@ -113,17 +114,17 @@ var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityR
 
 if (!await roleManager.RoleExistsAsync("Admin"))
 {
-    await roleManager.CreateAsync(new IdentityRole("Admin"));
+  await roleManager.CreateAsync(new IdentityRole("Admin"));
 }
 
 if (!await roleManager.RoleExistsAsync("User"))
 {
-    await roleManager.CreateAsync(new IdentityRole("User"));
+  await roleManager.CreateAsync(new IdentityRole("User"));
 }
 
 if (!await roleManager.RoleExistsAsync("Restricted"))
 {
-    await roleManager.CreateAsync(new IdentityRole("Restricted"));
+  await roleManager.CreateAsync(new IdentityRole("Restricted"));
 }
 
 // Configure the HTTP request pipeline.

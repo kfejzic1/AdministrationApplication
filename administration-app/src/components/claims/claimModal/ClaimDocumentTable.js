@@ -5,46 +5,11 @@ import {
 	TableBody,
 	TableCell,
 	TableContainer,
-	TablePagination,
 	TableRow,
-	FormControlLabel,
-	Switch,
-	Checkbox,
 	Paper,
-	Button,
 } from '@mui/material';
-
 import { makeStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme({
-	components: {
-		MuiSwitch: {
-			styleOverrides: {
-				switchBase: {
-					// Controls default (unchecked) color for the thumb
-					color: '#ccc',
-				},
-				colorPrimary: {
-					'&.Mui-checked': {
-						// Controls checked color for the thumb
-						color: '#ffaf36',
-					},
-				},
-				track: {
-					// Controls default (unchecked) color for the track
-					opacity: 0.2,
-					backgroundColor: '#c1bfbf',
-					'.Mui-checked.Mui-checked + &': {
-						// Controls checked color for the track
-						opacity: 0.7,
-						backgroundColor: '#ffc976',
-					},
-				},
-			},
-		},
-	},
-});
 
 const tableTheme = createTheme({
 	palette: {
@@ -122,24 +87,6 @@ const useStyles = makeStyles({
 	},
 });
 
-function getComparator(order, orderBy) {
-	return order === 'desc'
-		? (a, b) => descendingComparator(a, b, orderBy)
-		: (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-	const stabilizedThis = array.map((el, index) => [el, index]);
-	stabilizedThis.sort((a, b) => {
-		const order = comparator(a[0], b[0]);
-		if (order !== 0) {
-			return order;
-		}
-		return a[1] - b[1];
-	});
-	return stabilizedThis.map(el => el[0]);
-}
-
 function descendingComparator(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1;
@@ -171,31 +118,15 @@ export default function ClaimDocumentTable(props) {
 		setOrderBy(property);
 	};
 
-	const handleSelectAllClick = event => {
-		if (event.target.checked) {
-			const newSelected = documents.map(n => n.id);
-			setSelected(newSelected);
-			return;
-		}
-		setSelected([]);
-	};
-
 	const handleClick = (event, row) => {
-		const id = row.id;
-		window.open(encodeURI(`http://siprojekat.duckdns.org:8081${row.unc.slice(8)}`));
-	};
-
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-
-	const handleChangeRowsPerPage = event => {
-		setRowsPerPage(parseInt(event.target.value, 10));
-		setPage(0);
-	};
-
-	const handleChangeDense = event => {
-		setDense(event.target.checked);
+		let url = row.unc.split('/');
+		let pos = url.indexOf('transactions');
+		url = url.slice(pos);
+		let urlF = '';
+		url.forEach(el=>{
+			urlF += '/'+el;
+		});
+		window.open(encodeURI(`http://siprojekat.duckdns.org:8081${urlF}`));
 	};
 
 	const isSelected = id => selected.indexOf(id) !== -1;

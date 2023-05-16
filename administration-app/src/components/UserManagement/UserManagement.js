@@ -255,6 +255,11 @@ const UserManagement = () => {
 	const handleChangeDense = event => {
 		setDense(event.target.checked);
 	};
+
+	const [open, setOpen] = useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
+
 	return (
 		<div>
 			<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
@@ -275,6 +280,7 @@ const UserManagement = () => {
 											Create User
 										</Button>
 									</Tooltip>
+
 									<Tooltip title='Pending requests'>
 										<Button
 											className={classes.button}
