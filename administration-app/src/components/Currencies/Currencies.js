@@ -59,16 +59,12 @@ export default function Currencies() {
         fetchExchangeRates();
         fetchCurrencies();
         fetchCurrentUser();
-        fetchAllUsers();
         fetchAllAccounts();
         fetchUserAccounts();
 
 
     }, []);
-    const [selectedUser, setSelectedUser] = useState({
-        name: '',
-        accountNumber: ''
-    });
+    const [selectedUser, setSelectedUser] = useState({})
     const [currencies, setCurrencies] = useState([]);
     const [exchanges, setExchanges] = useState([]);
     const [open, setOpen] = useState(false);
@@ -86,9 +82,7 @@ export default function Currencies() {
     const [userTransactionAccount, setUserTransactionAccount] = useState({})
 
     const [transactions, setTransactions] = useState([]);
-    const [transactionType, setTransactionType] = useState('');
     const [transactionPurpose, setTransactionPurpose] = useState('');
-    const [transactionCategory, setTransactionCategory] = useState('');
 
     const [allAccounts, setAllAccounts] = useState([]);
     const [userAccounts, setUserAccounts] = useState([])
@@ -102,6 +96,33 @@ export default function Currencies() {
     })
 
     const [exchangeUnavailable, setExchangeUnavailable] = useState(false);
+
+    const [convertedAmount, setConvertedAmount] = useState('');
+
+    useEffect(() => {
+        if (amount && userTransactionAccount && selectedUser) {
+          convertCurrency();
+        }
+      }, [amount, userTransactionAccount, selectedUser]);
+
+    const convertCurrency = async () => {
+        setConvertedAmount('');
+        for(const exchange of exchanges){  
+        const regex = /\(([^)]+)\)/; 
+        const match = exchange.inputCurrency.match(regex);
+        const match2 = exchange.outputCurrency.match(regex);
+
+        if (match && match2) {
+        const result = match[1]; 
+        const result2 = match2[1]; 
+        if(result==userTransactionAccount.currency && result2==selectedUser.currency){
+            const convertedAmount = (amount * exchange.rate).toFixed(2);
+            setConvertedAmount(convertedAmount);
+        }
+        }
+
+    }
+      };
 
 
     const handleOpen = () => setOpen(true);
@@ -151,15 +172,6 @@ export default function Currencies() {
         })
     }
 
-    const fetchAllUsers = async () => {
-        getAllUsers().then(res => {
-            setAllUsers(res.data);
-            setSelectedUser({
-                name: res.data.userName,
-                accountNumber: res.data.accountNumber
-            })
-        })
-    }
     const fetchCurrencies = async () => {
         getAllCurrencies().then(res => {
             
@@ -283,10 +295,9 @@ export default function Currencies() {
 
         const newExchangeTransaction = {
             amount: +amount,
-            currency: userTransactionAccount.currency,
-            transactionType: transactionType,
+            SenderCurrency: userTransactionAccount.currency,
+            RecipientCurrnecy: selectedUser.currency,
             transactionPurpose: transactionPurpose,
-            category: transactionCategory,
             sender: {
                 accountNumber: userTransactionAccount.accountNumber
             },
@@ -305,10 +316,11 @@ export default function Currencies() {
             // else{
             //     setExchangeUnavailable(false);
             // }
-
+            alert('The new exchange transaction has been successfully added.');
             handleCloseExchangeTransaction()
         })
         .catch(err => {
+            alert('There was an error adding the exchange transaction.');
             console.log(err)
         })
     }
@@ -526,22 +538,9 @@ export default function Currencies() {
                                 }}
                                 />
                             </Box>
-
-                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
-                                <TextField id="outlined-basic" label="Transaction Type" variant="outlined" onChange={(event) => {
-                                    setTransactionType(event.target.value);
-                                }}
-                                />
-                            </Box>
                             <Box sx={{ minWidth: 120, marginTop: 2 }}>
                                 <TextField id="outlined-basic" label="Transaction Purpose" variant="outlined" onChange={(event) => {
                                     setTransactionPurpose(event.target.value);
-                                }}
-                                />
-                            </Box>
-                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
-                                <TextField id="outlined-basic" label="Category" variant="outlined" onChange={(event) => {
-                                    setTransactionCategory(event.target.value);
                                 }}
                                 />
                             </Box>
@@ -564,7 +563,7 @@ export default function Currencies() {
                             </Box>
                             <Box sx={{ minWidth: 120, marginTop: 2 }}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Select user</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">Select Account</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
@@ -573,14 +572,23 @@ export default function Currencies() {
                                         onChange={handleSelectedUserChange}
                                     >
 
-                                        {allAccounts.map((user) => (
-                                            <MenuItem value={user}>{user.owner.name} ({user.currency})</MenuItem>
-
+                                        {userAccounts.map((acc) => (
+                                            <MenuItem value={acc}>{acc.currency} ({acc.bankName})</MenuItem>
                                         ))}
 
                                     </Select>
                                 </FormControl>
                             </Box>
+                            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                                    <TextField
+                                        id="outlined-basic"
+                                        label="Converted Amount"
+                                        variant="outlined"
+                                        value={convertedAmount}
+                                        disabled
+                                    />
+                                </Box>
+
 
                             <Button onClick={onCreateExchangeTransaction} sx={{
                                 bgcolor: '#ffaf36',
