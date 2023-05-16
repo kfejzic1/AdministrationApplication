@@ -480,3 +480,4 @@ $RECYCLE.BIN/
 Migrations
 JSON
 .env
+.env.dev

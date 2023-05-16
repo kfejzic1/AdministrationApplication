@@ -18,13 +18,13 @@ namespace AdministrationAPI.Services
 
         string createDocumentUNC(string folder, string fileName)
         {
-            var documentUploadLocationPhysical = _configuration["UploadRootFolder:DefaultDocumentFolder"].Replace('\\', '/').TrimEnd('/');
+            var documentUploadLocationPhysical = Environment.GetEnvironmentVariable("UPLOAD_DOCUMENT_PATH").Replace('\\', '/').TrimEnd('/');
             return documentUploadLocationPhysical + "/" + folder + '/' + fileName;
         }
 
         public int UploadDocument(MemoryStream file, Document document)
         {
-            var documentUploadLocationPhysical = _configuration["UploadRootFolder:DefaultDocumentFolder"].Replace('\\', '/').TrimEnd('/');
+            var documentUploadLocationPhysical = Environment.GetEnvironmentVariable("UPLOAD_DOCUMENT_PATH").Replace('\\', '/').TrimEnd('/');
 
             document.Extension = document.FileName.Substring(document.FileName.LastIndexOf('.'));
             document.UNC = createDocumentUNC(document.Folder, document.FileName);
