@@ -132,8 +132,10 @@ if (!await roleManager.RoleExistsAsync("Restricted"))
 app.UseMiddleware<TokenExpirationHandler>();
 
 
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 
 
 app.UseCors();

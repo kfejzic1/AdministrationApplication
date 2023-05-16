@@ -1,8 +1,7 @@
-using AdministrationAPI.Models.Vendor;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-namespace AdministrationAPI.Models.EInvoice
+using AdministrationAPI.Models.Vendor;
+namespace AdministrationAPI.Models.EInvoiceForms
 {
     public class EInvoiceRequest
     {
@@ -21,4 +20,5 @@ namespace AdministrationAPI.Models.EInvoice
         public string? Param3 { get; set; }
         public string? Param4 { get; set; }
     }
+
 }

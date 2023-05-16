@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { getAllVendors } from '../../../services/vendorService';
 import { approve, getRequests, specifyData } from '../../../services/Einovice/requiredDataServices';
 const EinoviceApprove = props => {
-	const [data1, setData] = useState(['sad']);
+	const [data1, setData] = useState(['']);
 	const [refresh, setRefresh] = useState(false);
 	const [requsets, setRequsets] = useState([]);
 	const [id, setId] = useState('');
@@ -21,6 +21,7 @@ const EinoviceApprove = props => {
 		getRequests().then(arg => {
 			setRequsets(
 				arg.data.map(v => {
+					if(v.status == 1)
 					return (
 						<TableRow>
 							<TableCell width={'33%'} align='center'>
@@ -48,7 +49,7 @@ const EinoviceApprove = props => {
 								</Button>
 							</TableCell>
 						</TableRow>
-					);
+					); else return null;
 				})
 			);
 		});
