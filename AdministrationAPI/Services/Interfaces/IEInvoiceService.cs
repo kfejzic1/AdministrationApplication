@@ -1,6 +1,7 @@
 ﻿using AdministrationAPI.Contracts.Requests.EInvoices;
 using AdministrationAPI.Contracts.Responses;
 using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.EInvoiceForms;
 
 namespace AdministrationAPI.Services.Interfaces
 {

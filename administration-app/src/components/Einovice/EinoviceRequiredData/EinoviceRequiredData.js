@@ -113,7 +113,13 @@ const EinoviceRequiredData = props => {
 							}
 							t = t.slice(0, t.length - 1);
 							t = '{' + t + '}';
-							specifyData(id, JSON.parse(t));
+							specifyData(id, JSON.parse(t))
+								.then(s => {
+									alert('Successfull');
+								})
+								.catch(s => {
+									alert('Failed');
+								});
 						}}
 					>
 						Define

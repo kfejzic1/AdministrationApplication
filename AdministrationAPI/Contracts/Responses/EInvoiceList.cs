@@ -1,4 +1,5 @@
 ﻿using AdministrationAPI.Models.EInvoice;
+using AdministrationAPI.Models.EInvoiceForms;
 
 namespace AdministrationAPI.Contracts.Responses
 {
