@@ -3,7 +3,7 @@ import { env } from '../../config/env';
 export function specifyData(id, data) {
 	return axios(env.API_ENV.url + '/api/AdminEInvoice/' + id + '/e-invoices/create', {
 		method: 'POST',
-		body: data,
+		data: JSON.stringify(data),
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
