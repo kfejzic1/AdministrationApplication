@@ -150,11 +150,18 @@ export default function ClaimModal(props) {
       });
       res.data.messages.forEach(mess => {
         if (mess.documents.length != 0) {
+          let url = mess.documents[0].unc.split('/');
+          let pos = url.indexOf('transactions');
+          url = url.slice(pos);
+          let urlF = '';
+          url.forEach(el => {
+            urlF += '/' + el;
+          });
           let message = {
             text: mess.message,
             isUser: mess.userId === user,
             name: mess.userName,
-            file: mess.documents[0].unc.slice(8),
+            file: urlF,
             fileName: mess.documents[0].fileName
           };
           beMessages.push(message);
