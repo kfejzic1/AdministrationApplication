@@ -154,10 +154,10 @@ namespace AdministrationAPI.Controllers
             {
                 _userService.IsTokenValid(ControlExtensions.GetToken(HttpContext));
 
-                var result = await _accountService.ApproveRequest(id);
+                var result = await _accountService.ApproveRequest(id, ControlExtensions.GetToken(HttpContext));
                 if (result != null)
                 {
-                    return Ok("Account created.");
+                    return Ok(result);
                 }
                 
                 return BadRequest("Erorr");

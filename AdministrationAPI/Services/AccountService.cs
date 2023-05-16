@@ -103,14 +103,14 @@ namespace AdministrationAPI.Services
             return newAccountCreationRequest;
         }
 
-        public async Task<Account?> ApproveRequest(int id)
+        public async Task<HttpResponseMessage> ApproveRequest(int id, string token)
         {
 
             var request = _context.AccountCreationRequests.First(a => a.Id == id);
             if (request.Approved == true) return null;
             request.Approved = true;
             await _context.SaveChangesAsync();
-            Guid guid = Guid.NewGuid();
+            /*Guid guid = Guid.NewGuid();
             string accNumber = guid.ToString();
             while (true)
             {
@@ -134,8 +134,32 @@ namespace AdministrationAPI.Services
             var result = await _context.SaveChangesAsync();
             account.Currency = _context.Currencies.FirstOrDefault(c => c.Id == request.CurrencyId);
             account.User = _context.Users.FirstOrDefault(u => u.Id == request.UserId);
+            */
 
-            return account;
+            string baseUrl = "https://processingserver.herokuapp.com/api/UserBankAccount/CreateAccount/";
+            string userId = request.UserId; 
+            string apiUrl = baseUrl + userId;
+
+            using(HttpClient client = new HttpClient())
+            {
+                apiUrl += "?token=" + token;
+                var currencyName = _context.Currencies.FirstOrDefault(c => c.Id == request.CurrencyId).Name;
+                var requestBody = new
+                {
+                    currency = currencyName,
+                    bankName = "Raiffeisen",
+                    description = request.Description
+                };
+
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(apiUrl, content);
+
+                return response;
+            }
+            return null;
+            
         }
 
     }
