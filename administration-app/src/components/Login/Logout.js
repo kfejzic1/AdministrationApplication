@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, MenuItem, Avatar } from '@mui/material';
+import Logout from '@mui/icons-material/Logout';
 import { logout } from '../../services/userService';
 
 const LogoutButton = () => {
@@ -16,7 +17,7 @@ const LogoutButton = () => {
 	};
 
 	return (
-		<Button variant='outlined' style={{ margin: 10 }} onClick={handleLogout}>
+		<Button onClick={handleLogout}>
 			Log out
 		</Button>
 	);
