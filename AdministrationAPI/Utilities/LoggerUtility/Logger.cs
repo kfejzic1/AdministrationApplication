@@ -9,7 +9,7 @@
         }
         public static void LogToFile(string message)
         {
-            using (StreamWriter sw = File.AppendText(@"\temp\log.txt"))
+            using (StreamWriter sw = File.AppendText(Environment.GetEnvironmentVariable("LOGGER_FILE_PATH")))
             {
                 sw.WriteLine(DateTime.Now.ToString() + " --- " + message);
             }

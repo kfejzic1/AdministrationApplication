@@ -5,6 +5,7 @@ using AdministrationAPI.Services;
 using AdministrationAPI.Services.Interfaces;
 using AdministrationAPI.Utilities;
 using AdministrationAPI.Utilities.TokenUtility;
+using Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,9 +15,19 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    DotNetEnv.Env.Load("./.env.dev");
+}
+else
+{
+    DotNetEnv.Env.Load();
+}
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("LiveConnectionString");
+
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
 // Add services to the container.
 builder.Services.AddScoped<IVendorService, VendorService>();
@@ -85,12 +96,23 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<DBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("TransactionDB")));
-builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    builder.Services.AddDbContext<TemplateDbContext>(options => options.UseSqlite(connectionString));
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+}
+else
+{
+    builder.Services.AddDbContext<TemplateDbContext>(options => options.UseMySQL(connectionString));
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
+}
+
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
+
 
 var provider = builder.Services.BuildServiceProvider();
 
@@ -108,6 +130,12 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
+
+var services = scope.ServiceProvider;
+var appDbContext = services.GetRequiredService<AppDbContext>();
+appDbContext.Database.Migrate();
+var templateDbContext = services.GetRequiredService<TemplateDbContext>();
+templateDbContext.Database.Migrate();
 
 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
