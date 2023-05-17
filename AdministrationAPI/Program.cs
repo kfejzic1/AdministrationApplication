@@ -26,6 +26,7 @@ else
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
 // Add services to the container.
