@@ -21,35 +21,60 @@ const EinoviceApprove = props => {
 		getRequests().then(arg => {
 			setRequsets(
 				arg.data.map(v => {
-					if(v.status == 1)
-					return (
-						<TableRow>
-							<TableCell width={'33%'} align='center'>
-								{v.user.userName}
-							</TableCell>
-							<TableCell width={'33%'} align='center'>
-								{v.vendor.name}
-							</TableCell>
-							<TableCell width={'17%'} align='center'>
-								<Button
-									onClick={() => {
-										approve(v.eInvoiceRequestId, 'true');
-									}}
-								>
-									Approve
-								</Button>
-							</TableCell>
-							<TableCell width={'17%'} align='center'>
-								<Button
-									onClick={() => {
-										approve(v.eInvoiceRequestId, 'false');
-									}}
-								>
-									Reject
-								</Button>
-							</TableCell>
-						</TableRow>
-					); else return null;
+					if (v.status == 1)
+						return (
+							<TableRow>
+								<TableCell width={'10%'} align='center'>
+									{v.user.userName}
+								</TableCell>
+								<TableCell width={'10%'} align='center'>
+									{v.vendor.name}
+								</TableCell>
+								<TableCell width={'15%'} align='center'>
+									<i>
+										<strong>{v.vendor.param1 ? v.vendor.param1 + ': ' : ''}</strong>
+									</i>
+									{v.param1}
+								</TableCell>
+								<TableCell width={'15%'} align='center'>
+									<i>
+										<strong>{v.vendor.param2 ? v.vendor.param2 + ': ' : ''}</strong>
+									</i>
+									{v.param2}
+								</TableCell>
+								<TableCell width={'15%'} align='center'>
+									<i>
+										<strong>{v.vendor.param3 ? v.vendor.param3 + ': ' : ''}</strong>
+									</i>
+									{v.param3}
+								</TableCell>
+								<TableCell width={'15%'} align='center'>
+									<i>
+										<strong>{v.vendor.param4 ? v.vendor.param4 + ': ' : ''}</strong>
+									</i>
+									{v.param4}
+								</TableCell>
+								<TableCell width={'10%'} align='center'>
+									<Button
+										onClick={() => {
+											approve(v.eInvoiceRequestId, 'true');
+										}}
+									>
+										Approve
+									</Button>
+								</TableCell>
+								<TableCell width={'10%'} align='center'>
+									<Button
+										onClick={() => {
+											approve(v.eInvoiceRequestId, 'false');
+										}}
+									>
+										Reject
+									</Button>
+								</TableCell>
+							</TableRow>
+						);
+					else return null;
 				})
 			);
 		});
@@ -66,14 +91,18 @@ const EinoviceApprove = props => {
 			<Table>
 				<TableHead>
 					<TableRow>
-						<TableCell width={'33%'} align='center'>
+						<TableCell width={'10%'} align='center'>
 							User
 						</TableCell>
-						<TableCell width={'33%'} align='center'>
+						<TableCell width={'10%'} align='center'>
 							Vendor
 						</TableCell>
-						<TableCell width={'17%'} align='center'></TableCell>
-						<TableCell width={'17%'} align='center'></TableCell>
+						<TableCell width={'15%'} align='center'></TableCell>
+						<TableCell width={'15%'} align='center'></TableCell>
+						<TableCell width={'15%'} align='center'></TableCell>
+						<TableCell width={'15%'} align='center'></TableCell>
+						<TableCell width={'10%'} align='center'></TableCell>
+						<TableCell width={'10%'} align='center'></TableCell>
 					</TableRow>
 				</TableHead>
 				{requsets}

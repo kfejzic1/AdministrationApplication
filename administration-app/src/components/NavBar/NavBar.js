@@ -10,9 +10,11 @@ export const NavBar = props => {
 	}, []);
 
 	useEffect(() => {
-		getValidateToken(localStorage.getItem('token')).then(response => {
-			setUser(response.data);
-		});
+		getValidateToken(localStorage.getItem('token'))
+			.then(response => {
+				setUser(response.data);
+			})
+			.catch(() => {});
 	}, []);
 
 	const userAdmin = () => {

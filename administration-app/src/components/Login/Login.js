@@ -27,7 +27,7 @@ const LoginForm = props => {
 		props.setToken(localStorage.getItem('token'));
 		getValidateToken(localStorage.getItem('token')).then(response => {
 			props.setIsAdmin(userAdmin(response.data));
-		});
+		}).catch(() => {props.setIsAdmin(false)});;
 	}, []);
 
 	const userAdmin = user => {
@@ -100,7 +100,7 @@ const LoginForm = props => {
 				localStorage.setItem('userId', userId);
 				getValidateToken(localStorage.getItem('token')).then(response => {
 					props.setIsAdmin(userAdmin(response.data));
-				});
+				}).catch(() => {props.setIsAdmin(false)});;
 
 				navigate('/user');
 			})

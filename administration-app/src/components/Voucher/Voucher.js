@@ -170,7 +170,7 @@ const Voucher = () => {
 			setUser(
 				response.data
 			);
-		});
+		}).catch(() => {});;
 	},[]);
 
 

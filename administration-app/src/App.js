@@ -34,9 +34,13 @@ function App() {
 	const [isAdmin, setIsAdmin] = useState(false);
 	useEffect(() => {
 		setToken(localStorage.getItem('token'));
-		getValidateToken(localStorage.getItem('token')).then(response => {
-			setIsAdmin(userAdmin(response.data));
-		});
+		getValidateToken(localStorage.getItem('token'))
+			.then(response => {
+				setIsAdmin(userAdmin(response.data));
+			})
+			.catch(() => {
+				setIsAdmin(false);
+			});
 	}, []);
 
 	const userAdmin = user => {
@@ -175,7 +179,7 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-						<Route path='/login' element={<LoginForm setToken={setToken} />} />
+						<Route path='/login' element={<LoginForm setToken={setToken} setIsAdmin={setIsAdmin} />} />
 						{isAdmin ? (
 							<Route
 								path='/voucher'
