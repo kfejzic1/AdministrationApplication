@@ -78,9 +78,9 @@ const useStyles = makeStyles({
 		'& .MuiTableBody-root .Mui-selected:hover': {
 			backgroundColor: '#ffc976',
 		},
-		'& .css-177gid-MuiTableCell-root':{
-			padding: '10px'
-		}
+		'& .css-177gid-MuiTableCell-root': {
+			padding: '10px',
+		},
 	},
 
 	button: {
@@ -229,12 +229,18 @@ export default function VendorsTable() {
 	return (
 		<Box sx={{ width: '95%', margin: 'auto', pt: '15px', mt: '15px' }}>
 			<Paper sx={{ width: '100%', mb: 2, border: 'none' }}>
-				<VendorsTableToolBar refreshSelected={setSelected} fetchVendors={fetchData} numSelected={selected.length} selectedIds={selected} />
+				<VendorsTableToolBar
+					refreshSelected={setSelected}
+					fetchVendors={fetchData}
+					numSelected={selected.length}
+					selectedIds={selected}
+				/>
 				<ThemeProvider theme={tableTheme}>
 					<TableContainer>
 						<Table
 							className={classes.root}
 							sx={{ minWidth: '100%' }}
+							data-testid='b2b-customer-table'
 							aria-labelledby='tableTitle'
 							size={dense ? 'small' : 'medium'}>
 							<VendorsTableHead
@@ -275,8 +281,7 @@ export default function VendorsTable() {
 														}}
 													/>
 												</TableCell>
-												<TableCell component='th' id={labelId} scope='row' padding='none'>
-												</TableCell>
+												<TableCell component='th' id={labelId} scope='row' padding='none'></TableCell>
 												<TableCell align='left'>{row.name}</TableCell>
 												<TableCell align='left'>{row.companyDetails}</TableCell>
 												<TableCell align='left'>{row.phone}</TableCell>

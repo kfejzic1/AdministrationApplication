@@ -141,6 +141,7 @@ export default function LocationCreateModal(props) {
 											className={classes.textField}
 											id='standard-basic'
 											label='Name'
+											data-testid={'location-name'}
 											variant='standard'
 											value={name}
 											required={true}
@@ -152,6 +153,7 @@ export default function LocationCreateModal(props) {
 											id='standard-basic'
 											label='Address'
 											variant='standard'
+											data-testid={'location-address'}
 											value={address}
 											required={true}
 											error={errors.address}
@@ -162,7 +164,14 @@ export default function LocationCreateModal(props) {
 							</Stack>
 						</CardContent>
 						<CardActions className={classes.cardActions}>
-							<Button className={classes.button} variant='contained' size='small' type='submit' value='Submit' onClick={handleSubmit}>
+							<Button
+								className={classes.button}
+								variant='contained'
+								size='small'
+								type='submit'
+								value='Submit'
+								data-testid={'create-location-btn'}
+								onClick={handleSubmit}>
 								Create
 							</Button>
 						</CardActions>

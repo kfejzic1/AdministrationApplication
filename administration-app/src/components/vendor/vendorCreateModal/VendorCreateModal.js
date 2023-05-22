@@ -197,6 +197,7 @@ function VendorCreateModal(props) {
 										required={true}
 										error={errors.username}
 										onChange={handleUsernameChange}
+										data-testid={'vendor-name'}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -209,6 +210,7 @@ function VendorCreateModal(props) {
 										required={true}
 										error={errors.address}
 										onChange={handleAddressChange}
+										data-testid={'vendor-address'}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -219,6 +221,7 @@ function VendorCreateModal(props) {
 										variant='standard'
 										value={details}
 										onChange={handleDetailsChange}
+										data-testid={'vendor-details'}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -232,6 +235,7 @@ function VendorCreateModal(props) {
 										value={phone}
 										required={true}
 										onChange={handlePhoneChange}
+										data-testid={'vendor-phone'}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -269,6 +273,7 @@ function VendorCreateModal(props) {
 							size='small'
 							type='submit'
 							value='Submit'
+							data-testid={'vendor-create-button'}
 							onClick={handleSubmit}>
 							Create
 						</Button>
