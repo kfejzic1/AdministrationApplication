@@ -94,7 +94,13 @@ export default function VendorsTableToolBar(props) {
 
 	const createVendorsTooltip = (
 		<Tooltip title='Create B2B Customer'>
-			<Button className={classes.button} size='small' variant='contained' endIcon={<CreateIcon />} onClick={handleOpen}>
+			<Button
+				className={classes.button}
+				size='small'
+				variant='contained'
+				endIcon={<CreateIcon />}
+				data-testid={'create-vendor'}
+				onClick={handleOpen}>
 				Create B2B Customer
 			</Button>
 		</Tooltip>
